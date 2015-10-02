@@ -1,0 +1,7 @@
+{
+    "name": "stripe",
+    "allowed_domains": ["stripe.com"],
+    "start_urls": [
+        "https://stripe.com/docs/"
+    ]
+}

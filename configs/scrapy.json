@@ -1,0 +1,7 @@
+{
+    "name": "scrappy.org",
+    "allowed_domains": ["doc.scrapy.org"],
+    "start_urls": [
+        "http://doc.scrapy.org/en/"
+    ]
+}
