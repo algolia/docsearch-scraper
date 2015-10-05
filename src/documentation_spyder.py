@@ -7,48 +7,55 @@ import re
 
 class DocumentationSpyder(scrapy.Spider):
     def __init__(self):
-        self.load_config(sys.argv[1])
+        config = json.loads(open(sys.argv[1], "r").read())
+
+        self.name = config.get("name")
+        self.allowed_domains = config.get("allowed_domains")
+        self.start_urls = config.get("start_urls")
+        self.selectors = config.get("selectors")
 
     def parse(self, response):
         self.scrap_content(response)
-
 
         #for href in response.css("a::attr('href')"):
             #url = response.urljoin(href.extract())
             #yield scrapy.Request(url, callback=self.parse)
 
     def scrap_content(self, response):
-        selectors = [
-            "#content header h1",
-            "#content header p",
-            "#content section h1",
-            "#content section h2",
-            "#content section h3",
-            "#content section h4",
-            "#content section h5",
-            "#content section h6",
-            "#content section p",
-            "#content section ol"
-        ]
-
         doc = lxml.html.fromstring(response.body)
 
         separate_results = {}
 
-        for selector in selectors:
+        for selector in self.selectors:
             separate_selector = CSSSelector(selector)
             separate_results[selector] = separate_selector(doc)
 
-        sel = CSSSelector(','.join(selectors))
+        sel = CSSSelector(','.join(self.selectors))
+
+        blocs = []
 
         for el in sel(doc):
             current_selector = ''
-            for selector in selectors:
+            for selector in self.selectors:
                 if self.findMatchingElem(el, separate_results[selector]):
                     current_selector = selector
                     break
+            blocs.append((self.get_element_content(el), self.selectors.index(current_selector)))
 
-            print ">" + self.get_element_content(el) + "< (" + current_selector + ")"
+        self.index_document(blocs, response)
+
+
+
+    def index_document(self, blocs, response):
+        last_importance = -1
+
+        current_blocs = []
+
+        for i, selector in enumerate(self.selectors):
+            current_blocs[i] = None
+
+        for (bloc, importance) in blocs:
+            print bloc, importance
 
     def findMatchingElem(self, el, l):
         for elem in l:
@@ -56,19 +63,10 @@ class DocumentationSpyder(scrapy.Spider):
                 return True
         return False
 
-
     def get_element_content(self, el):
         s = ""
 
         for x in el.itertext():
-            s = s + re.sub('\s+', ' ', x.strip(' \t\n\r'))
+            s += re.sub('\s+', ' ', x.strip(' \t\n\r'))
 
         return s
-
-
-    def load_config(self, filepath):
-        config = json.loads(open(filepath, "r").read())
-
-        self.name = config.get("name")
-        self.allowed_domains = config.get("allowed_domains")
-        self.start_urls = config.get("start_urls")

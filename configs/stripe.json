@@ -3,5 +3,17 @@
     "allowed_domains": ["stripe.com"],
     "start_urls": [
         "https://stripe.com/docs/"
+    ],
+    "selectors": [
+        "#content header h1",
+        "#content header p",
+        "#content section h1",
+        "#content section h2",
+        "#content section h3",
+        "#content section h4",
+        "#content section h5",
+        "#content section h6",
+        "#content section p",
+        "#content section ol"
     ]
 }
