@@ -14,7 +14,7 @@ if os.path.isfile(sys.argv[1]) == False:
 if not os.path.exists("crawling_data"):
     os.makedirs("crawling_data")
 
-process = CrawlerProcess({'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'})
+process = CrawlerProcess({'LOG_ENABLED': '1', 'LOG_LEVEL': 'ERROR', 'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'})
 process.crawl(DocumentationSpyder)
 process.start()
 process.stop()
