@@ -16,5 +16,6 @@
         ["#content section h5"],
         ["#content section h6"],
         ["#content header p", "#content section p", "#content section ol"]
-    ]
+    ],
+    "strategy": "laravel"
 }

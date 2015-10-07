@@ -21,7 +21,7 @@ class ConfigLoader:
         self.configs['index_prefix'] = self.require_config(os.environ, 'INDEX_PREFIX')
         self.configs['index_name'] = self.configs['index_prefix'] + self.require_config(config, 'index_name')
 
-        configs_name = ["allowed_domains", "start_urls", "stop_urls", "selectors"]
+        configs_name = ["allowed_domains", "start_urls", "stop_urls", "selectors", "strategy"]
 
         for name in configs_name:
             self.configs[name] = self.require_config(config, name)
@@ -55,3 +55,6 @@ class ConfigLoader:
 
     def get_api_key(self):
         return self.configs['api_key']
+
+    def get_strategy(self):
+        return self.configs['strategy']
