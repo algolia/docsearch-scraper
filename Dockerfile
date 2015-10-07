@@ -3,4 +3,8 @@ FROM python:2.7
 RUN pip install scrapy
 RUN pip install algoliasearch
 
-CMD /bin/bash
+ADD configs /root/configs
+ADD src /root/src
+
+COPY docker/run /
+RUN chmod +x /run
