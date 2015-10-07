@@ -11,7 +11,7 @@ Run the following commands :
 
 ## Run the scrapper
 
-Usage: $ ```python src/index.py config.json```
+Usage: $ ```APPLICATION_ID=app_id API_KEY=api_key INDEX_PREFIX=prefix_ CONFIG="`cat configs/stripe.json`" python src/index.py config.json```
 
 The config.json should look like:
 
