@@ -23,6 +23,7 @@ class LaravelStrategy(AbstactStrategy):
             'attributesToIndex'         : attributes_to_index,
             'attributesToHighlight'     : attributes_to_highlight,
             'attributesToRetrieve'      : attributes_to_retrieve,
+            'attributesToSnippet'       : ['content'],
             'customRanking'             : ['asc(importance)'],
             'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
             'minWordSizefor1Typo'       : 3,
