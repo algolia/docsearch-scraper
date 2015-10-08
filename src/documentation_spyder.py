@@ -60,7 +60,9 @@ class DocumentationSpyder(CrawlSpider):
         objects = self.stategy.create_objects_from_document(blocs, response)
 
         print response.url
-        self.algolia_helper.add_objects(objects)
+
+        for i in xrange(0, len(objects), 100):
+            self.algolia_helper.add_objects(objects[i:i+100])
 
     def find_matching_el(self, el, l):
         for elem in l:

@@ -5,7 +5,7 @@
         "https://stripe.com/docs"
     ],
     "stop_urls": [
-        "https://stripe.com/docs/api"
+        "https://stripe.com/docs/api/"
     ],
     "selectors": [
         ["#content header h1"],
