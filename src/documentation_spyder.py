@@ -71,9 +71,4 @@ class DocumentationSpyder(CrawlSpider):
         return False
 
     def get_element_content(self, el):
-        s = ""
-
-        for x in el.itertext():
-            s += re.sub('\s+', ' ', x.strip(' \t\n\r'))
-
-        return s
+        return re.sub('\s+', ' ', el.text_content().strip(' \t\n\r:;,.'))
