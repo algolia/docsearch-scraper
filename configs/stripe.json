@@ -2,7 +2,8 @@
     "index_name": "stripe",
     "allowed_domains": ["stripe.com"],
     "start_urls": [
-        "https://stripe.com/docs"
+        "https://stripe.com/docs",
+        "https://stripe.com/docs/api[[api,v1]]"
     ],
     "stop_urls": [
         "https://stripe.com/docs/api/"

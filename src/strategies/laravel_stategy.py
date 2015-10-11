@@ -35,7 +35,7 @@ class LaravelStrategy(AbstactStrategy):
             'removeWordsIfNoResults'    : 'allOptional'
         }
 
-    def create_objects_from_document(self, blocs, response):
+    def create_objects_from_document(self, blocs, response, tags):
         objects = []
         current_blocs = {}
 
@@ -51,10 +51,17 @@ class LaravelStrategy(AbstactStrategy):
             current_blocs['link'] = response.url + self.get_hash(el)
             current_blocs['hash'] = self.get_hash(el)
             current_blocs['path'] = urlparse(current_blocs['link']).path
+            current_blocs['_tags'] = self.get_tags(response.url, tags)
 
             objects.append(copy.deepcopy(current_blocs))
 
         return objects
+
+    def get_tags(self, url, tags):
+        for (start_url, tag) in tags:
+            if start_url in url:
+                return tag
+        return ['default']
 
     def get_key(self, i):
         if i == 0:

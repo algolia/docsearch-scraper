@@ -17,11 +17,22 @@ class DocumentationSpyder(CrawlSpider):
         self.algolia_helper = algolia_helper
         self.stategy = strategy
 
+        self.tags = []  # order matters so array instead of dict
+        self.extract_tags()
+
         super(DocumentationSpyder, self).__init__(*args, **kwargs)
         DocumentationSpyder.rules = [
             Rule(LxmlLinkExtractor(allow=self.start_urls, deny=stop_urls), callback="parse_item", follow=True)
         ]
         super(DocumentationSpyder, self)._compile_rules()
+
+    def extract_tags(self):
+        pattern = re.compile('(.+)\[\[(.+?)]]')
+        for url in self.start_urls:
+            r = pattern.search(url)
+            if r is not None:
+                self.tags.append((r.group(1), r.group(2).split(',')))
+                self.start_urls[self.start_urls.index(url)] = r.group(1)
 
     def parse_item(self, response):
         if not "text/html" in response.headers['Content-Type']:
@@ -57,12 +68,12 @@ class DocumentationSpyder(CrawlSpider):
         self.index_document(blocs, response)
 
     def index_document(self, blocs, response):
-        objects = self.stategy.create_objects_from_document(blocs, response)
+        objects = self.stategy.create_objects_from_document(blocs, response, self.tags)
 
         print response.url
 
         for i in xrange(0, len(objects), 100):
-            self.algolia_helper.add_objects(objects[i:i+100])
+            self.algolia_helper.add_objects(objects[i:i + 100])
 
     def find_matching_el(self, el, l):
         for elem in l:
@@ -71,4 +82,9 @@ class DocumentationSpyder(CrawlSpider):
         return False
 
     def get_element_content(self, el):
-        return re.sub('\s+', ' ', el.text_content().strip(' \t\n\r:;,.'))
+        s = ""
+
+        for x in el.itertext():
+            s += ' ' + x.strip(' \t\n\r')
+
+        return re.sub('\s+', ' ', s.strip(' :;,.'))

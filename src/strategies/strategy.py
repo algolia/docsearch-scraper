@@ -6,5 +6,5 @@ class AbstactStrategy:
     def get_settings(self):
         raise Exception('get_settings need to be implemented')
 
-    def create_objects_from_document(self, blocs, response):
+    def create_objects_from_document(self, blocs, response, tags):
         raise Exception('index_document need to be implemented')
