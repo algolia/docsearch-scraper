@@ -21,7 +21,7 @@ class ConfigLoader:
         self.configs['index_prefix'] = self.require_config(os.environ, 'INDEX_PREFIX')
         self.configs['index_name'] = self.configs['index_prefix'] + self.require_config(config, 'index_name')
 
-        configs_name = ["allowed_domains", "start_urls", "stop_urls", "selectors", "strategy"]
+        configs_name = ["allowed_domains", "start_urls", "stop_urls", "selectors", "selectors_exclude", "strategy"]
 
         for name in configs_name:
             self.configs[name] = self.require_config(config, name)
@@ -58,3 +58,6 @@ class ConfigLoader:
 
     def get_strategy(self):
         return self.configs['strategy']
+
+    def get_selectors_exclude(self):
+        return self.configs['selectors_exclude']

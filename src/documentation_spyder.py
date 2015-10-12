@@ -8,16 +8,17 @@ from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 
 class DocumentationSpyder(CrawlSpider):
     def __init__(self, index_name, allowed_domains, start_urls, stop_urls,
-                 selectors, algolia_helper, strategy, *args, **kwargs):
+                 selectors, selectors_exclude, algolia_helper, strategy, *args, **kwargs):
 
         self.name = index_name
         self.allowed_domains = allowed_domains
         self.start_urls = start_urls
         self.selectors = selectors
+        self.selectors_exclude = selectors_exclude
         self.algolia_helper = algolia_helper
         self.stategy = strategy
 
-        self.tags = []  # order matters so array instead of dict
+        self.tags = []  # order matters so array
         self.extract_tags()
 
         super(DocumentationSpyder, self).__init__(*args, **kwargs)
@@ -42,6 +43,15 @@ class DocumentationSpyder(CrawlSpider):
 
     def scrap_content(self, response):
         doc = lxml.html.fromstring(response.body)
+
+        for selector in self.selectors_exclude:
+            exclude_selector = CSSSelector(selector)
+            bads = exclude_selector(doc)
+
+            if len(bads) > 0:
+                print "Removing " + str(len(bads)) + " elements matching `" + selector + "`"
+                for bad in bads:
+                    bad.getparent().remove(bad)
 
         separate_results = {}
 
@@ -75,9 +85,12 @@ class DocumentationSpyder(CrawlSpider):
         for i in xrange(0, len(objects), 100):
             self.algolia_helper.add_objects(objects[i:i + 100])
 
+    def is_same_element(self, el1, el2):
+        return el1.getroottree().getpath(el1) == el2.getroottree().getpath(el2)
+
     def find_matching_el(self, el, l):
         for elem in l:
-            if el.getroottree().getpath(el) == elem.getroottree().getpath(elem):
+            if self.is_same_element(el, elem):
                 return True
         return False
 

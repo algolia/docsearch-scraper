@@ -27,6 +27,7 @@ process.crawl(DocumentationSpyder,
                 start_urls=config.get_start_urls(),
                 stop_urls=config.get_stop_urls(),
                 selectors=config.get_selectors(),
+                selectors_exclude=config.get_selectors_exclude(),
                 algolia_helper=algolia_helper,
                 strategy=strategy)
 
