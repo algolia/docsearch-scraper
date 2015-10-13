@@ -10,7 +10,8 @@
     ],
     "selectors": [
         [".doc-container h2"],
-        [".doc-container .me1"]
+        [".doc-container .me1"],
+        [".doc-container div div p:nth-of-type(2)"]
     ],
     "strategy": "laravel"
 }
