@@ -82,8 +82,8 @@ class DocumentationSpyder(CrawlSpider):
 
         print response.url
 
-        for i in xrange(0, len(objects), 100):
-            self.algolia_helper.add_objects(objects[i:i + 100])
+        for i in xrange(0, len(objects), 50):
+            self.algolia_helper.add_objects(objects[i:i + 50])
 
     def is_same_element(self, el1, el2):
         return el1.getroottree().getpath(el1) == el2.getroottree().getpath(el2)
