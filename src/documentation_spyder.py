@@ -36,13 +36,13 @@ class DocumentationSpyder(CrawlSpider):
                 self.start_urls[self.start_urls.index(url)] = r.group(1)
 
     def parse_item(self, response):
-        if not "text/html" in response.headers['Content-Type']:
+        if "text/html" not in response.headers['Content-Type']:
             return
 
         self.scrap_content(response)
 
     def scrap_content(self, response):
-        doc = lxml.html.fromstring(response.body)
+        doc = lxml.html.fromstring(response.body.decode(response.encoding))
 
         for selector in self.selectors_exclude:
             exclude_selector = CSSSelector(selector)

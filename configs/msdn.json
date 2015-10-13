@@ -1,11 +1,10 @@
 {
-    "index_name": "msdn_che_adam",
+    "index_name": "msdn",
     "allowed_domains": ["msdn.microsoft.com"],
     "start_urls": [
        "https://msdn.microsoft.com/fr-fr/library"
     ],
     "stop_urls": [
-
     ],
     "selectors_exclude": [
 

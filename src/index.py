@@ -15,7 +15,7 @@ strategies = {
     'laravel': LaravelStrategy
 }
 
-if strategies.has_key(config.get_strategy()) == False:
+if not config.get_strategy() in strategies:
     exit("'" + config.get_strategy() + "' is not a good strategy name")
 
 strategy = strategies[config.get_strategy()](config, config.get_selectors())
