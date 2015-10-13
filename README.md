@@ -20,10 +20,15 @@ The config.json should look like:
     "index_name": "stripe",
     "allowed_domains": ["stripe.com"],
     "start_urls": [
-        "https://stripe.com/docs"
+        "https://stripe.com/docs",
+        "https://stripe.com/docs/api[[api]]",
+        "https://stripe.com/help/disputes[[help]]"
     ],
     "stop_urls": [
-        "https://stripe.com/docs/api"
+        "https://stripe.com/docs/api/"
+    ],
+    "selectors_exclude": [
+        ".method-list"
     ],
     "selectors": [
         ["#content header h1"],

@@ -2,7 +2,8 @@
     "index_name": "msdn",
     "allowed_domains": ["msdn.microsoft.com"],
     "start_urls": [
-       "https://msdn.microsoft.com/fr-fr/library"
+       "https://msdn.microsoft.com/fr-fr/library/windows/apps/jj207211(v=vs.105).aspx",
+       "https://msdn.microsoft.com/fr-fr/library/windows/apps/"
     ],
     "stop_urls": [
     ],
