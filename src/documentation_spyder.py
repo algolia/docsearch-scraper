@@ -55,7 +55,13 @@ class DocumentationSpyder(CrawlSpider):
         self.scrap_content(response)
 
     def scrap_content(self, response):
-        doc = lxml.html.fromstring(response.body.decode(response.encoding))
+        try:
+            body = response.body.decode(response.encoding)
+        except UnicodeDecodeError:
+            body = response.body
+            print "decoding failed"
+
+        doc = lxml.html.fromstring(body)
 
         for selector in self.selectors_exclude:
             exclude_selector = CSSSelector(selector)

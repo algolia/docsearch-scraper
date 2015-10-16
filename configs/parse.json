@@ -9,6 +9,7 @@
     "stop_urls": [
 
     ],
+    "selectors_exclude": [],
     "strategy": "laravel",
     "selectors": [
         [
