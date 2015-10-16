@@ -18,7 +18,9 @@ class DocumentationSpyder(CrawlSpider):
         self.algolia_helper = algolia_helper
         self.stategy = strategy
 
+        self.page_ranks = [] # order matters so array
         self.tags = []  # order matters so array
+        self.extract_page_rank()
         self.extract_tags()
 
         super(DocumentationSpyder, self).__init__(*args, **kwargs)
@@ -27,12 +29,23 @@ class DocumentationSpyder(CrawlSpider):
         ]
         super(DocumentationSpyder, self)._compile_rules()
 
+    def extract_page_rank(self):
+        pattern = re.compile('(.+?)(?:(?:\[page_rank:(.+?)])|(?:\[tags:(?:.+?)]))+')
+        for url in self.start_urls:
+            r = pattern.search(url)
+            if r is not None and r.group(2) is not None:
+                if r.group(2).isnumeric():
+                    self.page_ranks.append((r.group(1), int(r.group(2))))
+                else:
+                    print "Non numeric page rank found `" + r.group(2) + "` for url `" + r.group(1) + "`"
+
     def extract_tags(self):
-        pattern = re.compile('(.+)\[\[(.+?)]]')
+        pattern = re.compile('(.+?)(?:(?:\[tags:(.+?)])|(?:\[page_rank:(?:.+?)]))+')
         for url in self.start_urls:
             r = pattern.search(url)
             if r is not None:
-                self.tags.append((r.group(1), r.group(2).split(',')))
+                if r.group(2) is not None:
+                    self.tags.append((r.group(1), r.group(2).split(',')))
                 self.start_urls[self.start_urls.index(url)] = r.group(1)
 
     def parse_item(self, response):
@@ -78,7 +91,7 @@ class DocumentationSpyder(CrawlSpider):
         self.index_document(blocs, response)
 
     def index_document(self, blocs, response):
-        objects = self.stategy.create_objects_from_document(blocs, response, self.tags)
+        objects = self.stategy.create_objects_from_document(blocs, response, self.tags, self.page_ranks)
 
         print response.url
 

@@ -17,30 +17,31 @@ The config.json should look like:
 
 ```
 {
-    "index_name": "stripe",
-    "allowed_domains": ["stripe.com"],
-    "start_urls": [
-        "https://stripe.com/docs",
-        "https://stripe.com/docs/api[[api]]",
-        "https://stripe.com/help/disputes[[help]]"
-    ],
-    "stop_urls": [
-        "https://stripe.com/docs/api/"
-    ],
-    "selectors_exclude": [
-        ".method-list"
-    ],
-    "selectors": [
-        ["#content header h1"],
-        ["#content section h1"],
-        ["#content section h2"],
-        ["#content section h3"],
-        ["#content section h4"],
-        ["#content section h5"],
-        ["#content section h6"],
-        ["#content header p", "#content section p", "#content section ol"]
-    ],
-    "strategy": "laravel"
+    {
+        "index_name": "stripe",
+        "allowed_domains": ["stripe.com"],
+        "start_urls": [
+            "https://stripe.com/docs",
+            "https://stripe.com/docs/api[tags:api][page_rank:1]",
+            "https://stripe.com/help/disputes[tags:help]"
+        ],
+        "stop_urls": [
+            "https://stripe.com/docs/api/"
+        ],
+        "selectors_exclude": [
+            ".method-list"
+        ],
+        "selectors": [
+            ["#content header h1", "#content section h1"],
+            ["#content section h2"],
+            ["#content section h3"],
+            ["#content section h4"],
+            ["#content section h5"],
+            ["#content section h6"],
+            ["#content header p", "#content section p", "#content section ol"]
+        ],
+        "strategy": "laravel"
+    }
 }
 ```
 

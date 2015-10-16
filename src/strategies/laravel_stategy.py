@@ -6,11 +6,17 @@ from strategy import AbstactStrategy
 class LaravelStrategy(AbstactStrategy):
 
     def get_settings(self):
-        attributes_to_index = ['unordered(title)']
+
+        attributes_to_index = ['unordered(text_title)']
         attributes_to_highlight = ['title']
         attributes_to_retrieve = ['title']
 
-        for i in range(1, len(self.config.get_selectors())):
+        for i in range(1, len(self.config.get_selectors()) - 2):
+            attributes_to_index.append('unordered(text_h' + str(i) + ')')
+
+        attributes_to_index.append('unordered(title)')
+
+        for i in range(1, len(self.config.get_selectors()) - 2):
             attributes_to_index.append('unordered(h' + str(i) + ')')
             attributes_to_highlight.append('h' + str(i))
             attributes_to_retrieve.append('h' + str(i))
@@ -24,8 +30,8 @@ class LaravelStrategy(AbstactStrategy):
             'attributesToHighlight'     : attributes_to_highlight,
             'attributesToRetrieve'      : attributes_to_retrieve,
             'attributesToSnippet'       : ['content:50'],
-            'customRanking'             : ['asc(importance)'],
-            'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
+            'customRanking'             : ['desc(page_rank)', 'asc(importance)'],
+            'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'custom'],
             'minWordSizefor1Typo'       : 3,
             'minWordSizefor2Typos'      : 7,
             'allowTyposOnNumericTokens' : False,
@@ -35,7 +41,7 @@ class LaravelStrategy(AbstactStrategy):
             'removeWordsIfNoResults'    : 'allOptional'
         }
 
-    def create_objects_from_document(self, blocs, response, tags):
+    def create_objects_from_document(self, blocs, response, tags, page_ranks):
         objects = []
         current_blocs = {}
 
@@ -43,10 +49,18 @@ class LaravelStrategy(AbstactStrategy):
             current_blocs[self.get_key(i)] = None
 
         for ((el, bloc), importance) in blocs:
+
+            for i in range(0, len(self.selectors) - 1):
+                if i == importance:
+                    current_blocs["text_" + self.get_key(i)] = bloc
+                else:
+                    current_blocs["text_" + self.get_key(i)] = None
+
             for i in range(importance, len(self.selectors)):
                 current_blocs[self.get_key(i)] = None
 
             current_blocs[self.get_key(importance)] = bloc
+            current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
             current_blocs['importance'] = self.get_importance(current_blocs)
             current_blocs['link'] = response.url + self.get_hash(el)
             current_blocs['hash'] = self.get_hash(el)
@@ -56,6 +70,13 @@ class LaravelStrategy(AbstactStrategy):
             objects.append(copy.deepcopy(current_blocs))
 
         return objects
+
+    def get_page_rank(self, url, page_ranks):
+        for (start_url, rank) in page_ranks:
+            if start_url in url:
+                return rank
+
+        return 0
 
     def get_tags(self, url, tags):
         for (start_url, tag) in tags:

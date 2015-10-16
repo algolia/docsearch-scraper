@@ -3,8 +3,8 @@
     "allowed_domains": ["stripe.com"],
     "start_urls": [
         "https://stripe.com/docs",
-        "https://stripe.com/docs/api[[api]]",
-        "https://stripe.com/help/disputes[[help]]"
+        "https://stripe.com/docs/api[tags:api][page_rank:1]",
+        "https://stripe.com/help/disputes[tags:help]"
     ],
     "stop_urls": [
         "https://stripe.com/docs/api/"
@@ -13,8 +13,7 @@
         ".method-list"
     ],
     "selectors": [
-        ["#content header h1"],
-        ["#content section h1"],
+        ["#content header h1", "#content section h1"],
         ["#content section h2"],
         ["#content section h3"],
         ["#content section h4"],
