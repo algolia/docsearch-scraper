@@ -31,7 +31,7 @@ class LaravelStrategy(AbstactStrategy):
             'attributesToRetrieve'      : attributes_to_retrieve,
             'attributesToSnippet'       : ['content:50'],
             'customRanking'             : ['desc(page_rank)', 'asc(importance)'],
-            'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'custom'],
+            'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
             'minWordSizefor1Typo'       : 3,
             'minWordSizefor2Typos'      : 7,
             'allowTyposOnNumericTokens' : False,
