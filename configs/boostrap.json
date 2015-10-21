@@ -1,0 +1,22 @@
+{
+    "index_name": "bootstrap",
+    "allowed_domains": ["getbootstrap.com"],
+    "start_urls": [
+        "http://getbootstrap.com",
+        "http://getbootstrap.com/css[tags:css][page_rank:1]",
+        "http://getbootstrap.com/components[tags:css][page_rank:1]"
+    ],
+    "stop_urls": [
+        "http://getbootstrap.com/customize"
+    ],
+    "selectors_exclude": [
+      ".bs-docs-grid"
+    ],
+    "selectors": [
+        [".bs-docs-container h1"],
+        [".bs-docs-container h2"],
+        [".bs-docs-container h3"],
+        [".bs-docs-container p"]
+    ],
+    "strategy": "laravel"
+}
