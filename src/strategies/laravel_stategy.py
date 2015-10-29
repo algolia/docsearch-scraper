@@ -30,7 +30,7 @@ class LaravelStrategy(AbstactStrategy):
             'attributesToHighlight'     : attributes_to_highlight,
             'attributesToRetrieve'      : attributes_to_retrieve,
             'attributesToSnippet'       : ['content:50'],
-            'customRanking'             : ['desc(page_rank)', 'asc(importance)'],
+            'customRanking'             : ['desc(page_rank)', 'asc(importance)', 'asc(nb_words)'],
             'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
             'minWordSizefor1Typo'       : 3,
             'minWordSizefor2Typos'      : 7,
@@ -64,12 +64,13 @@ class LaravelStrategy(AbstactStrategy):
                 current_blocs[self.get_key(i)] = None
 
             current_blocs[self.get_key(importance)] = bloc
-            current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
-            current_blocs['importance'] = self.get_importance(current_blocs)
             current_blocs['link'] = response.url + self.get_hash(el)
             current_blocs['hash'] = self.get_hash(el)
             current_blocs['path'] = urlparse(current_blocs['link']).path
             current_blocs['_tags'] = self.get_tags(response.url, tags)
+            current_blocs['nb_words'] = len(bloc.split())
+            current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
+            current_blocs['importance'] = self.get_importance(current_blocs)
 
             objects.append(copy.deepcopy(current_blocs))
 
