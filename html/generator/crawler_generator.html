@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Crawler generators</title>
+	<script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/angularjs/1.4.6/angular.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+
+	<body ng-app="generator" ng-controller="GeneratorController">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Documentation Search Generator</a>
+				</div>
+			</div>
+		</nav>
+
+		<div class="">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-1">
+					<form>
+						<div class="form-group">
+							<label for="index_name">Index Name</label>
+							<input ng-model="index_name" class="form-control" placeholder="index_name" />
+						</div>
+						<div class="form-group">
+							<label for="allowed_domains">Allowed domains</label>
+							<textarea ng-model="allowed_domains" class="form-control" rows="2"></textarea>
+						</div>
+						<div class="form-group">
+							<label for="start_urls">Start urls</label>
+							<textarea ng-model="start_urls" class="form-control" rows="2"></textarea>
+						</div>
+						<div class="form-group">
+							<label for="stop_urls">Stop urls</label>
+							<textarea ng-model="stop_urls" class="form-control" rows="2"></textarea>
+						</div>
+						<div class="form-group">
+							<label for="strategy">Strategy</label>
+							<select ng-model="strategy" class="form-control">
+								<option selected value="laravel">Laravel</option>
+							</select>
+						</div>
+						<div>
+							<label for="strategy">Selectors</label>
+							<div ng-repeat="level in levels track by $index" style="margin-bottom: 10px;">
+								<div>Level {{$index + 1}}</div>
+								<div ng-repeat="selector in level track by $index" style="display: inline-block; margin-right: 10px; margin-bottom: 3px;">
+									<input class="form-control" ng-model="level[$index]">
+								</div>
+								<div style="display: inline-block;">
+									<button class="btn btn-default" ng-click="addSeletor(level)">+</button>
+									<button class="btn btn-default" ng-click="removeSelector(level)">-</button>
+									<button class="btn btn-default" ng-click="removeLevel(level)">- level</button>
+									<button class="btn btn-default" ng-click="addLevel(level)">+ Level</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-6">
+					<div>
+						<div>
+							<div>Algolia connector configuration</div>
+							<div class="copy">
+								<pre>{{getAlgoliaConnectorConfiguration()}}</pre>
+							</div>
+						</div>
+						<div>
+							<div>Html</div>
+							<div class="copy">
+								<pre>{{getHtml()}}</pre>
+							</div>
+						</div>
+						<div>
+							<div>Javascript</div>
+							<div class="copy">
+								<pre>{{getJavascript()}}</pre>
+							</div>
+						</div>
+						<div>
+							<div>Css</div>
+							<div class="copy">
+								<pre>{{getCss()}}</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+<script type="text/template" id="html_template_base">
+<div style="position: relative;">
+	<input id="algolia-search" type="text" placeholder="Search in the documentation" />
+	<i></i>
+</div>
+
+{{scripts}}
+
+{{elements}}
+
+</script>
+<script type="text/template" id="js_base_template">var client = algoliasearch('APP_ID', 'API_KEY')
+var index = client.initIndex('index_name');
+
+var template = Hogan.compile($('#algolia-autocomplete-template').html());
+
+$('#algolia-search').autocomplete({ hint: false, debug: true }, [{
+	source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+	displayKey: 'title',
+	templates: {
+		suggestion: function(suggestion) {
+			return template.render(suggestion);
+		}
+	},
+}]).on('autocomplete:selected', function(even, suggestion, dataset) {
+	window.location.href = suggestion.link;
+});
+</script>
+
+<script type="text/template" id="css_base_template">
+  #algolia-search
+  {
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border-radius: 3px;
+    border: solid 1px #B3B5B4;
+    width: 100%;
+  }
+
+  .algolia-autocomplete
+  {
+    width: 100%;
+  }
+
+  #algolia-search:focus
+  {
+    box-shadow: none;
+    outline: 0;
+    border-color: #53a1ec;
+  }
+
+  #search i
+  {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 7px;
+    width: 24px;
+    height: 24px;
+    display: block;
+    z-index: 200;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAgdJREFUOBGVk71LW1EYxr1HTCol6pJU/MBQJxEplhtSCEUyaCAEB/+BiuDo5uiQwckMWrCDIm2hW4aOgU4RSmK+HMxS2iGBdpF2KQlCg/nwd+I94XpyVXrh5X3f53nOc849H8aA7Usmky6/3/9GCLHc6XQmoGpEwTCM96Zp/rRJ+0pDIaVS6SX1R2LBwjrkLo9pnXo7EAgcW1xfEhLJ5/MmKUfME2+bzaZZqVSetFqt5/SbrKhBHBWLxV16x89IpVJur9d7jnCOgdFgMPhFV2YyGZ/L5foKPttut1+hKeka4fP5NjCZZ/kHTiZyQCgU+o3BOjq2TyR0E9kLDCIW8cFJoDAmOaP+TrzOZrPDCldZMMsUzXW1Wv2mwPsyk16gHySe6Rq5InkiQxy7Vyf1HoNJidVqtT86J0+tKEFEYZ2091yPUfpFJq5EIpErOydrwSaeQP7DKJFOp8d0ga0/oH6K7p0N65WCTfwBuQMy6fF4TrlTL3osRS6XG+H+nFCuW/gvK99J3Zsbj8dFLBbbh9lidW1yGfMyeZrepB6xjWqArXHLUzbs9gkooFAoLDFojwiAqechV3AIViV/ItxEn1lXDHHnk3vFb47X6/XLcDj8V5H8YhTDz/R9Zo5GaqBTvs/sv42kuW4GtNp9/U4zP4TJjZYbjqZBuLlCMw/pH+W4pCsc0KYU3gDjgcm1L9ZJCQAAAABJRU5ErkJggg==') center center no-repeat;
+  }
+
+.algolia-autocomplete {
+	width: 100%;
+}
+.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+	width: 100%;
+}
+.algolia-autocomplete .aa-hint {
+	color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+	width: 100%;
+	background-color: #fff;
+	border: 1px solid rgba(83, 161, 236, 0.5);
+	border-top: none;
+	box-sizing: border-box;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+	cursor: pointer;
+	border-bottom: solid 1px #EEE;
+	text-align: left;
+	padding: 12px 18px;
+	font-size: 15px;
+	line-height: 24px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .title
+{
+	font-size: 14px;
+	font-weight: bold;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h1
+{
+	font-size: 14px;
+	display: inline-block;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h2
+{
+	font-size: 14px;
+	display: inline-block;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h3
+{
+	font-size: 14px;
+	display: inline-block;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h4,
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h5,
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h6,
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .content
+{
+	font-size: 13px;
+	background-color: rgba(238, 238, 238, 0.35);
+	padding: 10px;
+	border-radius: 3px;
+	margin-left: 3px;
+	margin-top: 14px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+	background-color: #FAFAFA;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+	font-weight: bold;
+	font-style: normal;
+	background-color: rgba(83, 161, 236, 0.2);
+}
+</script>
+
+	<script type="text/javascript">
+		var generator = angular.module("generator", [], function() {});
+
+ 		generator.controller("GeneratorController", function ($scope) {
+ 			$scope.index_name = "stripe";
+ 			$scope.allowed_domains = "stripe.com";
+ 			$scope.start_urls = "https://stripe.com/docs";
+ 			$scope.stop_urls = "https://stripe.com/docs/api/";
+ 			$scope.strategy = "laravel";
+ 			$scope.levels = [
+		        ["#content header h1"],
+		        ["#content section h1"],
+		        ["#content section h2"],
+		        ["#content section h3"],
+		        ["#content section h4"],
+		        ["#content section h5"],
+		        ["#content section h6"],
+		        ["#content header p", "#content section p", "#content section ol"]
+		    ];
+ 			
+ 			$scope.getAlgoliaConnectorConfiguration = function () {
+ 				var config = {};
+ 				config.index_name = $scope.index_name;
+
+ 				$.map(['allowed_domains', 'start_urls', 'stop_urls'], function (config_name) {
+	 				config[config_name] = $scope[config_name].split("\n").filter(function (elt) {
+	 					return elt !== "";
+	 				});
+ 				})
+
+ 				config.strategy = $scope.strategy;
+
+ 				config.selectors = $scope.levels;
+
+ 				return JSON.stringify(config ,null,"    ");
+ 			}
+
+ 			var generateRowHtml = function(name) {
+ 				var elements_str = "";
+ 				elements_str += "\t\t{{#_highlightResult." + name + "}}\n"
+				elements_str += "\t\t<div class='" + name + "'>\n";
+				elements_str += "\t\t\t{{{ _highlightResult." + name + ".value }}}\n";
+				elements_str += "\t\t</div>\n";
+				elements_str += "\t\t{{/_highlightResult." + name + "}}\n"
+
+				return elements_str;
+ 			}
+
+ 			var generateContentRowHtml = function () {
+ 				var elements_str = "";
+ 				elements_str += "\t{{#_snippetResult.content}}\n"
+				elements_str += "\t<div class='content'>\n";
+				elements_str += "\t\t{{{ _snippetResult.content.value }}}\n";
+				elements_str += "\t</div>\n";
+				elements_str += "\t{{/_snippetResult.content}}\n"
+
+				return elements_str;
+ 			}
+
+ 			var generateRootRowHtml = function (name) {
+ 				var elements_str = "";
+ 				elements_str += "\t{{#_highlightResult." + name + "}}\n"
+				elements_str += "\t<div class='" + name + "'>\n";
+				elements_str += "\t\t{{{ _highlightResult." + name + ".value }}}\n";
+				elements_str += "\t</div>\n";
+				elements_str += "\t{{/_highlightResult." + name + "}}\n"
+
+				return elements_str;
+ 			}
+
+ 			$scope.getHtml = function () {
+ 				var scripts = ["https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js",
+ 							"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js",
+ 							"https://cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"]
+
+ 				var scripts_str = $.map(scripts, function (elt) {
+ 					return "<script src='" + elt + "'><\/script>"
+ 				});
+
+ 				var elements_str = '<script type="text/template" id="algolia-autocomplete-template">\n<div>\n';
+
+ 				if ($scope.levels.length >= 1)
+ 				{
+ 					elements_str += generateRootRowHtml('title');
+ 				}
+
+ 				if ($scope.levels.length >= 3)
+ 				{
+ 					elements_str += generateRootRowHtml('h1');
+ 				}
+
+ 				if ($scope.levels.length >= 4)
+ 				{
+	 				elements_str += '\t<div class="sub-section">\n';
+	 				for (var i = 1; i < $scope.levels.length -1; i++)
+	 				{
+	 					elements_str += generateRowHtml("h" + (i + 1));
+	 				}
+	 				elements_str += '\t</div>\n';
+	 			}
+
+ 				if ($scope.levels.length >= 2)
+ 				{
+ 					elements_str += generateContentRowHtml();
+ 				}
+
+ 				elements_str += "</div>\n<\/script>"
+
+
+ 				var html = $('#html_template_base').html();
+ 				return html.replace('{{scripts}}', scripts_str.join('\n'))
+ 												.replace('{{elements}}', elements_str);
+ 			}
+
+ 			$scope.getJavascript = function () {
+ 				return $('#js_base_template').html();
+ 			}
+
+ 			$scope.getCss = function () {
+ 				return $('#css_base_template').html();
+ 			};
+
+ 			$scope.addSeletor = function (level) {
+ 				$scope.levels[$scope.levels.indexOf(level)].push("");
+ 			}
+
+ 			$scope.removeSelector = function (level) {
+ 				$scope.levels[$scope.levels.indexOf(level)].pop();
+ 			}
+
+ 			$scope.addLevel = function(level) {
+ 				$scope.levels.splice($scope.levels.indexOf(level) + 1, 0, [""]);
+ 			}
+
+ 			$scope.removeLevel = function(level) {
+ 				$scope.levels.splice($scope.levels.indexOf(level), 1);
+ 			}
+	    });
+	</script>
+</html>

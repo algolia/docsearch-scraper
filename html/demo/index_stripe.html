@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Documentation</title>
+    <link rel="stylesheet" type="text/css" href="https://stripe.com/assets/site-fa96e67c02135a48196a6ad5eb074ce6.css" media="screen" />
+    <script type="text/javascript">
+        var _sf_startpt=(new Date()).getTime()
+        var APIValues = {};
+    </script>
+
+    <link rel="shortcut icon" href="https://stripe.com/favicon.ico">
+
+    <!--[if lt IE 9]>
+    <script src="https://stripe.com/assets/html5shiv-17761200a17ebcb716dda86cca6d2472.js"></script>
+    <![endif]-->
+    
+    <meta name="csrf-token" content="2pIy9EZ-6lP9gmq3lSjIVDxUypZlGMPhKOJuSjF0MovEOjzyHJPF811wTrkMa0lWfWRlEnPD9_q6d6e0zLUEoQ==" />
+</head>
+<body id="documentation">
+
+  <div id="header">
+    <h1><a href="https://stripe.com/">Stripe</a></h1>
+    <div class="navigation">
+    <div class="signin"><a id='signin' href="https://dashboard.stripe.com/login"><span>Sign In</span></a></div>
+
+  <ul class="global">
+    <li><a href="https://stripe.com/docs" class="selected">Documentation</a></li>
+    <li><a href="https://support.stripe.com">Help &amp; Support</a></li>
+  </ul>
+</div>
+
+  </div><!-- #header -->
+
+  <section id="search" style="position: relative; width: 940px; margin: 0 auto;">
+    <div style="margin-left: 190px;">
+      <div style="margin: 10px auto; box-sizing: border-box;">
+        <input id="algolia-search" type="text" placeholder="Search in the documentation" />
+        <i style=""></i>
+      </div>
+    </div>
+  </section>
+
+  <style type="text/css">
+  #algolia-search
+  {
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border-radius: 3px;
+    border: solid 1px #B3B5B4;
+    width: 100%;
+  }
+
+  .algolia-autocomplete
+  {
+    width: 100%;
+  }
+
+  #algolia-search:focus
+  {
+    box-shadow: none;
+    outline: 0;
+    border-color: #53a1ec;
+  }
+
+  #search i
+  {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 7px;
+    width: 24px;
+    height: 24px;
+    display: block;
+    z-index: 200;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAgdJREFUOBGVk71LW1EYxr1HTCol6pJU/MBQJxEplhtSCEUyaCAEB/+BiuDo5uiQwckMWrCDIm2hW4aOgU4RSmK+HMxS2iGBdpF2KQlCg/nwd+I94XpyVXrh5X3f53nOc849H8aA7Usmky6/3/9GCLHc6XQmoGpEwTCM96Zp/rRJ+0pDIaVS6SX1R2LBwjrkLo9pnXo7EAgcW1xfEhLJ5/MmKUfME2+bzaZZqVSetFqt5/SbrKhBHBWLxV16x89IpVJur9d7jnCOgdFgMPhFV2YyGZ/L5foKPttut1+hKeka4fP5NjCZZ/kHTiZyQCgU+o3BOjq2TyR0E9kLDCIW8cFJoDAmOaP+TrzOZrPDCldZMMsUzXW1Wv2mwPsyk16gHySe6Rq5InkiQxy7Vyf1HoNJidVqtT86J0+tKEFEYZ2091yPUfpFJq5EIpErOydrwSaeQP7DKJFOp8d0ga0/oH6K7p0N65WCTfwBuQMy6fF4TrlTL3osRS6XG+H+nFCuW/gvK99J3Zsbj8dFLBbbh9lidW1yGfMyeZrepB6xjWqArXHLUzbs9gkooFAoLDFojwiAqechV3AIViV/ItxEn1lXDHHnk3vFb47X6/XLcDj8V5H8YhTDz/R9Zo5GaqBTvs/sv42kuW4GtNp9/U4zP4TJjZYbjqZBuLlCMw/pH+W4pCsc0KYU3gDjgcm1L9ZJCQAAAABJRU5ErkJggg==') center center no-repeat;
+  }
+
+  .algolia-autocomplete {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-hint {
+    color: #999;
+  }
+  .algolia-autocomplete .aa-dropdown-menu {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid rgba(83, 161, 236, 0.5);
+    border-top: none;
+    box-sizing: border-box;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+    cursor: pointer;
+    border-bottom: solid 1px #EEE;
+    text-align: left;
+    padding: 12px 18px;
+    font-size: 15px;
+    line-height: 24px;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .title
+  {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h1
+  {
+    font-size: 14px;
+    display: inline-block;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h2
+  {
+    font-size: 14px;
+    display: inline-block;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h3
+  {
+    font-size: 14px;
+    display: inline-block;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h4,
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h5,
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .h6,
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .content
+  {
+    font-size: 13px;
+    background-color: rgba(238, 238, 238, 0.35);
+    padding: 10px;
+    border-radius: 3px;
+    margin-left: 3px;
+    margin-top: 14px;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+    background-color: #FAFAFA;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+    font-weight: bold;
+    font-style: normal;
+    background-color: rgba(83, 161, 236, 0.2);
+  }
+  </style>
+
+  <section id="doc">
+
+
+  <nav>
+
+    <h1 class="references">Development</h1>
+    <ul>      <li class="selected"><a href="https://stripe.com/docs">Getting Started</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/tutorials/checkout">Embedded Form</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/tutorials/forms">Custom Forms</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/mobile">Mobile Apps</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/tutorials/charges">Charging Cards</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/testing">Testing</a></li>
+      <li class="unselected"><a href="https://stripe.com/help/security">Security</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/fraud">Fraud Protection</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/webhooks">Webhooks</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/guides/bitcoin">Bitcoin Guide</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/guides/alipay">Alipay Guide</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/guides/file-upload">File Upload Guide</a></li>
+</ul>
+
+    <h1 class="getting-started">Account</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/docs/tutorials/dashboard">Your Account</a></li>
+      <li class="unselected"><a href="https://stripe.com/help/transfers">Getting Paid</a></li>
+      <li class="unselected"><a href="https://stripe.com/help/disputes-overview">Disputes</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/guides/dispute-evidence">Submitting Evidence</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/help/dispute-types">Dispute Types</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/help/disputes">Disputes FAQ</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/integrations">Integrations</a></li>
+</ul>
+
+    <h1 class="faq">References</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/docs/examples">Examples</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/stripe.js">Stripe.js</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/checkout">Checkout</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/libraries">API Libraries</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/upgrades">API Upgrades</a></li>
+
+      <li class="unselected">
+        <a href="https://stripe.com/docs/api" class="external" target="_blank">Full API Reference</a>
+      </li>
+    </ul>
+
+    <h1 class="subscriptions">Subscriptions</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/docs/subscriptions">Overview</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/tutorials/subscriptions">Getting Started</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/guides/subscriptions">Integration Guide</a></li>
+</ul>
+
+    <h1 class="orders">Relay</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/docs/relay">Overview</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/relay/apps-guide">Apps Guide</a></li>
+</ul>
+
+    <h1 class="connect">Connect</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/docs/connect">Overview</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/connect/connecting-to-accounts">Connecting to Accounts</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/standalone-accounts">Standalone Accounts</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/authentication">Authentication</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/reference">OAuth Reference</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/connect/payments-fees">Payments and Fees</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/connect/special-case-transfers">Special-case Transfers</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/connect/managed-accounts">Managed Accounts</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/updating-accounts">Updating Accounts</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/identity-verification">Identity Verification</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/bank-transfers">Bank Transfers</a></li>
+      <li class="unselected sub"><a href="https://stripe.com/docs/connect/migrating">Migrating Recipients</a></li>
+      <li class="unselected"><a href="https://stripe.com/docs/connect/testing">Testing</a></li>
+</ul>
+
+    <h1 class="more">About Stripe</h1>
+    <ul>      <li class="unselected"><a href="https://stripe.com/help/contact">Contact</a></li>
+      <li class="unselected"><a href="https://stripe.com/global">Global Users</a></li>
+      <li class="unselected last"><a href="https://stripe.com/gallery">Gallery</a></li>
+</ul>
+
+  </nav>
+
+    <section id="content">
+      <section id="start">
+
+  <header>
+    <h1>Getting Started</h1>
+    <p>
+      Below you'll find tutorials that will teach you how to use Stripe,
+      and reference documentation for all the moving&nbsp;parts.
+    </p>
+  </header>
+
+  <section class="getting-started">
+
+    <div class="implementation-options">
+
+      <div class="guides">
+        <a class="web" href="https://stripe.com/docs/tutorials/checkout">
+          <h2>On your website</h2>
+          <p>
+            Start accepting payments on your website with our JavaScript libraries. <span class="arrow">Learn more</span>
+          </p>
+        </a>
+        <a class="mobile" href="https://stripe.com/docs/mobile">
+          <h2>In your mobile app</h2>
+          <p>
+            We have toolkits for native iPhone and Android applications. <span class="arrow">Learn more</span>
+          </p>
+        </a>
+      </div>
+
+      <div class="payment-types">
+        <h3>Accept different payment types</h3>
+        <p>
+          In addition to charging <a href="https://stripe.com/docs/tutorials/charges">credit and debit cards</a>, Stripe's APIs let you accept payments on <a href="https://stripe.com/docs/mobile/android">Android</a> and <a href="https://stripe.com/docs/mobile/ios">iOS</a>. You can also support <a href="https://stripe.com/docs/guides/bitcoin">Bitcoin</a>, <a href="https://stripe.com/docs/guides/alipay">Alipay</a>, or <a href="https://stripe.com/docs/guides/amex-express-checkout">Amex Express Checkout</a>.
+        </p>
+
+        <hr>
+      </div>
+
+      <div class="non-developer">
+        <a class="platforms" href="https://stripe.com/docs/libraries#third-party-plugins">
+          <h3>Stripe plugins for 3rd party software</h3>
+          <p>
+            As well as the official API libraries listed above, there are a number of third-party plugins and libraries built by our community, such as for WordPress and Drupal.
+
+            <span class="arrow">Learn more</span>
+          </p>
+        </a>
+
+        <a class="services" href="https://stripe.com/docs/integrations">
+          <h3>Use Stripe with other services</h3>
+          <p>
+            Stripe has lots of third-party integrations which require no programming, hosting or complicated setup on your behalf, such as Shopify and Wufoo.
+
+            <span class="arrow">Learn more</span>
+          </p>
+        </a>
+      </div>
+
+    </div>
+
+    <section id="details">
+      <article>
+        <hr>
+        <h2>Need help?</h2>
+        <p>We're always happy to help out with code or any other questions you might have. <a href="https://support.stripe.com" class="arrow">Learn more</a></p>
+
+        <h2>API mailing list</h2>
+        <p>Join our mailing list to be notified of API changes and stay up to&nbsp;date. <a href="https://groups.google.com/a/lists.stripe.com/forum/#!forum/api-discuss" class="arrow">View mailing list</a></p>
+
+        <h2>Resources</h2>
+        <ul>
+          <li><a href="https://stripe.com/docs/libraries">API libraries</a></li>
+          <li><a href="https://stripe.com/docs/examples">Example projects</a></li>
+        </ul>
+      </article>
+    </section>
+  </section>
+</section>
+
+
+      <footer class="clearfix">
+  <section class="questions">
+    <h1>Questions?</h1>
+    <p>We're always happy to help with code or other questions you might have! Check out our answers to <a href="https://support.stripe.com">common questions</a> or chat live with other developers in <a href="irc://irc.freenode.net/stripe">#stripe</a> on freenode.</p>
+
+  </section>
+</footer>
+    </section>
+
+  </section><!-- #documentation -->
+
+  <div id="footer">
+    <div class="country-dropdown-view">
+        <a class="select">
+            <span>
+                <img src="https://stripe.com/img/flags/se.png" width="23" height="17" data-hires="true" />
+                <strong>Sweden</strong>
+            </span>
+        </a>
+
+        <div class="popover">
+            <div class="arrow"></div>
+            <h4>Select your Country</h4>
+            <ul>
+                    <li>
+                        <a href="https://stripe.com/country?country=AU&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/au.png" width="23" height="17" data-hires="true" />
+                            <span>Australia</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=CA&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/ca.png" width="23" height="17" data-hires="true" />
+                            <span>Canada</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=DK&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/dk.png" width="23" height="17" data-hires="true" />
+                            <span>Denmark</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=FI&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/fi.png" width="23" height="17" data-hires="true" />
+                            <span>Finland</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=GB&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/gb.png" width="23" height="17" data-hires="true" />
+                            <span>United Kingdom</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=IE&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/ie.png" width="23" height="17" data-hires="true" />
+                            <span>Ireland</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=NO&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/no.png" width="23" height="17" data-hires="true" />
+                            <span>Norway</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=SE&redirect=/docs" class="selected">
+                            <img src="https://stripe.com/img/flags/se.png" width="23" height="17" data-hires="true" />
+                            <span>Sweden</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=US&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/us.png" width="23" height="17" data-hires="true" />
+                            <span>United States</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=AT&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/at.png" width="23" height="17" data-hires="true" />
+                            <span>Austria</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=BE&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/be.png" width="23" height="17" data-hires="true" />
+                            <span>Belgium</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=FR&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/fr.png" width="23" height="17" data-hires="true" />
+                            <span>France</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=DE&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/de.png" width="23" height="17" data-hires="true" />
+                            <span>Germany</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=IT&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/it.png" width="23" height="17" data-hires="true" />
+                            <span>Italy</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=JP&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/jp.png" width="23" height="17" data-hires="true" />
+                            <span>Japan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=LU&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/lu.png" width="23" height="17" data-hires="true" />
+                            <span>Luxembourg</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=MX&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/mx.png" width="23" height="17" data-hires="true" />
+                            <span>Mexico</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=NL&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/nl.png" width="23" height="17" data-hires="true" />
+                            <span>Netherlands</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=SG&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/sg.png" width="23" height="17" data-hires="true" />
+                            <span>Singapore</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=ES&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/es.png" width="23" height="17" data-hires="true" />
+                            <span>Spain</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://stripe.com/country?country=CH&redirect=/docs" >
+                            <img src="https://stripe.com/img/flags/ch.png" width="23" height="17" data-hires="true" />
+                            <span>Switzerland</span>
+                        </a>
+                    </li>
+          </ul>
+        </div>
+    </div>
+
+
+    <p><a href="https://stripe.com">&copy; Stripe</a></p>
+
+    <ul>
+        <li><a href="https://status.stripe.com"><span>System Status</span></a></li>
+        <li><a href="https://stripe.com/about">About</a></li>
+        <li><a href="https://stripe.com/blog"><span>Blog</span></a></li>
+        <li><a href="https://stripe.com/jobs"><span>Jobs</span></a></li>
+        <li><a href="http://twitter.com/stripe">Twitter</a></li>
+    </ul>
+    <ul class="lesser">
+        <li><a href="https://stripe.com/terms">Terms of Service</a></li>
+        <li><a href="https://stripe.com/privacy">Privacy Policy</a></li>
+    </ul>
+</div>
+<div class="country-dropdown-overlay"></div>
+
+    <script src="https://stripe.com/assets/jquery-47d53801b9f61ca8a21dcc2571aeb3ec.js"></script>
+    <script src="https://stripe.com/assets/shared-3abadcaa3af6e785a085062e45894014.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"></script>
+
+    <script type="text/template" id="algolia-autocomplete-template">
+      <div>
+        {{#_highlightResult.title}}
+        <div class="title">
+          {{{ _highlightResult.title.value }}}
+        </div>
+        {{/_highlightResult.title}}
+        {{#_highlightResult.h1}}
+        <div class="h1">
+          {{{ _highlightResult.h1.value }}}
+        </div>
+        {{/_highlightResult.h1}}
+
+        <div class="sub-section">
+          {{#_highlightResult.h2}}
+          <div class="h2">
+            {{{ _highlightResult.h2.value }}}
+          </div>
+          {{/_highlightResult.h2}}
+
+          {{#_highlightResult.h3}}
+          <div class="h3">
+            > {{{ _highlightResult.h3.value }}}
+          </div>
+          {{/_highlightResult.h3}}
+
+          {{#_highlightResult.h4}}
+          <div class="h4">
+            > {{{ _highlightResult.h4.value }}}
+          </div>
+          {{/_highlightResult.h4}}
+
+          {{#_highlightResult.h5}}
+          <div class="h5">
+            > {{{ _highlightResult.h5.value }}}
+          </div>
+          {{/_highlightResult.h5}}
+
+          {{#_highlightResult.h5}}
+          <div class="h5">
+            > {{{ _highlightResult.h5.value }}}
+          </div>
+          {{/_highlightResult.h5}}
+
+          {{#_highlightResult.h6}}
+          <div class="h6">
+            > {{{ _highlightResult.h6.value }}}
+          </div>
+          {{/_highlightResult.h6}}
+        </div>
+
+        {{#_snippetResult.content}}
+        <div class="content">
+          {{{ _snippetResult.content.value }}}
+        </div>
+        {{/_snippetResult.content}}
+      </div>
+    </script>
+    <script>
+      var client = algoliasearch('P8MNSEC776', 'fe6d4517db9df93b337cd173e6d0b0aa')
+      var index = client.initIndex('crawler_stripe');
+
+      var template = Hogan.compile($('#algolia-autocomplete-template').html());
+
+
+      $('#algolia-search').autocomplete({ hint: false, debug: true }, [
+        {
+          source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+          displayKey: 'title',
+          templates: {
+            suggestion: function(suggestion) {
+              return template.render(suggestion);
+            }
+          },
+        }
+      ]).on('autocomplete:selected', function(even, suggestion, dataset) {
+        window.location.href = suggestion.link;
+      });
+    </script>  
+
+  <script src="https://stripe.com/assets/documentation-1e974d64ec26d26a950ac99931b4626a.js"></script>
+  <script src="https://stripe.com/assets/highlight.pack-2286570da0bb1b3179fb57ccf73939c5.js"></script>
+<script src="https://stripe.com/assets/highlighter-e9cf653413c50b1b2558992fba0cb323.js"></script>
+
+</body>
+</html>
