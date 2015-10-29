@@ -22,7 +22,7 @@ class ConfigLoader:
         self.configs['index_name'] = self.configs['index_prefix'] + self.require_config(config, 'index_name')
 
         configs_name = ["allowed_domains", "start_urls", "stop_urls",
-                        "selectors", "selectors_exclude", "strategy", "custom_settings"]
+                        "selectors", "selectors_exclude", "strategy", "custom_settings", "hash_strategy"]
 
         for name in configs_name:
             self.configs[name] = self.require_config(config, name)
@@ -65,3 +65,6 @@ class ConfigLoader:
 
     def get_custom_settings(self):
         return self.configs['custom_settings']
+
+    def get_hash_strategy(self):
+        return self.configs['hash_strategy']

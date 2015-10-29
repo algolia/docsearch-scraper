@@ -7,7 +7,8 @@
         "http://getbootstrap.com/components[tags:css][page_rank:1]"
     ],
     "stop_urls": [
-        "http://getbootstrap.com/customize"
+        "http://getbootstrap.com/customize",
+        "http://getbootstrap.com/2.3.2"
     ],
     "selectors_exclude": [
       ".bs-docs-grid"
@@ -18,5 +19,7 @@
         [".bs-docs-container h3"],
         [".bs-docs-container p"]
     ],
+    "custom_settings": {},
+    "hash_strategy": "id",
     "strategy": "laravel"
 }

@@ -22,5 +22,6 @@
         "attributesToIndex": ["text_title", "unordered(text_h1)", "unordered(text_h2)", "title",
                                 "unordered(h1)", "unordered(h2)", "content", "path", "hash"]
     },
+    "hash_strategy": "id",
     "strategy": "laravel"
 }

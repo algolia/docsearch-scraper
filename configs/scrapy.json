@@ -1,7 +1,21 @@
 {
-    "name": "scrappy.org",
+    "index_name": "scrappy",
     "allowed_domains": ["doc.scrapy.org"],
     "start_urls": [
-        "http://doc.scrapy.org/en/"
-    ]
+        "http://doc.scrapy.org/en/1.0"
+    ],
+    "stop_urls": [
+    ],
+    "selectors_exclude": [
+        ".headerlink",
+        ".admonition-title"
+    ],
+    "selectors": [
+        [".document h1"],
+        [".document h2"],
+        [".document p"]
+    ],
+    "custom_settings": {},
+    "hash_strategy": "id",
+    "strategy": "laravel"
 }

@@ -1,6 +1,7 @@
 import copy
 from urlparse import urlparse
 from strategy import AbstactStrategy
+from lxml import etree
 
 
 class LaravelStrategy(AbstactStrategy):
@@ -11,12 +12,12 @@ class LaravelStrategy(AbstactStrategy):
         attributes_to_highlight = ['title']
         attributes_to_retrieve = ['title']
 
-        for i in range(1, len(self.config.get_selectors()) - 2):
+        for i in range(1, len(self.config.get_selectors()) - 1):
             attributes_to_index.append('unordered(text_h' + str(i) + ')')
 
         attributes_to_index.append('unordered(title)')
 
-        for i in range(1, len(self.config.get_selectors()) - 2):
+        for i in range(1, len(self.config.get_selectors()) - 1):
             attributes_to_index.append('unordered(h' + str(i) + ')')
             attributes_to_highlight.append('h' + str(i))
             attributes_to_retrieve.append('h' + str(i))
@@ -105,6 +106,16 @@ class LaravelStrategy(AbstactStrategy):
         return importance
 
     def get_hash(self, el):
+
+        if "link" in self.hash_strategy:
+            if "id" in self.hash_strategy:
+                return self.get_hash_stategy_link(el, "id")
+            else:
+                return self.get_hash_stategy_link(el, "href")
+
+        return self.get_hash_stategy_id(el)
+
+    def get_hash_stategy_id(self, el):
         current_el = el
 
         if (current_el.get('id', default=None)) is not None:
@@ -123,4 +134,45 @@ class LaravelStrategy(AbstactStrategy):
             return '#' + current_el.get('id')
 
         return ""
+
+    def get_hash_stategy_link(self, el, attr):
+        current_el = el
+
+        if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
+            if len(current_el.find("a").get(attr)) > 0:
+                if current_el.find("a").get(attr)[0] == '#':
+                    current_el.find("a").get(attr)
+                else:
+                    return '#' + current_el.find("a").get(attr)
+
+        while current_el.getprevious() is not None and (current_el.find("a") is None or\
+                current_el.find("a").get(attr, default=None) is None):
+            current_el = current_el.getprevious()
+
+        if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
+            if len(current_el.find("a").get(attr)) > 0:
+                if current_el.find("a").get(attr)[0] == '#':
+                    current_el.find("a").get(attr)
+                else:
+                    return '#' + current_el.find("a").get(attr)
+
+        old_current_el = current_el
+
+        while current_el.getparent() is not None and (current_el.find("a") is None or\
+                current_el.find("a").get(attr, default=None) is None):
+            current_el = current_el.getparent()
+
+
+        if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
+            if len(current_el.find("a").get(attr)) > 0:
+                if current_el.find("a").get(attr)[0] == '#':
+                    return current_el.find("a").get(attr)
+                else:
+                    return '#' + current_el.find("a").get(attr)
+
+        return ""
+
+
+
+
 

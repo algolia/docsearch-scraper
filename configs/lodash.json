@@ -7,11 +7,14 @@
     "stop_urls": [
     ],
     "selectors_exclude": [
+        "pre",
+        ".toc-container"
     ],
     "selectors": [
-        [".doc-container h2"],
-        [".doc-container .me1"],
+        [".doc-container h3 .me1"],
         [".doc-container div div p:nth-of-type(2)"]
     ],
+    "custom_settings": {},
+    "hash_strategy": "link id",
     "strategy": "laravel"
 }

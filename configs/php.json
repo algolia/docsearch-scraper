@@ -14,5 +14,7 @@
         ["#layout-content h2"],
         ["#layout-content .refpurpose"]
     ],
+    "custom_settings": {},
+    "hash_strategy": "id",
     "strategy": "laravel"
 }

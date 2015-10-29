@@ -1,8 +1,9 @@
 class AbstactStrategy:
-    def __init__(self, config, selectors, custom_settings):
+    def __init__(self, config, selectors, custom_settings, hash_strategy):
         self.config = config
         self.selectors = selectors
         self.custom_settings = custom_settings
+        self.hash_strategy = hash_strategy
 
     def get_settings(self):
         raise Exception('get_settings need to be implemented')

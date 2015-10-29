@@ -7,31 +7,18 @@
         "https://parse.com/docs/rest/guide"
     ],
     "stop_urls": [
-
     ],
     "selectors_exclude": [],
-    "strategy": "laravel",
     "selectors": [
-        [
-            ".guide_content h1"
-        ],
-        [
-            ".guide_content h2"
-        ],
-        [
-            ".guide_content h3"
-        ],
-        [
-            ".guide_content h4"
-        ],
-        [
-            ".guide_content h5"
-        ],
-        [
-            ".guide_content h6"
-        ],
-        [
-            ".guide_content p"
-        ]
-    ]
+        [".guide_content h1"],
+        [".guide_content h2"],
+        [".guide_content h3"],
+        [".guide_content h4"],
+        [".guide_content h5"],
+        [".guide_content h6"],
+        [".guide_content p"]
+    ],
+    "custom_settings": {},
+    "hash_strategy": "link href",
+    "strategy": "laravel"
 }

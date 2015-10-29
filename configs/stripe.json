@@ -4,7 +4,7 @@
     "start_urls": [
         "https://stripe.com/docs",
         "https://stripe.com/docs/api[tags:api][page_rank:1]",
-        "https://stripe.com/help/disputes[tags:help]"
+        "https://stripe.com/help[tags:help]"
     ],
     "stop_urls": [
         "https://stripe.com/docs/api/"
@@ -21,5 +21,7 @@
         ["#content section h6"],
         ["#content header p", "#content section p", "#content section ol"]
     ],
+    "custom_settings": {},
+    "hash_strategy": "id",
     "strategy": "laravel"
 }
