@@ -25,7 +25,7 @@ class LaravelStrategy(AbstactStrategy):
         attributes_to_highlight += ['content']
         attributes_to_retrieve += ['_tags', 'link']
 
-        return {
+        settings = {
             'attributesToIndex'         : attributes_to_index,
             'attributesToHighlight'     : attributes_to_highlight,
             'attributesToRetrieve'      : attributes_to_retrieve,
@@ -40,6 +40,10 @@ class LaravelStrategy(AbstactStrategy):
             'advancedSyntax'            : True,
             'removeWordsIfNoResults'    : 'allOptional'
         }
+
+        settings.update(self.custom_settings)
+
+        return settings
 
     def create_objects_from_document(self, blocs, response, tags, page_ranks):
         objects = []

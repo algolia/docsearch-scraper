@@ -18,7 +18,7 @@ strategies = {
 if not config.get_strategy() in strategies:
     exit("'" + config.get_strategy() + "' is not a good strategy name")
 
-strategy = strategies[config.get_strategy()](config, config.get_selectors())
+strategy = strategies[config.get_strategy()](config, config.get_selectors(), config.get_custom_settings())
 
 process = CrawlerProcess({'LOG_ENABLED': '1', 'LOG_LEVEL': 'ERROR', 'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'})
 process.crawl(DocumentationSpyder,

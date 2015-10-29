@@ -68,7 +68,6 @@ class DocumentationSpyder(CrawlSpider):
             bads = exclude_selector(doc)
 
             if len(bads) > 0:
-                print "Removing " + str(len(bads)) + " elements matching `" + selector + "`"
                 for bad in bads:
                     bad.getparent().remove(bad)
 

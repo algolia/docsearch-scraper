@@ -1,0 +1,16 @@
+{
+    "index_name": "rubygems",
+    "allowed_domains": ["rubygems.org"],
+    "start_urls": [
+        "https://rubygems.org/gems"
+    ],
+    "stop_urls": [
+        "https://rubygems.org/gems"
+    ],
+    "selectors_exclude": [],
+    "selectors": [
+        [".t-link--black"],
+        [".gem__desc"]
+    ],
+    "strategy": "laravel"
+}
