@@ -4,18 +4,21 @@
 
 Run the following commands :
 
-- ```brew install python # will install pip```
-- ```pip install scrapy```
-- ```git clone git@github.com:algolia/documentation-scrapper.git```
-- ```cd documentation-scrapper```
+- `brew install python # will install pip`
+- `pip install scrapy`
+- `git clone git@github.com:algolia/documentation-scrapper.git`
+- `cd documentation-scrapper`
 
 ## Run the scrapper
 
-Usage: $ ```APPLICATION_ID=app_id API_KEY=api_key INDEX_PREFIX=prefix_ CONFIG="`cat configs/stripe.json`" python src/index.py config.json```
+Usage:
+```sh
+$ APPLICATION_ID=app_id API_KEY=api_key INDEX_PREFIX=prefix_ CONFIG="`cat configs/stripe.json`" python src/index.py
+```
 
 The config.json should look like:
 
-```
+```json
 {
     "index_name": "stripe",
     "allowed_domains": ["stripe.com"],
@@ -49,7 +52,7 @@ The config.json should look like:
 
 You might want a script like this to build and run the docker container
 
-```
+```sh
 #!/bin/bash
 
 docker build -t algolia/documentation-scrapper . || exit 1
