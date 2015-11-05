@@ -38,9 +38,25 @@
 							<textarea ng-model="stop_urls" class="form-control" rows="2"></textarea>
 						</div>
 						<div class="form-group">
+							<label for="selectors_exclude">Selector exclude</label>
+							<textarea ng-model="selectors_exclude" class="form-control" rows="2"></textarea>
+						</div>
+						<div class="form-group">
 							<label for="strategy">Strategy</label>
 							<select ng-model="strategy" class="form-control">
 								<option selected value="laravel">Laravel</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="custom_settings">Custom settings</label>
+							<textarea ng-model="custom_settings" class="form-control" rows="2"></textarea>
+						</div>
+						<div class="form-group">
+							<label for="hash-strategy">Hash strategy</label>
+							<select ng-model="hash-strategy" class="form-control">
+								<option selected value="id">id</option>
+								<option value="link id">link id</option>
+								<option value="link href">link href</option>
 							</select>
 						</div>
 						<div>
@@ -227,9 +243,10 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
  		generator.controller("GeneratorController", function ($scope) {
  			$scope.index_name = "stripe";
  			$scope.allowed_domains = "stripe.com";
- 			$scope.start_urls = "https://stripe.com/docs";
+ 			$scope.start_urls = "https://stripe.com/docs\nhttps://stripe.com/docs/api[tags:api][page_rank:1]\nhttps://stripe.com/help[tags:help]";
  			$scope.stop_urls = "https://stripe.com/docs/api/";
  			$scope.strategy = "laravel";
+ 			$scope.hash_strategy = "id";
  			$scope.levels = [
 		        ["#content header h1"],
 		        ["#content section h1"],
@@ -240,20 +257,33 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
 		        ["#content section h6"],
 		        ["#content header p", "#content section p", "#content section ol"]
 		    ];
+		    $scope.selectors_exclude = ".method-list";
+		    $scope.custom_settings = '{}';
  			
  			$scope.getAlgoliaConnectorConfiguration = function () {
  				var config = {};
  				config.index_name = $scope.index_name;
 
- 				$.map(['allowed_domains', 'start_urls', 'stop_urls'], function (config_name) {
+ 				$.map(['allowed_domains', 'start_urls', 'stop_urls', 'selectors_exclude'], function (config_name) {
 	 				config[config_name] = $scope[config_name].split("\n").filter(function (elt) {
 	 					return elt !== "";
 	 				});
  				})
 
  				config.strategy = $scope.strategy;
+ 				config.hash_strategy = $scope.hash_strategy;
 
  				config.selectors = $scope.levels;
+
+ 				try
+ 				{
+					config.custom_settings = JSON.parse($scope.custom_settings);
+ 				}
+ 				catch(e)
+ 				{
+ 					config.custom_settings = {};
+ 				}
+ 				
 
  				return JSON.stringify(config ,null,"    ");
  			}
