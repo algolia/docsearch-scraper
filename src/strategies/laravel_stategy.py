@@ -141,34 +141,30 @@ class LaravelStrategy(AbstactStrategy):
         if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
             if len(current_el.find("a").get(attr)) > 0:
                 if current_el.find("a").get(attr)[0] == '#':
-                    current_el.find("a").get(attr)
-                else:
-                    return '#' + current_el.find("a").get(attr)
-
-        while current_el.getprevious() is not None and (current_el.find("a") is None or\
-                current_el.find("a").get(attr, default=None) is None):
-            current_el = current_el.getprevious()
-
-        if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
-            if len(current_el.find("a").get(attr)) > 0:
-                if current_el.find("a").get(attr)[0] == '#':
-                    current_el.find("a").get(attr)
-                else:
-                    return '#' + current_el.find("a").get(attr)
-
-        old_current_el = current_el
-
-        while current_el.getparent() is not None and (current_el.find("a") is None or\
-                current_el.find("a").get(attr, default=None) is None):
-            current_el = current_el.getparent()
-
-
-        if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
-            if len(current_el.find("a").get(attr)) > 0:
-                if current_el.find("a").get(attr)[0] == '#':
                     return current_el.find("a").get(attr)
                 else:
                     return '#' + current_el.find("a").get(attr)
+
+        while current_el.getparent() is not None:
+            while current_el.getprevious() is not None and (current_el.find("a") is None or\
+                    current_el.find("a").get(attr, default=None) is None):
+                current_el = current_el.getprevious()
+
+            if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
+                if len(current_el.find("a").get(attr)) > 0:
+                    if current_el.find("a").get(attr)[0] == '#':
+                        return current_el.find("a").get(attr)
+                    else:
+                        return '#' + current_el.find("a").get(attr)
+
+            current_el = current_el.getparent()
+
+            if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
+                if len(current_el.find("a").get(attr)) > 0:
+                    if current_el.find("a").get(attr)[0] == '#':
+                        return current_el.find("a").get(attr)
+                    else:
+                        return '#' + current_el.find("a").get(attr)
 
         return ""
 
