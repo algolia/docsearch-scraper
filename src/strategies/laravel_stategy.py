@@ -135,9 +135,7 @@ class LaravelStrategy(AbstactStrategy):
 
         return ""
 
-    def get_hash_stategy_link(self, el, attr):
-        current_el = el
-
+    def check_current_element(self, current_el, attr):
         if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
             if len(current_el.find("a").get(attr)) > 0:
                 if current_el.find("a").get(attr)[0] == '#':
@@ -145,26 +143,35 @@ class LaravelStrategy(AbstactStrategy):
                 else:
                     return '#' + current_el.find("a").get(attr)
 
+        return None
+
+    def get_hash_stategy_link(self, el, attr):
+        current_el = el
+
+        link = self.check_current_element(current_el, attr)
+
+        # check current element
+        if link is not None:
+            return link
+
         while current_el.getparent() is not None:
             while current_el.getprevious() is not None and (current_el.find("a") is None or\
                     current_el.find("a").get(attr, default=None) is None):
                 current_el = current_el.getprevious()
 
-            if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
-                if len(current_el.find("a").get(attr)) > 0:
-                    if current_el.find("a").get(attr)[0] == '#':
-                        return current_el.find("a").get(attr)
-                    else:
-                        return '#' + current_el.find("a").get(attr)
+            link = self.check_current_element(current_el, attr)
+
+            # check same level previous element
+            if link is not None:
+                return link
 
             current_el = current_el.getparent()
 
-            if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
-                if len(current_el.find("a").get(attr)) > 0:
-                    if current_el.find("a").get(attr)[0] == '#':
-                        return current_el.find("a").get(attr)
-                    else:
-                        return '#' + current_el.find("a").get(attr)
+            link = self.check_current_element(current_el, attr)
+
+            # check parent
+            if link is not None:
+                return link
 
         return ""
 
