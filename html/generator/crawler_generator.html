@@ -42,6 +42,10 @@
 							<textarea ng-model="selectors_exclude" class="form-control" rows="2"></textarea>
 						</div>
 						<div class="form-group">
+							<label for="selectors_exclude">Characters to strip</label>
+							<input ng-model="strip_chars" class="form-control" placeholder="index_name" />
+						</div>
+						<div class="form-group">
 							<label for="strategy">Strategy</label>
 							<select ng-model="strategy" class="form-control">
 								<option selected value="laravel">Laravel</option>
@@ -246,6 +250,7 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
  			$scope.start_urls = "https://stripe.com/docs\nhttps://stripe.com/docs/api[tags:api][page_rank:1]\nhttps://stripe.com/help[tags:help]";
  			$scope.stop_urls = "https://stripe.com/docs/api/";
  			$scope.strategy = "laravel";
+ 			$scope.strip_chars = " :;,.";
  			$scope.hash_strategy = "id";
  			$scope.levels = [
 		        ["#content header h1"],
@@ -257,8 +262,8 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
 		        ["#content section h6"],
 		        ["#content header p", "#content section p", "#content section ol"]
 		    ];
-		    $scope.selectors_exclude = ".method-list";
-		    $scope.custom_settings = '{}';
+	    $scope.selectors_exclude = ".method-list";
+	    $scope.custom_settings = '{}';
  			
  			$scope.getAlgoliaConnectorConfiguration = function () {
  				var config = {};
@@ -270,6 +275,7 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
 	 				});
  				})
 
+ 				config.strip_chars = $scope.strip_chars;
  				config.strategy = $scope.strategy;
  				config.hash_strategy = $scope.hash_strategy;
 

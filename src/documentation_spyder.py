@@ -8,14 +8,15 @@ from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 
 class DocumentationSpyder(CrawlSpider):
     def __init__(self, index_name, allowed_domains, start_urls, stop_urls,
-                 selectors, selectors_exclude, algolia_helper, strategy, *args, **kwargs):
+                 selectors, selectors_exclude, strip_chars, algolia_helper, strategy, *args, **kwargs):
 
         self.name = index_name
         self.allowed_domains = allowed_domains
         self.start_urls = start_urls
         self.selectors = selectors
         self.selectors_exclude = selectors_exclude
-        self.algolia_helper = algolia_helper
+        self.strip_chars = strip_chars
+        self.algolia_helper = algolia_helper        
         self.stategy = strategy
 
         self.page_ranks = [] # order matters so array
@@ -119,4 +120,4 @@ class DocumentationSpyder(CrawlSpider):
         for x in el.itertext():
             s += ' ' + x.strip(' \t\n\r')
 
-        return re.sub('\s+', ' ', s.strip(' :;,.'))
+        return re.sub('\s+', ' ', s.strip(self.strip_chars))

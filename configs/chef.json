@@ -23,5 +23,6 @@
                                 "unordered(h1)", "unordered(h2)", "content", "path", "hash"]
     },
     "hash_strategy": "id",
-    "strategy": "laravel"
+    "strategy": "laravel",
+    "strip_chars": " :;,."
 }
