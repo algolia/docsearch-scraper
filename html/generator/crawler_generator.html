@@ -56,8 +56,8 @@
 							<textarea ng-model="custom_settings" class="form-control" rows="2"></textarea>
 						</div>
 						<div class="form-group">
-							<label for="hash-strategy">Hash strategy</label>
-							<select ng-model="hash-strategy" class="form-control">
+							<label for="hash_strategy">Hash strategy</label>
+							<select ng-model="hash_strategy" class="form-control">
 								<option selected value="id">id</option>
 								<option value="link id">link id</option>
 								<option value="link href">link href</option>
@@ -73,8 +73,6 @@
 								<div style="display: inline-block;">
 									<button class="btn btn-default" ng-click="addSeletor(level)">+</button>
 									<button class="btn btn-default" ng-click="removeSelector(level)">-</button>
-									<button class="btn btn-default" ng-click="removeLevel(level)">- level</button>
-									<button class="btn btn-default" ng-click="addLevel(level)">+ Level</button>
 								</div>
 							</div>
 						</div>
@@ -95,12 +93,6 @@
 							</div>
 						</div>
 						<div>
-							<div>Javascript</div>
-							<div class="copy">
-								<pre>{{getJavascript()}}</pre>
-							</div>
-						</div>
-						<div>
 							<div>Css</div>
 							<div class="copy">
 								<pre>{{getCss()}}</pre>
@@ -112,32 +104,10 @@
 		</div>
 	</body>
 <script type="text/template" id="html_template_base">
-<div style="position: relative;">
-	<input id="algolia-search" type="text" placeholder="Search in the documentation" />
-	<i></i>
-</div>
+
 
 {{scripts}}
 
-{{elements}}
-
-</script>
-<script type="text/template" id="js_base_template">var client = algoliasearch('APP_ID', 'API_KEY')
-var index = client.initIndex('index_name');
-
-var template = Hogan.compile($('#algolia-autocomplete-template').html());
-
-$('#algolia-search').autocomplete({ hint: false, debug: true }, [{
-	source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
-	displayKey: 'title',
-	templates: {
-		suggestion: function(suggestion) {
-			return template.render(suggestion);
-		}
-	},
-}]).on('autocomplete:selected', function(even, suggestion, dataset) {
-	window.location.href = suggestion.link;
-});
 </script>
 
 <script type="text/template" id="css_base_template">
@@ -279,7 +249,9 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
  				config.strategy = $scope.strategy;
  				config.hash_strategy = $scope.hash_strategy;
 
- 				config.selectors = $scope.levels;
+ 				config.selectors = $scope.levels.filter(function (elt) {
+ 					return elt.length !== 0;
+ 				});
 
  				try
  				{
@@ -291,88 +263,64 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
  				}
  				
 
- 				return JSON.stringify(config ,null,"    ");
- 			}
-
- 			var generateRowHtml = function(name) {
- 				var elements_str = "";
- 				elements_str += "\t\t{{#_highlightResult." + name + "}}\n"
-				elements_str += "\t\t<div class='" + name + "'>\n";
-				elements_str += "\t\t\t{{{ _highlightResult." + name + ".value }}}\n";
-				elements_str += "\t\t</div>\n";
-				elements_str += "\t\t{{/_highlightResult." + name + "}}\n"
-
-				return elements_str;
- 			}
-
- 			var generateContentRowHtml = function () {
- 				var elements_str = "";
- 				elements_str += "\t{{#_snippetResult.content}}\n"
-				elements_str += "\t<div class='content'>\n";
-				elements_str += "\t\t{{{ _snippetResult.content.value }}}\n";
-				elements_str += "\t</div>\n";
-				elements_str += "\t{{/_snippetResult.content}}\n"
-
-				return elements_str;
- 			}
-
- 			var generateRootRowHtml = function (name) {
- 				var elements_str = "";
- 				elements_str += "\t{{#_highlightResult." + name + "}}\n"
-				elements_str += "\t<div class='" + name + "'>\n";
-				elements_str += "\t\t{{{ _highlightResult." + name + ".value }}}\n";
-				elements_str += "\t</div>\n";
-				elements_str += "\t{{/_highlightResult." + name + "}}\n"
-
-				return elements_str;
+ 				return JSON.stringify(config, null,"  ");
  			}
 
  			$scope.getHtml = function () {
- 				var scripts = ["https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js",
- 							"https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js",
- 							"https://cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"]
 
- 				var scripts_str = $.map(scripts, function (elt) {
- 					return "<script src='" + elt + "'><\/script>"
- 				});
+ 				var s = '';
+ 				s += '<div style="position: relative;">\n';
+				s += '  <input id="algolia-search" type="text" placeholder="Search in the documentation" />\n'
+				s += '  <i></i>\n';
+				s += '</div>\n\n';
 
- 				var elements_str = '<script type="text/template" id="algolia-autocomplete-template">\n<div>\n';
+				s += "<script src='https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js'><\/script>\n",
+				s += "<script src='https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js'><\/script>\n\n";
 
- 				if ($scope.levels.length >= 1)
- 				{
- 					elements_str += generateRootRowHtml('title');
- 				}
-
- 				if ($scope.levels.length >= 3)
- 				{
- 					elements_str += generateRootRowHtml('h1');
- 				}
-
- 				if ($scope.levels.length >= 4)
- 				{
-	 				elements_str += '\t<div class="sub-section">\n';
-	 				for (var i = 1; i < $scope.levels.length -1; i++)
-	 				{
-	 					elements_str += generateRowHtml("h" + (i + 1));
-	 				}
-	 				elements_str += '\t</div>\n';
-	 			}
-
- 				if ($scope.levels.length >= 2)
- 				{
- 					elements_str += generateContentRowHtml();
- 				}
-
- 				elements_str += "</div>\n<\/script>"
-
-
- 				var html = $('#html_template_base').html();
- 				return html.replace('{{scripts}}', scripts_str.join('\n'))
- 												.replace('{{elements}}', elements_str);
+				s += "<script type='text/javascript'>\n\n";
+				s += getJavascript();
+				s += "<\/script>";
+ 				
+ 				return s;
  			}
 
- 			$scope.getJavascript = function () {
- 				return $('#js_base_template').html();
+ 			var getJavascript = function () {
+ 				var s = "";
+ 				s += "var client = algoliasearch('APP_ID', 'API_KEY')\n";
+				s += "var index = client.initIndex('index_name');\n";
+				s += "\n";
+				s += "$('#algolia-search').autocomplete({ hint: false, debug: true }, [{\n";
+				s += "  source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),\n";
+				s += "  displayKey: 'title',\n";
+				s += "  templates: {\n";
+				s += "    suggestion: function(suggestion) {\n";
+				s += "      var checkAttr = function (attr, value) {\n";
+				s += "        return attr !== undefined && attr[value] !== undefined;\n";
+				s += "      }\n";
+
+				s += "      s = '';\n";
+				s += "      s += '<div>';\n";
+
+				s += "      s += checkAttr(suggestion._highlightResult, 'title') ? '<div class=\"title\">' + suggestion._highlightResult.title.value + '</div>' : '';\n";
+				s += "      s += checkAttr(suggestion._highlightResult, 'h1') ? '<div class=\"h1\">' + suggestion._highlightResult.h1.value + '</div>' : '';\n";
+
+				s += "      for (var i = 1; i <= 6; i++)\n";
+				s += "        s += checkAttr(suggestion._highlightResult, 'h'+i) ? '<div class=\"h'+i+'\">' + suggestion._highlightResult['h'+i].value + '</div>' : ''\n";
+
+				s += "      s += checkAttr(suggestion._snippetResult, 'content') ? '<div class=\"content\">' + suggestion._snippetResult.content.value + '</div>' : ''\n";
+
+				s += "      s += '</div>';\n";
+
+				s += "      return s;\n";
+
+
+				s += "    }\n";
+				s += "  },\n";
+				s += "}]).on('autocomplete:selected', function(even, suggestion, dataset) {\n";
+				s += "  window.location.href = suggestion.link;\n";
+				s += "});\n";
+
+				return s;
  			}
 
  			$scope.getCss = function () {
@@ -385,14 +333,6 @@ $('#algolia-search').autocomplete({ hint: false, debug: true }, [{
 
  			$scope.removeSelector = function (level) {
  				$scope.levels[$scope.levels.indexOf(level)].pop();
- 			}
-
- 			$scope.addLevel = function(level) {
- 				$scope.levels.splice($scope.levels.indexOf(level) + 1, 0, [""]);
- 			}
-
- 			$scope.removeLevel = function(level) {
- 				$scope.levels.splice($scope.levels.indexOf(level), 1);
  			}
 	    });
 	</script>

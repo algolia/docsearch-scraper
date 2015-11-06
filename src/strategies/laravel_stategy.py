@@ -154,7 +154,7 @@ class LaravelStrategy(AbstactStrategy):
         if link is not None:
             return link
 
-        while current_el.getparent() is not None:
+        while current_el is not None and current_el.getparent() is not None:
             while current_el.getprevious() is not None and (current_el.find("a") is None or\
                     current_el.find("a").get(attr, default=None) is None):
                 current_el = current_el.getprevious()

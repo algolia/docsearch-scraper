@@ -476,89 +476,38 @@
     <script src="https://stripe.com/assets/jquery-47d53801b9f61ca8a21dcc2571aeb3ec.js"></script>
     <script src="https://stripe.com/assets/shared-3abadcaa3af6e785a085062e45894014.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js'></script>
+<script src='https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js'></script>
 
-    <script type="text/template" id="algolia-autocomplete-template">
-      <div>
-        {{#_highlightResult.title}}
-        <div class="title">
-          {{{ _highlightResult.title.value }}}
-        </div>
-        {{/_highlightResult.title}}
-        {{#_highlightResult.h1}}
-        <div class="h1">
-          {{{ _highlightResult.h1.value }}}
-        </div>
-        {{/_highlightResult.h1}}
+<script type='text/javascript'>
 
-        <div class="sub-section">
-          {{#_highlightResult.h2}}
-          <div class="h2">
-            {{{ _highlightResult.h2.value }}}
-          </div>
-          {{/_highlightResult.h2}}
-
-          {{#_highlightResult.h3}}
-          <div class="h3">
-            > {{{ _highlightResult.h3.value }}}
-          </div>
-          {{/_highlightResult.h3}}
-
-          {{#_highlightResult.h4}}
-          <div class="h4">
-            > {{{ _highlightResult.h4.value }}}
-          </div>
-          {{/_highlightResult.h4}}
-
-          {{#_highlightResult.h5}}
-          <div class="h5">
-            > {{{ _highlightResult.h5.value }}}
-          </div>
-          {{/_highlightResult.h5}}
-
-          {{#_highlightResult.h5}}
-          <div class="h5">
-            > {{{ _highlightResult.h5.value }}}
-          </div>
-          {{/_highlightResult.h5}}
-
-          {{#_highlightResult.h6}}
-          <div class="h6">
-            > {{{ _highlightResult.h6.value }}}
-          </div>
-          {{/_highlightResult.h6}}
-        </div>
-
-        {{#_snippetResult.content}}
-        <div class="content">
-          {{{ _snippetResult.content.value }}}
-        </div>
-        {{/_snippetResult.content}}
-      </div>
-    </script>
-    <script>
-      var client = algoliasearch('P8MNSEC776', 'fe6d4517db9df93b337cd173e6d0b0aa')
+var client = algoliasearch('P8MNSEC776', 'fe6d4517db9df93b337cd173e6d0b0aa')
       var index = client.initIndex('crawler_stripe');
 
-      var template = Hogan.compile($('#algolia-autocomplete-template').html());
+$('#algolia-search').autocomplete({ hint: false, debug: true }, [{
+  source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+  displayKey: 'title',
+  templates: {
+    suggestion: function(suggestion) {
+      var checkAttr = function (attr, value) {
+        return attr !== undefined && attr[value] !== undefined;
+      }
+      s = '';
+      s += '<div>';
+      s += checkAttr(suggestion._highlightResult, 'title') ? '<div class="title">' + suggestion._highlightResult.title.value + '</div>' : '';
+      s += checkAttr(suggestion._highlightResult, 'h1') ? '<div class="h1">' + suggestion._highlightResult.h1.value + '</div>' : '';
+      for (var i = 1; i <= 6; i++)
+        s += checkAttr(suggestion._highlightResult, 'h'+i) ? '<div class="h'+i+'">' + suggestion._highlightResult['h'+i].value + '</div>' : ''
+      s += checkAttr(suggestion._snippetResult, 'content') ? '<div class="content">' + suggestion._snippetResult.content.value + '</div>' : ''
+      s += '</div>';
+      return s;
+    }
+  },
+}]).on('autocomplete:selected', function(even, suggestion, dataset) {
+  window.location.href = suggestion.link;
+});
+</script>
 
-
-      $('#algolia-search').autocomplete({ hint: false, debug: true }, [
-        {
-          source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
-          displayKey: 'title',
-          templates: {
-            suggestion: function(suggestion) {
-              return template.render(suggestion);
-            }
-          },
-        }
-      ]).on('autocomplete:selected', function(even, suggestion, dataset) {
-        window.location.href = suggestion.link;
-      });
-    </script>  
 
   <script src="https://stripe.com/assets/documentation-1e974d64ec26d26a950ac99931b4626a.js"></script>
   <script src="https://stripe.com/assets/highlight.pack-2286570da0bb1b3179fb57ccf73939c5.js"></script>
