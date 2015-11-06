@@ -1,0 +1,35 @@
+{
+    "index_name": "scaladocs",
+    "allowed_domains": [
+        "docs.scala-lang.org"
+    ],
+    "start_urls": [
+        "http://docs.scala-lang.org"
+    ],
+    "stop_urls": [
+			"http://docs.scala-lang.org/de",
+			"http://docs.scala-lang.org/es",
+			"http://docs.scala-lang.org/fr",
+			"http://docs.scala-lang.org/ja",
+			"http://docs.scala-lang.org/ko",
+			"http://docs.scala-lang.org/pt-br",
+			"http://docs.scala-lang.org/zh-cn"
+    ],
+    "selectors_exclude": [],
+    "selectors": [
+      ["#guide-title"],
+      [".container h1"],
+      [".container h2"],
+      [".container h3"],
+      [".container h4"],
+      [".container h5"],
+      [".container h6"],
+      [".container p"]
+    ],
+    "custom_settings": {
+      "separatorsToIndex": "+*-!=#|^></\\:&$%~?_→"
+    },
+    "hash_strategy": "link id",
+    "strategy": "laravel",
+    "strip_chars": " "
+}
