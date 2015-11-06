@@ -25,7 +25,8 @@ class DocumentationSpyder(CrawlSpider):
 
         super(DocumentationSpyder, self).__init__(*args, **kwargs)
         DocumentationSpyder.rules = [
-            Rule(LxmlLinkExtractor(allow=self.start_urls, deny=stop_urls), callback="parse_item", follow=True)
+            Rule(LxmlLinkExtractor(allow=self.start_urls, deny=stop_urls, tags=('a', 'area', 'iframe'), attrs=('href', 'src')),
+                callback="parse_item", follow=True)
         ]
         super(DocumentationSpyder, self)._compile_rules()
 
