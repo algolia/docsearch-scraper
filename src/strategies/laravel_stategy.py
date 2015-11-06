@@ -159,19 +159,21 @@ class LaravelStrategy(AbstactStrategy):
                     current_el.find("a").get(attr, default=None) is None):
                 current_el = current_el.getprevious()
 
-            link = self.check_current_element(current_el, attr)
+            if current_el is not None:
+                link = self.check_current_element(current_el, attr)
 
-            # check same level previous element
-            if link is not None:
-                return link
+                # check same level previous element
+                if link is not None:
+                    return link
 
             current_el = current_el.getparent()
 
-            link = self.check_current_element(current_el, attr)
+            if current_el is not None:
+                link = self.check_current_element(current_el, attr)
 
-            # check parent
-            if link is not None:
-                return link
+                # check parent
+                if link is not None:
+                    return link
 
         return ""
 
