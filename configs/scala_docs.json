@@ -7,29 +7,28 @@
         "http://docs.scala-lang.org"
     ],
     "stop_urls": [
-			"http://docs.scala-lang.org/de",
-			"http://docs.scala-lang.org/es",
-			"http://docs.scala-lang.org/fr",
-			"http://docs.scala-lang.org/ja",
-			"http://docs.scala-lang.org/ko",
-			"http://docs.scala-lang.org/pt-br",
-			"http://docs.scala-lang.org/zh-cn"
+      "http://docs.scala-lang.org/index.html",
+      "http://docs.scala-lang.org/de",
+      "http://docs.scala-lang.org/es",
+      "http://docs.scala-lang.org/fr",
+      "http://docs.scala-lang.org/ja",
+      "http://docs.scala-lang.org/ko",
+      "http://docs.scala-lang.org/pt-br",
+      "http://docs.scala-lang.org/zh-cn"
     ],
     "selectors_exclude": [],
     "selectors": [
-      ["#guide-title"],
       [".container h1"],
       [".container h2"],
       [".container h3"],
       [".container h4"],
       [".container h5"],
-      [".container h6"],
-      [".container p"]
+      [".container h6"]
     ],
     "custom_settings": {
-      "separatorsToIndex": "+*-!=#|^></\\:&$%~?_→"
+        "separatorsToIndex": "+*-!=#|^></\\:&$%~?_→"
     },
-    "hash_strategy": "link id",
+    "hash_strategy": "id",
     "strategy": "laravel",
     "strip_chars": " "
 }
