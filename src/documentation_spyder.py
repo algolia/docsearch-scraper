@@ -93,7 +93,10 @@ class DocumentationSpyder(CrawlSpider):
                         break
                 if current_selector != -1:
                     break
-            blocs.append(((el, self.get_element_content(el)), current_selector))
+
+            content = self.get_element_content(el)
+            if len(content) > 0:
+                blocs.append(((el, content), current_selector))
 
         self.index_document(blocs, response)
 
