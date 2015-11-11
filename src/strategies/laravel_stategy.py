@@ -109,33 +109,18 @@ class LaravelStrategy(AbstactStrategy):
 
         if "link" in self.hash_strategy:
             if "id" in self.hash_strategy:
-                return self.get_hash_stategy_link(el, "id")
+                return self._get_hash(el, "id")
             else:
-                return self.get_hash_stategy_link(el, "href")
+                return self._get_hash(el, "href")
 
-        return self.get_hash_stategy_id(el)
-
-    def get_hash_stategy_id(self, el):
-        current_el = el
-
-        if (current_el.get('id', default=None)) is not None:
-            return '#' + current_el.get('id')
-
-        while current_el.getprevious() is not None and current_el.get('id', default=None) is None:
-            current_el = current_el.getprevious()
-
-        if (current_el.get('id', default=None)) is not None:
-            return '#' + current_el.get('id')
-
-        while current_el.getparent() is not None and current_el.get('id', default=None) is None:
-            current_el = current_el.getparent()
-
-        if (current_el.get('id', default=None)) is not None:
-            return '#' + current_el.get('id')
-
-        return ""
+        return self._get_hash(el, None)
 
     def check_current_element(self, current_el, attr):
+        if attr is None:
+            if current_el.get('id', default=None) is not None:
+                return '#' + current_el.get('id')
+            return None
+
         if current_el.find("a") is not None and current_el.find("a").get(attr, default=None) is not None:
             if len(current_el.find("a").get(attr)) > 0:
                 if current_el.find("a").get(attr)[0] == '#':
@@ -145,7 +130,7 @@ class LaravelStrategy(AbstactStrategy):
 
         return None
 
-    def get_hash_stategy_link(self, el, attr):
+    def _get_hash(self, el, attr):
         current_el = el
 
         link = self.check_current_element(current_el, attr)
@@ -154,10 +139,16 @@ class LaravelStrategy(AbstactStrategy):
         if link is not None:
             return link
 
-        while current_el is not None and current_el.getparent() is not None:
-            while current_el.getprevious() is not None and (current_el.find("a") is None or\
-                    current_el.find("a").get(attr, default=None) is None):
+        while current_el is not None:
+            while current_el.getprevious() is not None:
                 current_el = current_el.getprevious()
+
+                if current_el is not None:
+                    link = self.check_current_element(current_el, attr)
+
+                    # check same level previous element
+                    if link is not None:
+                        return link
 
             if current_el is not None:
                 link = self.check_current_element(current_el, attr)

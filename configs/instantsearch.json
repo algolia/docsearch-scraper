@@ -1,0 +1,23 @@
+{
+    "index_name": "instantsearch",
+    "allowed_domains": ["instantsearch.algolia.com"],
+    "start_urls": [
+        "https://instantsearch.algolia.com/documentation"
+    ],
+    "stop_urls": [
+
+    ],
+    "selectors_exclude": [
+        ".attr-legend"
+    ],
+    "selectors": [
+        [".documentation-content h2"],
+        [".documentation-content h3"],
+        [".documentation-content h4"],
+        [".documentation-content p", ".documentation-content li"]
+    ],
+    "custom_settings": {},
+    "hash_strategy": "id",
+    "strategy": "laravel",
+    "strip_chars": " :;,."
+}

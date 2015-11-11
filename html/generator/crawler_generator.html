@@ -302,7 +302,6 @@
 				s += "      s += '<div>';\n";
 
 				s += "      s += checkAttr(suggestion._highlightResult, 'title') ? '<div class=\"title\">' + suggestion._highlightResult.title.value + '</div>' : '';\n";
-				s += "      s += checkAttr(suggestion._highlightResult, 'h1') ? '<div class=\"h1\">' + suggestion._highlightResult.h1.value + '</div>' : '';\n";
 
 				s += "      for (var i = 1; i <= 6; i++)\n";
 				s += "        s += checkAttr(suggestion._highlightResult, 'h'+i) ? '<div class=\"h'+i+'\">' + suggestion._highlightResult['h'+i].value + '</div>' : ''\n";
