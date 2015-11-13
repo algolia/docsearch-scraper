@@ -1,32 +1,47 @@
 {
     "index_name": "scaladocs",
     "allowed_domains": [
-        "docs.scala-lang.org"
+        "scaladocs.algolia.com"
     ],
     "start_urls": [
-        "http://docs.scala-lang.org"
+        "http://scaladocs.algolia.com/de[tags:de]",
+        "http://scaladocs.algolia.com/es[tags:es]",
+        "http://scaladocs.algolia.com/fr[tags:fr]",
+        "http://scaladocs.algolia.com/ja[tags:ja]",
+        "http://scaladocs.algolia.com/ko[tags:ko]",
+        "http://scaladocs.algolia.com/pt-br[tags:pt-br]",
+        "http://scaladocs.algolia.com/zh-cn[tags:zh-cn]",
+        "http://scaladocs.algolia.com/overviews[tags:en,learn]",
+        "http://scaladocs.algolia.com/tutorials[tags:en,learn]",
+        "http://scaladocs.algolia.com/style[tags:en,learn]",
+        "http://scaladocs.algolia.com/glossary[tags:en,quickref]",
+        "http://scaladocs.algolia.com/cheatsheets[tags:en,quickref]",
+        "http://scaladocs.algolia.com/contribute[tags:en,contribute]",
+        "http://scaladocs.algolia.com/sips[tags:en,sips]",
+        "http://scaladocs.algolia.com/[tags:en]"
     ],
     "stop_urls": [
-      "http://docs.scala-lang.org/index.html",
-      "http://docs.scala-lang.org/de",
-      "http://docs.scala-lang.org/es",
-      "http://docs.scala-lang.org/fr",
-      "http://docs.scala-lang.org/ja",
-      "http://docs.scala-lang.org/ko",
-      "http://docs.scala-lang.org/pt-br",
-      "http://docs.scala-lang.org/zh-cn"
+      "http://scaladocs.algolia.com/index.html",
+      "http://scaladocs.algolia.com/overviews/index.html",
+      "http://scaladocs.algolia.com/overviews/macros/quasiquotes.html"
     ],
-    "selectors_exclude": [],
+    "selectors_exclude": [
+      ".contents",
+      ".copyright",
+      ".footer",
+      "#scroller"
+    ],
     "selectors": [
+      ["header h1", ".wrapper h1", ".container h1",  ".container #guide-title"],
       [".container h1"],
       [".container h2"],
       [".container h3"],
       [".container h4"],
-      [".container h5"],
-      [".container h6"]
+      ["p"]
     ],
     "custom_settings": {
-        "separatorsToIndex": "+*-!=#|^></\\:&$%~?_→"
+      "attributesForFaceting": ["title"],
+      "attributesToIndex": ["title", "h1", "h2", "h3", "h4", "h5", "h6", "content"]
     },
     "hash_strategy": "id",
     "strategy": "laravel",
