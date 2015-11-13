@@ -71,7 +71,7 @@ class LaravelStrategy(AbstactStrategy):
             current_blocs['_tags'] = self.get_tags(response.url, tags)
             current_blocs['nb_words'] = len(bloc.split())
             current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
-            current_blocs['importance'] = self.get_importance(current_blocs)
+            current_blocs['importance'] = importance
 
             objects.append(copy.deepcopy(current_blocs))
 
