@@ -41,7 +41,8 @@
     ],
     "custom_settings": {
       "attributesForFaceting": ["title"],
-      "attributesToIndex": ["title", "h1", "h2", "h3", "h4", "h5", "h6", "content"]
+      "attributesToIndex": ["title", "h1", "h2", "h3", "h4", "h5", "h6", "content"],
+      "attributesToSnippet": ["content:20"]
     },
     "hash_strategy": "id",
     "strategy": "laravel",
