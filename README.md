@@ -6,6 +6,7 @@ Run the following commands :
 
 - `brew install python # will install pip`
 - `pip install scrapy`
+- `pip install algoliasearch`
 - `git clone git@github.com:algolia/documentation-scrapper.git`
 - `cd documentation-scrapper`
 
@@ -66,5 +67,5 @@ docker run \
     -e INDEX_PREFIX=prefix_ \
     -e CONFIG="`cat configs/stripe.json`" \
     --name documentation-scrapper \
-    -t algolia/documentation-scrapper /run
+    -t algolia/documentation-scrapper /root/run
 ```
