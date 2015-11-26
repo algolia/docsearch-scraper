@@ -1,29 +1,29 @@
 {
     "index_name": "scaladocs",
     "allowed_domains": [
-        "scaladocs.algolia.com"
+        "docs.scala-lang.org"
     ],
     "start_urls": [
-        "http://scaladocs.algolia.com/de[tags:de]",
-        "http://scaladocs.algolia.com/es[tags:es]",
-        "http://scaladocs.algolia.com/fr[tags:fr]",
-        "http://scaladocs.algolia.com/ja[tags:ja]",
-        "http://scaladocs.algolia.com/ko[tags:ko]",
-        "http://scaladocs.algolia.com/pt-br[tags:pt-br]",
-        "http://scaladocs.algolia.com/zh-cn[tags:zh-cn]",
-        "http://scaladocs.algolia.com/overviews[tags:en,learn]",
-        "http://scaladocs.algolia.com/tutorials[tags:en,learn]",
-        "http://scaladocs.algolia.com/style[tags:en,learn]",
-        "http://scaladocs.algolia.com/glossary[tags:en,quickref]",
-        "http://scaladocs.algolia.com/cheatsheets[tags:en,quickref]",
-        "http://scaladocs.algolia.com/contribute[tags:en,contribute]",
-        "http://scaladocs.algolia.com/sips[tags:en,sips]",
-        "http://scaladocs.algolia.com/[tags:en]"
+        "http://docs.scala-lang.org/de[tags:de]",
+        "http://docs.scala-lang.org/es[tags:es]",
+        "http://docs.scala-lang.org/fr[tags:fr]",
+        "http://docs.scala-lang.org/ja[tags:ja]",
+        "http://docs.scala-lang.org/ko[tags:ko]",
+        "http://docs.scala-lang.org/pt-br[tags:pt-br]",
+        "http://docs.scala-lang.org/zh-cn[tags:zh-cn]",
+        "http://docs.scala-lang.org/overviews[tags:en,learn]",
+        "http://docs.scala-lang.org/tutorials[tags:en,learn]",
+        "http://docs.scala-lang.org/style[tags:en,learn]",
+        "http://docs.scala-lang.org/glossary[tags:en,quickref]",
+        "http://docs.scala-lang.org/cheatsheets[tags:en,quickref]",
+        "http://docs.scala-lang.org/contribute[tags:en,contribute]",
+        "http://docs.scala-lang.org/sips[tags:en,sips]",
+        "http://docs.scala-lang.org/[tags:en]"
     ],
     "stop_urls": [
-      "http://scaladocs.algolia.com/index.html",
-      "http://scaladocs.algolia.com/overviews/index.html",
-      "http://scaladocs.algolia.com/overviews/macros/quasiquotes.html"
+      "http://docs.scala-lang.org/index.html",
+      "http://docs.scala-lang.org/overviews/index.html",
+      "http://docs.scala-lang.org/overviews/macros/quasiquotes.html"
     ],
     "selectors_exclude": [
       ".contents",
