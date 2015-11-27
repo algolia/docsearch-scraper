@@ -1,10 +1,14 @@
+"""
+Default Strategy
+"""
 import copy
 from urlparse import urlparse
-from strategy import AbstactStrategy
-from lxml import etree
+from strategies.abstract_strategy import AbstractStrategy
 
-
-class LaravelStrategy(AbstactStrategy):
+class DefaultStrategy(AbstractStrategy):
+    """
+    DefaultStrategy
+    """
 
     def get_settings(self):
 
@@ -12,35 +16,53 @@ class LaravelStrategy(AbstactStrategy):
         attributes_to_highlight = ['title']
         attributes_to_retrieve = ['title']
 
-        for i in range(1, len(self.config.get_selectors()) - 1):
-            attributes_to_index.append('unordered(text_h' + str(i) + ')')
+        # Add 
 
-        attributes_to_index.append('unordered(title)')
 
-        for i in range(1, len(self.config.get_selectors()) - 1):
-            attributes_to_index.append('unordered(h' + str(i) + ')')
-            attributes_to_highlight.append('h' + str(i))
-            attributes_to_retrieve.append('h' + str(i))
 
-        attributes_to_index += ['content', 'path', 'hash']
-        attributes_to_highlight += ['content']
-        attributes_to_retrieve += ['_tags', 'link']
+        print self.config.selectors
+        print self.selectors
 
-        settings = {
-            'attributesToIndex'         : attributes_to_index,
-            'attributesToHighlight'     : attributes_to_highlight,
-            'attributesToRetrieve'      : attributes_to_retrieve,
-            'attributesToSnippet'       : ['content:50'],
-            'customRanking'             : ['desc(page_rank)', 'asc(importance)', 'asc(nb_words)'],
-            'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
-            'minWordSizefor1Typo'       : 3,
-            'minWordSizefor2Typos'      : 7,
-            'allowTyposOnNumericTokens' : False,
-            'minProximity'              : 2,
-            'ignorePlurals'             : True,
-            'advancedSyntax'            : True,
-            'removeWordsIfNoResults'    : 'allOptional'
-        }
+        # TODO: This part adds all the hX to the settings
+        # We'll need to redo it with hierarchy.lvl0, hierarchy.lvl1
+        #
+        # hierarchicalFacet (avec chaque niveau qui contient le niveau previous
+        # hierarchy (0, 1, 2, 3, 4), to have a real hierarchy where each key is
+        # filled is there is something
+        # hierarchy_unique, where only the matching level is filled and the
+        # other are nil
+        # hierarchy_html for the hierarchy with html ontent
+        #
+        #
+        # for i in range(1, len(self.config.get_selectors()) - 1):
+        #     attributes_to_index.append('unordered(text_h' + str(i) + ')')
+
+        # attributes_to_index.append('unordered(title)')
+
+        # for i in range(1, len(self.config.get_selectors()) - 1):
+        #     attributes_to_index.append('unordered(h' + str(i) + ')')
+        #     attributes_to_highlight.append('h' + str(i))
+        #     attributes_to_retrieve.append('h' + str(i))
+
+        # attributes_to_index += ['content', 'path', 'hash']
+        # attributes_to_highlight += ['content']
+        # attributes_to_retrieve += ['_tags', 'link']
+
+        # settings = {
+        #     'attributesToIndex'         : attributes_to_index,
+        #     'attributesToHighlight'     : attributes_to_highlight,
+        #     'attributesToRetrieve'      : attributes_to_retrieve,
+        #     'attributesToSnippet'       : ['content:50'],
+        #     'customRanking'             : ['desc(page_rank)', 'asc(importance)', 'asc(nb_words)'],
+        #     'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
+        #     'minWordSizefor1Typo'       : 3,
+        #     'minWordSizefor2Typos'      : 7,
+        #     'allowTyposOnNumericTokens' : False,
+        #     'minProximity'              : 2,
+        #     'ignorePlurals'             : True,
+        #     'advancedSyntax'            : True,
+        #     'removeWordsIfNoResults'    : 'allOptional'
+        # }
 
         settings.update(self.custom_settings)
 

@@ -1,75 +1,62 @@
-import sys
+"""
+Load the config from the CONFIG environment variable
+"""
 import os.path
 import json
 import os
 
-
-class ConfigLoader:
-    configs = {}
+class ConfigLoader(object):
+    """
+    ConfigLoader
+    """
+    allowed_domains = None
+    api_key = None
+    app_id = None
+    custom_settings = None
+    hash_strategy = None
+    index_name = None
+    index_prefix = None
+    selectors = None
+    selectors_exclude = None
+    start_urls = None
+    stop_urls = None
+    strategy = None
+    strip_chars = None
 
     def __init__(self):
-
-        self.configs_env = os.environ['CONFIG']
-
-        if self.configs_env is None:
+        if os.environ['CONFIG'] is None:
             exit('env `CONFIG` missing')
 
-        config = json.loads(self.configs_env)
+        data = json.loads(os.environ['CONFIG'])
+        # Merge other ENV variables
+        data['app_id'] = os.environ['APPLICATION_ID']
+        data['api_key'] = os.environ['API_KEY']
+        data['index_prefix'] = os.environ['INDEX_PREFIX']
+        data['index_name'] = data['index_prefix'] + data['index_name']
 
-        self.configs['app_id'] = self.require_config(os.environ, 'APPLICATION_ID')
-        self.configs['api_key'] = self.require_config(os.environ, 'API_KEY')
-        self.configs['index_prefix'] = self.require_config(os.environ, 'INDEX_PREFIX')
-        self.configs['index_name'] = self.configs['index_prefix'] + self.require_config(config, 'index_name')
+        # List of keys to expose
+        public_config_keys = [
+            'allowed_domains',
+            'api_key',
+            'app_id',
+            'custom_settings',
+            'hash_strategy',
+            'index_name',
+            'index_prefix',
+            'selectors',
+            'selectors_exclude',
+            'start_urls',
+            'stop_urls',
+            'strategy',
+            'strip_chars'
+        ]
 
-        configs_name = ["allowed_domains", "start_urls", "stop_urls",
-                        "selectors", "selectors_exclude", "strategy", 
-                        "custom_settings", "hash_strategy",
-                        "strip_chars"]
+        # Expose all the data as public attributes
+        for name in public_config_keys:
+            value = data.get(name)
 
-        for name in configs_name:
-            self.configs[name] = self.require_config(config, name)
+            if value is None:
+                print "Needed parameter: '" + name + "'"
+                exit()
 
-    def require_config(self, config, name):
-        value = config.get(name)
-
-        if value is None:
-            print "Needed parameter: '" + name + "'"
-            exit()
-
-        return value
-
-    def get_index_name(self):
-        return self.configs['index_name']
-
-    def get_allowed_domains(self):
-        return self.configs['allowed_domains']
-
-    def get_selectors(self):
-        return self.configs['selectors']
-
-    def get_start_urls(self):
-        return self.configs['start_urls']
-
-    def get_stop_urls(self):
-        return self.configs['stop_urls']
-
-    def get_app_id(self):
-        return self.configs['app_id']
-
-    def get_api_key(self):
-        return self.configs['api_key']
-
-    def get_strategy(self):
-        return self.configs['strategy']
-
-    def get_selectors_exclude(self):
-        return self.configs['selectors_exclude']
-
-    def get_custom_settings(self):
-        return self.configs['custom_settings']
-
-    def get_hash_strategy(self):
-        return self.configs['hash_strategy']
-
-    def get_strip_chars(self): 
-        return self.configs['strip_chars']        
+            setattr(self, name, data[name])

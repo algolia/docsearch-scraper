@@ -1,35 +1,29 @@
 """
 documentationSearch scrapper main entry point
 """
-from scrapy.crawler import CrawlerProcess
-from documentation_spyder import DocumentationSpyder
 from algolia_helper import AlgoliaHelper
 from config_loader import ConfigLoader
-from strategies.laravel_stategy import LaravelStrategy
+from documentation_spyder import DocumentationSpyder
+from scrapy.crawler import CrawlerProcess
+from strategies.default_strategy import DefaultStrategy
 
 CONFIG = ConfigLoader()
 
 ALGOLIA_HELPER = AlgoliaHelper(
-    CONFIG.get_app_id(),
-    CONFIG.get_api_key(),
-    CONFIG.get_index_name()
+    CONFIG.app_id,
+    CONFIG.api_key,
+    CONFIG.index_name
 )
 
 STRATEGIES = {
-    'laravel': LaravelStrategy
+    'default': DefaultStrategy
 }
 
-CONFIG_STRATEGY = CONFIG.get_strategy()
+CONFIG_STRATEGY = CONFIG.strategy
 if not CONFIG_STRATEGY in STRATEGIES:
-    exit("'" + CONFIG_STRATEGY + "' is not a good strategy name")
+    exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
 
-# TODO: Only need to pass CONFIG, all the others can be found from CONFIG
-STRATEGY = STRATEGIES[CONFIG_STRATEGY](
-    CONFIG,
-    CONFIG.get_selectors(),
-    CONFIG.get_custom_settings(),
-    CONFIG.get_hash_strategy()
-)
+STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
 
 PROCESS = CrawlerProcess({
     'LOG_ENABLED': '1',
@@ -38,18 +32,18 @@ PROCESS = CrawlerProcess({
 })
 PROCESS.crawl(
     DocumentationSpyder,
-    index_name=CONFIG.get_index_name(),
-    allowed_domains=CONFIG.get_allowed_domains(),
-    start_urls=CONFIG.get_start_urls(),
-    stop_urls=CONFIG.get_stop_urls(),
-    selectors=CONFIG.get_selectors(),
-    selectors_exclude=CONFIG.get_selectors_exclude(),
-    strip_chars=CONFIG.get_strip_chars(),
+    index_name=CONFIG.index_name,
+    allowed_domains=CONFIG.allowed_domains,
+    start_urls=CONFIG.start_urls,
+    stop_urls=CONFIG.stop_urls,
+    selectors=CONFIG.selectors,
+    selectors_exclude=CONFIG.selectors_exclude,
+    strip_chars=CONFIG.strip_chars,
     algolia_helper=ALGOLIA_HELPER,
     strategy=STRATEGY
 )
-
-PROCESS.start()
-PROCESS.stop()
-
-ALGOLIA_HELPER.move_index_with_settings(STRATEGY.get_settings())
+#
+# PROCESS.start()
+# PROCESS.stop()
+#
+# ALGOLIA_HELPER.move_index_with_settings(STRATEGY.get_settings())
