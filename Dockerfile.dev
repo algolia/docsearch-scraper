@@ -10,8 +10,6 @@ RUN pip install algoliasearch
 COPY docker/run /root/
 RUN chmod +x /root/run
 
-COPY src /root/src
-
 WORKDIR /root
 ENTRYPOINT ["/root/run"]
 CMD []
