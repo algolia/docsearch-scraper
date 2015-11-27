@@ -1,39 +1,55 @@
+"""
+documentationSearch scrapper main entry point
+"""
 from scrapy.crawler import CrawlerProcess
 from documentation_spyder import DocumentationSpyder
 from algolia_helper import AlgoliaHelper
 from config_loader import ConfigLoader
 from strategies.laravel_stategy import LaravelStrategy
 
-config = ConfigLoader()
+CONFIG = ConfigLoader()
 
-algolia_helper = AlgoliaHelper(
-                    config.get_app_id(),
-                    config.get_api_key(),
-                    config.get_index_name())
+ALGOLIA_HELPER = AlgoliaHelper(
+    CONFIG.get_app_id(),
+    CONFIG.get_api_key(),
+    CONFIG.get_index_name()
+)
 
-strategies = {
+STRATEGIES = {
     'laravel': LaravelStrategy
 }
 
-if not config.get_strategy() in strategies:
-    exit("'" + config.get_strategy() + "' is not a good strategy name")
+CONFIG_STRATEGY = CONFIG.get_strategy()
+if not CONFIG_STRATEGY in STRATEGIES:
+    exit("'" + CONFIG_STRATEGY + "' is not a good strategy name")
 
-strategy = strategies[config.get_strategy()](config, config.get_selectors(), config.get_custom_settings(),
-                                             config.get_hash_strategy())
+# TODO: Only need to pass CONFIG, all the others can be found from CONFIG
+STRATEGY = STRATEGIES[CONFIG_STRATEGY](
+    CONFIG,
+    CONFIG.get_selectors(),
+    CONFIG.get_custom_settings(),
+    CONFIG.get_hash_strategy()
+)
 
-process = CrawlerProcess({'LOG_ENABLED': '1', 'LOG_LEVEL': 'ERROR', 'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'})
-process.crawl(DocumentationSpyder,
-                index_name=config.get_index_name(),
-                allowed_domains=config.get_allowed_domains(),
-                start_urls=config.get_start_urls(),
-                stop_urls=config.get_stop_urls(),
-                selectors=config.get_selectors(),
-                selectors_exclude=config.get_selectors_exclude(),
-                strip_chars=config.get_strip_chars(),
-                algolia_helper=algolia_helper,
-                strategy=strategy)
+PROCESS = CrawlerProcess({
+    'LOG_ENABLED': '1',
+    'LOG_LEVEL': 'ERROR',
+    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+})
+PROCESS.crawl(
+    DocumentationSpyder,
+    index_name=CONFIG.get_index_name(),
+    allowed_domains=CONFIG.get_allowed_domains(),
+    start_urls=CONFIG.get_start_urls(),
+    stop_urls=CONFIG.get_stop_urls(),
+    selectors=CONFIG.get_selectors(),
+    selectors_exclude=CONFIG.get_selectors_exclude(),
+    strip_chars=CONFIG.get_strip_chars(),
+    algolia_helper=ALGOLIA_HELPER,
+    strategy=STRATEGY
+)
 
-process.start()
-process.stop()
+PROCESS.start()
+PROCESS.stop()
 
-algolia_helper.move_index_with_settings(strategy.get_settings())
+ALGOLIA_HELPER.move_index_with_settings(STRATEGY.get_settings())
