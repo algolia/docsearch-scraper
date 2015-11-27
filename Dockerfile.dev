@@ -2,13 +2,16 @@ FROM python:2.7
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
 RUN adduser --disabled-password --gecos docsearch docsearch
-USER docsearch
 
 RUN pip install scrapy
 RUN pip install algoliasearch
 
 COPY docker/run /root/
 RUN chmod +x /root/run
+
+# The only difference with the default Dockerfile is that we do not COPY the
+# /src directory, we expect it to be added as a volume when running the
+# container
 
 WORKDIR /root
 ENTRYPOINT ["/root/run"]
