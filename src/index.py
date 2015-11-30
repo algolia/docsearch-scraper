@@ -3,7 +3,7 @@ documentationSearch scrapper main entry point
 """
 from algolia_helper import AlgoliaHelper
 from config_loader import ConfigLoader
-from documentation_spyder import DocumentationSpyder
+from documentation_spider import DocumentationSpider
 from scrapy.crawler import CrawlerProcess
 from strategies.default_strategy import DefaultStrategy
 
@@ -28,10 +28,11 @@ STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
 PROCESS = CrawlerProcess({
     'LOG_ENABLED': '1',
     'LOG_LEVEL': 'ERROR',
+    # 'LOG_LEVEL': 'DEBUG',
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
 })
 PROCESS.crawl(
-    DocumentationSpyder,
+    DocumentationSpider,
     index_name=CONFIG.index_name,
     allowed_domains=CONFIG.allowed_domains,
     start_urls=CONFIG.start_urls,
@@ -42,8 +43,18 @@ PROCESS.crawl(
     algolia_helper=ALGOLIA_HELPER,
     strategy=STRATEGY
 )
+# url
+# anchor
+# hierarchy_checkbox: (tous, remplis)
+# hierarchy_radio: (only one filled)
+# hierarchy_pyramid: (ok for hierarchycal faceting)
+# tags
+# lvl_match (1, 2, 3, etc)
+# content: contenu du selecteur
+# weight: {}
 #
-# PROCESS.start()
-# PROCESS.stop()
+#
+PROCESS.start()
+PROCESS.stop()
 #
 # ALGOLIA_HELPER.move_index_with_settings(STRATEGY.get_settings())

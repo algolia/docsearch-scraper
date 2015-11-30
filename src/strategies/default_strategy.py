@@ -10,18 +10,53 @@ class DefaultStrategy(AbstractStrategy):
     DefaultStrategy
     """
 
-    def get_settings(self):
+    def create_objects_from_document(self, blocs, response, tags, page_ranks):
+        print "CREATE OBJECTS"
+        # objects = []
+        # current_blocs = {}
 
-        attributes_to_index = ['unordered(text_title)']
-        attributes_to_highlight = ['title']
-        attributes_to_retrieve = ['title']
+        # for i in range(0, len(self.selectors)):
+        #     current_blocs[self.get_key(i)] = None
+
+        # for ((el, bloc), importance) in blocs:
+
+        #     for i in range(0, len(self.selectors) - 1):
+        #         if i == importance:
+        #             current_blocs["text_" + self.get_key(i)] = bloc
+        #         else:
+        #             current_blocs["text_" + self.get_key(i)] = None
+
+        #     for i in range(importance, len(self.selectors)):
+        #         current_blocs[self.get_key(i)] = None
+
+        #     current_blocs[self.get_key(importance)] = bloc
+        #     current_blocs['link'] = response.url + self.get_hash(el)
+        #     current_blocs['hash'] = self.get_hash(el)
+        #     current_blocs['path'] = urlparse(current_blocs['link']).path
+        #     current_blocs['_tags'] = self.get_tags(response.url, tags)
+        #     current_blocs['nb_words'] = len(bloc.split())
+        #     current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
+        #     current_blocs['importance'] = importance
+
+        #     objects.append(copy.deepcopy(current_blocs))
+
+        # return objects
+
+
+
+    def get_settings(self):
+        print "kjkkjkjk"
+
+        # attributes_to_index = ['unordered(text_title)']
+        # attributes_to_highlight = ['title']
+        # attributes_to_retrieve = ['title']
 
         # Add 
 
 
 
-        print self.config.selectors
-        print self.selectors
+        # print self.config.selectors
+        # print self.selectors
 
         # TODO: This part adds all the hX to the settings
         # We'll need to redo it with hierarchy.lvl0, hierarchy.lvl1
@@ -68,36 +103,6 @@ class DefaultStrategy(AbstractStrategy):
 
         return settings
 
-    def create_objects_from_document(self, blocs, response, tags, page_ranks):
-        objects = []
-        current_blocs = {}
-
-        for i in range(0, len(self.selectors)):
-            current_blocs[self.get_key(i)] = None
-
-        for ((el, bloc), importance) in blocs:
-
-            for i in range(0, len(self.selectors) - 1):
-                if i == importance:
-                    current_blocs["text_" + self.get_key(i)] = bloc
-                else:
-                    current_blocs["text_" + self.get_key(i)] = None
-
-            for i in range(importance, len(self.selectors)):
-                current_blocs[self.get_key(i)] = None
-
-            current_blocs[self.get_key(importance)] = bloc
-            current_blocs['link'] = response.url + self.get_hash(el)
-            current_blocs['hash'] = self.get_hash(el)
-            current_blocs['path'] = urlparse(current_blocs['link']).path
-            current_blocs['_tags'] = self.get_tags(response.url, tags)
-            current_blocs['nb_words'] = len(bloc.split())
-            current_blocs['page_rank'] = self.get_page_rank(response.url, page_ranks)
-            current_blocs['importance'] = importance
-
-            objects.append(copy.deepcopy(current_blocs))
-
-        return objects
 
     def get_page_rank(self, url, page_ranks):
         for (start_url, rank) in page_ranks:

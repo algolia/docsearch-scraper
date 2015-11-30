@@ -1,0 +1,28 @@
+{
+    "index_name": "stripe-dev",
+    "allowed_domains": ["172.17.42.1"],
+    "start_urls": [
+        "http://172.17.42.1:8080/docs/tutorials/checkout"
+    ],
+    "stop_urls": [
+        "http://172.17.42.1:8080/docs/api/"
+    ],
+    "selectors_exclude": [
+        ".method-list",
+        "aside.intro.note"
+    ],
+    "selectors": {
+      "lvl0": "#content header h1,#content section h1",
+      "lvl1": "#content section h2",
+      "lvl2": "#content section h3",
+      "lvl3": "#content section h4",
+      "lvl4": "#content section h5",
+      "lvl5": "#content section h6",
+      "text": "#content header p,#content section p,#content section ol"
+    },
+    "custom_settings": {},
+    "hash_strategy": "id",
+    "strategy": "default",
+    "strip_chars": " :;,."
+}
+
