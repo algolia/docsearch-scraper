@@ -77,7 +77,25 @@ $ docker run \
     -e CONFIG="$(cat configs/docname.json)" \
     -v `pwd`/src:/root/src \
     --name docname \
-    -t algolia/documentation-scrapper-dev
+    -t algolia/documentation-scrapper-dev \
+    /root/run
+```
+
+And use this one to run the tests:
+
+```sh
+$ docker stop docname
+$ docker rm docname
+$ docker run \
+    -e APPLICATION_ID=appId \
+    -e API_KEY=apiKey \
+    -e INDEX_PREFIX=prefix_ \
+    -e CONFIG="$(cat configs/docname.json)" \
+    -v `pwd`/src:/root/src \
+    --name docname \
+    -t algolia/documentation-scrapper-dev \
+    /root/test
+
 ```
 
 ### Prod

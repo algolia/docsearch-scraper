@@ -1,18 +1,20 @@
+# Dev version of the Dockerfile
+# - Includes test library
+# - Do not COPY ./src
+# - Do not define an ENTRYPOINT
+
 FROM python:2.7
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
-RUN adduser --disabled-password --gecos docsearch docsearch
-
 RUN pip install scrapy
 RUN pip install algoliasearch
+RUN pip install pytest
 
 COPY docker/run /root/
 RUN chmod +x /root/run
-
-# The only difference with the default Dockerfile is that we do not COPY the
-# /src directory, we expect it to be added as a volume when running the
-# container
+COPY docker/test /root/
+RUN chmod +x /root/test
 
 WORKDIR /root
-ENTRYPOINT ["/root/run"]
+ENTRYPOINT []
 CMD []
