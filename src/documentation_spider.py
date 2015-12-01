@@ -264,6 +264,21 @@ class DocumentationSpider(CrawlSpider):
             # We update the list of selectors
             selectors = self.get_all_parent_selectors(found_level)
 
+    
+    def get_hierarchy_complete(self, hierarchy):
+        full_content = []
+        hierarchy_complete = {}
+        for level in self.levels:
+            content = hierarchy[level]
+
+            if content == None:
+                hierarchy_complete[level] = None
+                continue
+
+            full_content.append(content)
+            hierarchy_complete[level] = " > ".join(full_content)
+
+        return hierarchy_complete
 
 
     def callback(self, response):
@@ -295,13 +310,13 @@ class DocumentationSpider(CrawlSpider):
                 hierarchy_radio = self.get_hierarchy_radio(content, level)
                 records.append({
                     'url': url,
-                    # 'hierarchy_complete':
                     # weight
                     # tags
                     # anchor
                     'content': content,
                     'hierarchy': hierarchy,
                     'hierarchy_radio': hierarchy_radio,
+                    'hierarchy_complete': hierarchy_complete,
                     'type': level
                 })
 

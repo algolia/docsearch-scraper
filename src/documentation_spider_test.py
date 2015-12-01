@@ -25,6 +25,40 @@ SPIDER = DocumentationSpider(
     1
 )
 
+class TestGetHierarchyRadio:
+
+    def test_simple_toplevel(self):
+        # Given
+        content = 'Foo'
+        level = 'lvl0'
+
+        # When
+        actual = SPIDER.get_hierarchy_radio(content, level)
+
+        # Then
+        assert actual['lvl0'] == 'Foo'
+        assert actual['lvl1'] == None
+        assert actual['lvl2'] == None
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
+
+    def test_simple_sublevel(self):
+        # Given
+        content = 'Baz'
+        level = 'lvl2'
+
+        # When
+        actual = SPIDER.get_hierarchy_radio(content, level)
+
+        # Then
+        assert actual['lvl0'] == None
+        assert actual['lvl1'] == None
+        assert actual['lvl2'] == 'Baz'
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
+
 class TestGetHierarchy:
     """Test the get_hierarchy method"""
 
@@ -165,4 +199,48 @@ class TestGetHierarchy:
         assert actual['lvl4'] == None
         assert actual['lvl5'] == None
 
+class TestGetHierarchyComplete:
 
+    def test_simple_toplevel(self):
+        # Given
+        hierarchy = {
+            'lvl0': 'Foo',
+            'lvl1': None,
+            'lvl2': None,
+            'lvl3': None,
+            'lvl4': None,
+            'lvl5': None
+        }
+
+        # When
+        actual = SPIDER.get_hierarchy_complete(hierarchy)
+
+        # Then
+        assert actual['lvl0'] == 'Foo'
+        assert actual['lvl1'] == None
+        assert actual['lvl2'] == None
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
+
+    def test_many_levels(self):
+        # Given
+        hierarchy = {
+            'lvl0': 'Foo',
+            'lvl1': 'Bar',
+            'lvl2': 'Baz',
+            'lvl3': None,
+            'lvl4': None,
+            'lvl5': None
+        }
+
+        # When
+        actual = SPIDER.get_hierarchy_complete(hierarchy)
+
+        # Then
+        assert actual['lvl0'] == 'Foo'
+        assert actual['lvl1'] == 'Foo > Bar'
+        assert actual['lvl2'] == 'Foo > Bar > Baz'
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
