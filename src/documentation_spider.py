@@ -203,11 +203,25 @@ class DocumentationSpider(CrawlSpider):
         return False
 
 
+    def get_anchor(self, dom, element, level):
+        """Return the closest #anchor to access this element.
+        Will be the element name or id if one is set, otherwise will go up the
+        three of all parents"""
 
+        # Check the name or id on the element
+        anchor = element.get('name', element.get('id'))
+        if anchor != None:
+            return anchor
 
-
-
-
+        # Check on child
+        children = element.cssselect('[name],[id]')
+        if len(children) > 0:
+            return children[-1].get('name', element.get('id'))
+        
+        # Not found at this level, we try again at the parent level
+        all_parent_selectors = self.get_all_parent_selectors(level)
+        parent = self.get_parent(dom, element, all_parent_selectors)
+        return self.get_anchor(dom, parent['element'], parent['lvl'])
 
 
     def get_hierarchy_radio(self, content, set_level):
@@ -264,7 +278,6 @@ class DocumentationSpider(CrawlSpider):
             # We update the list of selectors
             selectors = self.get_all_parent_selectors(found_level)
 
-    
     def get_hierarchy_complete(self, hierarchy):
         full_content = []
         hierarchy_complete = {}
@@ -308,11 +321,10 @@ class DocumentationSpider(CrawlSpider):
                 content = self.get_text(match)
                 hierarchy = self.get_hierarchy(dom, match, level)
                 hierarchy_radio = self.get_hierarchy_radio(content, level)
+                anchor = self.get_anchor(dom, match, level)
                 records.append({
                     'url': url,
-                    # weight
-                    # tags
-                    # anchor
+                    'anchor': anchor,
                     'content': content,
                     'hierarchy': hierarchy,
                     'hierarchy_radio': hierarchy_radio,
@@ -321,11 +333,9 @@ class DocumentationSpider(CrawlSpider):
                 })
 
         print(records)
-        # TODO: Find the anchor
         # TODO: Move code to strategy
         # TODO: Use some weight
         # TODO: Add tags?
-        # TODO: Generate hierarchy complete
         # TODO: Save text content
         # TODO: Configure the index
 

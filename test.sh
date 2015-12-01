@@ -7,6 +7,6 @@ docker run \
     -e INDEX_PREFIX= \
     -e CONFIG="$(cat configs/stripe-dev.json)" \
     -v `pwd`/src:/root/src \
-    --name stripe \
+    --name stripe-test \
     -t algolia/documentation-scrapper-dev \
     /root/test
