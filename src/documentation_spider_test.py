@@ -25,40 +25,6 @@ SPIDER = DocumentationSpider(
     1
 )
 
-class TestGetHierarchyRadio:
-
-    def test_simple_toplevel(self):
-        # Given
-        content = 'Foo'
-        level = 'lvl0'
-
-        # When
-        actual = SPIDER.get_hierarchy_radio(content, level)
-
-        # Then
-        assert actual['lvl0'] == 'Foo'
-        assert actual['lvl1'] == None
-        assert actual['lvl2'] == None
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
-
-    def test_simple_sublevel(self):
-        # Given
-        content = 'Baz'
-        level = 'lvl2'
-
-        # When
-        actual = SPIDER.get_hierarchy_radio(content, level)
-
-        # Then
-        assert actual['lvl0'] == None
-        assert actual['lvl1'] == None
-        assert actual['lvl2'] == 'Baz'
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
-
 class TestGetHierarchy:
     """Test the get_hierarchy method"""
 
@@ -199,6 +165,52 @@ class TestGetHierarchy:
         assert actual['lvl4'] == None
         assert actual['lvl5'] == None
 
+class TestGetHierarchyRadio:
+
+    def test_toplevel(self):
+        # Given
+        hierarchy = {
+            'lvl0': 'Foo',
+            'lvl1': None,
+            'lvl2': None,
+            'lvl3': None,
+            'lvl4': None,
+            'lvl5': None
+        }
+
+        # When
+        actual = SPIDER.get_hierarchy_radio(hierarchy)
+
+        # Then
+        assert actual['lvl0'] == 'Foo'
+        assert actual['lvl1'] == None
+        assert actual['lvl2'] == None
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
+
+    def test_sublevel(self):
+        # Given
+        hierarchy = {
+            'lvl0': 'Foo',
+            'lvl1': 'Bar',
+            'lvl2': 'Baz',
+            'lvl3': None,
+            'lvl4': None,
+            'lvl5': None
+        }
+
+        # When
+        actual = SPIDER.get_hierarchy_radio(hierarchy)
+
+        # Then
+        assert actual['lvl0'] == None
+        assert actual['lvl1'] == None
+        assert actual['lvl2'] == 'Baz'
+        assert actual['lvl3'] == None
+        assert actual['lvl4'] == None
+        assert actual['lvl5'] == None
+
 class TestGetHierarchyComplete:
 
     def test_simple_toplevel(self):
@@ -318,3 +330,35 @@ class TestGetAnchor:
 
         # Then
         assert actual == 'bar'
+
+    def test_no_anchor(self):
+        # Given
+        dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl2'
+        element = CSSSelector(SELECTORS[level])(dom)[0]
+
+        # When
+        actual = SPIDER.get_anchor(dom, element, level)
+
+        # Then
+        assert actual == None
+
+class TestGetLevelWeight:
+
+    def test_level_weight(self):
+        assert SPIDER.get_level_weight('lvl0') == 100
+        assert SPIDER.get_level_weight('lvl1') == 90
+        assert SPIDER.get_level_weight('lvl2') == 80
+        assert SPIDER.get_level_weight('lvl3') == 70
+        assert SPIDER.get_level_weight('lvl4') == 60
+        assert SPIDER.get_level_weight('lvl5') == 50
+        assert SPIDER.get_level_weight('text') == 0
+
+
+

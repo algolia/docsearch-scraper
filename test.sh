@@ -1,5 +1,6 @@
-docker stop stripe &>/dev/null
-docker rm stripe &>/dev/null
+name='stripe-test'
+docker stop $name 2>/dev/null
+docker rm $name 2>/dev/null
 
 docker run \
     -e APPLICATION_ID=BH4D9OD16A \
@@ -7,6 +8,6 @@ docker run \
     -e INDEX_PREFIX= \
     -e CONFIG="$(cat configs/stripe-dev.json)" \
     -v `pwd`/src:/root/src \
-    --name stripe-test \
+    --name $name \
     -t algolia/documentation-scrapper-dev \
     /root/test
