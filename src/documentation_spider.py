@@ -26,7 +26,7 @@ class DocumentationSpider(CrawlSpider):
         self.algolia_helper = algolia_helper
         self.stategy = strategy
 
-        self.levels = ['lvl0','lvl1','lvl2','lvl3','lvl4','lvl5']
+        self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5']
 
         # self.page_ranks = [] # order matters so array
         # self.tags = []  # order matters so array
@@ -64,7 +64,7 @@ class DocumentationSpider(CrawlSpider):
     #                 self.tags.append((r.group(1), r.group(2).split(',')))
     #             self.start_urls[self.start_urls.index(url)] = r.group(1)
 
-    def close(self):
+    def stop_and_close(self):
         raise CloseSpider('CLOSE')
 
     @staticmethod
@@ -172,6 +172,11 @@ class DocumentationSpider(CrawlSpider):
 
         # Not found at this level. Let's go up one notch
         parent = set_element.getparent()
+
+        # We've hit the body
+        if parent.tag == 'body':
+            return False
+
         while True:
             # Just checking if the parent matches
             if self.element_matches_selector(dom, parent, selectors):
@@ -272,6 +277,9 @@ class DocumentationSpider(CrawlSpider):
         dom = self.get_dom(response)
         dom = self.remove_from_dom(dom, self.selectors_exclude)
 
+        url = response.url
+        print url
+
         records = []
 
         for level in self.levels:
@@ -286,7 +294,7 @@ class DocumentationSpider(CrawlSpider):
                 hierarchy = self.get_hierarchy(dom, match, level)
                 hierarchy_radio = self.get_hierarchy_radio(content, level)
                 records.append({
-                    # 'url':
+                    'url': url,
                     # 'hierarchy_complete':
                     # weight
                     # tags
@@ -297,9 +305,16 @@ class DocumentationSpider(CrawlSpider):
                     'type': level
                 })
 
-            pprint.pprint(records)
+        print(records)
+        # TODO: Find the anchor
+        # TODO: Move code to strategy
+        # TODO: Use some weight
+        # TODO: Add tags?
+        # TODO: Generate hierarchy complete
+        # TODO: Save text content
+        # TODO: Configure the index
 
-        self.close()
+        self.stop_and_close()
 
 
 
