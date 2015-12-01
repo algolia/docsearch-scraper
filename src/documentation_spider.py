@@ -8,7 +8,11 @@ from scrapy.spiders import CrawlSpider, Rule
 import itertools
 import lxml
 import re
-import pprint
+import json
+
+def pprint(data):
+    print(json.dumps(data, indent=2, sort_keys=True))
+
 
 class DocumentationSpider(CrawlSpider):
     """
@@ -99,7 +103,13 @@ class DocumentationSpider(CrawlSpider):
     def elements_are_equals(el1, el2):
         """Checks if two elements are actually the same"""
         return el1.getroottree().getpath(el1) == el2.getroottree().getpath(el2)
-    
+
+    @staticmethod
+    def get_level_weight(level):
+        matches = re.match(r'lvl([0-9]*)', level)
+        if matches:
+            return 100 - int(matches.group(1)) * 10
+        return 0
 
     def get_all_parent_selectors(self, set_level):
         """Returns a large selector that contains all the selectors for all the
@@ -145,11 +155,11 @@ class DocumentationSpider(CrawlSpider):
 
         # No parent selectors, so no parent to find
         if len(selectors) == 0:
-            return False
+            return None
 
         # We stop if we hit the body
         if set_element.tag == 'body':
-            return False
+            return None
 
         # We return this element if it matches
         if self.element_matches_selector(dom, set_element, selectors):
@@ -175,7 +185,7 @@ class DocumentationSpider(CrawlSpider):
 
         # We've hit the body
         if parent.tag == 'body':
-            return False
+            return None
 
         while True:
             # Just checking if the parent matches
@@ -195,12 +205,12 @@ class DocumentationSpider(CrawlSpider):
 
             # We've hit the body
             if previous_of_parent.tag == 'body':
-                return False
+                return None
 
             # We start over on the previous sibling of the parent
             return self.get_parent(dom, previous_of_parent, selectors)
 
-        return False
+        return None
 
 
     def get_anchor(self, dom, element, level):
@@ -217,14 +227,17 @@ class DocumentationSpider(CrawlSpider):
         children = element.cssselect('[name],[id]')
         if len(children) > 0:
             return children[-1].get('name', element.get('id'))
-        
+
         # Not found at this level, we try again at the parent level
         all_parent_selectors = self.get_all_parent_selectors(level)
         parent = self.get_parent(dom, element, all_parent_selectors)
-        return self.get_anchor(dom, parent['element'], parent['lvl'])
+        if parent != None:
+            return self.get_anchor(dom, parent['element'], parent['lvl'])
 
+        # No more parent, we have no anchor
+        return None
 
-    def get_hierarchy_radio(self, content, set_level):
+    def get_hierarchy_radio(self, hierarchy):
         """Returns the radio hierarchy for the record, where only one level is
         filled and the others are empty
         Ex: {
@@ -236,12 +249,20 @@ class DocumentationSpider(CrawlSpider):
             lvl5: None
         }
         """
+
         hierarchy_radio = {}
-        for level in self.levels:
-            value = content if (level == set_level) else None
-            hierarchy_radio[level] = value
+        is_found = False
+        for level in reversed(self.levels):
+            value = hierarchy[level]
+            if is_found == False and value != None:
+                is_found = True
+                hierarchy_radio[level] = value
+                continue
+
+            hierarchy_radio[level] = None
 
         return hierarchy_radio
+
 
     def get_hierarchy(self, dom, element, set_level):
         """Returns the hierarchy of the record, where all levels that have
@@ -256,12 +277,14 @@ class DocumentationSpider(CrawlSpider):
         }
         """
 
+
         # We start with a blank state
         hierarchy = {}
         for level in self.levels:
             hierarchy[level] = None
         # Adding the one we know about
-        hierarchy[set_level] = self.get_text(element)
+        if set_level in self.levels:
+            hierarchy[set_level] = self.get_text(element)
 
         # Finding all possible parents and adding them
         selectors = self.get_all_parent_selectors(set_level)
@@ -310,18 +333,27 @@ class DocumentationSpider(CrawlSpider):
 
         records = []
 
-        for level in self.levels:
+        # Getting the records of the hierarchy
+        levels = list(self.levels)
+        levels.append('text')
+        for level in levels:
             # This level is not configured
             if not level in self.selectors:
                 continue
 
             # Getting record content for each matching CSS selector
             matches = CSSSelector(self.selectors[level])(dom)
-            for match in matches:
+            for position, match in enumerate(matches):
                 content = self.get_text(match)
                 hierarchy = self.get_hierarchy(dom, match, level)
-                hierarchy_radio = self.get_hierarchy_radio(content, level)
+                hierarchy_radio = self.get_hierarchy_radio(hierarchy)
+                hierarchy_complete = self.get_hierarchy_complete(hierarchy)
                 anchor = self.get_anchor(dom, match, level)
+                weight = {
+                    'level': self.get_level_weight(level),
+                    'position': position
+                }
+
                 records.append({
                     'url': url,
                     'anchor': anchor,
@@ -329,10 +361,12 @@ class DocumentationSpider(CrawlSpider):
                     'hierarchy': hierarchy,
                     'hierarchy_radio': hierarchy_radio,
                     'hierarchy_complete': hierarchy_complete,
+                    'weight': weight,
                     'type': level
                 })
 
-        print(records)
+        pprint(records)
+        print len(records)
         # TODO: Move code to strategy
         # TODO: Use some weight
         # TODO: Add tags?

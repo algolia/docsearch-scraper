@@ -43,17 +43,7 @@ PROCESS.crawl(
     algolia_helper=ALGOLIA_HELPER,
     strategy=STRATEGY
 )
-# url
-# anchor
-# hierarchy_checkbox: (tous, remplis)
-# hierarchy_radio: (only one filled)
-# hierarchy_pyramid: (ok for hierarchycal faceting)
-# tags
-# lvl_match (1, 2, 3, etc)
-# content: contenu du selecteur
-# weight: {}
-#
-#
+
 PROCESS.start()
 PROCESS.stop()
 #
