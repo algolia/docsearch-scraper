@@ -244,3 +244,77 @@ class TestGetHierarchyComplete:
         assert actual['lvl3'] == None
         assert actual['lvl4'] == None
         assert actual['lvl5'] == None
+
+class TestGetAnchor:
+
+    def test_name_on_heading(self):
+        # Given
+        dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2 name="bar">Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl1'
+        element = CSSSelector(SELECTORS[level])(dom)[0]
+
+        # When
+        actual = SPIDER.get_anchor(dom, element, level)
+
+        # Then
+        assert actual == 'bar'
+
+    def test_id_on_heading(self):
+        # Given
+        dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2 id="bar">Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl1'
+        element = CSSSelector(SELECTORS[level])(dom)[0]
+
+        # When
+        actual = SPIDER.get_anchor(dom, element, level)
+
+        # Then
+        assert actual == 'bar'
+
+    def test_anchor_on_parent(self):
+        # Given
+        dom = lxml.html.fromstring("""
+        <html><body>
+            <h1 id="foo">Foo</h1>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl1'
+        element = CSSSelector(SELECTORS[level])(dom)[0]
+
+        # When
+        actual = SPIDER.get_anchor(dom, element, level)
+
+        # Then
+        assert actual == 'foo'
+
+    def test_anchor_in_subelement(self):
+        # Given
+        dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2><a href="#" name="bar">Bar</a><span></span></h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl1'
+        element = CSSSelector(SELECTORS[level])(dom)[0]
+
+        # When
+        actual = SPIDER.get_anchor(dom, element, level)
+
+        # Then
+        assert actual == 'bar'
