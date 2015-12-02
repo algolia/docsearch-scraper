@@ -45,11 +45,12 @@ class DocumentationSpider(CrawlSpider):
         if "text/html" not in response.headers['Content-Type']:
             return
 
-        print "callback"
         records = self.strategy.get_records_from_response(response)
-        print(len(records))
+        self.algolia_helper.add_records(records)
+        
+        # print(len(records))
 
-        self.stop_and_close()
+        # self.stop_and_close()
 
     # def index_document(self, blocs, response):
     #     objects = self.stategy.create_objects_from_document(blocs, response, self.tags, self.page_ranks)
