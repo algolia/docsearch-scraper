@@ -1,7 +1,6 @@
 """DefaultStrategy tests"""
 from config_loader import ConfigLoader
-from default_strategy import DefaultStrategy
-from lxml.cssselect import CSSSelector
+from strategies.default_strategy import DefaultStrategy
 import lxml.html
 import json
 import os
@@ -40,7 +39,7 @@ class TestGetHierarchy:
 
     def test_simple_toplevel(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -48,10 +47,10 @@ class TestGetHierarchy:
         </body></html>
         """)
         level = 'lvl0'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -63,7 +62,7 @@ class TestGetHierarchy:
 
     def test_simple_sublevel(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -71,10 +70,10 @@ class TestGetHierarchy:
         </body></html>
         """)
         level = 'lvl1'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -86,7 +85,7 @@ class TestGetHierarchy:
 
     def test_no_parent(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <p>Text</p>
             <h1>Foo</h1>
@@ -95,10 +94,10 @@ class TestGetHierarchy:
         </body></html>
         """)
         level = 'text'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(element, level)
 
         # Then
         assert actual['lvl0'] == None
@@ -110,7 +109,7 @@ class TestGetHierarchy:
 
     def test_different_wrappers(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <header>
               <h1>Foo</h1>
@@ -133,10 +132,10 @@ class TestGetHierarchy:
         </body></html>
         """)
         level = 'lvl2'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -148,7 +147,7 @@ class TestGetHierarchy:
 
     def test_selector_contains_elements(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <header>
               <h1>Foo</h1>
@@ -162,10 +161,10 @@ class TestGetHierarchy:
         </body></html>
         """)
         level = 'lvl2'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -271,7 +270,7 @@ class TestGetAnchor:
 
     def test_name_on_heading(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2 name="bar">Bar</h2>
@@ -279,17 +278,17 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(element, level)
 
         # Then
         assert actual == 'bar'
 
     def test_id_on_heading(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2 id="bar">Bar</h2>
@@ -297,17 +296,17 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(element, level)
 
         # Then
         assert actual == 'bar'
 
     def test_anchor_on_parent(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1 id="foo">Foo</h1>
             <h2>Bar</h2>
@@ -315,17 +314,17 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(element, level)
 
         # Then
         assert actual == 'foo'
 
     def test_anchor_in_subelement(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2><a href="#" name="bar">Bar</a><span></span></h2>
@@ -333,17 +332,17 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(element, level)
 
         # Then
         assert actual == 'bar'
 
     def test_no_anchor(self):
         # Given
-        dom = lxml.html.fromstring("""
+        STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -351,10 +350,10 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl2'
-        element = CSSSelector(SELECTORS[level])(dom)[0]
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(element, level)
 
         # Then
         assert actual == None
@@ -369,6 +368,3 @@ class TestGetLevelWeight:
         assert STRATEGY.get_level_weight('lvl4') == 60
         assert STRATEGY.get_level_weight('lvl5') == 50
         assert STRATEGY.get_level_weight('text') == 0
-
-
-
