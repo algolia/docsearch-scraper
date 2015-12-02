@@ -1,7 +1,10 @@
-"""DocumentationSpider tests"""
-from documentation_spider import DocumentationSpider
+"""DefaultStrategy tests"""
+from config_loader import ConfigLoader
+from default_strategy import DefaultStrategy
 from lxml.cssselect import CSSSelector
-import lxml
+import lxml.html
+import json
+import os
 
 SELECTORS = {
     "lvl0": "h1",
@@ -12,18 +15,25 @@ SELECTORS = {
     "lvl5": "h6",
     "text": "p"
 }
-SPIDER = DocumentationSpider(
-    "test",
-    "allowed_domains",
-    "start_urls",
-    "stop_urls",
-    SELECTORS,
-    "selector_exclude",
-    "strip_chars"
-    "algolia_helper",
-    "strategy",
-    1
-)
+# Stub ENV variables read by ConfigLoader
+os.environ['CONFIG'] = json.dumps({
+    'allowed_domains': 'test',
+    'api_key': 'test',
+    'app_id': 'test',
+    'custom_settings': 'test',
+    'hash_strategy': 'test',
+    'index_name': 'test',
+    'index_name': 'test',
+    'index_prefix': 'test',
+    'selectors': SELECTORS,
+    'selectors_exclude': 'test',
+    'start_urls': 'test',
+    'stop_urls': 'test',
+    'strategy': 'test',
+    'strip_chars': 'test'
+})
+
+STRATEGY = DefaultStrategy(ConfigLoader())
 
 class TestGetHierarchy:
     """Test the get_hierarchy method"""
@@ -41,7 +51,7 @@ class TestGetHierarchy:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(dom, element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -64,7 +74,7 @@ class TestGetHierarchy:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(dom, element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -88,7 +98,7 @@ class TestGetHierarchy:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(dom, element, level)
 
         # Then
         assert actual['lvl0'] == None
@@ -126,7 +136,7 @@ class TestGetHierarchy:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(dom, element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -155,7 +165,7 @@ class TestGetHierarchy:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_hierarchy(dom, element, level)
+        actual = STRATEGY.get_hierarchy(dom, element, level)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -179,7 +189,7 @@ class TestGetHierarchyRadio:
         }
 
         # When
-        actual = SPIDER.get_hierarchy_radio(hierarchy)
+        actual = STRATEGY.get_hierarchy_radio(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -201,7 +211,7 @@ class TestGetHierarchyRadio:
         }
 
         # When
-        actual = SPIDER.get_hierarchy_radio(hierarchy)
+        actual = STRATEGY.get_hierarchy_radio(hierarchy)
 
         # Then
         assert actual['lvl0'] == None
@@ -225,7 +235,7 @@ class TestGetHierarchyComplete:
         }
 
         # When
-        actual = SPIDER.get_hierarchy_complete(hierarchy)
+        actual = STRATEGY.get_hierarchy_complete(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -247,7 +257,7 @@ class TestGetHierarchyComplete:
         }
 
         # When
-        actual = SPIDER.get_hierarchy_complete(hierarchy)
+        actual = STRATEGY.get_hierarchy_complete(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -272,7 +282,7 @@ class TestGetAnchor:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(dom, element, level)
 
         # Then
         assert actual == 'bar'
@@ -290,7 +300,7 @@ class TestGetAnchor:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(dom, element, level)
 
         # Then
         assert actual == 'bar'
@@ -308,7 +318,7 @@ class TestGetAnchor:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(dom, element, level)
 
         # Then
         assert actual == 'foo'
@@ -326,7 +336,7 @@ class TestGetAnchor:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(dom, element, level)
 
         # Then
         assert actual == 'bar'
@@ -344,7 +354,7 @@ class TestGetAnchor:
         element = CSSSelector(SELECTORS[level])(dom)[0]
 
         # When
-        actual = SPIDER.get_anchor(dom, element, level)
+        actual = STRATEGY.get_anchor(dom, element, level)
 
         # Then
         assert actual == None
@@ -352,13 +362,13 @@ class TestGetAnchor:
 class TestGetLevelWeight:
 
     def test_level_weight(self):
-        assert SPIDER.get_level_weight('lvl0') == 100
-        assert SPIDER.get_level_weight('lvl1') == 90
-        assert SPIDER.get_level_weight('lvl2') == 80
-        assert SPIDER.get_level_weight('lvl3') == 70
-        assert SPIDER.get_level_weight('lvl4') == 60
-        assert SPIDER.get_level_weight('lvl5') == 50
-        assert SPIDER.get_level_weight('text') == 0
+        assert STRATEGY.get_level_weight('lvl0') == 100
+        assert STRATEGY.get_level_weight('lvl1') == 90
+        assert STRATEGY.get_level_weight('lvl2') == 80
+        assert STRATEGY.get_level_weight('lvl3') == 70
+        assert STRATEGY.get_level_weight('lvl4') == 60
+        assert STRATEGY.get_level_weight('lvl5') == 50
+        assert STRATEGY.get_level_weight('text') == 0
 
 
 
