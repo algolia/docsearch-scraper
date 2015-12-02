@@ -87,8 +87,8 @@ class AbstractStrategy(object):
 
 
 
-    def get_settings(self):
-        raise Exception('get_settings need to be implemented')
+    def get_index_settings(self):
+        raise Exception('get_index_settings need to be implemented')
 
     def get_records_from_response(self):
         raise Exception('get_records_from_response need to be implemented')

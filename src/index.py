@@ -32,6 +32,8 @@ PROCESS = CrawlerProcess({
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
 })
 
+
+
 PROCESS.crawl(
     DocumentationSpider,
     config=CONFIG,
@@ -41,5 +43,5 @@ PROCESS.crawl(
 
 PROCESS.start()
 PROCESS.stop()
-#
-# ALGOLIA_HELPER.move_index_with_settings(STRATEGY.get_settings())
+
+ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())

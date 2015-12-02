@@ -35,7 +35,8 @@ class DefaultStrategy(AbstractStrategy):
             # Getting record content for each matching CSS selector
             matches = self.cssselect(self.config.selectors[level])
             for position, match in enumerate(matches):
-                content = self.get_text(match)
+                # We only save content for the 'text' matches
+                content = None if level != 'text' else self.get_text(match)
                 hierarchy = self.get_hierarchy(match, level)
                 hierarchy_radio = self.get_hierarchy_radio(hierarchy)
                 hierarchy_complete = self.get_hierarchy_complete(hierarchy)
@@ -56,10 +57,72 @@ class DefaultStrategy(AbstractStrategy):
                     'type': level
                 })
 
-        self.pprint(records)
+        # self.pprint(records)
 
         return records
 
+    def get_index_settings(self):
+        settings = {
+            'attributesToIndex': [
+                # We first look for matches in the exact titles
+                'unordered(hierarchy_radio.lvl0)',
+                'unordered(hierarchy_radio.lvl1)',
+                'unordered(hierarchy_radio.lvl2)',
+                'unordered(hierarchy_radio.lvl3)',
+                'unordered(hierarchy_radio.lvl4)',
+                'unordered(hierarchy_radio.lvl5)',
+                # Then in the whole title hierarchy
+                'unordered(hierarchy.lvl0)',
+                'unordered(hierarchy.lvl1)',
+                'unordered(hierarchy.lvl2)',
+                'unordered(hierarchy.lvl3)',
+                'unordered(hierarchy.lvl4)',
+                'unordered(hierarchy.lvl5)',
+                # And only in textual content at the end
+                'content',
+                # And really, we can still have a look in those as well...
+                'url,anchor'
+            ],
+            'attributesToRetrieve': [
+                'hierarchy',
+                'content',
+                'anchor',
+                'url'
+            ],
+            'attributesToHighlight': [
+                'hierarchy',
+                'content'
+            ],
+            # TODO: Allow passing custom weight to pages through the config
+            'customRanking': [
+                'desc(weight.level)',
+                'desc(weight.position)'
+            ],
+            # Default ranking is: typo, geo, words, proximity, attribute, exact, custom
+            # - We removed geo as this is irrelevant
+            # - We moved words before typo, because in case of a documentation
+            #   search you have no idea where your matching words will be (not
+            #   necessarily at the start)
+            # - For the same reason, we put proximity lower and gave more weight
+            #   to attribute
+            'ranking': [
+                'words',
+                'typo',
+                'attribute',
+                'proximity',
+                'exact',
+                'custom'
+            ],
+            'minWordSizefor1Typo': 3,
+            'minWordSizefor2Typos': 7,
+            'allowTyposOnNumericTokens': False,
+            'minProximity': 2,
+            'ignorePlurals': True,
+            'advancedSyntax': True,
+            'removeWordsIfNoResults': 'allOptional'
+        }
+
+        return settings
 
 
     def get_all_parent_selectors(self, set_level):
@@ -241,7 +304,7 @@ class DefaultStrategy(AbstractStrategy):
     def get_hierarchy_complete(self, hierarchy):
         """Returns the hierarchy complete hierarchy of the record, where each
         level includes the previous levels, separated with ">".
-        
+
         Works well with the instantsearch.js hierarchicalMenu widget
         Ex: {
             lvl0: Foo,
@@ -281,7 +344,7 @@ class DefaultStrategy(AbstractStrategy):
 # attributes_to_highlight = ['title']
 # attributes_to_retrieve = ['title']
 
-# Add 
+# Add
 
 
 
