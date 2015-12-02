@@ -31,15 +31,10 @@ PROCESS = CrawlerProcess({
     # 'LOG_LEVEL': 'DEBUG',
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
 })
+
 PROCESS.crawl(
     DocumentationSpider,
-    index_name=CONFIG.index_name,
-    allowed_domains=CONFIG.allowed_domains,
-    start_urls=CONFIG.start_urls,
-    stop_urls=CONFIG.stop_urls,
-    selectors=CONFIG.selectors,
-    selectors_exclude=CONFIG.selectors_exclude,
-    strip_chars=CONFIG.strip_chars,
+    config=CONFIG,
     algolia_helper=ALGOLIA_HELPER,
     strategy=STRATEGY
 )
