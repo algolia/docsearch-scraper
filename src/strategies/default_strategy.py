@@ -17,11 +17,10 @@ class DefaultStrategy(AbstractStrategy):
         """
         Main method called from the DocumentationSpider. Will be passed the HTTP
         response and will return a list of all records"""
-        dom = self.get_dom(response)
-        dom = self.remove_from_dom(dom, self.config.selectors_exclude)
+        self.dom = self.get_dom(response)
+        self.dom = self.remove_from_dom(self.dom, self.config.selectors_exclude)
 
         url = response.url
-        print url
 
         records = []
 
@@ -34,13 +33,13 @@ class DefaultStrategy(AbstractStrategy):
                 continue
 
             # Getting record content for each matching CSS selector
-            matches = CSSSelector(self.config.selectors[level])(dom)
+            matches = self.cssselect(self.config.selectors[level])
             for position, match in enumerate(matches):
                 content = self.get_text(match)
-                hierarchy = self.get_hierarchy(dom, match, level)
+                hierarchy = self.get_hierarchy(match, level)
                 hierarchy_radio = self.get_hierarchy_radio(hierarchy)
                 hierarchy_complete = self.get_hierarchy_complete(hierarchy)
-                anchor = self.get_anchor(dom, match, level)
+                anchor = self.get_anchor(match, level)
                 weight = {
                     'level': self.get_level_weight(level),
                     'position': position
@@ -74,16 +73,16 @@ class DefaultStrategy(AbstractStrategy):
         return ",".join(parent_selectors)
 
 
-    def selector_level_matched(self, dom, set_element):
+    def selector_level_matched(self, set_element):
         """Returns which selector level this element is matching"""
         for level in self.levels:
-            matches = CSSSelector(self.config.selectors[level])(dom)
+            matches = self.cssselect(self.config.selectors[level])
             for match in matches:
                 if self.elements_are_equals(match, set_element):
                     return level
         return False
 
-    def get_parent(self, dom, set_element, selectors):
+    def get_parent(self, set_element, selectors):
         """Given any element and a set of selectors, will return the closest
         hierarchical parent that matches one of the selector.
         It will check all previous siblings and previous siblings of the parent
@@ -100,9 +99,9 @@ class DefaultStrategy(AbstractStrategy):
             return None
 
         # We return this element if it matches
-        if self.element_matches_selector(dom, set_element, selectors):
+        if self.element_matches_selector(set_element, selectors):
             return {
-                'lvl': self.selector_level_matched(dom, set_element),
+                'lvl': self.selector_level_matched(set_element),
                 'element': set_element
                 }
 
@@ -110,12 +109,12 @@ class DefaultStrategy(AbstractStrategy):
         children = set_element.getchildren()
         if len(children) > 0:
             last_child = children[-1]
-            return self.get_parent(dom, last_child, selectors)
+            return self.get_parent(last_child, selectors)
 
         # Does it have a previous sibling? If so, we start over from that one
         previous = set_element.getprevious()
         if previous != None:
-            return self.get_parent(dom, previous, selectors)
+            return self.get_parent(previous, selectors)
 
 
         # Not found at this level. Let's go up one notch
@@ -127,9 +126,9 @@ class DefaultStrategy(AbstractStrategy):
 
         while True:
             # Just checking if the parent matches
-            if self.element_matches_selector(dom, parent, selectors):
+            if self.element_matches_selector(parent, selectors):
                 return {
-                    'lvl': self.selector_level_matched(dom, parent),
+                    'lvl': self.selector_level_matched(parent),
                     'element': parent
                     }
 
@@ -146,12 +145,12 @@ class DefaultStrategy(AbstractStrategy):
                 return None
 
             # We start over on the previous sibling of the parent
-            return self.get_parent(dom, previous_of_parent, selectors)
+            return self.get_parent(previous_of_parent, selectors)
 
         return None
 
 
-    def get_anchor(self, dom, element, level):
+    def get_anchor(self, element, level):
         """Return the closest #anchor to access this element.
         Will be the element name or id if one is set, otherwise will go up the
         three of all parents"""
@@ -168,9 +167,9 @@ class DefaultStrategy(AbstractStrategy):
 
         # Not found at this level, we try again at the parent level
         all_parent_selectors = self.get_all_parent_selectors(level)
-        parent = self.get_parent(dom, element, all_parent_selectors)
+        parent = self.get_parent(element, all_parent_selectors)
         if parent != None:
-            return self.get_anchor(dom, parent['element'], parent['lvl'])
+            return self.get_anchor(parent['element'], parent['lvl'])
 
         # No more parent, we have no anchor
         return None
@@ -202,7 +201,7 @@ class DefaultStrategy(AbstractStrategy):
         return hierarchy_radio
 
 
-    def get_hierarchy(self, dom, element, set_level):
+    def get_hierarchy(self, element, set_level):
         """Returns the hierarchy of the record, where all levels that have
         a matching element will be filled
         Ex: {
@@ -227,7 +226,7 @@ class DefaultStrategy(AbstractStrategy):
         # Finding all possible parents and adding them
         selectors = self.get_all_parent_selectors(set_level)
         while True:
-            parent = self.get_parent(dom, element, selectors)
+            parent = self.get_parent(element, selectors)
             # No more parent to find, we can stop
             if not parent:
                 return hierarchy

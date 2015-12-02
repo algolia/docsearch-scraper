@@ -68,19 +68,22 @@ class AbstractStrategy(object):
             return 100 - int(matches.group(1)) * 10
         return 0
 
-    def element_matches_selector(self, dom, set_element, selectors):
+    def element_matches_selector(self, set_element, selectors):
         """Returns true if `element` matches at least one of the selectors"""
         if len(selectors) == 0:
             return False
         # We get all the elements in the page that matches the selector and see
         # if the given one is in the list
-        all_matches = CSSSelector(selectors)(dom)
+        all_matches = self.cssselect(selectors)
         for match in all_matches:
             if self.elements_are_equals(match, set_element):
                 return True
 
         return False
 
+    def cssselect(self, selector):
+        """Select an element in the current DOM using speficied CSS selector"""
+        return CSSSelector(selector)(self.dom)
 
 
 
