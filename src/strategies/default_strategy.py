@@ -26,8 +26,12 @@ class DefaultStrategy(AbstractStrategy):
         records = self.get_records_from_dom()
 
         # Add page-related attributes to the records
-        for record in record:
-            record['url'] = url
+        for record in records:
+            if record['anchor'] != None:
+                record['url'] = url + '#' + record['anchor']
+            else:
+                record['url'] = url
+
 
         return records
 
@@ -35,40 +39,79 @@ class DefaultStrategy(AbstractStrategy):
         if self.dom == None:
             exit('DefaultStrategy.dom is not defined')
 
-        records = []
-        # Getting the records of the hierarchy
+        # We get a big selector that matches all relevant nodes, in order
+        # But we also keep a list of all matches for each individual level
         levels = list(self.levels)
         levels.append('text')
+        selector_all = []
+        nodes_per_level = {}
         for level in levels:
-            # This level is not configured
-            if not level in self.config.selectors:
-                continue
+            level_selector = self.config.selectors[level]
+            selector_all.append(level_selector)
+            nodes_per_level[level] = self.cssselect(level_selector)
 
-            # Getting record content for each matching CSS selector
-            matches = self.cssselect(self.config.selectors[level])
-            for position, match in enumerate(matches):
-                # We only save content for the 'text' matches
-                content = None if level != 'text' else self.get_text(match)
-                hierarchy = self.get_hierarchy(match, level)
-                hierarchy_radio = self.get_hierarchy_radio(hierarchy)
-                hierarchy_complete = self.get_hierarchy_complete(hierarchy)
-                anchor = self.get_anchor(match, level)
-                weight = {
-                    'level': self.get_level_weight(level),
-                    'position': position
-                }
+        nodes = self.cssselect(",".join(selector_all))
+        print len(nodes), "nodes found"
 
-                records.append({
-                    'anchor': anchor,
-                    'content': content,
-                    'hierarchy': hierarchy,
-                    'hierarchy_radio': hierarchy_radio,
-                    'hierarchy_complete': hierarchy_complete,
-                    'weight': weight,
-                    'type': level
-                })
 
-        # self.pprint(records)
+        # We keep the current hierarchy and anchor state between loops
+        previous_hierarchy = {}
+        anchors = {}
+        for index in range(6):
+            previous_hierarchy['lvl' + str(index)] = None
+            anchors['lvl' + str(index)] = None
+
+        records = []
+        for position, node in enumerate(nodes):
+            # Which level is the selector matching?
+            for level in levels:
+                if node in nodes_per_level[level]:
+                    current_level = level
+                    break;
+
+            # We set the hierarchy as the same as the previous one
+            # We override the current level
+            # And set all levels after it to None
+            hierarchy = previous_hierarchy.copy()
+
+            # Update the hierarchy for each new header
+            if current_level != 'text':
+                hierarchy[current_level] = self.get_text(node)
+                anchors[current_level] = self.get_anchor(node)
+
+                current_level_int = int(current_level[3:])
+                for index in range(current_level_int + 1, 6):
+                    hierarchy['lvl' + str(index)] = None
+                    anchors['lvl' + str(index)] = None
+                previous_hierarchy = hierarchy
+
+            # Getting the element anchor as the closest one
+            anchor = None
+            for index in reversed(range(6)):
+                potential_anchor = anchors['lvl' + str(index)]
+                if potential_anchor == None:
+                    continue
+                anchor = potential_anchor
+                break
+
+            # We only save content for the 'text' matches
+            content = None if current_level != 'text' else self.get_text(node)
+            hierarchy_radio = self.get_hierarchy_radio(hierarchy)
+            hierarchy_complete = self.get_hierarchy_complete(hierarchy)
+            weight = {
+                'level': self.get_level_weight(current_level),
+                'position': position
+            }
+
+            records.append({
+                'anchor': anchor,
+                'content': content,
+                'hierarchy': hierarchy,
+                'hierarchy_radio': hierarchy_radio,
+                'hierarchy_complete': hierarchy_complete,
+                'weight': weight,
+                'type': current_level
+            })
 
         return records
 
@@ -104,6 +147,8 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy',
                 'content'
             ],
+            'distinct': True,
+            'attributeForDistinct': 'url',
             # TODO: Allow passing custom weight to pages through the config
             'customRanking': [
                 'desc(weight.level)',
@@ -149,7 +194,9 @@ class DefaultStrategy(AbstractStrategy):
 
     def selector_level_matched(self, set_element):
         """Returns which selector level this element is matching"""
-        for level in self.levels:
+        levels = list(self.levels)
+        levels.append('text')
+        for level in levels:
             matches = self.cssselect(self.config.selectors[level])
             for match in matches:
                 if self.elements_are_equals(match, set_element):
@@ -224,10 +271,11 @@ class DefaultStrategy(AbstractStrategy):
         return None
 
 
-    def get_anchor(self, element, level):
-        """Return the closest #anchor to access this element.
-        Will be the element name or id if one is set, otherwise will go up the
-        three of all parents"""
+    def get_anchor(self, element):
+        """
+        Return a possible anchor for that element.
+        Looks for name and id, and if not found will look in children
+        """
 
         # Check the name or id on the element
         anchor = element.get('name', element.get('id'))
@@ -238,12 +286,6 @@ class DefaultStrategy(AbstractStrategy):
         children = element.cssselect('[name],[id]')
         if len(children) > 0:
             return children[-1].get('name', element.get('id'))
-
-        # Not found at this level, we try again at the parent level
-        all_parent_selectors = self.get_all_parent_selectors(level)
-        parent = self.get_parent(element, all_parent_selectors)
-        if parent != None:
-            return self.get_anchor(parent['element'], parent['lvl'])
 
         # No more parent, we have no anchor
         return None
