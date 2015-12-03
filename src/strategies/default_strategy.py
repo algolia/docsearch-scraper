@@ -2,7 +2,6 @@
 Default Strategy
 """
 from strategies.abstract_strategy import AbstractStrategy
-from lxml.cssselect import CSSSelector
 
 class DefaultStrategy(AbstractStrategy):
     """

@@ -24,6 +24,7 @@ class DocumentationSpider(CrawlSpider):
         self.algolia_helper = algolia_helper
         self.strategy = strategy
 
+
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(
             allow=self.start_urls,
@@ -40,17 +41,18 @@ class DocumentationSpider(CrawlSpider):
         raise CloseSpider('CLOSE')
 
     def callback(self, response):
-        print response
         """Callback fired on each page scrapped"""
         if "text/html" not in response.headers['Content-Type']:
             return
 
-        records = self.strategy.get_records_from_response(response)
-        self.algolia_helper.add_records(records)
-        
-        # print(len(records))
+        print response.url
 
-        # self.stop_and_close()
+        print "Parsing response"
+        records = self.strategy.get_records_from_response(response)
+        print "Pushing records"
+        self.algolia_helper.add_records(records)
+
+        self.stop_and_close()
 
     # def index_document(self, blocs, response):
     #     objects = self.stategy.create_objects_from_document(blocs, response, self.tags, self.page_ranks)

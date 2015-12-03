@@ -1,11 +1,11 @@
 {
     "index_name": "stripe-dev",
-    "allowed_domains": ["172.17.42.1"],
+    "allowed_domains": ["stripe.com"],
     "start_urls": [
-        "http://172.17.42.1:8080/docs/tutorials/checkout"
+        "https://stripe.com/docs"
     ],
     "stop_urls": [
-        "http://172.17.42.1:8080/docs/api/"
+        "https://stripe.com/docs/api/"
     ],
     "selectors_exclude": [
         ".method-list",
