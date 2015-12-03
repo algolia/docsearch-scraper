@@ -11,8 +11,6 @@ class AbstractStrategy(object):
     Abstract Strategy
     """
 
-    # TODO: Pass dom as a self. variables
-
     def __init__(self, config):
         self.config = config
 
