@@ -34,10 +34,9 @@ os.environ['CONFIG'] = json.dumps({
 
 STRATEGY = DefaultStrategy(ConfigLoader())
 
-class TestGetHierarchy:
-    """Test the get_hierarchy method"""
+class TestGetRecordsFromDom:
 
-    def test_simple_toplevel(self):
+    def test_simple(self):
         # Given
         STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
@@ -46,66 +45,44 @@ class TestGetHierarchy:
             <h3>Baz</h3>
         </body></html>
         """)
-        level = 'lvl0'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(element, level)
+        actual = STRATEGY.get_records_from_dom()
 
         # Then
-        assert actual['lvl0'] == 'Foo'
-        assert actual['lvl1'] == None
-        assert actual['lvl2'] == None
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
+        assert len(actual) == 3
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
 
-    def test_simple_sublevel(self):
+        assert actual[1]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[1]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[1]['hierarchy']['lvl2'] == None
+
+        assert actual[2]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[2]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[2]['hierarchy']['lvl2'] == 'Baz'
+
+    def test_text(self):
         # Given
         STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
+            <p>text</p>
             <h1>Foo</h1>
             <h2>Bar</h2>
             <h3>Baz</h3>
         </body></html>
         """)
-        level = 'lvl1'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(element, level)
+        actual = STRATEGY.get_records_from_dom()
 
         # Then
-        assert actual['lvl0'] == 'Foo'
-        assert actual['lvl1'] == 'Bar'
-        assert actual['lvl2'] == None
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
-
-    def test_no_parent(self):
-        # Given
-        STRATEGY.dom = lxml.html.fromstring("""
-        <html><body>
-            <p>Text</p>
-            <h1>Foo</h1>
-            <h2>Bar</h2>
-            <h3>Baz</h3>
-        </body></html>
-        """)
-        level = 'text'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
-
-        # When
-        actual = STRATEGY.get_hierarchy(element, level)
-
-        # Then
-        assert actual['lvl0'] == None
-        assert actual['lvl1'] == None
-        assert actual['lvl2'] == None
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'text'
+        assert actual[3]['hierarchy']['lvl0'] == None
+        assert actual[3]['hierarchy']['lvl1'] == None
+        assert actual[3]['hierarchy']['lvl2'] == None
 
     def test_different_wrappers(self):
         # Given
@@ -131,48 +108,29 @@ class TestGetHierarchy:
             </div>
         </body></html>
         """)
-        level = 'lvl2'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(element, level)
+        actual = STRATEGY.get_records_from_dom()
 
         # Then
-        assert actual['lvl0'] == 'Foo'
-        assert actual['lvl1'] == 'Bar'
-        assert actual['lvl2'] == 'Baz'
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
+        assert len(actual) == 6
 
     def test_selector_contains_elements(self):
         # Given
         STRATEGY.dom = lxml.html.fromstring("""
         <html><body>
-            <header>
-              <h1>Foo</h1>
-              <p>text</p>
-            </header>
-            <div>
-              <h2><a href="#">Bar</a><span></span></h2>
-              <p>text</p>
-            </div>
-            <h3>Baz</h3>
+            <h1><a href="#">Foo</a><span></span></h1>
         </body></html>
         """)
-        level = 'lvl2'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_hierarchy(element, level)
+        actual = STRATEGY.get_records_from_dom()
 
         # Then
-        assert actual['lvl0'] == 'Foo'
-        assert actual['lvl1'] == 'Bar'
-        assert actual['lvl2'] == 'Baz'
-        assert actual['lvl3'] == None
-        assert actual['lvl4'] == None
-        assert actual['lvl5'] == None
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
+
 
 class TestGetHierarchyRadio:
 

@@ -46,18 +46,10 @@ class DocumentationSpider(CrawlSpider):
             return
 
         print response.url
+        self.stop_and_close()
 
         print "Parsing response"
         records = self.strategy.get_records_from_response(response)
         print "Pushing records"
-        self.algolia_helper.add_records(records)
+        # self.algolia_helper.add_records(records)
 
-        self.stop_and_close()
-
-    # def index_document(self, blocs, response):
-    #     objects = self.stategy.create_objects_from_document(blocs, response, self.tags, self.page_ranks)
-
-    #     print response.url
-
-    #     for i in xrange(0, len(objects), 50):
-    #         self.algolia_helper.add_objects(objects[i:i + 50])

@@ -2,11 +2,13 @@
 Default Strategy
 """
 from strategies.abstract_strategy import AbstractStrategy
+import time
 
 class DefaultStrategy(AbstractStrategy):
     """
     DefaultStrategy
     """
+    dom = None
 
     def __init__(self, config):
         super(DefaultStrategy, self).__init__(config)
@@ -21,8 +23,19 @@ class DefaultStrategy(AbstractStrategy):
 
         url = response.url
 
-        records = []
+        records = self.get_records_from_dom()
 
+        # Add page-related attributes to the records
+        for record in record:
+            record['url'] = url
+
+        return records
+
+    def get_records_from_dom(self):
+        if self.dom == None:
+            exit('DefaultStrategy.dom is not defined')
+
+        records = []
         # Getting the records of the hierarchy
         levels = list(self.levels)
         levels.append('text')
@@ -46,7 +59,6 @@ class DefaultStrategy(AbstractStrategy):
                 }
 
                 records.append({
-                    'url': url,
                     'anchor': anchor,
                     'content': content,
                     'hierarchy': hierarchy,
@@ -327,72 +339,3 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy_complete[level] = " > ".join(full_content)
 
         return hierarchy_complete
-
-
-
-
-
-
-
-
-
-# def get_settings(self):
-#     print "kjkkjkjk"
-
-# attributes_to_index = ['unordered(text_title)']
-# attributes_to_highlight = ['title']
-# attributes_to_retrieve = ['title']
-
-# Add
-
-
-
-# print self.config.selectors
-# print self.selectors
-
-# TODO: This part adds all the hX to the settings
-# We'll need to redo it with hierarchy.lvl0, hierarchy.lvl1
-#
-# hierarchicalFacet (avec chaque niveau qui contient le niveau previous
-# hierarchy (0, 1, 2, 3, 4), to have a real hierarchy where each key is
-# filled is there is something
-# hierarchy_unique, where only the matching level is filled and the
-# other are nil
-# hierarchy_html for the hierarchy with html ontent
-#
-#
-# for i in range(1, len(self.config.get_selectors()) - 1):
-#     attributes_to_index.append('unordered(text_h' + str(i) + ')')
-
-# attributes_to_index.append('unordered(title)')
-
-# for i in range(1, len(self.config.get_selectors()) - 1):
-#     attributes_to_index.append('unordered(h' + str(i) + ')')
-#     attributes_to_highlight.append('h' + str(i))
-#     attributes_to_retrieve.append('h' + str(i))
-
-# attributes_to_index += ['content', 'path', 'hash']
-# attributes_to_highlight += ['content']
-# attributes_to_retrieve += ['_tags', 'link']
-
-# settings = {
-#     'attributesToIndex'         : attributes_to_index,
-#     'attributesToHighlight'     : attributes_to_highlight,
-#     'attributesToRetrieve'      : attributes_to_retrieve,
-#     'attributesToSnippet'       : ['content:50'],
-#     'customRanking'             : ['desc(page_rank)', 'asc(importance)', 'asc(nb_words)'],
-#     'ranking'                   : ['words', 'typo', 'attribute', 'proximity', 'exact', 'custom'],
-#     'minWordSizefor1Typo'       : 3,
-#     'minWordSizefor2Typos'      : 7,
-#     'allowTyposOnNumericTokens' : False,
-#     'minProximity'              : 2,
-#     'ignorePlurals'             : True,
-#     'advancedSyntax'            : True,
-#     'removeWordsIfNoResults'    : 'allOptional'
-# }
-
-# settings.update(self.custom_settings)
-
-# return settings
-
-
