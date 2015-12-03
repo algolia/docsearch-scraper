@@ -13,8 +13,12 @@ class AlgoliaHelper:
 
     def add_records(self, records):
         """Add new records to the temporary index"""
-        self.algolia_index_tmp.add_objects(records)
-        print "Pushed " + str(len(records)) + " records"
+        record_count = len(records)
+
+        for i in xrange(0, record_count, 50):
+            self.algolia_index_tmp.add_objects(records[i:i + 50])
+
+        print "Pushed records"
 
     def commit_tmp_index(self, settings):
         """Overwrite the real index with the temporary one"""

@@ -4,6 +4,7 @@ DocumentationSpider
 from scrapy.exceptions import CloseSpider
 from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+import time
 
 class DocumentationSpider(CrawlSpider):
     """
@@ -46,10 +47,7 @@ class DocumentationSpider(CrawlSpider):
             return
 
         print response.url
-        self.stop_and_close()
 
-        print "Parsing response"
         records = self.strategy.get_records_from_response(response)
-        print "Pushing records"
-        # self.algolia_helper.add_records(records)
+        self.algolia_helper.add_records(records)
 

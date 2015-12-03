@@ -5,24 +5,11 @@
         "https://stripe.com/docs"
     ],
     "stop_urls": [
-        "https://stripe.com/docs/api",
-        "https://stripe.com/docs/mobile",
-        "https://stripe.com/docs/connect",
-        "https://stripe.com/docs/guides",
-        "https://stripe.com/docs/tutorials",
-        "https://stripe.com/docs/relay",
-        "https://stripe.com/docs/s",
-        "https://stripe.com/docs/f",
-        "https://stripe.com/docs/e",
-        "https://stripe.com/docs/w",
-        "https://stripe.com/docs/r",
-        "https://stripe.com/docs/l",
-        "https://stripe.com/docs/t",
-        "https://stripe.com/docs/u",
-        "https://stripe.com/docs/i"
+        "https://stripe.com/docs/api/"
     ],
     "selectors_exclude": [
-        ".method-list"
+        ".method-list",
+        "aside.intro.note"
     ],
     "selectors": {
       "lvl0": "#content header h1,#content section h1",

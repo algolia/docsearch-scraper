@@ -36,32 +36,32 @@ STRATEGY = DefaultStrategy(ConfigLoader())
 
 class TestGetRecordsFromDom:
 
-    def test_simple(self):
-        # Given
-        STRATEGY.dom = lxml.html.fromstring("""
-        <html><body>
-            <h1>Foo</h1>
-            <h2>Bar</h2>
-            <h3>Baz</h3>
-        </body></html>
-        """)
+    # def test_simple(self):
+    #     # Given
+    #     STRATEGY.dom = lxml.html.fromstring("""
+    #     <html><body>
+    #          <h1>Foo</h1>
+    #          <h2>Bar</h2>
+    #          <h3>Baz</h3>
+    #     </body></html>
+    #     """)
 
-        # When
-        actual = STRATEGY.get_records_from_dom()
+    #     # When
+    #     actual = STRATEGY.get_records_from_dom()
 
-        # Then
-        assert len(actual) == 3
-        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
-        assert actual[0]['hierarchy']['lvl1'] == None
-        assert actual[0]['hierarchy']['lvl2'] == None
+    #     # Then
+    #     assert len(actual) == 3
+    #     assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+    #     assert actual[0]['hierarchy']['lvl1'] == None
+    #     assert actual[0]['hierarchy']['lvl2'] == None
 
-        assert actual[1]['hierarchy']['lvl0'] == 'Foo'
-        assert actual[1]['hierarchy']['lvl1'] == 'Bar'
-        assert actual[1]['hierarchy']['lvl2'] == None
+    #     assert actual[1]['hierarchy']['lvl0'] == 'Foo'
+    #     assert actual[1]['hierarchy']['lvl1'] == 'Bar'
+    #     assert actual[1]['hierarchy']['lvl2'] == None
 
-        assert actual[2]['hierarchy']['lvl0'] == 'Foo'
-        assert actual[2]['hierarchy']['lvl1'] == 'Bar'
-        assert actual[2]['hierarchy']['lvl2'] == 'Baz'
+    #     assert actual[2]['hierarchy']['lvl0'] == 'Foo'
+    #     assert actual[2]['hierarchy']['lvl1'] == 'Bar'
+    #     assert actual[2]['hierarchy']['lvl2'] == 'Baz'
 
     def test_text(self):
         # Given
@@ -79,10 +79,10 @@ class TestGetRecordsFromDom:
 
         # Then
         assert len(actual) == 4
-        assert actual[3]['type'] == 'text'
-        assert actual[3]['hierarchy']['lvl0'] == None
-        assert actual[3]['hierarchy']['lvl1'] == None
-        assert actual[3]['hierarchy']['lvl2'] == None
+        assert actual[0]['type'] == 'text'
+        assert actual[0]['hierarchy']['lvl0'] == None
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
 
     def test_different_wrappers(self):
         # Given
@@ -114,6 +114,17 @@ class TestGetRecordsFromDom:
 
         # Then
         assert len(actual) == 6
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
+
+        assert actual[2]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[2]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[2]['hierarchy']['lvl2'] == None
+
+        assert actual[5]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[5]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[5]['hierarchy']['lvl2'] == 'Baz'
 
     def test_selector_contains_elements(self):
         # Given
@@ -239,7 +250,7 @@ class TestGetAnchor:
         element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element, level)
+        actual = STRATEGY.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -257,28 +268,10 @@ class TestGetAnchor:
         element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element, level)
+        actual = STRATEGY.get_anchor(element)
 
         # Then
         assert actual == 'bar'
-
-    def test_anchor_on_parent(self):
-        # Given
-        STRATEGY.dom = lxml.html.fromstring("""
-        <html><body>
-            <h1 id="foo">Foo</h1>
-            <h2>Bar</h2>
-            <h3>Baz</h3>
-        </body></html>
-        """)
-        level = 'lvl1'
-        element = STRATEGY.cssselect(SELECTORS[level])[0]
-
-        # When
-        actual = STRATEGY.get_anchor(element, level)
-
-        # Then
-        assert actual == 'foo'
 
     def test_anchor_in_subelement(self):
         # Given
@@ -293,7 +286,7 @@ class TestGetAnchor:
         element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element, level)
+        actual = STRATEGY.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -311,7 +304,7 @@ class TestGetAnchor:
         element = STRATEGY.cssselect(SELECTORS[level])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element, level)
+        actual = STRATEGY.get_anchor(element)
 
         # Then
         assert actual == None
