@@ -33,7 +33,6 @@ PROCESS = CrawlerProcess({
 })
 
 
-
 PROCESS.crawl(
     DocumentationSpider,
     config=CONFIG,
@@ -45,3 +44,4 @@ PROCESS.start()
 PROCESS.stop()
 
 ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())
+print "Done"

@@ -85,8 +85,6 @@ class AbstractStrategy(object):
         """Select an element in the current DOM using speficied CSS selector"""
         return CSSSelector(selector)(self.dom)
 
-
-
     def get_index_settings(self):
         raise Exception('get_index_settings need to be implemented')
 
