@@ -169,6 +169,8 @@ class DefaultStrategy(AbstractStrategy):
                 'exact',
                 'custom'
             ],
+            'highlightPreTag': '<span class="ads-suggestion--highlight">',
+            'highlightPostTag': '</span>',
             'minWordSizefor1Typo': 3,
             'minWordSizefor2Typos': 7,
             'allowTyposOnNumericTokens': False,
