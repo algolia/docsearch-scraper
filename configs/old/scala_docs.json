@@ -18,7 +18,7 @@
         "http://docs.scala-lang.org/cheatsheets[tags:en,quickref]",
         "http://docs.scala-lang.org/contribute[tags:en,contribute]",
         "http://docs.scala-lang.org/sips[tags:en,sips]",
-        "http://docs.scala-lang.org/[tags:en]"
+        "http://docs.scala-lang.org[tags:en,homepage]"
     ],
     "stop_urls": [
       "http://docs.scala-lang.org/index.html",
