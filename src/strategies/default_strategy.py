@@ -2,7 +2,6 @@
 Default Strategy
 """
 from strategies.abstract_strategy import AbstractStrategy
-import time
 
 class DefaultStrategy(AbstractStrategy):
     """
@@ -27,16 +26,15 @@ class DefaultStrategy(AbstractStrategy):
 
         # Add page-related attributes to the records
         for record in records:
-            if record['anchor'] != None:
+            if record['anchor'] is not None:
                 record['url'] = url + '#' + record['anchor']
             else:
                 record['url'] = url
 
-
         return records
 
     def get_records_from_dom(self):
-        if self.dom == None:
+        if self.dom is None:
             exit('DefaultStrategy.dom is not defined')
 
         # We get a big selector that matches all relevant nodes, in order
@@ -53,7 +51,6 @@ class DefaultStrategy(AbstractStrategy):
         nodes = self.cssselect(",".join(selector_all))
         # print len(nodes), "nodes found"
 
-
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = {}
         anchors = {}
@@ -67,7 +64,7 @@ class DefaultStrategy(AbstractStrategy):
             for level in levels:
                 if node in nodes_per_level[level]:
                     current_level = level
-                    break;
+                    break
 
             # We set the hierarchy as the same as the previous one
             # We override the current level
@@ -89,7 +86,7 @@ class DefaultStrategy(AbstractStrategy):
             anchor = None
             for index in reversed(range(6)):
                 potential_anchor = anchors['lvl' + str(index)]
-                if potential_anchor == None:
+                if potential_anchor is None:
                     continue
                 anchor = potential_anchor
                 break
@@ -115,7 +112,8 @@ class DefaultStrategy(AbstractStrategy):
 
         return records
 
-    def get_index_settings(self):
+    @staticmethod
+    def get_index_settings():
         settings = {
             'attributesToIndex': [
                 # We first look for matches in the exact titles
@@ -182,7 +180,6 @@ class DefaultStrategy(AbstractStrategy):
 
         return settings
 
-
     def get_all_parent_selectors(self, set_level):
         """Returns a large selector that contains all the selectors for all the
         levels above the specified one"""
@@ -192,7 +189,6 @@ class DefaultStrategy(AbstractStrategy):
                 break
             parent_selectors.append(self.config.selectors[level])
         return ",".join(parent_selectors)
-
 
     def selector_level_matched(self, set_element):
         """Returns which selector level this element is matching"""
@@ -205,6 +201,10 @@ class DefaultStrategy(AbstractStrategy):
                     return level
         return False
 
+    @staticmethod
+    def get_anchor_string_from_element(element):
+        return element.get('name', element.get('id'))
+
     def get_anchor(self, element):
         """
         Return a possible anchor for that element.
@@ -212,14 +212,45 @@ class DefaultStrategy(AbstractStrategy):
         """
 
         # Check the name or id on the element
-        anchor = element.get('name', element.get('id'))
-        if anchor != None:
+        anchor = self.get_anchor_string_from_element(element)
+
+        if anchor is not None:
             return anchor
 
         # Check on child
         children = element.cssselect('[name],[id]')
         if len(children) > 0:
-            return children[-1].get('name', element.get('id'))
+            return self.get_anchor_string_from_element(children[-1])
+
+        el = element
+
+        while el is not None:
+            # go back
+            while el.getprevious() is not None:
+                el = el.getprevious()
+
+                if el is not None:
+                    anchor = self.get_anchor_string_from_element(el)
+
+                    if anchor is not None:
+                        return anchor
+
+            # check last previous
+            if el is not None:
+                anchor = self.get_anchor_string_from_element(el)
+
+                if anchor is not None:
+                    return anchor
+
+            # go up
+            el = el.getparent()
+
+            if el is not None:
+                anchor = self.get_anchor_string_from_element(el)
+
+                # check parent
+                if anchor is not None:
+                    return anchor
 
         # No more parent, we have no anchor
         return None
@@ -241,7 +272,7 @@ class DefaultStrategy(AbstractStrategy):
         is_found = False
         for level in reversed(self.levels):
             value = hierarchy[level]
-            if is_found == False and value != None:
+            if is_found is False and value is not None:
                 is_found = True
                 hierarchy_radio[level] = value
                 continue
@@ -249,7 +280,6 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy_radio[level] = None
 
         return hierarchy_radio
-
 
     def get_hierarchy_complete(self, hierarchy):
         """Returns the hierarchy complete hierarchy of the record, where each
@@ -259,7 +289,7 @@ class DefaultStrategy(AbstractStrategy):
         Ex: {
             lvl0: Foo,
             lvl1: Foo > Bar,
-            lvl2: Foo > Bar >  Baz,
+            lvl2: Foo > Bar > Baz,
             lvl3: None,
             lvl4: None,
             lvl5: None
@@ -270,7 +300,7 @@ class DefaultStrategy(AbstractStrategy):
         for level in self.levels:
             content = hierarchy[level]
 
-            if content == None:
+            if content is None:
                 hierarchy_complete[level] = None
                 continue
 

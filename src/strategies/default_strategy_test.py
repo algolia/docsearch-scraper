@@ -255,6 +255,28 @@ class TestGetAnchor:
         # Then
         assert actual == 'bar'
 
+    def test_id_not_in_a_direct_parent(self):
+        STRATEGY.dom = lxml.html.fromstring("""
+        <div>
+            <a id="bar"></a>
+            <div>
+                <div>
+                    <h2>Bar</h2>
+                </div>
+            </div>
+        </div>
+        """)
+
+        level = 'lvl1'
+        element = STRATEGY.cssselect(SELECTORS[level])[0]
+
+        # When
+        actual = STRATEGY.get_anchor(element)
+
+        # Then
+        assert actual == 'bar'
+
+
     def test_id_on_heading(self):
         # Given
         STRATEGY.dom = lxml.html.fromstring("""
