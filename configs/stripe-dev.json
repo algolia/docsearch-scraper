@@ -1,5 +1,5 @@
 {
-    "index_name": "stripe-dev",
+    "index_name": "stripe",
     "allowed_domains": ["stripe.com"],
     "start_urls": [
         "https://stripe.com/docs"
@@ -9,7 +9,7 @@
     ],
     "selectors_exclude": [
         ".method-list",
-        "aside.intro.note"
+        "aside.note"
     ],
     "selectors": {
       "lvl0": "#content header h1",
