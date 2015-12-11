@@ -51,7 +51,7 @@ class DefaultStrategy(AbstractStrategy):
             nodes_per_level[level] = self.cssselect(level_selector)
 
         nodes = self.cssselect(",".join(selector_all))
-        print len(nodes), "nodes found"
+        # print len(nodes), "nodes found"
 
 
         # We keep the current hierarchy and anchor state between loops
@@ -205,74 +205,6 @@ class DefaultStrategy(AbstractStrategy):
                     return level
         return False
 
-    def get_parent(self, set_element, selectors):
-        """Given any element and a set of selectors, will return the closest
-        hierarchical parent that matches one of the selector.
-        It will check all previous siblings and previous siblings of the parent
-        in order, recursively.
-        Will return an object containing the matching element, and the level of
-        the match"""
-
-        # No parent selectors, so no parent to find
-        if len(selectors) == 0:
-            return None
-
-        # We stop if we hit the body
-        if set_element.tag == 'body':
-            return None
-
-        # We return this element if it matches
-        if self.element_matches_selector(set_element, selectors):
-            return {
-                'lvl': self.selector_level_matched(set_element),
-                'element': set_element
-                }
-
-        # Does it have children? If so, we start over from the last child
-        children = set_element.getchildren()
-        if len(children) > 0:
-            last_child = children[-1]
-            return self.get_parent(last_child, selectors)
-
-        # Does it have a previous sibling? If so, we start over from that one
-        previous = set_element.getprevious()
-        if previous != None:
-            return self.get_parent(previous, selectors)
-
-
-        # Not found at this level. Let's go up one notch
-        parent = set_element.getparent()
-
-        # We've hit the body
-        if parent.tag == 'body':
-            return None
-
-        while True:
-            # Just checking if the parent matches
-            if self.element_matches_selector(parent, selectors):
-                return {
-                    'lvl': self.selector_level_matched(parent),
-                    'element': parent
-                    }
-
-            # Do we have a previous sibling of the parent?
-            previous_of_parent = parent.getprevious()
-
-            # If not, let's start again on to the next
-            if previous_of_parent == None:
-                parent = parent.getparent()
-                continue
-
-            # We've hit the body
-            if previous_of_parent.tag == 'body':
-                return None
-
-            # We start over on the previous sibling of the parent
-            return self.get_parent(previous_of_parent, selectors)
-
-        return None
-
-
     def get_anchor(self, element):
         """
         Return a possible anchor for that element.
@@ -318,43 +250,6 @@ class DefaultStrategy(AbstractStrategy):
 
         return hierarchy_radio
 
-
-    def get_hierarchy(self, element, set_level):
-        """Returns the hierarchy of the record, where all levels that have
-        a matching element will be filled
-        Ex: {
-            lvl0: Foo,
-            lvl1: Bar,
-            lvl2: Baz,
-            lvl3: None,
-            lvl4: None,
-            lvl5: None
-        }
-        """
-
-
-        # We start with a blank state
-        hierarchy = {}
-        for level in self.levels:
-            hierarchy[level] = None
-        # Adding the one we know about
-        if set_level in self.levels:
-            hierarchy[set_level] = self.get_text(element)
-
-        # Finding all possible parents and adding them
-        selectors = self.get_all_parent_selectors(set_level)
-        while True:
-            parent = self.get_parent(element, selectors)
-            # No more parent to find, we can stop
-            if not parent:
-                return hierarchy
-
-            # We add the found parent to the hierarchy
-            found_level = parent['lvl']
-            hierarchy[found_level] = self.get_text(parent['element'])
-
-            # We update the list of selectors
-            selectors = self.get_all_parent_selectors(found_level)
 
     def get_hierarchy_complete(self, hierarchy):
         """Returns the hierarchy complete hierarchy of the record, where each
