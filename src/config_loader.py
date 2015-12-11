@@ -13,7 +13,6 @@ class ConfigLoader(object):
     api_key = None
     app_id = None
     custom_settings = None
-    hash_strategy = None
     index_name = None
     index_prefix = None
     selectors = None
@@ -40,7 +39,6 @@ class ConfigLoader(object):
             'api_key',
             'app_id',
             'custom_settings',
-            'hash_strategy',
             'index_name',
             'index_prefix',
             'selectors',
