@@ -1,0 +1,20 @@
+# Dev version of the Dockerfile
+# - Includes test library
+# - Do not COPY ./src
+# - Do not define an ENTRYPOINT
+
+FROM python:2.7
+MAINTAINER Algolia <documentationsearch@algolia.com>
+
+RUN pip install scrapy
+RUN pip install algoliasearch
+RUN pip install pytest
+
+COPY docker/run /root/
+RUN chmod +x /root/run
+COPY docker/test /root/
+RUN chmod +x /root/test
+
+WORKDIR /root
+ENTRYPOINT []
+CMD []

@@ -5,7 +5,7 @@
         "https://stripe.com/docs"
     ],
     "stop_urls": [
-        "https://stripe.com/docs/api"
+        "https://stripe.com/docs/api/"
     ],
     "selectors_exclude": [
         ".method-list",
@@ -21,8 +21,8 @@
       "text": "#content header p,#content section p,#content section ol"
     },
     "custom_settings": {},
+    "hash_strategy": "id",
     "strategy": "default",
     "strip_chars": " :;,."
 }
-
 

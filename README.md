@@ -51,21 +51,65 @@ The config.json should look like:
 
 ## Docker
 
-You might want a script like this to build and run the docker container
+### Development
+
+You can build a development version of the image, to be used in development. It
+will build the exact same image than the prod one but will expect the
+`/root/src` folder to be mapped to a volume on the host. This lets you edit the
+python files in your favorite editor in the host while still being able to run
+the script in a Docker environment.
+
+First, build the development image:
 
 ```sh
-#!/bin/bash
+docker build -t algolia/documentation-scrapper-dev -f Dockerfile.dev .
+```
 
-docker build -t algolia/documentation-scrapper . || exit 1
+Then, use a script to remove any dev container and rebuild it.
 
-docker stop documentation-scrapper > /dev/null 2>&1 || true
-docker rm documentation-scrapper > /dev/null 2>&1 || true
-
-docker run \
-    -e APPLICATION_ID=app_id \
-    -e API_KEY=api_key \
+```sh
+$ docker stop docname
+$ docker rm docname
+$ docker run \
+    -e APPLICATION_ID=appId \
+    -e API_KEY=apiKey \
     -e INDEX_PREFIX=prefix_ \
-    -e CONFIG="`cat configs/stripe.json`" \
-    --name documentation-scrapper \
-    -t algolia/documentation-scrapper /root/run
+    -e CONFIG="$(cat configs/docname.json)" \
+    -v `pwd`/src:/root/src \
+    --name docname \
+    -t algolia/documentation-scrapper-dev \
+    /root/run
+```
+
+And use this one to run the tests:
+
+```sh
+$ docker stop docname
+$ docker rm docname
+$ docker run \
+    -e APPLICATION_ID=appId \
+    -e API_KEY=apiKey \
+    -e INDEX_PREFIX=prefix_ \
+    -e CONFIG="$(cat configs/docname.json)" \
+    -v `pwd`/src:/root/src \
+    --name docname \
+    -t algolia/documentation-scrapper-dev \
+    /root/test
+
+```
+
+### Prod
+
+In production, you build the image from the default Docker file, then run the
+container.
+
+```
+$ docker build -t algolia/documentation-scrapper-dev .
+$ docker run \
+    -e APPLICATION_ID=appId \
+    -e API_KEY=apiKey \
+    -e INDEX_PREFIX=prefix_ \
+    -e CONFIG="$(cat configs/docname.json)" \
+    --name docname \
+    -t algolia/documentation-scrapper
 ```

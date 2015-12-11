@@ -1,39 +1,46 @@
-from scrapy.crawler import CrawlerProcess
-from documentation_spyder import DocumentationSpyder
+"""
+documentationSearch scrapper main entry point
+"""
 from algolia_helper import AlgoliaHelper
 from config_loader import ConfigLoader
-from strategies.laravel_stategy import LaravelStrategy
+from documentation_spider import DocumentationSpider
+from scrapy.crawler import CrawlerProcess
+from strategies.default_strategy import DefaultStrategy
 
-config = ConfigLoader()
+CONFIG = ConfigLoader()
 
-algolia_helper = AlgoliaHelper(
-                    config.get_app_id(),
-                    config.get_api_key(),
-                    config.get_index_name())
+ALGOLIA_HELPER = AlgoliaHelper(
+    CONFIG.app_id,
+    CONFIG.api_key,
+    CONFIG.index_name
+)
 
-strategies = {
-    'laravel': LaravelStrategy
+STRATEGIES = {
+    'default': DefaultStrategy
 }
 
-if not config.get_strategy() in strategies:
-    exit("'" + config.get_strategy() + "' is not a good strategy name")
+CONFIG_STRATEGY = CONFIG.strategy
+if not CONFIG_STRATEGY in STRATEGIES:
+    exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
 
-strategy = strategies[config.get_strategy()](config, config.get_selectors(), config.get_custom_settings(),
-                                             config.get_hash_strategy())
+STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
 
-process = CrawlerProcess({'LOG_ENABLED': '1', 'LOG_LEVEL': 'ERROR', 'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'})
-process.crawl(DocumentationSpyder,
-                index_name=config.get_index_name(),
-                allowed_domains=config.get_allowed_domains(),
-                start_urls=config.get_start_urls(),
-                stop_urls=config.get_stop_urls(),
-                selectors=config.get_selectors(),
-                selectors_exclude=config.get_selectors_exclude(),
-                strip_chars=config.get_strip_chars(),
-                algolia_helper=algolia_helper,
-                strategy=strategy)
+PROCESS = CrawlerProcess({
+    'LOG_ENABLED': '1',
+    'LOG_LEVEL': 'ERROR',
+    # 'LOG_LEVEL': 'DEBUG',
+    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+})
 
-process.start()
-process.stop()
 
-algolia_helper.move_index_with_settings(strategy.get_settings())
+PROCESS.crawl(
+    DocumentationSpider,
+    config=CONFIG,
+    algolia_helper=ALGOLIA_HELPER,
+    strategy=STRATEGY
+)
+
+PROCESS.start()
+PROCESS.stop()
+
+ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())

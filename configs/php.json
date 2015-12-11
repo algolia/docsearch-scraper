@@ -16,6 +16,6 @@
     ],
     "custom_settings": {},
     "hash_strategy": "id",
-    "strategy": "laravel",
+    "strategy": "default",
     "strip_chars": " :;,."
 }

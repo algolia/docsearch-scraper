@@ -45,6 +45,6 @@
       "attributesToSnippet": ["content:20"]
     },
     "hash_strategy": "id",
-    "strategy": "laravel",
+    "strategy": "default",
     "strip_chars": " "
 }
