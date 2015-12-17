@@ -145,6 +145,9 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy',
                 'content'
             ],
+            'attributesToSnippet': [
+                'content:10'
+            ],
             'distinct': True,
             'attributeForDistinct': 'url',
             # TODO: Allow passing custom weight to pages through the config
