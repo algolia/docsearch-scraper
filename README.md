@@ -49,6 +49,15 @@ The config.json should look like:
 }
 ```
 
+## Test the UX/UI with the playground
+
+To test it live, you can use the following HTML page:
+
+```sh
+# edit your credentials + index name in ./html/playground.html
+$ open ./html/playground.html
+```
+
 ## Docker
 
 ### Development
