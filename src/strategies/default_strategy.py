@@ -170,7 +170,7 @@ class DefaultStrategy(AbstractStrategy):
                 'exact',
                 'custom'
             ],
-            'highlightPreTag': '<span class="ads-suggestion--highlight">',
+            'highlightPreTag': '<span class="algolia-docsearch-suggestion--highlight">',
             'highlightPostTag': '</span>',
             'minWordSizefor1Typo': 3,
             'minWordSizefor2Typos': 7,
