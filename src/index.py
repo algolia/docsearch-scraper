@@ -7,6 +7,10 @@ from documentation_spider import DocumentationSpider
 from scrapy.crawler import CrawlerProcess
 from strategies.default_strategy import DefaultStrategy
 
+# disable boto (S3 download)
+from scrapy import optional_features
+optional_features.remove('boto')
+
 CONFIG = ConfigLoader()
 
 ALGOLIA_HELPER = AlgoliaHelper(
