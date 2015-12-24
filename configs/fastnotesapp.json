@@ -1,0 +1,23 @@
+{
+    "index_name": "fastnotesapp-helpcenter",
+    "allowed_domains": ["help.fastnotesapp.com"],
+    "start_urls": [
+        "http://help.fastnotesapp.com/knowledge_base"
+    ],
+    "stop_urls": [
+    ],
+    "selectors_exclude": [
+    ],
+    "selectors": {
+      "lvl0": ".box-c-topic h2",
+      "lvl1": ".bla",
+      "lvl2": ".bla",
+      "lvl3": ".bla",
+      "lvl4": ".bla",
+      "lvl5": ".bla",
+      "text": ".topic-description p"
+    },
+    "custom_settings": {},
+    "strategy": "default",
+    "strip_chars": " :;,."
+}

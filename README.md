@@ -112,7 +112,7 @@ In production, you build the image from the default Docker file, then run the
 container.
 
 ```
-$ docker build -t algolia/documentation-scrapper-dev .
+$ docker build -t algolia/documentation-scrapper .
 $ docker run \
     -e APPLICATION_ID=appId \
     -e API_KEY=apiKey \
