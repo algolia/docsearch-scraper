@@ -9,7 +9,8 @@ from strategies.default_strategy import DefaultStrategy
 
 # disable boto (S3 download)
 from scrapy import optional_features
-optional_features.remove('boto')
+if 'boto' in optional_features:
+    optional_features.remove('boto')
 
 CONFIG = ConfigLoader()
 
