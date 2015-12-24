@@ -24,28 +24,27 @@ The config.json should look like:
     "index_name": "stripe",
     "allowed_domains": ["stripe.com"],
     "start_urls": [
-        "https://stripe.com/docs",
-        "https://stripe.com/docs/api[tags:api][page_rank:1]",
-        "https://stripe.com/help[tags:help]"
+        "https://stripe.com/docs"
     ],
     "stop_urls": [
-        "https://stripe.com/docs/api/"
+        "https://stripe.com/docs/api"
     ],
     "selectors_exclude": [
-        ".method-list"
+        ".method-list",
+        "aside.note"
     ],
-    "selectors": [
-        ["#content header h1", "#content section h1"],
-        ["#content section h2"],
-        ["#content section h3"],
-        ["#content section h4"],
-        ["#content section h5"],
-        ["#content section h6"],
-        ["#content header p", "#content section p", "#content section ol"]
-    ],
+    "selectors": {
+      "lvl0": "#content header h1",
+      "lvl1": "#content article h1",
+      "lvl2": "#content section h3",
+      "lvl3": "#content section h4",
+      "lvl4": "#content section h5",
+      "lvl5": "#content section h6",
+      "text": "#content header p,#content section p,#content section ol"
+    },
     "custom_settings": {},
-    "hash_strategy": "id",
-    "strategy": "laravel"
+    "strategy": "default",
+    "strip_chars": " :;,."
 }
 ```
 
