@@ -112,8 +112,7 @@ class DefaultStrategy(AbstractStrategy):
 
         return records
 
-    @staticmethod
-    def get_index_settings():
+    def get_index_settings(self):
         settings = {
             'attributesToIndex': [
                 # We first look for matches in the exact titles
@@ -180,6 +179,10 @@ class DefaultStrategy(AbstractStrategy):
             'advancedSyntax': True,
             'removeWordsIfNoResults': 'allOptional'
         }
+
+        # apply custom updates
+        if self.config.custom_settings is not None:
+            settings.update(self.config.custom_settings)
 
         return settings
 
