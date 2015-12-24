@@ -1,0 +1,23 @@
+{
+    "index_name": "getpostman",
+    "allowed_domains": ["getpostman.com"],
+    "start_urls": [
+        "https://www.getpostman.com/docs/"
+    ],
+    "stop_urls": [
+    ],
+    "selectors_exclude": [
+    ],
+    "selectors": {
+      "lvl0": "h2.documentation-header",
+      "lvl1": ".doc-container-data h3",
+      "lvl2": ".doc-container-data h4",
+      "lvl3": ".bla",
+      "lvl4": ".bla",
+      "lvl5": ".bla",
+      "text": ".doc-container-data p, .doc-container-data ul"
+    },
+    "custom_settings": {},
+    "strategy": "default",
+    "strip_chars": " :;,."
+}
