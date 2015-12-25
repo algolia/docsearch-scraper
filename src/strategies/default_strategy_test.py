@@ -22,7 +22,6 @@ os.environ['CONFIG'] = json.dumps({
     'custom_settings': 'test',
     'hash_strategy': 'test',
     'index_name': 'test',
-    'index_name': 'test',
     'index_prefix': 'test',
     'selectors': SELECTORS,
     'selectors_exclude': 'test',
@@ -341,3 +340,32 @@ class TestGetLevelWeight:
         assert STRATEGY.get_level_weight('lvl4') == 60
         assert STRATEGY.get_level_weight('lvl5') == 50
         assert STRATEGY.get_level_weight('text') == 0
+
+class TestGetRecordsFromDom2:
+    def test_text_with_only_three_levels(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <p>text</p>
+            <h1>Foo</h1>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+
+        STRATEGY.config.selectors = {
+            'lvl0': 'h1',
+            'lvl1': 'h2',
+            'lvl2': 'h3',
+            'text': 'p'
+        }
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 4
+        assert actual[0]['type'] == 'text'
+        assert actual[0]['hierarchy']['lvl0'] == None
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
