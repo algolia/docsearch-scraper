@@ -1,6 +1,6 @@
 {
     "index_name": "postman",
-    "allowed_domains": ["getpostman.com"],
+    "allowed_domains": "getpostman.com",
     "start_urls": [
         "https://www.getpostman.com/docs/"
     ],
