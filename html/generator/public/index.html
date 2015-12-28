@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scrapper Configurator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css">
+  <style>
+    html, body, .main {
+      height: 100%;
+    }
+    .main-left {
+      position: absolute;
+      top: 0;
+      right: 400px;
+      bottom: 0;
+      left: 0;
+    }
+    .main-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 50px;
+      width: 400px;
+      border-left: 2px solid #ccc;
+      padding: 0 20px;
+      overflow: scroll;
+    }
+    .iframe-wrapper {
+      position: absolute;
+      top: 0;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .status-bar {
+      position: absolute;
+      height: 50px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #efefef;
+      border-top: 2px solid #ccc;
+      font-size: 20px;
+      line-height: 50px;
+      padding-left: 20px;
+    }
+    .levels .fa-times {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main">
+    <div class="main-left">
+      <div class="iframe-wrapper">
+        <iframe src="/blank.html" frameborder="0"></iframe>
+      </div>
+    </div>
+    <div class="main-right">
+      <h4>Start URLs</h4>
+      <textarea rows="4" style="width: 100%" id="start-urls"></textarea>
+      <h4>CSS Selectors</h4>
+      <div class="levels">
+        <p><button class="btn btn-default" rel="lvl0">lvl0</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="lvl1">lvl1</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="lvl2">lvl2</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="lvl3">lvl3</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="lvl4">lvl4</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="lvl5">lvl5</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default" rel="text">text</button> <i class="fa fa-times"></i></p>
+      </div>
+      <h4>Stop URLs</h4>
+      <textarea rows="4" style="width: 100%" id="stop-urls"></textarea>
+      <hr />
+      <h4>Configuration</h4>
+      <pre id="code"></pre>
+    </div>
+    <div class="status-bar"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+  <script>
+    function updateCode() {
+      var startUrls = $('#start-urls').val().split("\n").filter(function(e) { return e !== ''; });
+      var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
+      var code = {
+        index_name: "FIXME",
+        allowed_domains: startUrls.map(function(e) {``
+          var a = document.createElement("a");
+          a.href = e;
+          return a.hostname;
+        }).reduce(function(arr, e) {
+          if (arr.indexOf(e) < 0) arr.push(e);
+          return arr;
+        }, []),
+        start_urls: startUrls,
+        stop_urls: stopUrls,
+        selectors_exclude: [],
+        selectors: {
+          lvl0: $('.levels .btn[rel="lvl0"]').text().substring(6),
+          lvl1: $('.levels .btn[rel="lvl1"]').text().substring(6),
+          lvl2: $('.levels .btn[rel="lvl2"]').text().substring(6),
+          lvl3: $('.levels .btn[rel="lvl3"]').text().substring(6),
+          lvl4: $('.levels .btn[rel="lvl4"]').text().substring(6),
+          lvl5: $('.levels .btn[rel="lvl5"]').text().substring(6),
+          text: $('.levels .btn[rel="text"]').text().substring(6)
+        },
+        custom_settings: {},
+        strategy: "default",
+        strip_chars: " :;,."
+      };
+      $('#code').text(JSON.stringify(code, null, 2));
+    }
+    updateCode();
+
+    window.onPathHover = function(path) {
+      $('.status-bar').text(path);
+    };
+    var currentLevel = null;
+    window.onPathClick = function(path) {
+      if (currentLevel) {
+        var val = currentLevel.text().substring(6);
+        if (val) {
+          val += ', ' + path;
+        } else {
+          val = path;
+        }
+        currentLevel.text(currentLevel.attr('rel') + ': ' + val);
+        updateCode();
+      }
+    };
+    $(document).on('click', '.levels .btn', function() {
+      currentLevel = $(this);
+    });
+    $(document).on('click', '.levels .fa-times', function() {
+      var b = $(this).parent().find('.btn');
+      b.text(b.attr('rel'));
+      updateCode();
+    });
+    $('#start-urls, #stop-urls').on('change', updateCode);
+    $('#start-urls').on('change', function() {
+      $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
+    });
+  </script>
+
+</body>
+</html>
