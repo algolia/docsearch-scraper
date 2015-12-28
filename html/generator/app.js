@@ -37,7 +37,7 @@ var server = app.listen(3000, function () {
 
 function updateUrl(element, attribute, url, proxify) {
   var val = element.attr(attribute);
-  if (val.indexOf('/') === 0) {
+  if (val && val.indexOf('/') === 0) {
     var pathname = URL.parse(url).pathname;
     val = url.replace(pathname, '/') + val;
   } else {
