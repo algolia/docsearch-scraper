@@ -16,8 +16,10 @@ $(document).on('mouseout', SELECTOR, function() {
 
 $(document).on('click', SELECTOR, function() {
   var selector = cssPath(this).join(' ');
-  window.parent.onPathClick(selector);
-  return false;
+  if(window.parent.currentLevel !== undefined) {
+    window.parent.onPathClick(selector);
+    return false;
+  }
 });
 
 function cssPath(el, path) {
