@@ -82,15 +82,18 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy = previous_hierarchy.copy()
 
             # Update the hierarchy for each new header
+            current_level_int = int(current_level[3:]) if current_level != 'text' else 6 # 6 > lvl5
             if current_level != 'text':
                 hierarchy[current_level] = self.get_text(node)
                 anchors[current_level] = self.get_anchor(node)
 
-                current_level_int = int(current_level[3:])
                 for index in range(current_level_int + 1, 6):
                     hierarchy['lvl' + str(index)] = None
                     anchors['lvl' + str(index)] = None
                 previous_hierarchy = hierarchy
+
+            if current_level_int < self.config.min_indexed_level:
+                continue
 
             # Getting the element anchor as the closest one
             anchor = None
