@@ -121,21 +121,31 @@
     window.onPathHover = function(path) {
       $('.status-bar').text(path);
     };
-    var currentLevel = null;
+    window.currentLevel = undefined;
     window.onPathClick = function(path) {
-      if (currentLevel) {
-        var val = currentLevel.text().substring(6);
+      if (window.currentLevel !== undefined) {
+        var val = window.currentLevel.text().substring(6);
         if (val) {
           val += ', ' + path;
         } else {
           val = path;
         }
-        currentLevel.text(currentLevel.attr('rel') + ': ' + val);
+        window.currentLevel.text(window.currentLevel.attr('rel') + ': ' + val);
         updateCode();
       }
     };
     $(document).on('click', '.levels .btn', function() {
-      currentLevel = $(this);
+      if(window.currentLevel === undefined) {
+        window.currentLevel = $(this);
+        window.currentLevel.addClass('active');
+      } else if(!window.currentLevel.is($(this))) {
+        window.currentLevel.removeClass('active');
+        window.currentLevel = $(this);
+        window.currentLevel.addClass('active');
+      } else { //window.currentLevel === $(this)
+        window.currentLevel.removeClass('active');
+        window.currentLevel = undefined;
+      }
     });
     $(document).on('click', '.levels .fa-times', function() {
       var b = $(this).parent().find('.btn');
