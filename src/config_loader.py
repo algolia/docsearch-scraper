@@ -21,6 +21,7 @@ class ConfigLoader(object):
     stop_urls = None
     strategy = None
     strip_chars = None
+    min_indexed_level = 0
 
     def __init__(self):
         if os.environ['CONFIG'] is None:
@@ -41,6 +42,7 @@ class ConfigLoader(object):
             'custom_settings',
             'index_name',
             'index_prefix',
+            'min_indexed_level',
             'selectors',
             'selectors_exclude',
             'start_urls',
