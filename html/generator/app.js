@@ -39,9 +39,9 @@ function updateUrl(element, attribute, url, proxify) {
   var val = element.attr(attribute);
   if (val && val.indexOf('/') === 0) {
     var pathname = URL.parse(url).pathname;
-    val = url.replace(pathname, '/') + val;
+    val = url.replace(pathname, '') + val;
   } else {
-    var sep = url.indexOf('/') === url.length - 1 ? '' : '/';
+    var sep = url[url.length - 1] === '/' ? '' : '/';
     val = url + sep + val;
   }
   element.attr(attribute, (proxify ? '/proxy?url=' : '') + val);
