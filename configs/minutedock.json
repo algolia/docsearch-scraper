@@ -1,0 +1,21 @@
+{
+  "index_name": "minutedock",
+  "allowed_domains": [
+    "minutedock.com"
+  ],
+  "start_urls": [
+    "https://minutedock.com/help/"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": "section.page-header div.container h1",
+    "lvl1": "#article h1",
+    "lvl2": "#article section.article-content h2",
+    "text": "#article section.article-content p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
