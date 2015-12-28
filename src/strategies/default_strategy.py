@@ -40,7 +40,18 @@ class DefaultStrategy(AbstractStrategy):
         # We get a big selector that matches all relevant nodes, in order
         # But we also keep a list of all matches for each individual level
         levels = list(self.levels)
-        levels.append('text')
+
+        used_levels = []
+
+        # Because all levels might not be used we check if the level is present in the config
+        for level in levels:
+            if level not in self.config.selectors:
+                break
+            used_levels.append(level)
+        if 'text' in self.config.selectors:
+            used_levels.append('text')
+        levels = used_levels
+
         selector_all = []
         nodes_per_level = {}
         for level in levels:
@@ -49,7 +60,6 @@ class DefaultStrategy(AbstractStrategy):
             nodes_per_level[level] = self.cssselect(level_selector)
 
         nodes = self.cssselect(",".join(selector_all))
-        # print len(nodes), "nodes found"
 
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = {}
