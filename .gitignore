@@ -2,3 +2,4 @@ crawling_data
 src/*.pyc
 src/strategies/*.pyc
 run.sh
+.DS_Store
