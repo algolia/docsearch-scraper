@@ -55,8 +55,5 @@ class ConfigLoader(object):
         for name in public_config_keys:
             value = data.get(name)
 
-            if value is None:
-                print "Needed parameter: '" + name + "'"
-                exit()
-
-            setattr(self, name, data[name])
+            if value is not None:
+                setattr(self, name, data[name])
