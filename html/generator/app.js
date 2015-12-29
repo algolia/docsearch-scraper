@@ -54,7 +54,7 @@ function updateUrl(element, attribute, url, proxify) {
 function proxy(html, url) {
   var $ = cheerio.load(html);
 
-  $('body').append('<script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>');
+  $('head').append('<script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>');
   $('body').append('<script src="http://localhost:3000/selector.js" type="text/javascript"></script>');
 
   $('a:not([href^="http://"])' +
