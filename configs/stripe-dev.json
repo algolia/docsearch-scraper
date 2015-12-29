@@ -22,7 +22,6 @@
     },
     "custom_settings": {},
     "hash_strategy": "id",
-    "strategy": "default",
-    "strip_chars": " :;,."
+    "strategy": "default"
 }
 

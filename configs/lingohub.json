@@ -1,0 +1,21 @@
+{
+  "index_name": "lingohub",
+  "allowed_domains": [
+    "lingohub.com"
+  ],
+  "start_urls": [
+    "https://lingohub.com/documentation/"
+  ],
+  "stop_urls": [
+    ".*_wpnonce.*"
+  ],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": "header.entry-header h1.entry-title",
+    "lvl1": "div.entry-content.content h2",
+    "lvl2": "div.entry-content.content h3",
+    "text": "div.entry-content.content p, div.entry-content.content li"
+  },
+  "custom_settings": {},
+  "strategy": "default"
+}
