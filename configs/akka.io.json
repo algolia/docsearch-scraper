@@ -1,0 +1,27 @@
+{
+  "index_name": "akka_io",
+  "allowed_domains": [
+    "doc.akka.io"
+  ],
+  "start_urls": [
+    "http://doc.akka.io/docs/akka/2.4.1"
+  ],
+  "stop_urls": [
+  	"http://doc.akka.io/docs/akka/2.4.1/java*",
+  	"http://doc.akka.io/docs/akka/2.4.1/scala/index*"
+  ],
+  "selectors_exclude": [
+  	"#scroller-anchor"
+  ],
+  "selectors": {
+    "lvl0": ".container h1",
+    "lvl1": ".container h2",
+    "lvl2": ".container h3",
+    "lvl3": ".container h4",
+    "text": ".container p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 2
+}
