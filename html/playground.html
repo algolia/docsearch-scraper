@@ -22,12 +22,14 @@
         </div>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.js"></script>
         <script type="text/javascript">
-        docsearch({
+          var config = {
             // appId: 'your optional appid',
             apiKey: 'ac6eb7fb00ae608216700af9fa1ee4a9',
             indexName: 'tim_stripe',
             inputSelector: '#q'
-        });
+          };
+          docsearch(config);
+          document.body.insertAdjacentHTML('beforeend', '<pre>' + JSON.stringify(config, null, 2) + '</pre>');
         </script>
     </body>
 </html>
