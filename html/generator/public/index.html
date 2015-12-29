@@ -51,7 +51,18 @@
     .levels .fa-times {
       cursor: pointer;
     }
+
+  .text{ background :  #1f77b4 }
+  .lvl0{ background :  #ff7f0e }
+  .lvl1{ background :  #2ca02c }
+  .lvl2{ background :  #d62728 }
+  .lvl3{ background :  #9467bd }
+  .lvl4{ background :  #8c564b }
+  .lvl5{ background :  #e377c2 }
+  .lvl6{ background :  #7f7f7f }
+
   </style>
+  <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -66,13 +77,13 @@
       <textarea rows="4" style="width: 100%" id="start-urls"></textarea>
       <h4>CSS Selectors</h4>
       <div class="levels">
-        <p><button class="btn btn-default" rel="lvl0">lvl0</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="lvl1">lvl1</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="lvl2">lvl2</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="lvl3">lvl3</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="lvl4">lvl4</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="lvl5">lvl5</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default" rel="text">text</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl0" rel="lvl0">lvl0</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl1" rel="lvl1">lvl1</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl2" rel="lvl2">lvl2</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl3" rel="lvl3">lvl3</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl4" rel="lvl4">lvl4</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default lvl5" rel="lvl5">lvl5</button> <i class="fa fa-times"></i></p>
+        <p><button class="btn btn-default text" rel="text">text</button> <i class="fa fa-times"></i></p>
       </div>
       <h4>Stop URLs</h4>
       <textarea rows="4" style="width: 100%" id="stop-urls"></textarea>
@@ -83,79 +94,7 @@
     <div class="status-bar"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
-  <script>
-    function updateCode() {
-      var startUrls = $('#start-urls').val().split("\n").filter(function(e) { return e !== ''; });
-      var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
-      var code = {
-        index_name: "FIXME",
-        allowed_domains: startUrls.map(function(e) {``
-          var a = document.createElement("a");
-          a.href = e;
-          return a.hostname;
-        }).reduce(function(arr, e) {
-          if (arr.indexOf(e) < 0) arr.push(e);
-          return arr;
-        }, []),
-        start_urls: startUrls,
-        stop_urls: stopUrls,
-        selectors_exclude: [],
-        selectors: {
-          lvl0: $('.levels .btn[rel="lvl0"]').text().substring(6),
-          lvl1: $('.levels .btn[rel="lvl1"]').text().substring(6),
-          lvl2: $('.levels .btn[rel="lvl2"]').text().substring(6),
-          lvl3: $('.levels .btn[rel="lvl3"]').text().substring(6),
-          lvl4: $('.levels .btn[rel="lvl4"]').text().substring(6),
-          lvl5: $('.levels .btn[rel="lvl5"]').text().substring(6),
-          text: $('.levels .btn[rel="text"]').text().substring(6)
-        },
-        custom_settings: {},
-        strategy: "default"
-      };
-      $('#code').text(JSON.stringify(code, null, 2));
-    }
-    updateCode();
-
-    window.onPathHover = function(path) {
-      $('.status-bar').text(path);
-    };
-    window.currentLevel = undefined;
-    window.onPathClick = function(path) {
-      if (window.currentLevel !== undefined) {
-        var val = window.currentLevel.text().substring(6);
-        if (val) {
-          val += ', ' + path;
-        } else {
-          val = path;
-        }
-        window.currentLevel.text(window.currentLevel.attr('rel') + ': ' + val);
-        updateCode();
-      }
-    };
-    $(document).on('click', '.levels .btn', function() {
-      if(window.currentLevel === undefined) {
-        window.currentLevel = $(this);
-        window.currentLevel.addClass('active');
-      } else if(!window.currentLevel.is($(this))) {
-        window.currentLevel.removeClass('active');
-        window.currentLevel = $(this);
-        window.currentLevel.addClass('active');
-      } else { //window.currentLevel === $(this)
-        window.currentLevel.removeClass('active');
-        window.currentLevel = undefined;
-      }
-    });
-    $(document).on('click', '.levels .fa-times', function() {
-      var b = $(this).parent().find('.btn');
-      b.text(b.attr('rel'));
-      updateCode();
-    });
-    $('#start-urls, #stop-urls').on('change', updateCode);
-    $('#start-urls').on('change', function() {
-      $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
-    });
-  </script>
+  <script src="index.js" type="text/javascript"></script>
 
 </body>
 </html>
