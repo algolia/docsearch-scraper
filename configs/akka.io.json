@@ -4,11 +4,11 @@
     "doc.akka.io"
   ],
   "start_urls": [
-    "http://doc.akka.io/docs/akka/2.4.1"
+    "http://doc.akka.io/docs/akka/current"
   ],
   "stop_urls": [
-  	"http://doc.akka.io/docs/akka/2.4.1/java*",
-  	"http://doc.akka.io/docs/akka/2.4.1/scala/index*"
+  	"http://doc.akka.io/docs/akka/current/java*",
+  	"http://doc.akka.io/docs/akka/current/scala/index*"
   ],
   "selectors_exclude": [
   	"#scroller-anchor"
