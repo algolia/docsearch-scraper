@@ -21,8 +21,7 @@
       "text": "#content header p,#content section p,#content section ol"
     },
     "custom_settings": {},
-    "strategy": "default",
-    "strip_chars": " :;,."
+    "strategy": "default"
 }
 
 

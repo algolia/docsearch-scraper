@@ -18,6 +18,5 @@
       "text": ".topic-description p"
     },
     "custom_settings": {},
-    "strategy": "default",
-    "strip_chars": " :;,."
+    "strategy": "default"
 }

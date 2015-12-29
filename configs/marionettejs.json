@@ -15,6 +15,5 @@
     "text": "div.docs div.docs__content p, div.docs div.docs__content li"
   },
   "custom_settings": {},
-  "strategy": "default",
-  "strip_chars": " :;,."
+  "strategy": "default"
 }

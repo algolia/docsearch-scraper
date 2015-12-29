@@ -1,0 +1,19 @@
+{
+  "index_name": "vinli",
+  "allowed_domains": [
+    "docs.vin.li"
+  ],
+  "start_urls": [
+    "http://docs.vin.li/en/latest/"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": "#telemetry-services h1, #device-service h1, #vinli-services-documentation h1",
+    "lvl1": "#list-all-devices h2",
+    "text": "#telemetry-services p, #telemetry-services ul.simple li"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": "¶"
+}
