@@ -3,6 +3,7 @@ var cheerio = require('cheerio');
 var express = require('express');
 var app = express();
 var URL = require('url');
+var path = require('path');
 
 app.use(express.static('public'));
 
@@ -37,9 +38,12 @@ var server = app.listen(3000, function () {
 
 function updateUrl(element, attribute, url, proxify) {
   var val = element.attr(attribute);
+  var pathname = URL.parse(url).pathname;
   if (val && val.indexOf('/') === 0) {
-    var pathname = URL.parse(url).pathname;
     val = url.replace(pathname, '') + val;
+  } else if (val && (val.indexOf('../') === 0 || val.indexOf('./') === 0)) {
+    var dir = path.dirname(pathname);
+    val = url.replace(pathname, dir) + '/' + val;
   } else {
     var sep = url[url.length - 1] === '/' ? '' : '/';
     val = url + sep + val;
