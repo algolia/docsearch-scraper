@@ -1,0 +1,25 @@
+{
+  "index_name": "hugodocs",
+  "allowed_domains": [
+    "hugodocs.netlify.com"
+  ],
+  "start_urls": [
+    "http://hugodocs.netlify.com/"
+  ],
+  "stop_urls": [
+  ],
+  "selectors_exclude": [
+  ],
+  "selectors": {
+  	"lvl0": ".content-wrapper h1",
+    "lvl1": ".content-wrapper h2",
+    "lvl2": ".content-wrapper h3",
+    "lvl3": ".content-wrapper h4",
+    "lvl4": ".content-wrapper h5",
+    "text": ".content-wrapper p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
