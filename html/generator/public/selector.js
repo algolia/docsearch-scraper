@@ -74,7 +74,7 @@ function cssPath(el, path) {
 
 function getClassSelector(el) {
   return el.className && el.className.split(' ')
-  .filter(function(className) { return className !== 'algolia-hover' })
+  .filter(function(className) { return className !== 'algolia-hover' && className != 'algolia-deepest'; })
   .map(function(className) { return '.' + className })
   .join('');
 }
