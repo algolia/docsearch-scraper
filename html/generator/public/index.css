@@ -1,0 +1,62 @@
+html, body, .main {
+  height: 100%;
+}
+.main-left {
+  position: absolute;
+  top: 0;
+  right: 400px;
+  bottom: 0;
+  left: 0;
+}
+#code {
+  font-family: 'inconsolata', monaco, monospace;
+  width: 100%;
+}
+.main-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 50px;
+  width: 400px;
+  border-left: 2px solid #ccc;
+  padding: 0 20px;
+  overflow: scroll;
+}
+.iframe-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+}
+iframe {
+  width: 100%;
+  height: 100%;
+}
+.status-bar {
+  position: absolute;
+  height: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #efefef;
+  border-top: 2px solid #ccc;
+  font-size: 20px;
+  line-height: 50px;
+  padding-left: 20px;
+}
+.levels .fa-times {
+  cursor: pointer;
+  margin: 10px 5px;
+}
+.lvl-input { display: flex; }
+.lvl-input button{ width: 50px; }
+.lvl-input input{ flex-grow: 1; }
+.text button{ background :  #1f77b4 }
+.lvl0 button{ background :  #ff7f0e }
+.lvl1 button{ background :  #2ca02c }
+.lvl2 button{ background :  #d62728 }
+.lvl3 button{ background :  #9467bd }
+.lvl4 button{ background :  #8c564b }
+.lvl5 button{ background :  #e377c2 }
+.lvl6 button{ background :  #7f7f7f }
