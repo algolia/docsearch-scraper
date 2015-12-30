@@ -13,7 +13,7 @@ $(function(){
   updateCode();
 
   window.currentLevel = undefined;
-  $(document).on('click', '.levels .btn', function() {
+  $(document).on('click', '.levels .btn', function toggleLevelSelect() {
     if(window.currentLevel === undefined) {
       window.currentLevel = $(this);
       window.currentLevel.addClass('active');
@@ -29,27 +29,29 @@ $(function(){
       contentWindow.postMessage({type:'toggleMode', newMode: 'highlight'}, window.location.href);
     }
   });
-  $(document).on('click', '.levels .fa-times', function() {
-    var b = $(this).parent().find('.btn');
-    b.text(b.attr('rel'));
+
+  $(document).on('click', '.levels .fa-times', function clearInput() {
+    $(this).siblings('input').val('');
     updateCode();
     contentWindow.postMessage({type:'toggleMode', newMode: 'highlight'}, window.location.href);
   });
 
-  $('#start-urls, #stop-urls').on('change', updateCode);
+  $('#start-urls, #stop-urls, .lvl-input > input').on('change', updateCode);
   $('#start-urls').on('change', function() {
     $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
   });
 
   function onPathClick(path) {
-    if (window.currentLevel !== undefined) {
-      var val = window.currentLevel.text().substring(6);
+    var selectedLevel = window.currentLevel;
+    if (selectedLevel !== undefined) {
+      var inputForSelectedLevel = selectedLevel.siblings('input');
+      var val = inputForSelectedLevel.val();
       if (val) {
         val += ', ' + path;
       } else {
         val = path;
       }
-      window.currentLevel.text(window.currentLevel.attr('rel') + ': ' + val);
+      inputForSelectedLevel.val(val);
       updateCode();
     }
   }
@@ -63,10 +65,10 @@ $(function(){
     var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var code = {
       index_name: "FIXME",
-      allowed_domains: startUrls.map(function(e) {``
-                                     var a = document.createElement("a");
-                                     a.href = e;
-                                     return a.hostname;
+      allowed_domains: startUrls.map(function(e) {
+        var a = document.createElement("a");
+        a.href = e;
+        return a.hostname;
       }).reduce(function(arr, e) {
         if (arr.indexOf(e) < 0) arr.push(e);
         return arr;
@@ -75,13 +77,13 @@ $(function(){
       stop_urls: stopUrls,
       selectors_exclude: [],
       selectors: {
-        lvl0: $('.levels .btn[rel="lvl0"]').text().substring(6),
-        lvl1: $('.levels .btn[rel="lvl1"]').text().substring(6),
-        lvl2: $('.levels .btn[rel="lvl2"]').text().substring(6),
-        lvl3: $('.levels .btn[rel="lvl3"]').text().substring(6),
-        lvl4: $('.levels .btn[rel="lvl4"]').text().substring(6),
-        lvl5: $('.levels .btn[rel="lvl5"]').text().substring(6),
-        text: $('.levels .btn[rel="text"]').text().substring(6)
+        lvl0: $('.levels .lvl0 input').val(),
+        lvl1: $('.levels .lvl1 input').val(),
+        lvl2: $('.levels .lvl2 input').val(),
+        lvl3: $('.levels .lvl3 input').val(),
+        lvl4: $('.levels .lvl4 input').val(),
+        lvl5: $('.levels .lvl5 input').val(),
+        text: $('.levels .text input').val()
       },
       custom_settings: {},
       strategy: "default"
