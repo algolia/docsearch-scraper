@@ -1,0 +1,25 @@
+{
+  "index_name": "rudder_project",
+  "allowed_domains": [
+    "www.rudder-project.org"
+  ],
+  "start_urls": [
+    "http://www.rudder-project.org/doc"
+  ],
+  "stop_urls": [  ],
+  "selectors_exclude": [
+  	".bigtitle"
+  ],
+  "selectors": {
+  	"lvl0": "#header h1",
+    "lvl1": ".titlepage h2",
+    "lvl2": ".section h3",
+    "lvl3": ".section h4",
+    "lvl4": ".section h5",
+    "text": ".section p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
