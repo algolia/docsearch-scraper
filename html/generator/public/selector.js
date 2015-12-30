@@ -30,7 +30,7 @@ document.write('<style>.algolia-hover { outline: 1px solid red !important; curso
 
 
 
-$(document).on('mouseenter', SELECTOR, function() {
+$(document).on('mouseover', SELECTOR, function() {
   if(currentMode!=='select') return;
   $(this).addClass('algolia-hover');
   var selector = cssPath(this).join(' ');
