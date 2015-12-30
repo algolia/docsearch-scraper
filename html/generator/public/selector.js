@@ -33,9 +33,11 @@ document.write('<style>.algolia-hover.algolia-deepest { outline: 1px solid red !
 $(document).on('mouseover', SELECTOR, function() {
   if(currentMode!=='select') return;
   $(this).addClass('algolia-hover');
-  $('.algolia-hover:not(:has(.algolia-hover))').addClass('algolia-deepest');
-  var selector = cssPath(this).join(' ');
-  //window.parent.onPathHover(selector);
+  var el = $('.algolia-hover:not(:has(.algolia-hover))').addClass('algolia-deepest');
+  if (el.length === 0) {
+    return;
+  }
+  var selector = cssPath(el[0]).join(' ');
   parentWindow.postMessage({type: 'hover', selector: selector}, window.location.href);
 });
 
