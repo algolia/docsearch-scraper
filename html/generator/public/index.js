@@ -37,10 +37,12 @@ $(function(){
     contentWindow.postMessage({type:'toggleMode', newMode: 'highlight'}, window.location.href);
   });
 
-  $('#start-urls, #stop-urls, .lvl-input > input').on('change', updateCode);
+  $('#start-urls, #stop-urls, .lvl-input > input, #min_indexed_level, #strip_chars').on('change', updateCode);
   $('#start-urls').on('change', function() {
     $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
   });
+
+  $('#config').on('change', updateUI); 
 
   function onPathClick(path) {
     var selectedLevel = window.currentLevel;
@@ -62,6 +64,37 @@ $(function(){
   }
 
   function updateCode() {
+    var config = readConfigFromUI();
+    $('#config').val(JSON.stringify(config, null, 2));
+    contentWindow.postMessage({type:'config', config: config}, window.location.href);
+  }
+
+  function updateUI() {
+    var config = JSON.parse($(this).val());
+
+    $('.levels .lvl0 input').val(config.selectors.lvl0);
+    $('.levels .lvl1 input').val(config.selectors.lvl1);
+    $('.levels .lvl2 input').val(config.selectors.lvl2);
+    $('.levels .lvl3 input').val(config.selectors.lvl3);
+    $('.levels .lvl4 input').val(config.selectors.lvl4);
+    $('.levels .lvl5 input').val(config.selectors.lvl5);
+    $('.levels .lvl6 input').val(config.selectors.lvl6);
+    $('.levels .text input').val(config.selectors.text);
+
+    $('#stop-urls').val(config.stop_urls);
+    
+    var startUrls = config.start_urls;
+    $('#start-urls').val(startUrls);
+    $('iframe').attr('src', '/proxy?url=' + startUrls[0]);
+
+
+    $('#min_indexed_level').val(config.min_indexed_level || 0);
+    $('#strip_chars').val(config.strip_chars || '');
+
+    //contentWindow.postMessage({type:'config', config: config}, window.location.href);
+  }
+
+  function readConfigFromUI() {
     var startUrls = $('#start-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var config = {
@@ -95,7 +128,6 @@ $(function(){
         config.selectors[lvl] = v;
       }
     });
-    $('#config').text(JSON.stringify(config, null, 2));
-    contentWindow.postMessage({type:'config', config: config}, window.location.href);
+    return config 
   }
 });
