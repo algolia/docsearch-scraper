@@ -1,100 +1,74 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Scrapper Configurator</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css">
-  <style>
-    html, body, .main {
-      height: 100%;
-    }
-    .main-left {
-      position: absolute;
-      top: 0;
-      right: 400px;
-      bottom: 0;
-      left: 0;
-    }
-    .main-right {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 50px;
-      width: 400px;
-      border-left: 2px solid #ccc;
-      padding: 0 20px;
-      overflow: scroll;
-    }
-    .iframe-wrapper {
-      position: absolute;
-      top: 0;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-    }
-    .status-bar {
-      position: absolute;
-      height: 50px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #efefef;
-      border-top: 2px solid #ccc;
-      font-size: 20px;
-      line-height: 50px;
-      padding-left: 20px;
-    }
-    .levels .fa-times {
-      cursor: pointer;
-    }
+  <head>
+    <title>Scrapper Configurator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+  </head>
+  <body>
 
-  .text{ background :  #1f77b4 }
-  .lvl0{ background :  #ff7f0e }
-  .lvl1{ background :  #2ca02c }
-  .lvl2{ background :  #d62728 }
-  .lvl3{ background :  #9467bd }
-  .lvl4{ background :  #8c564b }
-  .lvl5{ background :  #e377c2 }
-  .lvl6{ background :  #7f7f7f }
-
-  </style>
-  <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
-</head>
-<body>
-
-  <div class="main">
-    <div class="main-left">
-      <div class="iframe-wrapper">
-        <iframe src="/blank.html" frameborder="0"></iframe>
+    <div class="main">
+      <div class="main-left">
+        <div class="iframe-wrapper">
+          <iframe src="/blank.html" frameborder="0"></iframe>
+        </div>
       </div>
-    </div>
-    <div class="main-right">
-      <h4>Start URLs</h4>
-      <textarea rows="4" style="width: 100%" id="start-urls"></textarea>
-      <h4>CSS Selectors</h4>
-      <div class="levels">
-        <p><button class="btn btn-default lvl0" rel="lvl0">lvl0</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default lvl1" rel="lvl1">lvl1</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default lvl2" rel="lvl2">lvl2</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default lvl3" rel="lvl3">lvl3</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default lvl4" rel="lvl4">lvl4</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default lvl5" rel="lvl5">lvl5</button> <i class="fa fa-times"></i></p>
-        <p><button class="btn btn-default text" rel="text">text</button> <i class="fa fa-times"></i></p>
+      <div class="main-right">
+        <h4>Start URLs</h4>
+        <textarea rows="4" style="width: 100%" id="start-urls"></textarea>
+        <h4>CSS Selectors</h4>
+        <div class="levels">
+          <p class='lvl0 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl0</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl1 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl1</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl2 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl2</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl3 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl3</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl4 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl4</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl5 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl5</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='lvl6 lvl-input'>
+            <button class="btn btn-default" rel="lvl0">lvl6</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+          <p class='text lvl-input'>
+            <button class="btn btn-default" rel="lvl0">Text</button>
+            <input type=text class="value"/>
+            <i class="fa fa-times"></i>
+          </p>
+        </div>
+        <h4>Stop URLs</h4>
+        <textarea rows="4" style="width: 100%" id="stop-urls"></textarea>
+        <hr />
+        <h4>Configuration</h4>
+        <textarea id="code" name="" rows="20" cols="30"></textarea>
       </div>
-      <h4>Stop URLs</h4>
-      <textarea rows="4" style="width: 100%" id="stop-urls"></textarea>
-      <hr />
-      <h4>Configuration</h4>
-      <pre id="code"></pre>
+      <div class="status-bar"></div>
     </div>
-    <div class="status-bar"></div>
-  </div>
-
-  <script src="index.js" type="text/javascript"></script>
-
-</body>
+    <script src="index.js" type="text/javascript"></script>
+  </body>
 </html>
