@@ -47,6 +47,8 @@ function updateUrl(element, attribute, url, proxify) {
   var pathname = URL.parse(url).pathname;
   if (val && val.indexOf('/') === 0) {
     val = url.replace(pathname, '') + val;
+  } else if (val && val.indexOf('#') === 0) {
+    val = url + val;
   } else {
     var dir = pathname.charAt(pathname.length - 1) === '/' ? pathname : path.dirname(pathname);
     val = url.replace(pathname, dir) + '/' + val;
