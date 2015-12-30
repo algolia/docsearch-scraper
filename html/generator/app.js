@@ -21,13 +21,19 @@ app.get('/proxy', function(req, res) {
     }
   }
 
-  var page = request.get(url, function(error, response, body) {
-    if (!error) {
-      var proxied = proxy(body, url);
-      res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-      res.send(proxied);
-    }
-  });
+  var page = request.get({
+        url: url,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36' //some webservers are stopping reques with empty user agent
+        },
+      },
+      function(error, response, body) {
+        if (!error) {
+          var proxied = proxy(body, url);
+          res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+          res.send(proxied);
+        }
+      });
 });
 
 var server = app.listen(3000, function () {
