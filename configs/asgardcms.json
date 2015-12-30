@@ -13,7 +13,7 @@
 
   ],
   "selectors": {
-    "lvl0": ".documentation > p:first-of-type",
+    "lvl0": "#sidebar-nav .current > a",
     "lvl1": ".documentation h2",
     "lvl2": ".documentation h3",
     "lvl3": ".documentation h4",
