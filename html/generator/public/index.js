@@ -63,7 +63,7 @@ $(function(){
   function updateCode() {
     var startUrls = $('#start-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
-    var code = {
+    var config = {
       index_name: "FIXME",
       allowed_domains: startUrls.map(function(e) {
         var a = document.createElement("a");
@@ -76,19 +76,25 @@ $(function(){
       start_urls: startUrls,
       stop_urls: stopUrls,
       selectors_exclude: [],
-      selectors: {
-        lvl0: $('.levels .lvl0 input').val(),
-        lvl1: $('.levels .lvl1 input').val(),
-        lvl2: $('.levels .lvl2 input').val(),
-        lvl3: $('.levels .lvl3 input').val(),
-        lvl4: $('.levels .lvl4 input').val(),
-        lvl5: $('.levels .lvl5 input').val(),
-        text: $('.levels .text input').val()
-      },
+      selectors: {},
       custom_settings: {},
       strategy: "default"
     };
-    $('#code').text(JSON.stringify(code, null, 2));
-    contentWindow.postMessage({type:'config', config: code}, window.location.href);
+    var minIndexedLevel = +$('#min_indexed_level').val();
+    if (minIndexedLevel > 0) {
+      config.min_indexed_level = minIndexedLevel;
+    }
+    var stripChars = $('#strip_chars').val();
+    if (stripChars !== '') {
+      config.strip_chars = stripChars;
+    }
+    $.each(['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'text'], function(i, lvl) {
+      var v = $('.levels .' + lvl + ' input').val();
+      if (v) {
+        config.selectors[lvl] = v;
+      }
+    });
+    $('#config').text(JSON.stringify(config, null, 2));
+    contentWindow.postMessage({type:'config', config: config}, window.location.href);
   }
 });
