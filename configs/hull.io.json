@@ -1,0 +1,25 @@
+{
+  "index_name": "hull.io",
+  "allowed_domains": [
+    "www.hull.io"
+  ],
+  "start_urls": [
+    "http://www.hull.io/docs"
+  ],
+  "stop_urls": [
+  	"http://www.hull.io/docs/apps/serve"
+  ],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".tree-nav-section li.active > a",
+    "lvl1": ".documentation-header h1",
+    "lvl2": ".documentation-body h2",
+    "lvl3": ".documentation-body h3",
+    "lvl4": ".documentation-body h4",
+    "text": ".documentation-header p, .documentation-body p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
