@@ -8,7 +8,7 @@ html, body, .main {
   bottom: 0;
   left: 0;
 }
-#code {
+#config {
   font-family: 'inconsolata', monaco, monospace;
   width: 100%;
 }
