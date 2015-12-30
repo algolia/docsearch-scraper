@@ -1,0 +1,24 @@
+{
+  "index_name": "thundersquared",
+  "allowed_domains": [
+    "docs.thundersquared.com"
+  ],
+  "start_urls": [
+    "http://docs.thundersquared.com/"
+  ],
+  "stop_urls": [
+    "http://docs.thundersquared.com/author/.*",
+    "http://docs.thundersquared.com/items/.*"
+  ],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".hkb-breadcrumbs li:nth-child(2)",
+    "lvl1": "header.entry-header h1.entry-title",
+    "lvl2": ".entry-content h4",
+    "lvl3": ".entry-content h5",
+    "text": ".entry-content p, .entry-content li"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "min_indexed_level": 1
+}
