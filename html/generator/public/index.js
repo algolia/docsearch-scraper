@@ -14,6 +14,7 @@ $(function(){
 
   window.currentLevel = undefined;
   $(document).on('click', '.levels .btn', function toggleLevelSelect() {
+    $('.status-bar').text('');
     if(window.currentLevel === undefined) {
       window.currentLevel = $(this);
       window.currentLevel.addClass('active');
