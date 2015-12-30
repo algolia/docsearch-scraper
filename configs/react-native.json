@@ -1,0 +1,23 @@
+{
+  "index_name": "react-native",
+  "allowed_domains": [
+    "facebook.github.io"
+  ],
+  "start_urls": [
+    "http://facebook.github.io/react-native/docs/getting-started.html",
+    "http://facebook.github.io/react-native/docs/.*"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [
+    ".hash-link"
+  ],
+  "selectors": {
+    "lvl0": ".documentationContent div.inner-content h1",
+    "lvl1": ".documentationContent div.inner-content h2",
+    "lvl2": ".documentationContent div.inner-content h3",
+    "lvl3": ".documentationContent div.inner-content h4",
+    "text": ".documentationContent div.inner-content p, .documentationContent div.inner-content li"
+  },
+  "custom_settings": {},
+  "strategy": "default"
+}
