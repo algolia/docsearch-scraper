@@ -14,7 +14,7 @@
     "lvl0": "#vinli-services-documentation h1, .wy-breadcrumbs li:nth-child(2)",
     "lvl1": ".section h1",
     "lvl2": ".section h2",
-    "text": ".section p, .sectionul.simple li"
+    "text": ".section p, .section ul.simple li"
   },
   "custom_settings": {},
   "strategy": "default",
