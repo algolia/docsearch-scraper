@@ -26,20 +26,21 @@ parentWindow.postMessage({type: 'pageLoad'}, window.location.href);
 
 var SELECTOR = 'h1, h2, h3, h4, h5, td, p, ul, ol, li, blockquote, div, span';
 
-document.write('<style>.algolia-hover { outline: 1px solid red !important; cursor: pointer; }</style>');
+document.write('<style>.algolia-hover.deepest { outline: 1px solid red !important; cursor: pointer; }</style>');
 
 
 
 $(document).on('mouseover', SELECTOR, function() {
   if(currentMode!=='select') return;
   $(this).addClass('algolia-hover');
+  $('.algolia-hover:not(:has(.algolia-hover))').addClass('deepest');
   var selector = cssPath(this).join(' ');
   //window.parent.onPathHover(selector);
   parentWindow.postMessage({type: 'hover', selector: selector}, window.location.href);
 });
 
 $(document).on('mouseout', SELECTOR, function() {
-  $(this).removeClass('algolia-hover');
+  $(this).removeClass('algolia-hover').removeClass('deepest');
 });
 
 $(document).on('click', SELECTOR, function() {
