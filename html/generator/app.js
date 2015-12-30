@@ -42,7 +42,7 @@ function updateUrl(element, attribute, url, proxify) {
   if (val && val.indexOf('/') === 0) {
     val = url.replace(pathname, '') + val;
   } else {
-    var dir = path.dirname(pathname);
+    var dir = pathname.charAt(pathname.length - 1) === '/' ? pathname : path.dirname(pathname);
     val = url.replace(pathname, dir) + '/' + val;
   }
   element.attr(attribute, (proxify ? '/proxy?url=' : '') + val);
