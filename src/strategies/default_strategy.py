@@ -2,6 +2,7 @@
 Default Strategy
 """
 from strategies.abstract_strategy import AbstractStrategy
+import re
 
 class DefaultStrategy(AbstractStrategy):
     """
@@ -44,6 +45,8 @@ class DefaultStrategy(AbstractStrategy):
         selector_all = []
         nodes_per_level = {}
         for level in levels:
+            match = re.match('\d+', level)
+
             level_selector = self.config.selectors[level]
             selector_all.append(level_selector)
             nodes_per_level[level] = self.cssselect(level_selector)
