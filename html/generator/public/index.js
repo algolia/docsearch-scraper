@@ -37,7 +37,7 @@ $(function(){
     contentWindow.postMessage({type:'toggleMode', newMode: 'highlight'}, window.location.href);
   });
 
-  $('#start-urls, #stop-urls, .lvl-input > input, #min_indexed_level, #strip_chars').on('change', updateCode);
+  $('#start-urls, #stop-urls, #index_name, .lvl-input > input, #min_indexed_level, #strip_chars').on('change', updateCode);
   $('#start-urls').on('change', function() {
     $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
   });
@@ -95,10 +95,11 @@ $(function(){
   }
 
   function readConfigFromUI() {
+    var indexName = $('#index_name').val();
     var startUrls = $('#start-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var stopUrls = $('#stop-urls').val().split("\n").filter(function(e) { return e !== ''; });
     var config = {
-      index_name: "FIXME",
+      index_name: indexName,
       allowed_domains: startUrls.map(function(e) {
         var a = document.createElement("a");
         a.href = e;
