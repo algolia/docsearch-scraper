@@ -77,10 +77,25 @@ class ConfigLoader(object):
         if not isinstance(data.get('stop_urls'), list):
             data['stop_urls'] = [data['stop_urls']]
 
-        # Allowed domains uses start url if empty
+        # Build default allowed_domains from start_urls and stop_urls
         if not data.get('allowed_domains'):
-            parsed_uri = urlparse(data.get('start_urls')[0])
-            data['allowed_domains'] = parsed_uri.netloc
+            if not data.get('allowed_domains'):
+                def get_domain(url):
+                    """ Return domain name from url """
+                    return urlparse(url).netloc
+
+                # Concatenating both list, being careful that they can be None
+                all_urls = data.get('start_urls', []) + data.get('stop_urls', [])
+                # Getting the list of domains for each of them
+                all_domains = [get_domain(_) for _ in all_urls]
+                # Removing duplicates
+                all_domains_unique = []
+                for domain in all_domains:
+                    if domain in all_domains_unique:
+                        continue
+                    all_domains_unique.append(domain)
+
+                data['allowed_domains'] = all_domains_unique
 
         # Allowed domains must be an array
         if not isinstance(data.get('allowed_domains'), list):
