@@ -45,7 +45,7 @@ class DefaultStrategy(AbstractStrategy):
         selector_all = []
         nodes_per_level = {}
         for level in levels:
-            match = re.match('\d+', level)
+            match = int(re.search(r'\d+', level).group(0))
 
             level_selector = self.config.selectors[level]
             selector_all.append(level_selector)
