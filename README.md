@@ -22,7 +22,7 @@ The config.json should look like:
 ```json
 {
     "index_name": "stripe",
-    "allowed_domains": ["stripe.com"],
+    "allowed_domains": "stripe.com",
     "start_urls": [
         "https://stripe.com/docs"
     ],
@@ -85,8 +85,9 @@ as `lvl1` and `h3` as `lvl2`. `text` is usually any `p` of text.
 
 ### `allowed_domains`
 
-This is the whitelist of domains the crawler will scan. If a link targets a page
-that is not in the whitelist, the crawler will not follow it.
+You can pass either a string or an array of strings. This is the whitelist of
+domains the crawler will scan. If a link targets a page that is not in the
+whitelist, the crawler will not follow it.
 
 Default is the domain of the first element in the `start_urls`
 
