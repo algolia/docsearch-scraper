@@ -1,0 +1,40 @@
+{
+  "index_name": "atinternet-solutions",
+  "allowed_domains": [
+    "developers.atinternet-solutions.com"
+  ],
+  "start_urls": [
+    "http://developers.atinternet-solutions.com"
+  ],
+  "stop_urls": [
+		"http://developers.atinternet-solutions.com/home",
+		"http://developers.atinternet-solutions.com/android-en",
+		"http://developers.atinternet-solutions.com/javascript-en",
+		"http://developers.atinternet-solutions.com/apple-en",
+		"http://developers.atinternet-solutions.com/windows-en",
+		"http://developers.atinternet-solutions.com/category/android-en",
+		"http://developers.atinternet-solutions.com/category/windows-en",
+		"http://developers.atinternet-solutions.com/category/javascript-en",
+		"http://developers.atinternet-solutions.com/category/apple-en",
+		"http://developers.atinternet-solutions.com/.*?kw="
+  ],
+  "selectors_exclude": [
+  	"#summary",
+  	"#ios-platforms",
+  	"#sidebar-module",
+  	".ui-tabs-anchor"
+  ],
+  "selectors": {
+    "lvl0": "main section .entry-meta > span > span > a",
+    "lvl1": "main section .entry-meta > span > span > span > a",
+    "lvl2": "main section article .single-content h1",
+    "lvl3": "main section article .single-content h2",
+    "lvl4": "main section article .single-content h3",
+    "lvl5": "main section article .single-content h4",
+    "text": "main section article .single-content p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
