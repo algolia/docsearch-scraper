@@ -1,0 +1,22 @@
+{
+    "index_name": "test_index_name",
+    "allowed_domains": ["test_allowed_domains.com"],
+    "start_urls": [
+        "https://www.test_start_urls.com/docs/"
+    ],
+    "stop_urls": [
+    ],
+    "selectors_exclude": [
+    ],
+    "selectors": {
+      "lvl0": "h1",
+      "lvl1": "h2",
+      "lvl2": "h3",
+      "lvl3": "h4",
+      "lvl4": "h5",
+      "lvl5": "h6",
+      "text": "p"
+    },
+    "custom_settings": {},
+    "strategy": "default"
+}

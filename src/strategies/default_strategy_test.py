@@ -35,32 +35,32 @@ STRATEGY = DefaultStrategy(ConfigLoader())
 
 class TestGetRecordsFromDom:
 
-    # def test_simple(self):
-    #     # Given
-    #     STRATEGY.dom = lxml.html.fromstring("""
-    #     <html><body>
-    #          <h1>Foo</h1>
-    #          <h2>Bar</h2>
-    #          <h3>Baz</h3>
-    #     </body></html>
-    #     """)
+    def test_simple(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+             <h1>Foo</h1>
+             <h2>Bar</h2>
+             <h3>Baz</h3>
+        </body></html>
+        """)
 
-    #     # When
-    #     actual = STRATEGY.get_records_from_dom()
+        # When
+        actual = STRATEGY.get_records_from_dom()
 
-    #     # Then
-    #     assert len(actual) == 3
-    #     assert actual[0]['hierarchy']['lvl0'] == 'Foo'
-    #     assert actual[0]['hierarchy']['lvl1'] == None
-    #     assert actual[0]['hierarchy']['lvl2'] == None
+        # Then
+        assert len(actual) == 3
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
 
-    #     assert actual[1]['hierarchy']['lvl0'] == 'Foo'
-    #     assert actual[1]['hierarchy']['lvl1'] == 'Bar'
-    #     assert actual[1]['hierarchy']['lvl2'] == None
+        assert actual[1]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[1]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[1]['hierarchy']['lvl2'] == None
 
-    #     assert actual[2]['hierarchy']['lvl0'] == 'Foo'
-    #     assert actual[2]['hierarchy']['lvl1'] == 'Bar'
-    #     assert actual[2]['hierarchy']['lvl2'] == 'Baz'
+        assert actual[2]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[2]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[2]['hierarchy']['lvl2'] == 'Baz'
 
     def test_text(self):
         # Given

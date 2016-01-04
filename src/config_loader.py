@@ -1,6 +1,7 @@
 """
 Load the config from the CONFIG environment variable
 """
+from urlparse import urlparse
 import os.path
 import json
 import os
@@ -9,6 +10,7 @@ class ConfigLoader(object):
     """
     ConfigLoader
     """
+    # We define them here so the linters/autocomplete know what to expect
     allowed_domains = None
     api_key = None
     app_id = None
@@ -18,42 +20,87 @@ class ConfigLoader(object):
     selectors = None
     selectors_exclude = None
     start_urls = None
-    stop_urls = None
+    allow_urls = None
+    deny_urls = None
+    stop_urls = None # Deprecated, should use deny_urls instead
     strategy = None
     strip_chars = None
     min_indexed_level = 0
 
     def __init__(self):
-        if os.environ['CONFIG'] is None:
+        if os.environ['CONFIG'] is '':
             exit('env `CONFIG` missing')
 
-        data = json.loads(os.environ['CONFIG'])
+        try:
+            data = json.loads(os.environ['CONFIG'])
+        except ValueError:
+            raise ValueError('CONFIG is not a valid JSON')
+
+        # Check for all mandatory variables
+        data = self.assert_config(data)
+
         # Merge other ENV variables
         data['app_id'] = os.environ['APPLICATION_ID']
         data['api_key'] = os.environ['API_KEY']
         data['index_prefix'] = os.environ['INDEX_PREFIX']
+
+
+
+
+        # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
+        for key, value in data.iteritems():
+            setattr(self, key, value)
 
-        # List of keys to expose
-        public_config_keys = [
-            'allowed_domains',
-            'api_key',
-            'app_id',
-            'custom_settings',
-            'index_name',
-            'index_prefix',
-            'min_indexed_level',
-            'selectors',
-            'selectors_exclude',
-            'start_urls',
-            'stop_urls',
-            'strategy',
-            'strip_chars'
-        ]
+    @staticmethod
+    def assert_config(user_data):
+        """Check for all needed parameters in config"""
 
-        # Expose all the data as public attributes
-        for name in public_config_keys:
-            value = data.get(name)
+        # Set default values
+        default_data = {
+            'allow_urls': [],
+            'deny_url': [],
+            'start_urls': [],
+        }
+        data = default_data.copy()
+        data.update(user_data)
 
-            if value is not None:
-                setattr(self, name, data[name])
+        if not data.get('index_name'):
+            raise ValueError('index_name is not defined')
+
+        # Start_urls is mandatory
+        if not data.get('start_urls'):
+            raise ValueError('start_urls is not defined')
+
+        # Start urls must be an array
+        if not isinstance(data.get('start_urls'), list):
+            data['start_urls'] = [data['start_urls']]
+
+        # stop_urls is deprecated
+        if 'stop_urls' in data:
+            # Use it instead of deny_urls if none set
+            deny_urls = data.get('deny_urls', None)
+            if not deny_urls:
+                data['deny_urls'] = data['stop_urls']
+            data.pop('stop_urls', None)
+
+        # Deny urls must be an array
+        if not isinstance(data.get('deny_urls'), list):
+            data['deny_urls'] = [data['deny_urls']]
+
+        # Allow urls must be an array
+        if not isinstance(data.get('allow_urls'), list):
+            data['allow_urls'] = [data['allow_urls']]
+
+        # Allowed domains uses start url if empty
+        if not data.get('allowed_domains'):
+            parsed_uri = urlparse(data.get('start_urls')[0])
+            data['allowed_domains'] = parsed_uri.netloc
+
+        # Allowed domains must be an array
+        if not isinstance(data.get('allowed_domains'), list):
+            data['allowed_domains'] = [data['allowed_domains']]
+
+
+
+        return data
