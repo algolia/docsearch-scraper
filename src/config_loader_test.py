@@ -19,7 +19,7 @@ class TestInit:
             'selectors': 'selectors',
             'selectors_exclude': 'selectors_exclude',
             'start_urls': 'start_urls',
-            'stop_urls': 'stop_urls',
+            'stop_urls': 'http://www.stopurl.com/',
             'strategy': 'strategy',
             'strip_chars': 'strip_chars'
         }
@@ -122,12 +122,12 @@ class TestInit:
         with pytest.raises(ValueError):
             ConfigLoader()
 
-    def test_allowed_domains_uses_start_url_as_default(self):
-        """ Should use domain of start_urls for allowed_domains if none is set
-        """
+    def test_allowed_domains_start(self):
+        """ Should populate allowed_domains from start_urls """
         # Given
         self.config({
             'start_urls': 'http://www.foo.bar/',
+            'stop_urls': [],
             'allowed_domains': None
         })
 
@@ -136,3 +136,37 @@ class TestInit:
 
         # Then
         assert actual.allowed_domains == ['www.foo.bar']
+    
+    def test_allowed_domains_start_stop(self):
+        """ Should populate allowed_domains from both start and stop urls """
+        # Given
+        self.config({
+            'start_urls': 'http://www.foo.bar/',
+            'stop_urls': 'http://www.algolia.com/',
+            'allowed_domains': None
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
+
+    def test_allowed_domains_unique(self):
+        """ Should populate a list of unique domains """
+        # Given
+        self.config({
+            'start_urls': 'http://www.foo.bar/',
+            'stop_urls': [
+                'http://www.algolia.com/',
+                'http://www.foo.bar/'
+            ],
+            'allowed_domains': None
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
+
