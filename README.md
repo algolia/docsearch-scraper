@@ -69,6 +69,8 @@ page in order, following every link it finds on the page. It will only stop if
 the domain is outside of the `allowed_domains` or if the link is blacklisted in
 `stop_urls`.
 
+Note that it currently does not follow 301 redirects.
+
 ### `selectors`
 
 **Mandatory**
@@ -94,6 +96,12 @@ This is the blacklist of urls on which the crawler should stop. If a link in
 a crawled webpage targets one the elements in the `stop_urls` list, the crawler
 will not follow the link.
 
+Note that you can use regexps as well as plain urls.
+
+Note: It is sometimes needed to add `http://www.example.com/index.html` pages to
+the `stop_urls` list if you set `http://www.example.com` as a `start_urls`, to
+avoid duplicated content.
+
 ### `selectors_exclude`
 
 By default, the `selectors` search is applied page-wide. If there are some parts
@@ -109,6 +117,15 @@ settings.
 
 Don't pay attention to this config option. We currently have only one strategy
 in the source code.
+
+### `min_indexed_level`
+
+Lets you define the minimum level at which you want records to be indexed. For
+example, with a `min_indexed_level: 1`, you will only index records that have at
+least a `lvl1` field.
+
+This is especially useful when the documentation is split into several pages,
+but all pages duplicates the main title (see [this issue][1].
 
 ## Test the UX/UI with the playground
 
@@ -183,3 +200,6 @@ $ docker run \
     --name docname \
     -t algolia/documentation-scrapper
 ```
+
+
+[1]: https://github.com/algolia/documentation-scrapper/issues/7)
