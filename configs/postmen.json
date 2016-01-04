@@ -1,0 +1,27 @@
+{
+  "index_name": "postmen",
+  "allowed_domains": [
+    "docs.postmen.com"
+  ],
+  "start_urls": [
+    "https://docs.postmen.com"
+  ],
+  "stop_urls": [
+  	"https://docs.postmen.com/index.html"
+  ],
+  "selectors_exclude": [
+  	".api-resource__description",
+  	".api-endpoint-reqres"
+  ],
+  "selectors": {
+    "lvl0": "#page-content h2, header li.active",
+    "lvl1": "#page-content h3",
+    "lvl2": "#page-content h4",
+    "text": "#page-content p"
+  },
+  "custom_settings": {
+  },
+  "strategy": "default",
+  "strip_chars": " :;,.",
+  "min_indexed_level": 1
+}
