@@ -126,7 +126,7 @@ example, with a `min_indexed_level: 1`, you will only index records that have at
 least a `lvl1` field.
 
 This is especially useful when the documentation is split into several pages,
-but all pages duplicates the main title (see [this issue][1].
+but all pages duplicates the main title (see [this issue][1]).
 
 ## Test the UX/UI with the playground
 
@@ -203,4 +203,4 @@ $ docker run \
 ```
 
 
-[1]: https://github.com/algolia/documentation-scrapper/issues/7)
+[1]: https://github.com/algolia/documentation-scrapper/issues/7
