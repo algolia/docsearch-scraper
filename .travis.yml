@@ -1,0 +1,9 @@
+language: python
+sudo: required
+
+services:
+  - docker
+
+script:
+  - docker build -t algolia/documentation-scrapper-dev -f Dockerfile.dev .
+  - ./test
