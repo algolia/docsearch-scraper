@@ -9,11 +9,9 @@
   "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": "#main-header",
-    "lvl1": ".container > .inner h2",
-    "lvl2": ".container > .inner h3",
-    "lvl3": ".container > .inner h4",
-    "lvl4": ".container > .inner h5",
+    "lvl0": ".container > .inner h2",
+    "lvl1": ".container > .inner h3",
+    "lvl2": ".container > .inner h5",
     "text": ".container > .inner p"
   },
   "custom_settings": {
