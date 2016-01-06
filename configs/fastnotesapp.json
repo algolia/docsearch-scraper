@@ -9,14 +9,11 @@
     "selectors_exclude": [
     ],
     "selectors": {
-      "lvl0": ".box-c-topic h2",
-      "lvl1": ".bla",
-      "lvl2": ".bla",
-      "lvl3": ".bla",
-      "lvl4": ".bla",
-      "lvl5": ".bla",
+      "lvl0": ".breadcrumbs li:nth-child(2)",
+      "lvl1": ".box-c-topic h2",
       "text": ".topic-description p"
     },
     "custom_settings": {},
-    "strategy": "default"
+    "strategy": "default",
+    "min_indexed_level": 1
 }
