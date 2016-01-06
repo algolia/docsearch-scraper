@@ -7,10 +7,32 @@
     "https://docs.postmen.com"
   ],
   "stop_urls": [
-  	"https://docs.postmen.com/index.html"
+    "https://docs.postmen.com/index.html",
+    "https://docs.postmen.com/aramex.html",
+    "https://docs.postmen.com/myhermes-uk.html",
+    "https://docs.postmen.com/sf-express.html",
+    "https://docs.postmen.com/ups-mi.html",
+    "https://docs.postmen.com/yodel.html",
+    "https://docs.postmen.com/endicia.html",
+    "https://docs.postmen.com/quantium.html",
+    "https://docs.postmen.com/ups.html",
+    "https://docs.postmen.com/tnt.html",
+    "https://docs.postmen.com/purolator.html",
+    "https://docs.postmen.com/fastway-au.html",
+    "https://docs.postmen.com/parcelled-in.html",
+    "https://docs.postmen.com/hong-kong-post.html",
+    "https://docs.postmen.com/fedex.html",
+    "https://docs.postmen.com/dpd-nl.html",
+    "https://docs.postmen.com/dpex.html",
+    "https://docs.postmen.com/fedex-smartpost.html",
+    "https://docs.postmen.com/dpd-uk.html",
+    "https://docs.postmen.com/bpost-international.html",
+    "https://docs.postmen.com/dhl.html",
+    "https://docs.postmen.com/dhl-global-mail-asia.html",
+    "https://docs.postmen.com/bring.html",
+    "https://docs.postmen.com/canpar.html"
   ],
   "selectors_exclude": [
-  	".api-resource__description",
   	".api-endpoint-reqres"
   ],
   "selectors": {
