@@ -11,14 +11,18 @@
   	"#header"
   ],
   "selectors": {
-    "lvl0": ".content h2",
-    "lvl1": ".content h3",
-    "lvl2": ".content h4",
-    "lvl3": ".content h5",
+    "lvl0": {
+      "selector": ".pm-accordion .category-title:not(.collapsed)",
+      "global": true
+    },
+    "lvl1": ".content h2",
+    "lvl2": ".content h3",
+    "lvl3": ".content h4",
+    "lvl4": ".content h5",
+    "lvl5": ".content p b",
     "text": ".content p"
   },
   "custom_settings": {},
   "strategy": "default",
-  "strip_chars": " :;,.",
-  "min_indexed_level": 3
+  "strip_chars": " :;,."
 }

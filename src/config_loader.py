@@ -42,9 +42,6 @@ class ConfigLoader(object):
         data['api_key'] = os.environ['API_KEY']
         data['index_prefix'] = os.environ['INDEX_PREFIX']
 
-
-
-
         # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
         for key, value in data.iteritems():

@@ -33,6 +33,7 @@ os.environ['CONFIG'] = json.dumps({
 
 STRATEGY = DefaultStrategy(ConfigLoader())
 
+
 class TestGetRecordsFromDom:
 
     # def test_simple(self):
@@ -353,12 +354,12 @@ class TestGetRecordsFromDom2:
         </body></html>
         """)
 
-        STRATEGY.config.selectors = {
+        STRATEGY.set_selectors({
             'lvl0': 'h1',
             'lvl1': 'h2',
             'lvl2': 'h3',
             'text': 'p'
-        }
+        })
 
         # When
         actual = STRATEGY.get_records_from_dom()
@@ -369,3 +370,110 @@ class TestGetRecordsFromDom2:
         assert actual[0]['hierarchy']['lvl0'] == None
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
+
+class TestGetRecordsFromDomWithGlobalLevels:
+    def test_global_title_at_the_end(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <p>text</p>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+            <h1>Foo</h1>
+        </body></html>
+        """)
+
+        STRATEGY.set_selectors({
+            'lvl0': {
+                'selector': 'h1',
+                'global': 'true'
+            },
+            'lvl1': 'h2',
+            'lvl2': 'h3',
+            'text': 'p'
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[0]['type'] == 'text'
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[0]['hierarchy']['lvl1'] == None
+        assert actual[0]['hierarchy']['lvl2'] == None
+        assert actual[0]['content'] == 'text'
+
+        assert actual[3]['type'] == 'lvl0'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[3]['hierarchy']['lvl1'] == None
+        assert actual[3]['hierarchy']['lvl2'] == None
+
+    def test_several_match_for_global_selector(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <p>text</p>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+            <h1>Foo</h1>
+            <h1>Foo</h1>
+        </body></html>
+        """)
+
+        STRATEGY.set_selectors({
+            'lvl0': {
+                'selector': 'h1',
+                'global': 'true'
+            },
+            'lvl1': 'h2',
+            'lvl2': 'h3',
+            'text': 'p'
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+        assert actual[3]['type'] == 'lvl0'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo Foo'
+        assert actual[3]['hierarchy']['lvl1'] == None
+        assert actual[3]['hierarchy']['lvl2'] == None
+
+
+    def test_several_global_selectors(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <p>text</p>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+            <h1>Foo</h1>
+            <h1>Foo</h1>
+        </body></html>
+        """)
+
+        STRATEGY.set_selectors({
+            'lvl0': {
+                'selector': 'h1',
+                'global': True
+            },
+            'lvl1': {
+                'selector': 'h2',
+                'global': 'true'
+            },
+            'lvl2': 'h3',
+            'text': 'p'
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+        assert actual[0]['type'] == 'text'
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo Foo'
+        assert actual[0]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[0]['hierarchy']['lvl2'] is None
+        assert actual[0]['content'] == 'text'

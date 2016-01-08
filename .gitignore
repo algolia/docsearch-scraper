@@ -3,3 +3,5 @@ src/*.pyc
 src/strategies/*.pyc
 run
 .DS_Store
+src/__pycache__/
+src/strategies/__pycache__/
