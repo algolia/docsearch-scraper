@@ -83,6 +83,8 @@ relevance.
 A default config would be to target the page `title` or `h1` as `lvl0`, the `h2`
 as `lvl1` and `h3` as `lvl2`. `text` is usually any `p` of text.
 
+#### Global selectors
+
 It's possible to make a selector global which mean that all records for the page will have
 this value. This is useful when you have a title that in right sidebar because
 the sidebar is after the content on dom.
@@ -90,8 +92,28 @@ the sidebar is after the content on dom.
 ```
 "selectors": {
   "lvl0": {
-    "selector", "#content header h1",
+    "selector": "#content header h1",
     "global": true
+  },
+  "lvl1": "#content article h1",
+  "lvl2": "#content section h3",
+  "lvl3": "#content section h4",
+  "lvl4": "#content section h5",
+  "lvl5": "#content section h6",
+  "text": "#content header p,#content section p,#content section ol"
+}
+```
+
+#### Xpath selector
+
+By default selector are considered css selectors but you can specify that a selector is an xpath one.
+This is useful when you want to do more complex selection like selecting the parent of a node.
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "//li[@class="chapter active done"]/../../a",
+    "xpath": true
   },
   "lvl1": "#content article h1",
   "lvl2": "#content section h3",
