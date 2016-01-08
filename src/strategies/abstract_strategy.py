@@ -6,6 +6,8 @@ import json
 """
 Abstract Strategy
 """
+
+
 class AbstractStrategy(object):
     """
     Abstract Strategy
@@ -14,6 +16,28 @@ class AbstractStrategy(object):
 
     def __init__(self, config):
         self.config = config
+        self.config.selectors = self.parse_selectors(self.config.selectors)
+
+    def set_selectors(self, selectors):
+        self.config.selectors = self.parse_selectors(selectors)
+
+    @staticmethod
+    def parse_selectors(config_selectors):
+        selectors = {}
+
+        for key in config_selectors:
+            selectors[key] = config_selectors[key]
+
+            # Backward compatibility, if it's a string then we put it in an object
+            if isinstance(selectors[key], basestring):
+                selectors[key] = {'selector': selectors[key]}
+
+            if 'global' in selectors[key]:
+                selectors[key]['global'] = bool(selectors[key]['global'])
+            else:
+                selectors[key]['global'] = False
+
+        return selectors
 
     @staticmethod
     def pprint(data):
@@ -34,6 +58,11 @@ class AbstractStrategy(object):
     def get_text(element):
         """Return the text content of a DOM node"""
         return element.text_content().strip()
+
+    @staticmethod
+    def get_text_from_nodes(elements):
+        """Return the text content of a set of DOM nodes"""
+        return ' '.join([element.text_content().strip() for element in elements])
 
     @staticmethod
     def remove_from_dom(dom, exclude_selectors):

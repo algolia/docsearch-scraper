@@ -1,6 +1,7 @@
 """
 Default Strategy
 """
+from lxml.cssselect import CSSSelector
 from strategies.abstract_strategy import AbstractStrategy
 
 class DefaultStrategy(AbstractStrategy):
@@ -12,6 +13,7 @@ class DefaultStrategy(AbstractStrategy):
     def __init__(self, config):
         super(DefaultStrategy, self).__init__(config)
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5']
+        self.global_content = {}
 
     def get_records_from_response(self, response):
         """
@@ -50,14 +52,26 @@ class DefaultStrategy(AbstractStrategy):
             used_levels.append(level)
         if 'text' in self.config.selectors:
             used_levels.append('text')
+
         levels = used_levels
 
         selector_all = []
         nodes_per_level = {}
+
         for level in levels:
             level_selector = self.config.selectors[level]
-            selector_all.append(level_selector)
-            nodes_per_level[level] = self.cssselect(level_selector)
+            selector_all.append(level_selector['selector'])
+
+            matching_dom_nodes = self.cssselect(level_selector['selector'])
+
+            if not level_selector['global']:
+                nodes_per_level[level] = matching_dom_nodes
+            else:
+                # Be safe in case the selector match more than once by concatenating all the matching content
+                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes)
+                global_nodes = matching_dom_nodes
+                # We only want 1 record
+                nodes_per_level[level] = [global_nodes[0]] if len(global_nodes) > 0 else []
 
         nodes = self.cssselect(",".join(selector_all))
 
@@ -69,12 +83,20 @@ class DefaultStrategy(AbstractStrategy):
             anchors['lvl' + str(index)] = None
 
         records = []
+
         for position, node in enumerate(nodes):
             # Which level is the selector matching?
+            current_level = None
+
             for level in levels:
                 if node in nodes_per_level[level]:
                     current_level = level
                     break
+
+            # If the current node is part of a global level it's posible
+            # that it doesn't match because we take only one node for global selectors
+            if current_level is None:
+                continue
 
             # We set the hierarchy as the same as the previous one
             # We override the current level
@@ -84,7 +106,11 @@ class DefaultStrategy(AbstractStrategy):
             # Update the hierarchy for each new header
             current_level_int = int(current_level[3:]) if current_level != 'text' else 6 # 6 > lvl5
             if current_level != 'text':
-                hierarchy[current_level] = self.get_text(node)
+                if current_level not in self.global_content:
+                    hierarchy[current_level] = self.get_text(node)
+                else:
+                    hierarchy[current_level] = self.global_content[current_level]
+
                 anchors[current_level] = self.get_anchor(node)
 
                 for index in range(current_level_int + 1, 6):
@@ -94,6 +120,10 @@ class DefaultStrategy(AbstractStrategy):
 
             if current_level_int < self.config.min_indexed_level:
                 continue
+
+            for index in range(0, current_level_int + 1):
+                if 'lvl' + str(index) in self.global_content:
+                    hierarchy['lvl' + str(index)] = self.global_content['lvl' + str(index)]
 
             # Getting the element anchor as the closest one
             anchor = None
@@ -198,27 +228,6 @@ class DefaultStrategy(AbstractStrategy):
             settings.update(self.config.custom_settings)
 
         return settings
-
-    def get_all_parent_selectors(self, set_level):
-        """Returns a large selector that contains all the selectors for all the
-        levels above the specified one"""
-        parent_selectors = []
-        for level in self.levels:
-            if level == set_level:
-                break
-            parent_selectors.append(self.config.selectors[level])
-        return ",".join(parent_selectors)
-
-    def selector_level_matched(self, set_element):
-        """Returns which selector level this element is matching"""
-        levels = list(self.levels)
-        levels.append('text')
-        for level in levels:
-            matches = self.cssselect(self.config.selectors[level])
-            for match in matches:
-                if self.elements_are_equals(match, set_element):
-                    return level
-        return False
 
     @staticmethod
     def get_anchor_string_from_element(element):
