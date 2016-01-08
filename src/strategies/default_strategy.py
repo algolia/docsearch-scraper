@@ -1,7 +1,6 @@
 """
 Default Strategy
 """
-from lxml.cssselect import CSSSelector
 from strategies.abstract_strategy import AbstractStrategy
 
 class DefaultStrategy(AbstractStrategy):
@@ -36,8 +35,12 @@ class DefaultStrategy(AbstractStrategy):
         return records
 
     def get_records_from_dom(self):
+
         if self.dom is None:
             exit('DefaultStrategy.dom is not defined')
+
+        # Reset it to be able to have a clean instance when testing
+        self.global_content = {}
 
         # We get a big selector that matches all relevant nodes, in order
         # But we also keep a list of all matches for each individual level
@@ -62,7 +65,7 @@ class DefaultStrategy(AbstractStrategy):
             level_selector = self.config.selectors[level]
             selector_all.append(level_selector['selector'])
 
-            matching_dom_nodes = self.cssselect(level_selector['selector'])
+            matching_dom_nodes = self.select(level_selector['selector'])
 
             if not level_selector['global']:
                 nodes_per_level[level] = matching_dom_nodes
@@ -73,7 +76,7 @@ class DefaultStrategy(AbstractStrategy):
                 # We only want 1 record
                 nodes_per_level[level] = [global_nodes[0]] if len(global_nodes) > 0 else []
 
-        nodes = self.cssselect(",".join(selector_all))
+        nodes = self.select(" | ".join(selector_all))
 
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = {}
@@ -105,6 +108,7 @@ class DefaultStrategy(AbstractStrategy):
 
             # Update the hierarchy for each new header
             current_level_int = int(current_level[3:]) if current_level != 'text' else 6 # 6 > lvl5
+
             if current_level != 'text':
                 if current_level not in self.global_content:
                     hierarchy[current_level] = self.get_text(node)

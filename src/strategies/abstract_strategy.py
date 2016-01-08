@@ -1,4 +1,6 @@
+from cssselect import HTMLTranslator
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 import lxml
 import re
 import json
@@ -36,6 +38,18 @@ class AbstractStrategy(object):
                 selectors[key]['global'] = bool(selectors[key]['global'])
             else:
                 selectors[key]['global'] = False
+
+            if 'type' in selectors[key]:
+                if selectors[key]['type'] not in ['xpath', 'css']:
+                    raise Exception(selectors[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
+            else:
+                selectors[key]['type'] = 'css'
+
+            if selectors[key]['type'] == 'css':
+                selectors[key]['selector'] = AbstractStrategy.css_to_xpath(selectors[key]['selector'])
+
+            # We don't need it because everything is xpath now
+            selectors[key].pop('type')
 
         return selectors
 
@@ -96,22 +110,14 @@ class AbstractStrategy(object):
             return 100 - int(matches.group(1)) * 10
         return 0
 
-    def element_matches_selector(self, set_element, selectors):
-        """Returns true if `element` matches at least one of the selectors"""
-        if len(selectors) == 0:
-            return False
-        # We get all the elements in the page that matches the selector and see
-        # if the given one is in the list
-        all_matches = self.cssselect(selectors)
-        for match in all_matches:
-            if self.elements_are_equals(match, set_element):
-                return True
+    @staticmethod
+    def css_to_xpath(css):
+        return HTMLTranslator().css_to_xpath(css)
 
-        return False
-
-    def cssselect(self, selector):
+    def select(self, path):
         """Select an element in the current DOM using speficied CSS selector"""
-        return CSSSelector(selector)(self.dom)
+
+        return XPath(path)(self.dom)
 
     def get_index_settings(self):
         raise Exception('get_index_settings need to be implemented')
