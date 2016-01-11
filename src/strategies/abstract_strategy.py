@@ -34,11 +34,13 @@ class AbstractStrategy(object):
             if isinstance(selectors[key], basestring):
                 selectors[key] = {'selector': selectors[key]}
 
+            # Global
             if 'global' in selectors[key]:
                 selectors[key]['global'] = bool(selectors[key]['global'])
             else:
                 selectors[key]['global'] = False
 
+            # Type
             if 'type' in selectors[key]:
                 if selectors[key]['type'] not in ['xpath', 'css']:
                     raise Exception(selectors[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
@@ -51,7 +53,11 @@ class AbstractStrategy(object):
             # We don't need it because everything is xpath now
             selectors[key].pop('type')
 
+            # Default value
             selectors[key]['default_value'] = selectors[key]['default_value'] if 'default_value' in selectors[key] else None
+
+            # Strip chars
+            selectors[key]['strip_chars'] = selectors[key]['strip_chars'] if 'strip_chars' in selectors[key] else None
 
         return selectors
 
@@ -70,18 +76,23 @@ class AbstractStrategy(object):
 
         return lxml.html.fromstring(body)
 
-    @staticmethod
-    def get_text(element):
-        """Return the text content of a DOM node"""
-        return element.text_content().strip()
+    def get_strip_chars(self, level):
+        if self.config.selectors[level]['strip_chars'] is None:
+            return self.config.strip_chars
+        return self.config.selectors[level]['strip_chars']
 
     @staticmethod
-    def get_text_from_nodes(elements):
+    def get_text(element, strip_chars=None):
+        """Return the text content of a DOM node"""
+        return element.text_content().strip(strip_chars)
+
+    @staticmethod
+    def get_text_from_nodes(elements, strip_chars=None):
         """Return the text content of a set of DOM nodes"""
         if len(elements) == 0:
             return None
 
-        return ' '.join([element.text_content().strip() for element in elements])
+        return ' '.join([element.text_content().strip(strip_chars) for element in elements])
 
     @staticmethod
     def remove_from_dom(dom, exclude_selectors):
