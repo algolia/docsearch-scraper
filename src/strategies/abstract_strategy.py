@@ -51,6 +51,8 @@ class AbstractStrategy(object):
             # We don't need it because everything is xpath now
             selectors[key].pop('type')
 
+            selectors[key]['default_value'] = selectors[key]['default_value'] if 'default_value' in selectors[key] else None
+
         return selectors
 
     @staticmethod
@@ -76,6 +78,9 @@ class AbstractStrategy(object):
     @staticmethod
     def get_text_from_nodes(elements):
         """Return the text content of a set of DOM nodes"""
+        if len(elements) == 0:
+            return None
+
         return ' '.join([element.text_content().strip() for element in elements])
 
     @staticmethod
