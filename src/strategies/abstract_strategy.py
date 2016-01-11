@@ -28,7 +28,12 @@ class AbstractStrategy(object):
         selectors = {}
 
         for key in config_selectors:
-            selectors[key] = config_selectors[key]
+            if key != 'text':
+                selectors[key] = config_selectors[key]
+            else:
+                # Backward compatibility, rename text to content
+                key = 'content'
+                selectors[key] = config_selectors['text']
 
             # Backward compatibility, if it's a string then we put it in an object
             if isinstance(selectors[key], basestring):
@@ -119,7 +124,7 @@ class AbstractStrategy(object):
 
         >>> self.get_level_weight('lvl0') = 100
         >>> self.get_level_weight('lvl3') = 70
-        >>> self.get_level_weight('text') = 0
+        >>> self.get_level_weight('content') = 0
         """
         matches = re.match(r'lvl([0-9]*)', level)
         if matches:
