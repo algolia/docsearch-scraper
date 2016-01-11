@@ -53,8 +53,8 @@ class DefaultStrategy(AbstractStrategy):
             if level not in self.config.selectors:
                 break
             used_levels.append(level)
-        if 'text' in self.config.selectors:
-            used_levels.append('text')
+        if 'content' in self.config.selectors:
+            used_levels.append('content')
 
         levels = used_levels
 
@@ -107,9 +107,9 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy = previous_hierarchy.copy()
 
             # Update the hierarchy for each new header
-            current_level_int = int(current_level[3:]) if current_level != 'text' else 6 # 6 > lvl5
+            current_level_int = int(current_level[3:]) if current_level != 'content' else 6 # 6 > lvl5
 
-            if current_level != 'text':
+            if current_level != 'content':
                 if current_level not in self.global_content:
                     hierarchy[current_level] = self.get_text(node, self.get_strip_chars(current_level))
                 else:
@@ -139,16 +139,16 @@ class DefaultStrategy(AbstractStrategy):
                 break
 
             # We only save content for the 'text' matches
-            content = None if current_level != 'text' else self.get_text(node, self.get_strip_chars(current_level))
+            content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level))
 
             # Handle default values
             for level in self.config.selectors:
-                if level != 'text':
+                if level != 'content':
                     if hierarchy[level] is None and self.config.selectors[level]['default_value'] is not None:
                         hierarchy[level] = self.config.selectors[level]['default_value']
                 else:
                     if content is None and self.config.selectors[level]['default_value'] is not None:
-                        content = self.config.selectors['text']['default_value']
+                        content = self.config.selectors['content']['default_value']
 
             hierarchy_radio = self.get_hierarchy_radio(hierarchy)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
