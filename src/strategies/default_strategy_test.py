@@ -12,7 +12,7 @@ SELECTORS = {
     "lvl3": "h4",
     "lvl4": "h5",
     "lvl5": "h6",
-    "text": "p"
+    "content": "p"
 }
 # Stub ENV variables read by ConfigLoader
 os.environ['CONFIG'] = json.dumps({
@@ -79,7 +79,7 @@ class TestGetRecordsFromDom:
 
         # Then
         assert len(actual) == 4
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == None
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -366,7 +366,7 @@ class TestGetRecordsFromDom2:
 
         # Then
         assert len(actual) == 4
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == None
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -400,7 +400,7 @@ class TestGetRecordsFromDomWithGlobalLevels:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -430,7 +430,7 @@ class TestGetRecordsFromDomWithGlobalLevels:
             },
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -465,14 +465,14 @@ class TestGetRecordsFromDomWithGlobalLevels:
                 'global': 'true'
             },
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
         actual = STRATEGY.get_records_from_dom()
 
         # Then
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo Foo'
         assert actual[0]['hierarchy']['lvl1'] == 'Bar'
         assert actual[0]['hierarchy']['lvl2'] is None
@@ -497,7 +497,7 @@ class TestGetRecordsFromDomWithXpath:
             },
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -538,7 +538,7 @@ class TestGetRecordsFromDomWithXpath:
                 'type': 'xpath'
             },
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -548,7 +548,7 @@ class TestGetRecordsFromDomWithXpath:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo Foo'
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -586,7 +586,7 @@ class TestGetRecordsFromDomWithXpath:
             },
             'lvl1': 'li.active',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -596,7 +596,7 @@ class TestGetRecordsFromDomWithXpath:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -621,7 +621,7 @@ class TestGetRecordsFromDomWithDefaultValue:
             },
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -631,7 +631,7 @@ class TestGetRecordsFromDomWithDefaultValue:
 
         # First record has the global H1
         assert len(actual) == 3
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Documentation'
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -651,7 +651,7 @@ class TestGetRecordsFromDomWithDefaultValue:
             'lvl0': 'h1',
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': {
+            'content': {
                 'selector': 'p',
                 'default_value': 'Documentation'
             }
@@ -688,7 +688,7 @@ class TestGetRecordsFromDomWithDefaultValue:
             },
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -698,7 +698,7 @@ class TestGetRecordsFromDomWithDefaultValue:
 
         # First record has the global H1
         assert len(actual) == 3
-        assert actual[0]['type'] == 'text'
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Documentation'
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
@@ -723,7 +723,7 @@ class TestGetRecordsFromDomWithDefaultValue:
             },
             'lvl1': 'h2',
             'lvl2': 'h3',
-            'text': 'p'
+            'content': 'p'
         })
 
         # When
@@ -756,7 +756,7 @@ class TestGetRecordsFromDomWithStripChars:
             "lvl0": "h1",
             "lvl1": "h2",
             "lvl2": "h3",
-            "text": "p"
+            "content": "p"
         })
 
         # When
@@ -766,7 +766,7 @@ class TestGetRecordsFromDomWithStripChars:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[3]['type'] == 'text'
+        assert actual[3]['type'] == 'content'
         assert actual[3]['hierarchy']['lvl0'] == 'Foo;'
         assert actual[3]['hierarchy']['lvl1'] == '!Bar'
         assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
@@ -791,6 +791,39 @@ class TestGetRecordsFromDomWithStripChars:
                 "strip_chars": "!"
             },
             "lvl2": "h3",
+            "content": "p"
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'content'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo;'
+        assert actual[3]['hierarchy']['lvl1'] == 'Bar.'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
+        assert actual[3]['content'] == 'text'
+
+class TestGetRecordsFromDomWithOldTestSelector:
+    def test_test_selector(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2>Bar</h2>
+            <h3>Baz</h3>
+            <p>text</p>
+        </body></html>
+        """)
+
+        STRATEGY.config.strip_chars = ',.'
+        STRATEGY.set_selectors({
+            "lvl0": "h1",
+            "lvl1": "h2",
+            "lvl2": "h3",
             "text": "p"
         })
 
@@ -801,8 +834,8 @@ class TestGetRecordsFromDomWithStripChars:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[3]['type'] == 'text'
-        assert actual[3]['hierarchy']['lvl0'] == 'Foo;'
-        assert actual[3]['hierarchy']['lvl1'] == 'Bar.'
-        assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
+        assert actual[3]['type'] == 'content'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[3]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz'
         assert actual[3]['content'] == 'text'
