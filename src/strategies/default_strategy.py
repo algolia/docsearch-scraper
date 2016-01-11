@@ -96,7 +96,7 @@ class DefaultStrategy(AbstractStrategy):
                     current_level = level
                     break
 
-            # If the current node is part of a global level it's posible
+            # If the current node is part of a global level it's possible
             # that it doesn't match because we take only one node for global selectors
             if current_level is None:
                 continue
@@ -140,6 +140,16 @@ class DefaultStrategy(AbstractStrategy):
 
             # We only save content for the 'text' matches
             content = None if current_level != 'text' else self.get_text(node)
+
+            # Handle default values
+            for level in self.config.selectors:
+                if level != 'text':
+                    if hierarchy[level] is None and self.config.selectors[level]['default_value'] is not None:
+                        hierarchy[level] = self.config.selectors[level]['default_value']
+                else:
+                    if content is None and self.config.selectors[level]['default_value'] is not None:
+                        content = self.config.selectors['text']['default_value']
+
             hierarchy_radio = self.get_hierarchy_radio(hierarchy)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
             weight = {
