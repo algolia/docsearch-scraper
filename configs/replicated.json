@@ -1,0 +1,21 @@
+{
+  "index_name": "replicated",
+  "allowed_domains": [
+    "docs.replicated.com"
+  ],
+  "start_urls": [
+    "http://docs.replicated.com/"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".docs-header h1",
+    "lvl1": ".content h1",
+    "lvl2": ".content h2",
+    "lvl3": ".content h3",
+    "text": ".content p, .content li"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "js_render": true
+}

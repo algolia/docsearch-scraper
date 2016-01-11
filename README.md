@@ -44,7 +44,8 @@ The config.json should look like:
     },
     "custom_settings": {},
     "strategy": "default",
-    "strip_chars": " :;,."
+    "strip_chars": " :;,.",
+    "js_render": false
 }
 ```
 
@@ -206,6 +207,16 @@ least a `lvl1` field.
 This is especially useful when the documentation is split into several pages,
 but all pages duplicates the main title (see [this issue][1]).
 
+### `js_render`
+
+The HTML code that we crawl is sometimes generated using Javascript. In those
+cases, the `js_render` option must be set to `true`. It will enable our
+internal proxy ([Splash][2]) to render pages before crawling them. To start a
+Splash proxy server using Docker, just type:
+`docker run -p 8050:8050 scrapinghub/splash`.
+
+This parameter is optional and is set to `false` by default.
+
 ## Test the UX/UI with the playground
 
 To test it live, you can use the following HTML page:
@@ -282,3 +293,4 @@ $ docker run \
 
 
 [1]: https://github.com/algolia/documentation-scrapper/issues/7
+[2]: https://github.com/scrapinghub/scrapy-splash
