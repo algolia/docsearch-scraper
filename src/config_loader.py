@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Load the config from the CONFIG environment variable
 """
@@ -22,7 +23,7 @@ class ConfigLoader(object):
     start_urls = None
     stop_urls = None
     strategy = None
-    strip_chars = None
+    strip_chars = ".,;:§¶"
     min_indexed_level = 0
 
     def __init__(self):

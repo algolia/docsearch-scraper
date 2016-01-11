@@ -71,7 +71,7 @@ class DefaultStrategy(AbstractStrategy):
                 nodes_per_level[level] = matching_dom_nodes
             else:
                 # Be safe in case the selector match more than once by concatenating all the matching content
-                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes)
+                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes, self.get_strip_chars(level))
                 global_nodes = matching_dom_nodes
                 # We only want 1 record
                 nodes_per_level[level] = [global_nodes[0]] if len(global_nodes) > 0 else []
@@ -111,7 +111,7 @@ class DefaultStrategy(AbstractStrategy):
 
             if current_level != 'text':
                 if current_level not in self.global_content:
-                    hierarchy[current_level] = self.get_text(node)
+                    hierarchy[current_level] = self.get_text(node, self.get_strip_chars(current_level))
                 else:
                     hierarchy[current_level] = self.global_content[current_level]
 
@@ -139,7 +139,7 @@ class DefaultStrategy(AbstractStrategy):
                 break
 
             # We only save content for the 'text' matches
-            content = None if current_level != 'text' else self.get_text(node)
+            content = None if current_level != 'text' else self.get_text(node, self.get_strip_chars(current_level))
 
             # Handle default values
             for level in self.config.selectors:
