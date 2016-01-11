@@ -124,6 +124,25 @@ This is useful when you want to do more complex selection like selecting the par
 }
 ```
 
+#### Default value
+
+You have the possibility to add a default value. If the given selector doesn't match anything in a page
+then for each record the default value will be set
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "#content article h1",
+    "default_value": "Documentation"
+  },
+  "lvl1": "#content section h3",
+  "lvl2": "#content section h4",
+  "lvl3": "#content section h5",
+  "lvl4": "#content section h6",
+  "text": "#content header p,#content section p,#content section ol"
+}
+```
+
 ### `allowed_domains`
 
 You can pass either a string or an array of strings. This is the whitelist of
