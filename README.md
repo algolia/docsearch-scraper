@@ -143,6 +143,24 @@ then for each record the default value will be set
 }
 ```
 
+#### Strip Chars
+
+You can override the default strip chars per level
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "#content article h1",
+    "strip_chars": " .,;:"
+  },
+  "lvl1": "#content section h3",
+  "lvl2": "#content section h4",
+  "lvl3": "#content section h5",
+  "lvl4": "#content section h6",
+  "text": "#content header p,#content section p,#content section ol"
+}
+```
+
 ### `allowed_domains`
 
 You can pass either a string or an array of strings. This is the whitelist of

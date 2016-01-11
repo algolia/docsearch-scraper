@@ -28,13 +28,11 @@ os.environ['CONFIG'] = json.dumps({
     'start_urls': 'test',
     'stop_urls': 'test',
     'strategy': 'test',
-    'strip_chars': 'test'
+    'strip_chars': ''
 })
 
 STRATEGY = DefaultStrategy(ConfigLoader())
 SELECTORS = STRATEGY.parse_selectors(SELECTORS)
-
-print SELECTORS
 
 class TestGetRecordsFromDom:
 
@@ -604,6 +602,7 @@ class TestGetRecordsFromDomWithXpath:
         assert actual[0]['hierarchy']['lvl2'] == None
         assert actual[0]['content'] == 'text'
 
+
 class TestGetRecordsFromDomWithDefaultValue:
     def test_default_value(self):
         # Given
@@ -739,3 +738,71 @@ class TestGetRecordsFromDomWithDefaultValue:
         assert actual[0]['hierarchy']['lvl1'] == None
         assert actual[0]['hierarchy']['lvl2'] == None
         assert actual[0]['content'] == None
+
+class TestGetRecordsFromDomWithStripChars:
+    def test_strip_chars(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>.Foo;</h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>,text,</p>
+        </body></html>
+        """)
+
+        STRATEGY.config.strip_chars = ',.'
+        STRATEGY.set_selectors({
+            "lvl0": "h1",
+            "lvl1": "h2",
+            "lvl2": "h3",
+            "text": "p"
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'text'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo;'
+        assert actual[3]['hierarchy']['lvl1'] == '!Bar'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
+        assert actual[3]['content'] == 'text'
+
+    def test_strip_chars_with_level_override(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>.Foo;</h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>,text,</p>
+        </body></html>
+        """)
+
+        STRATEGY.config.strip_chars = ',.'
+        STRATEGY.set_selectors({
+            "lvl0": "h1",
+            "lvl1": {
+                "selector": "h2",
+                "strip_chars": "!"
+            },
+            "lvl2": "h3",
+            "text": "p"
+        })
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'text'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo;'
+        assert actual[3]['hierarchy']['lvl1'] == 'Bar.'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
+        assert actual[3]['content'] == 'text'
