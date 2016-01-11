@@ -5,3 +5,4 @@ run
 .DS_Store
 src/__pycache__/
 src/strategies/__pycache__/
+src/.cache/
