@@ -64,6 +64,9 @@ class AbstractStrategy(object):
             # Strip chars
             selectors[key]['strip_chars'] = selectors[key]['strip_chars'] if 'strip_chars' in selectors[key] else None
 
+            # Searchable
+            selectors[key]['searchable'] = bool(selectors[key]['searchable']) if 'searchable' in selectors[key] else True
+
         return selectors
 
     @staticmethod
@@ -133,12 +136,11 @@ class AbstractStrategy(object):
 
     @staticmethod
     def css_to_xpath(css):
-        return HTMLTranslator().css_to_xpath(css)
+        return HTMLTranslator().css_to_xpath(css) if len(css) > 0 else ""
 
     def select(self, path):
-        """Select an element in the current DOM using speficied CSS selector"""
-
-        return XPath(path)(self.dom)
+        """Select an element in the current DOM using specified CSS selector"""
+        return XPath(path)(self.dom) if len(path) > 0 else []
 
     def get_index_settings(self):
         raise Exception('get_index_settings need to be implemented')
