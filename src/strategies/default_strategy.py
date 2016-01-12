@@ -63,7 +63,9 @@ class DefaultStrategy(AbstractStrategy):
 
         for level in levels:
             level_selector = self.config.selectors[level]
-            selector_all.append(level_selector['selector'])
+
+            if len(level_selector['selector']) > 0:
+                selector_all.append(level_selector['selector'])
 
             matching_dom_nodes = self.select(level_selector['selector'])
 
@@ -170,27 +172,25 @@ class DefaultStrategy(AbstractStrategy):
         return records
 
     def get_index_settings(self):
+        attributes_to_index = []
+
+        # We first look for matches in the exact titles
+        for level in self.levels:
+            if level in self.config.selectors and self.config.selectors[level]['searchable']:
+                attributes_to_index.append('unordered(hierarchy_radio.' + level + ')')
+
+        # Then in the whole title hierarchy
+        for level in self.levels:
+            if level in self.config.selectors and self.config.selectors[level]['searchable']:
+                attributes_to_index.append('unordered(hierarchy.' + level + ')')
+
+        if 'content' in self.config.selectors and self.config.selectors['content']['searchable']:
+            attributes_to_index.append('content')
+
+        attributes_to_index.append('url,anchor')
+
         settings = {
-            'attributesToIndex': [
-                # We first look for matches in the exact titles
-                'unordered(hierarchy_radio.lvl0)',
-                'unordered(hierarchy_radio.lvl1)',
-                'unordered(hierarchy_radio.lvl2)',
-                'unordered(hierarchy_radio.lvl3)',
-                'unordered(hierarchy_radio.lvl4)',
-                'unordered(hierarchy_radio.lvl5)',
-                # Then in the whole title hierarchy
-                'unordered(hierarchy.lvl0)',
-                'unordered(hierarchy.lvl1)',
-                'unordered(hierarchy.lvl2)',
-                'unordered(hierarchy.lvl3)',
-                'unordered(hierarchy.lvl4)',
-                'unordered(hierarchy.lvl5)',
-                # And only in textual content at the end
-                'content',
-                # And really, we can still have a look in those as well...
-                'url,anchor'
-            ],
+            'attributesToIndex': attributes_to_index,
             'attributesToRetrieve': [
                 'hierarchy',
                 'content',
