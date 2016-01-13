@@ -280,6 +280,12 @@ $ docker run \
 In production, you build the image from the default Docker file, then run the
 container.
 
+Several documentations are using Javascript to generate the HTML code. To
+handle those documentations, this image which embeds a Splash proxy in
+order to render webpages before crawling them. Note that your JSON
+configuration file must set the `js_render` parameter to `true`
+see [`js_render`](#js_render). If not, the Splash instance won't be started.
+
 ```
 $ docker build -t algolia/documentation-scrapper .
 $ docker run \
@@ -290,7 +296,6 @@ $ docker run \
     --name docname \
     -t algolia/documentation-scrapper
 ```
-
 
 [1]: https://github.com/algolia/documentation-scrapper/issues/7
 [2]: https://github.com/scrapinghub/scrapy-splash
