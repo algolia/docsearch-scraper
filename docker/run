@@ -1,3 +1,13 @@
 #!/bin/bash
 
+echo $CONFIG | grep -qF '"js_render": true'
+
+if [ "$?" -eq 0 ]
+then
+  splash --proxy-profiles-path /etc/splash/proxy-profiles \
+         --js-profiles-path /etc/splash/js-profiles       \
+         --filters-path /etc/splash/filters               \
+         --lua-package-path /etc/splash/lua_modules/?.lua \
+         > /dev/null 2>&1 &
+fi
 python /root/src/index.py
