@@ -18,13 +18,11 @@ class DocumentationSpider(CrawlSpider):
         # Scrapy config
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
-        self.start_urls = config.start_urls
+        self.start_urls = [start_url['url'] for start_url in config.start_urls]
         self.stop_urls = config.stop_urls
-
 
         self.algolia_helper = algolia_helper
         self.strategy = strategy
-
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(

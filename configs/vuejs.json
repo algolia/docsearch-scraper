@@ -4,10 +4,15 @@
     "vuejs.org"
   ],
   "start_urls": [
-    "http://vuejs.org/api/",
+    {
+      "url": "http://vuejs.org/api/",
+      "page_rank": 1
+    },
     "http://vuejs.org/guide/"
   ],
-  "stop_urls": [],
+  "stop_urls": [
+    "http://vuejs.org/guide/index.html"
+  ],
   "selectors_exclude": [
   	".sidebar h2 .version-select"
   ],
@@ -16,12 +21,13 @@
       "selector": ".sidebar h2",
       "global": true
     },
-    "lvl1": ".content h1",
-    "lvl2": ".content h2",
-    "lvl3": ".content h3",
-    "lvl4": ".content h4",
+    "lvl1": ".content.guide h1, .content.api h1, .content.api h2, .content.api h3",
+    "lvl2": ".content.guide h2, .content.api h4",
+    "lvl3": ".content.guide h3",
+    "lvl4": ".content.guide h4",
     "text": ".content p"
   },
+  "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
   "strip_chars": " :;,."
