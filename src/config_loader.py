@@ -23,7 +23,7 @@ class ConfigLoader(object):
     start_urls = None
     stop_urls = None
     strategy = None
-    strip_chars = ".,;:§¶"
+    strip_chars = u".,;:§¶"
     min_indexed_level = 0
 
     def __init__(self):
