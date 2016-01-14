@@ -79,7 +79,7 @@ class AbstractStrategy(object):
         """Get the DOM representation of the webpage"""
         try:
             body = response.body.decode(response.encoding)
-        except UnicodeDecodeError:
+        except UnicodeError:
             body = response.body
 
         return lxml.html.fromstring(body)
@@ -93,6 +93,7 @@ class AbstractStrategy(object):
     def get_text(element, strip_chars=None):
         """Return the text content of a DOM node"""
         return element.text_content().strip(strip_chars)
+
 
     @staticmethod
     def get_text_from_nodes(elements, strip_chars=None):
