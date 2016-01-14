@@ -950,3 +950,136 @@ class TestAllowToBypassOneOrMoreLevels:
         assert actual[2]['hierarchy']['lvl1'] == 'Bar'
         assert actual[2]['hierarchy']['lvl2'] == 'Baz'
         assert actual[2]['content'] == 'text'
+
+class TestPageRank:
+    def test_default_page_rank_should_be_zero(self):
+        # Given
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+        assert actual[0]['weight']['page_rank'] == 0
+
+    def test_positive_page_rank(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 1, 'tags': []}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api")
+
+        # Then
+        assert actual[0]['weight']['page_rank'] == 1
+
+    def test_positive_sub_page_page_rank(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 1, 'tags': []}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+
+        # Then
+        assert actual[0]['weight']['page_rank'] == 1
+
+    def test_negative_page_rank(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': -1, 'tags': []}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+
+        # Then
+        assert actual[0]['weight']['page_rank'] == -1
+
+class TestTags:
+    def test_adding_tags_for_page(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 0, 'tags': ["test"]}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api")
+
+        # Then
+        assert actual[0]['tags'] == ["test"]
+
+    def test_adding_tags_for_subpage(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 0, 'tags': ["test"]}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+
+        # Then
+        assert actual[0]['tags'] == ["test"]
