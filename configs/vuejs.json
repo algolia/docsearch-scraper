@@ -1,0 +1,28 @@
+{
+  "index_name": "vuejs",
+  "allowed_domains": [
+    "vuejs.org"
+  ],
+  "start_urls": [
+    "http://vuejs.org/api/",
+    "http://vuejs.org/guide/"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [
+  	".sidebar h2 .version-select"
+  ],
+  "selectors": {
+    "lvl0": {
+      "selector": ".sidebar h2",
+      "global": true
+    },
+    "lvl1": ".content h1",
+    "lvl2": ".content h2",
+    "lvl3": ".content h3",
+    "lvl4": ".content h4",
+    "text": ".content p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "strip_chars": " :;,."
+}
