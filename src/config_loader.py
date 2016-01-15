@@ -25,6 +25,7 @@ class ConfigLoader(object):
     strategy = None
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
+    urls = None
 
     def __init__(self):
         if os.environ['CONFIG'] is '':
@@ -47,6 +48,25 @@ class ConfigLoader(object):
         data['index_name'] = data['index_prefix'] + data['index_name']
         for key, value in data.iteritems():
             setattr(self, key, value)
+
+        self.start_urls = self.parse_urls(self.start_urls)
+
+    @staticmethod
+    def parse_urls(config_start_urls):
+        start_urls = []
+        for start_url in config_start_urls:
+            if isinstance(start_url, basestring):
+                start_url = {'url': start_url}
+
+            if "page_rank" not in start_url:
+                start_url['page_rank'] = 0
+
+            if "tags" not in start_url:
+                start_url['tags'] = []
+
+            start_urls.append(start_url)
+
+        return start_urls
 
     @staticmethod
     def assert_config(user_data):
