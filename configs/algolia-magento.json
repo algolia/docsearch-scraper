@@ -9,10 +9,11 @@
   "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": ".main-content h2",
-    "lvl1": ".main-content h3",
-    "lvl2": ".main-content h4",
-    "lvl3": ".main-content h5",
+    "lvl0": ".main-content h1",
+    "lvl1": ".main-content h2",
+    "lvl2": ".main-content h3",
+    "lvl3": ".main-content h4",
+    "lvl4": ".main-content h5",
     "text": ".main-content p, .main-content ol"
   },
   "min_indexed_level": 1,
