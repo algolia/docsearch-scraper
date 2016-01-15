@@ -45,7 +45,8 @@ The config.json should look like:
     "custom_settings": {},
     "strategy": "default",
     "strip_chars": " :;,.",
-    "js_render": false
+    "js_render": false,
+    "js_wait": 0.5
 }
 ```
 
@@ -217,6 +218,14 @@ Splash proxy server using Docker, just type:
 
 This parameter is optional and is set to `false` by default.
 
+### `js_wait`
+
+The `js_wait` parameter lets you change the default waiting time to render the
+webpage with the Splash proxy. For more information, check the `wait` paramter
+from the [Splash API][3].
+
+This parameter is optional and is set to `0.5` by default.
+
 ## Test the UX/UI with the playground
 
 To test it live, you can use the following HTML page:
@@ -299,3 +308,4 @@ $ docker run \
 
 [1]: https://github.com/algolia/documentation-scrapper/issues/7
 [2]: https://github.com/scrapinghub/scrapy-splash
+[3]: http://splash.readthedocs.org/en/stable/api.html#render-html

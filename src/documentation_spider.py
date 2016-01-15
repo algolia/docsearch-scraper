@@ -25,6 +25,7 @@ class DocumentationSpider(CrawlSpider):
         self.algolia_helper = algolia_helper
         self.strategy = strategy
         self.js_render = config.js_render
+        self.js_wait = config.js_wait
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(
@@ -51,7 +52,7 @@ class DocumentationSpider(CrawlSpider):
             yield Request(url, self.splash_parse_start_url, meta = {
                 'splash': {
                     'endpoint': 'render.html',
-                    'args': {'wait': 0.5}
+                    'args': {'wait': self.js_wait}
                 }
             })
 
@@ -63,7 +64,7 @@ class DocumentationSpider(CrawlSpider):
     def splash_request(self, request):
         request.meta['splash'] = {
             'endpoint': 'render.html',
-            'args': {'wait': 0.5},
+            'args': {'wait': self.js_wait},
         }
         return request
 
