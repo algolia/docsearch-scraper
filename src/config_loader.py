@@ -119,6 +119,7 @@ class ConfigLoader(object):
         if not isinstance(data.get('allowed_domains'), list):
             data['allowed_domains'] = [data['allowed_domains']]
 
-
+        # Set default strategy
+        data['strategy'] = data.get('strategy') or 'default'
 
         return data

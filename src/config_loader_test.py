@@ -170,18 +170,6 @@ class TestInit:
         # Then
         assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
 
-    def test_start_url_should_be_transform_to_object_if_string(self):
-        # Given
-        self.config({
-            'start_urls': ['http://www.foo.bar/']
-        })
-
-        # When
-        actual = ConfigLoader()
-
-        # Then
-        assert actual.start_urls[0]['url'] == 'http://www.foo.bar/'
-
     def test_start_url_should_add_default_page_rank_and_tags(self):
         # Given
         self.config({
@@ -194,4 +182,29 @@ class TestInit:
         # Then
         assert actual.start_urls[0]['tags'] == []
         assert actual.start_urls[0]['page_rank'] == 0
+
+    def test_start_url_should_be_transform_to_object_if_string(self):
+        # Given
+        self.config({
+            'start_urls': ['http://www.foo.bar/']
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.start_urls[0]['url'] == 'http://www.foo.bar/'
+
+    def test_default_strategy(self):
+        """ Should use default strategy if none is passed """
+        # When
+        self.config({
+            'strategy': None
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.strategy == 'default'
 
