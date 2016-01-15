@@ -170,3 +170,15 @@ class TestInit:
         # Then
         assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
 
+    def test_default_strategy(self):
+        """ Should use default strategy if none is passed """
+        self.config({
+            'strategy': None
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.strategy == 'default'
+
