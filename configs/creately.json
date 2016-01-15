@@ -18,9 +18,10 @@
   ],
   "selectors": {
     "lvl0": ".menu-block-1 > .menu > li.expanded > a.active-trail",
-    "lvl1": ".help-right h1",
-    "lvl2": ".help-right h2",
-    "lvl3": ".help-right h3",
+    "lvl1": ".menu-block-1 > .menu > li.expanded > .menu > li.expanded > a.active-trail",
+    "lvl2": ".help-right h1",
+    "lvl3": ".help-right h2",
+    "lvl4": ".help-right h3",
     "text": ".help-right p"
   },
   "custom_settings": {},
