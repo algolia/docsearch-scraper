@@ -1,8 +1,5 @@
 {
   "index_name": "atinternet-solutions",
-  "allowed_domains": [
-    "developers.atinternet-solutions.com"
-  ],
   "start_urls": [
     "http://developers.atinternet-solutions.com"
   ],
@@ -25,9 +22,18 @@
   	".ui-tabs-anchor"
   ],
   "selectors": {
-    "lvl0": "main section .entry-meta > span > span > a",
-    "lvl1": "main section .entry-meta > span > span > span > a",
-    "lvl2": "main section article .single-content h1",
+    "lvl0": {
+      "selector": "main section .entry-meta > span > span > a, .top-article-content .entry-meta .breadcrumb span:nth-child(4) a",
+      "global": true
+    },
+    "lvl1": {
+      "selector": "main section .entry-meta > span > span > span > a, .top-article-content .entry-meta .breadcrumb span:nth-child(6) a",
+      "global": true
+    },
+    "lvl2": {
+      "selector": "main section .entry-meta .breadcrumb_last, .top-article-content .entry-meta .breadcrumb div  div",
+      "global": true
+    },
     "lvl3": "main section article .single-content h2",
     "lvl4": "main section article .single-content h3",
     "lvl5": "main section article .single-content h4",
@@ -35,6 +41,5 @@
   },
   "custom_settings": {},
   "strategy": "default",
-  "strip_chars": " :;,.",
-  "min_indexed_level": 1
+  "min_indexed_level": 3
 }
