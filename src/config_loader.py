@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Load the config from the CONFIG environment variable
 """
@@ -22,7 +23,7 @@ class ConfigLoader(object):
     start_urls = None
     stop_urls = None
     strategy = None
-    strip_chars = None
+    strip_chars = ".,;:§¶"
     min_indexed_level = 0
 
     def __init__(self):
@@ -41,9 +42,6 @@ class ConfigLoader(object):
         data['app_id'] = os.environ['APPLICATION_ID']
         data['api_key'] = os.environ['API_KEY']
         data['index_prefix'] = os.environ['INDEX_PREFIX']
-
-
-
 
         # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
@@ -101,6 +99,7 @@ class ConfigLoader(object):
         if not isinstance(data.get('allowed_domains'), list):
             data['allowed_domains'] = [data['allowed_domains']]
 
-
+        # Set default strategy
+        data['strategy'] = data.get('strategy') or 'default'
 
         return data
