@@ -8,28 +8,133 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css" />
     </head>
     <body>
-        <div class="container" style="margin-top: 100px">
+        <div id="playground" ng-app="playground" ng-controller="PlaygroundController">
             <div class="row">
-                <div class="col-sm-6 col-sm-offset-3">
+                <div class="col-md-9 left-panel">
                     <div class="input-group">
+                        <div id=""></div>
                         <input type="search" class="form-control" id="q">
                         <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
                     </div>
                 </div>
+                <div class="col-md-3 right-panel">
+                    <div class="form-group">
+                        <label for="appId">App Id</label>
+                        <input ng-model="config.appId" id="appId" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="apiKey"><b>Admin</b> Api Key</label>
+                        <input type="password" ng-model="config.apiKey" id="apiKey" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="indexName">Index Name</label>
+                        <input ng-model="config.indexName" id="indexName" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="loader">Load config</label>
+                        <select ng-model="config.indexName" ng-options="value for value in indices" class="form-control" id="loader"></select>
+                    </div>
+                </div>
             </div>
+
         </div>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/angularjs/1.4.7/angular.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/1.11.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/algoliasearch/3.10.2/algoliasearch.min.js"></script>
+
         <script type="text/javascript">
-          var config = {
-            // appId: 'your optional appid',
-            apiKey: 'ac6eb7fb00ae608216700af9fa1ee4a9',
-            indexName: 'portwallet',
-            inputSelector: '#q'
-          };
-          docsearch(config);
-          document.body.insertAdjacentHTML('beforeend', '<pre>' + JSON.stringify(config, null, 2) + '</pre>');
+            var playground = angular.module("playground", []);
+
+            playground.controller("PlaygroundController", function ($scope) {
+                $scope.config = {
+                    appId: '',
+                    apiKey: '',
+                    indexName: '',
+                    inputSelector: '#q'
+                };
+
+                $scope.indices = [];
+
+                var docSearch = undefined;
+                var client;
+
+                if (localStorage && localStorage['config']) {
+                    $scope.config = JSON.parse(localStorage['config']);
+                }
+
+                var initDocSearch = function (first_time) {
+                    if (!first_time) {
+                        localStorage['config'] = JSON.stringify($scope.config);
+                    }
+
+                    if ($scope.config.appId != '' && $scope.config.apiKey != '' && $scope.config.indexName != '') {
+                        if (docSearch !== undefined) {
+                            jQuery('.algolia-autocomplete').remove();
+                            jQuery('.input-group').prepend('<input type="search" class="form-control" id="q">');
+                        }
+
+                        docSearch = docsearch($scope.config);
+                    }
+
+                    if ($scope.config.appId != '' && $scope.config.apiKey != '') {
+                        client = algoliasearch($scope.config.appId, $scope.config.apiKey, {
+                          protocol: 'https:'
+                        });
+
+                        client.listIndexes(function(err, content) {
+                            if (err) {
+                                $scope.indices = [];
+                            }
+                            else {
+                                $scope.indices = content.items.map(function (item) {
+                                    return item.name;
+                                });
+                            }
+                            $scope.$apply();
+                        });
+                    }
+                };
+
+                angular.forEach(['config.appId', 'config.apiKey', 'config.indexName'], function(value, key) {
+                    $scope.$watch(value, function(newValue, oldValue) {
+                        initDocSearch();
+                    });
+                });
+
+                initDocSearch(true);
+            });
+
         </script>
+
+        <style>
+            body
+            {
+                margin: 0px;
+                background-color: #FAFAFA;
+            }
+            .input-group
+            {
+                width: 600px;
+                margin: auto;
+            }
+
+            .right-panel
+            {
+                background-color: #FAFAFA;
+                height: 100%;
+                position: absolute;
+                right: 0px;
+                border-left: solid 1px #DDD;
+                padding-top: 100px;
+            }
+
+            .left-panel
+            {
+                padding-top: 100px;
+            }
+        </style>
     </body>
 </html>
