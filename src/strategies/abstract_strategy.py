@@ -92,8 +92,12 @@ class AbstractStrategy(object):
     @staticmethod
     def get_text(element, strip_chars=None):
         """Return the text content of a DOM node"""
-        return element.text_content().strip(strip_chars)
-
+        # We call strip a first time for space, tab, newline, return and formfeed
+        text = element.text_content().strip()
+        # then one more time if with custom strip_chars if there is some
+        if strip_chars is not None:
+            text = text.strip(strip_chars)
+        return text
 
     @staticmethod
     def get_text_from_nodes(elements, strip_chars=None):
@@ -101,7 +105,7 @@ class AbstractStrategy(object):
         if len(elements) == 0:
             return None
 
-        return ' '.join([element.text_content().strip(strip_chars) for element in elements])
+        return ' '.join([AbstractStrategy.get_text(element, strip_chars) for element in elements])
 
     @staticmethod
     def remove_from_dom(dom, exclude_selectors):

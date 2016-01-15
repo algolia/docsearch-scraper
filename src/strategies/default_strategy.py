@@ -13,6 +13,7 @@ class DefaultStrategy(AbstractStrategy):
         super(DefaultStrategy, self).__init__(config)
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5']
         self.global_content = {}
+        self.page_rank = {}
 
     def get_records_from_response(self, response):
         """
@@ -23,7 +24,7 @@ class DefaultStrategy(AbstractStrategy):
 
         url = response.url
 
-        records = self.get_records_from_dom()
+        records = self.get_records_from_dom(url)
 
         # Add page-related attributes to the records
         for record in records:
@@ -34,7 +35,7 @@ class DefaultStrategy(AbstractStrategy):
 
         return records
 
-    def get_records_from_dom(self):
+    def get_records_from_dom(self, current_page_url=None):
 
         if self.dom is None:
             exit('DefaultStrategy.dom is not defined')
@@ -155,6 +156,7 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy_radio = self.get_hierarchy_radio(hierarchy)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
             weight = {
+                'page_rank': self.get_page_rank(current_page_url),
                 'level': self.get_level_weight(current_level),
                 'position': position
             }
@@ -166,7 +168,8 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy_radio': hierarchy_radio,
                 'hierarchy_complete': hierarchy_complete,
                 'weight': weight,
-                'type': current_level
+                'type': current_level,
+                'tags': self.get_tags(current_page_url)
             })
 
         return records
@@ -204,10 +207,11 @@ class DefaultStrategy(AbstractStrategy):
             'attributesToSnippet': [
                 'content:10'
             ],
+            'attributesForFaceting': ['tags'],
             'distinct': True,
             'attributeForDistinct': 'url',
-            # TODO: Allow passing custom weight to pages through the config
             'customRanking': [
+                'desc(weight.page_rank)',
                 'desc(weight.level)',
                 'desc(weight.position)'
             ],
@@ -242,6 +246,22 @@ class DefaultStrategy(AbstractStrategy):
             settings.update(self.config.custom_settings)
 
         return settings
+
+    # Check if tags are defined for the current_page or one of the parent page
+    def get_tags(self, current_page_url):
+        if current_page_url is not None:
+            for start_url in self.config.start_urls:
+                if start_url['url'] in current_page_url:
+                    return start_url['tags']
+        return []
+
+    # Check if a page_rank is defined for the current_page or one of the parent page
+    def get_page_rank(self, current_page_url):
+        if current_page_url is not None:
+            for start_url in self.config.start_urls:
+                if start_url['url'] in current_page_url:
+                    return int(start_url['page_rank'])
+        return 0
 
     @staticmethod
     def get_anchor_string_from_element(element):
