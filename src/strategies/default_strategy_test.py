@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """DefaultStrategy tests"""
 from config_loader import ConfigLoader
 from strategies.default_strategy import DefaultStrategy
@@ -27,8 +28,7 @@ os.environ['CONFIG'] = json.dumps({
     'selectors_exclude': 'test',
     'start_urls': 'test',
     'stop_urls': 'test',
-    'strategy': 'test',
-    'strip_chars': ''
+    'strategy': 'test'
 })
 
 STRATEGY = DefaultStrategy(ConfigLoader())
@@ -83,6 +83,21 @@ class TestGetRecordsFromDom:
         assert actual[0]['hierarchy']['lvl0'] is None
         assert actual[0]['hierarchy']['lvl1'] is None
         assert actual[0]['hierarchy']['lvl2'] is None
+
+    def test_text_with_utf8(self):
+        # Given
+        STRATEGY.dom = lxml.html.fromstring(u"""
+        <html><body>
+            <p>UTF8 ‽✗✓ Madness</p>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom()
+
+        # Then
+        assert actual[0]['type'] == 'content'
+        assert actual[0]['content'] == u"UTF8 ‽✗✓ Madness"
 
     def test_different_wrappers(self):
         # Given
