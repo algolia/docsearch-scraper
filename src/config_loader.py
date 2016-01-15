@@ -128,4 +128,10 @@ class ConfigLoader(object):
         else:
             data['js_render'] = False
 
+        # `js_render` is set to False by default unless `true` is specified
+        if isinstance(data.get('js_wait'), float):
+            data['js_wait'] = data.get('js_wait')
+        else:
+            data['js_wait'] = 0.5
+
         return data
