@@ -18,6 +18,6 @@
   },
   "custom_settings": {},
   "strategy": "default",
-  "strip_chars": "¶",
+  "strip_chars": "¶»",
   "min_indexed_level": 1
 }
