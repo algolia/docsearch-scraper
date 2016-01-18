@@ -53,8 +53,12 @@
                     appId: '',
                     apiKey: '',
                     indexName: '',
-                    inputSelector: '#q'
+                    inputSelector: '#q',
+                    autocompleteOptions: {
+                        debug: "true"
+                    }
                 };
+
 
                 $scope.indices = [];
 
@@ -64,6 +68,7 @@
                 if (localStorage && localStorage['config']) {
                     $scope.config = JSON.parse(localStorage['config']);
                 }
+
 
                 var initDocSearch = function (first_time) {
                     if (!first_time) {
@@ -76,7 +81,7 @@
                             jQuery('.input-group').prepend('<input type="search" class="form-control" id="q">');
                         }
 
-                        docSearch = docsearch($scope.config);
+                        docSearch = docsearch($scope.config, {debug: true});
                     }
 
                     if ($scope.config.appId != '' && $scope.config.apiKey != '') {
