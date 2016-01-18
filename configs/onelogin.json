@@ -1,0 +1,20 @@
+{
+  "index_name": "onelogin",
+  "allowed_domains": [
+    "developers.onelogin.com"
+  ],
+  "start_urls": [
+    "https://developers.onelogin.com/docs"
+  ],
+  "stop_urls": [
+    "https://developers.onelogin.com/login"
+  ],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-header h1",
+    "lvl1": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-body div.content.block-content.ready div.blocks-parent div.block.section.ng-scope div.ng-scope div.ng-isolate-scope h3",
+    "text": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-body div.content.block-content.ready div.blocks-parent div.block.section.ng-scope div.ng-scope div.ng-isolate-scope p"
+  },
+  "custom_settings": {},
+  "strategy": "default"
+}
