@@ -40,11 +40,13 @@ The config.json should look like:
       "lvl3": "#content section h4",
       "lvl4": "#content section h5",
       "lvl5": "#content section h6",
-      "text": "#content header p,#content section p,#content section ol"
+      "content": "#content header p,#content section p,#content section ol"
     },
     "custom_settings": {},
     "strategy": "default",
-    "strip_chars": " :;,."
+    "strip_chars": " :;,.",
+    "js_render": false,
+    "js_wait": 0.5
 }
 ```
 
@@ -77,11 +79,89 @@ Note that it currently does not follow 301 redirects.
 
 This object contains all the CSS selectors that will be used to create the
 record hierarchy. It contains 6 levels (`lvl0`, `lvl1`, `lvl2`, `lvl3`, `lvl4`,
-`lvl5`) and `text`. You should fill at least the three first levels for better
+`lvl5`) and `content`. You should fill at least the three first levels for better
 relevance.
 
 A default config would be to target the page `title` or `h1` as `lvl0`, the `h2`
-as `lvl1` and `h3` as `lvl2`. `text` is usually any `p` of text.
+as `lvl1` and `h3` as `lvl2`. `content` is usually any `p` of text.
+
+#### Global selectors
+
+It's possible to make a selector global which mean that all records for the page will have
+this value. This is useful when you have a title that in right sidebar because
+the sidebar is after the content on dom.
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "#content header h1",
+    "global": true
+  },
+  "lvl1": "#content article h1",
+  "lvl2": "#content section h3",
+  "lvl3": "#content section h4",
+  "lvl4": "#content section h5",
+  "lvl5": "#content section h6",
+  "content": "#content header p,#content section p,#content section ol"
+}
+```
+
+#### Xpath selector
+
+By default selector are considered css selectors but you can specify that a selector is an xpath one.
+This is useful when you want to do more complex selection like selecting the parent of a node.
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "//li[@class="chapter active done"]/../../a",
+    "xpath": true
+  },
+  "lvl1": "#content article h1",
+  "lvl2": "#content section h3",
+  "lvl3": "#content section h4",
+  "lvl4": "#content section h5",
+  "lvl5": "#content section h6",
+  "content": "#content header p,#content section p,#content section ol"
+}
+```
+
+#### Default value
+
+You have the possibility to add a default value. If the given selector doesn't match anything in a page
+then for each record the default value will be set
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "#content article h1",
+    "default_value": "Documentation"
+  },
+  "lvl1": "#content section h3",
+  "lvl2": "#content section h4",
+  "lvl3": "#content section h5",
+  "lvl4": "#content section h6",
+  "content": "#content header p,#content section p,#content section ol"
+}
+```
+
+#### Strip Chars
+
+You can override the default strip chars per level
+
+```
+"selectors": {
+  "lvl0": {
+    "selector": "#content article h1",
+    "strip_chars": " .,;:"
+  },
+  "lvl1": "#content section h3",
+  "lvl2": "#content section h4",
+  "lvl3": "#content section h5",
+  "lvl4": "#content section h6",
+  "content": "#content header p,#content section p,#content section ol"
+}
+```
 
 ### `allowed_domains`
 
@@ -127,6 +207,24 @@ least a `lvl1` field.
 
 This is especially useful when the documentation is split into several pages,
 but all pages duplicates the main title (see [this issue][1]).
+
+### `js_render`
+
+The HTML code that we crawl is sometimes generated using Javascript. In those
+cases, the `js_render` option must be set to `true`. It will enable our
+internal proxy ([Splash][2]) to render pages before crawling them. To start a
+Splash proxy server using Docker, just type:
+`docker run -p 8050:8050 scrapinghub/splash`.
+
+This parameter is optional and is set to `false` by default.
+
+### `js_wait`
+
+The `js_wait` parameter lets you change the default waiting time to render the
+webpage with the Splash proxy. For more information, check the `wait` paramter
+from the [Splash API][3].
+
+This parameter is optional and is set to `0.5` by default.
 
 ## Test the UX/UI with the playground
 
@@ -191,6 +289,12 @@ $ docker run \
 In production, you build the image from the default Docker file, then run the
 container.
 
+Several documentations are using Javascript to generate the HTML code. To
+handle those documentations, this image which embeds a Splash proxy in
+order to render webpages before crawling them. Note that your JSON
+configuration file must set the `js_render` parameter to `true`
+see [`js_render`](#js_render). If not, the Splash instance won't be started.
+
 ```
 $ docker build -t algolia/documentation-scrapper .
 $ docker run \
@@ -202,5 +306,6 @@ $ docker run \
     -t algolia/documentation-scrapper
 ```
 
-
 [1]: https://github.com/algolia/documentation-scrapper/issues/7
+[2]: https://github.com/scrapinghub/scrapy-splash
+[3]: http://splash.readthedocs.org/en/stable/api.html#render-html

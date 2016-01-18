@@ -1,14 +1,44 @@
-FROM python:2.7
+FROM ubuntu:14.04
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
+# Install DocSearch dependencies
+RUN apt-get update -y && apt-get install -y \
+      python-pip  \
+      python-dev  \
+      python-lxml \
+      libffi-dev  \
+      libssl-dev  \
+      git
 RUN pip install scrapy
+RUN pip install scrapyjs
 RUN pip install algoliasearch
 
+# Put everything in /root
+WORKDIR /root
+
+# Install and configure Splash
+RUN git clone https://github.com/scrapinghub/splash
+RUN ./splash/dockerfiles/splash/provision.sh \
+    prepare_install                          \
+    install_msfonts                          \
+    install_builddeps                        \
+    install_deps                             \
+    install_extra_fonts                      \
+    install_pyqt5                            \
+    install_python_deps
+RUN pip3 install -e ./splash/
+
+# Copy DocSearch files
 COPY docker/run /root/
+COPY src /root/src
 RUN chmod +x /root/run
 
-COPY src /root/src
+# Create volumes for Splash
+VOLUME [                          \
+    "/etc/splash/proxy-profiles", \
+    "/etc/splash/js-profiles",    \
+    "/etc/splash/filters",        \
+    "/etc/splash/lua_modules"     \
+]
 
-WORKDIR /root
 ENTRYPOINT ["/root/run"]
-CMD []

@@ -8,11 +8,15 @@
   ],
   "stop_urls": [
     "http://docs.thundersquared.com/author/.*",
-    "http://docs.thundersquared.com/items/.*"
+    "http://docs.thundersquared.com/items/.*",
+    "http://docs.thundersquared.com/tutorials/.*/\\?.*"
   ],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": ".hkb-breadcrumbs li:nth-child(2)",
+    "lvl0": {
+      "selector": ".ht-kb-em-category a",
+      "global": true
+    },
     "lvl1": "header.entry-header h1.entry-title",
     "lvl2": ".entry-content h4",
     "lvl3": ".entry-content h5",
