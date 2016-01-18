@@ -2,12 +2,13 @@ FROM ubuntu:14.04
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
 # Install DocSearch dependencies
-RUN apt-get update -y
-RUN apt-get install -y python-pip
-RUN apt-get install -y python-dev
-RUN apt-get install -y python-lxml
-RUN apt-get install -y libffi-dev
-RUN apt-get install -y libssl-dev
+RUN apt-get update -y && apt-get install -y \
+      python-pip  \
+      python-dev  \
+      python-lxml \
+      libffi-dev  \
+      libssl-dev  \
+      git
 RUN pip install scrapy
 RUN pip install scrapyjs
 RUN pip install algoliasearch
@@ -16,7 +17,6 @@ RUN pip install algoliasearch
 WORKDIR /root
 
 # Install and configure Splash
-RUN apt-get install -y git
 RUN git clone https://github.com/scrapinghub/splash
 RUN ./splash/dockerfiles/splash/provision.sh \
     prepare_install                          \
