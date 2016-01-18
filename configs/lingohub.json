@@ -4,18 +4,27 @@
     "lingohub.com"
   ],
   "start_urls": [
-    "https://lingohub.com/documentation/"
+    "https://lingohub.com/documentation/guides",
+    "https://lingohub.com/documentation/developers"
   ],
   "stop_urls": [
     ".*_wpnonce.*"
   ],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": "header.entry-header h1.entry-title",
-    "lvl1": "div.entry-content.content h2",
-    "lvl2": "div.entry-content.content h3",
+    "lvl0": {
+      "selector": ".sidebar-nav > li.current_page_item > a, .sidebar-nav .current_page_ancestor > a",
+      "global": true
+    },
+    "lvl1": {
+      "selector": ".sidebar-nav > li > ul > li a.current_page_item",
+      "global": true
+    },
+    "lvl2": "div.entry-content.content h2",
+    "lvl3": "div.entry-content.content h3",
     "text": "div.entry-content.content p, div.entry-content.content li"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "min_indexed_level": 2
 }
