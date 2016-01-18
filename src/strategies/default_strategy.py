@@ -12,6 +12,8 @@ class DefaultStrategy(AbstractStrategy):
     def __init__(self, config):
         super(DefaultStrategy, self).__init__(config)
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5']
+        self.global_content = {}
+        self.page_rank = {}
 
     def get_records_from_response(self, response):
         """
@@ -22,7 +24,7 @@ class DefaultStrategy(AbstractStrategy):
 
         url = response.url
 
-        records = self.get_records_from_dom()
+        records = self.get_records_from_dom(url)
 
         # Add page-related attributes to the records
         for record in records:
@@ -33,9 +35,13 @@ class DefaultStrategy(AbstractStrategy):
 
         return records
 
-    def get_records_from_dom(self):
+    def get_records_from_dom(self, current_page_url=None):
+
         if self.dom is None:
             exit('DefaultStrategy.dom is not defined')
+
+        # Reset it to be able to have a clean instance when testing
+        self.global_content = {}
 
         # We get a big selector that matches all relevant nodes, in order
         # But we also keep a list of all matches for each individual level
@@ -48,18 +54,32 @@ class DefaultStrategy(AbstractStrategy):
             if level not in self.config.selectors:
                 break
             used_levels.append(level)
-        if 'text' in self.config.selectors:
-            used_levels.append('text')
+        if 'content' in self.config.selectors:
+            used_levels.append('content')
+
         levels = used_levels
 
         selector_all = []
         nodes_per_level = {}
+
         for level in levels:
             level_selector = self.config.selectors[level]
-            selector_all.append(level_selector)
-            nodes_per_level[level] = self.cssselect(level_selector)
 
-        nodes = self.cssselect(",".join(selector_all))
+            if len(level_selector['selector']) > 0:
+                selector_all.append(level_selector['selector'])
+
+            matching_dom_nodes = self.select(level_selector['selector'])
+
+            if not level_selector['global']:
+                nodes_per_level[level] = matching_dom_nodes
+            else:
+                # Be safe in case the selector match more than once by concatenating all the matching content
+                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes, self.get_strip_chars(level))
+                global_nodes = matching_dom_nodes
+                # We only want 1 record
+                nodes_per_level[level] = [global_nodes[0]] if len(global_nodes) > 0 else []
+
+        nodes = self.select(" | ".join(selector_all))
 
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = {}
@@ -69,12 +89,20 @@ class DefaultStrategy(AbstractStrategy):
             anchors['lvl' + str(index)] = None
 
         records = []
+
         for position, node in enumerate(nodes):
             # Which level is the selector matching?
+            current_level = None
+
             for level in levels:
                 if node in nodes_per_level[level]:
                     current_level = level
                     break
+
+            # If the current node is part of a global level it's possible
+            # that it doesn't match because we take only one node for global selectors
+            if current_level is None:
+                continue
 
             # We set the hierarchy as the same as the previous one
             # We override the current level
@@ -82,9 +110,14 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy = previous_hierarchy.copy()
 
             # Update the hierarchy for each new header
-            current_level_int = int(current_level[3:]) if current_level != 'text' else 6 # 6 > lvl5
-            if current_level != 'text':
-                hierarchy[current_level] = self.get_text(node)
+            current_level_int = int(current_level[3:]) if current_level != 'content' else 6 # 6 > lvl5
+
+            if current_level != 'content':
+                if current_level not in self.global_content:
+                    hierarchy[current_level] = self.get_text(node, self.get_strip_chars(current_level))
+                else:
+                    hierarchy[current_level] = self.global_content[current_level]
+
                 anchors[current_level] = self.get_anchor(node)
 
                 for index in range(current_level_int + 1, 6):
@@ -94,6 +127,10 @@ class DefaultStrategy(AbstractStrategy):
 
             if current_level_int < self.config.min_indexed_level:
                 continue
+
+            for index in range(0, current_level_int + 1):
+                if 'lvl' + str(index) in self.global_content:
+                    hierarchy['lvl' + str(index)] = self.global_content['lvl' + str(index)]
 
             # Getting the element anchor as the closest one
             anchor = None
@@ -105,10 +142,21 @@ class DefaultStrategy(AbstractStrategy):
                 break
 
             # We only save content for the 'text' matches
-            content = None if current_level != 'text' else self.get_text(node)
+            content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level))
+
+            # Handle default values
+            for level in self.config.selectors:
+                if level != 'content':
+                    if hierarchy[level] is None and self.config.selectors[level]['default_value'] is not None:
+                        hierarchy[level] = self.config.selectors[level]['default_value']
+                else:
+                    if content is None and self.config.selectors[level]['default_value'] is not None:
+                        content = self.config.selectors['content']['default_value']
+
             hierarchy_radio = self.get_hierarchy_radio(hierarchy)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
             weight = {
+                'page_rank': self.get_page_rank(current_page_url),
                 'level': self.get_level_weight(current_level),
                 'position': position
             }
@@ -120,33 +168,32 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy_radio': hierarchy_radio,
                 'hierarchy_complete': hierarchy_complete,
                 'weight': weight,
-                'type': current_level
+                'type': current_level,
+                'tags': self.get_tags(current_page_url)
             })
 
         return records
 
     def get_index_settings(self):
+        attributes_to_index = []
+
+        # We first look for matches in the exact titles
+        for level in self.levels:
+            if level in self.config.selectors and self.config.selectors[level]['searchable']:
+                attributes_to_index.append('unordered(hierarchy_radio.' + level + ')')
+
+        # Then in the whole title hierarchy
+        for level in self.levels:
+            if level in self.config.selectors and self.config.selectors[level]['searchable']:
+                attributes_to_index.append('unordered(hierarchy.' + level + ')')
+
+        if 'content' in self.config.selectors and self.config.selectors['content']['searchable']:
+            attributes_to_index.append('content')
+
+        attributes_to_index.append('url,anchor')
+
         settings = {
-            'attributesToIndex': [
-                # We first look for matches in the exact titles
-                'unordered(hierarchy_radio.lvl0)',
-                'unordered(hierarchy_radio.lvl1)',
-                'unordered(hierarchy_radio.lvl2)',
-                'unordered(hierarchy_radio.lvl3)',
-                'unordered(hierarchy_radio.lvl4)',
-                'unordered(hierarchy_radio.lvl5)',
-                # Then in the whole title hierarchy
-                'unordered(hierarchy.lvl0)',
-                'unordered(hierarchy.lvl1)',
-                'unordered(hierarchy.lvl2)',
-                'unordered(hierarchy.lvl3)',
-                'unordered(hierarchy.lvl4)',
-                'unordered(hierarchy.lvl5)',
-                # And only in textual content at the end
-                'content',
-                # And really, we can still have a look in those as well...
-                'url,anchor'
-            ],
+            'attributesToIndex': attributes_to_index,
             'attributesToRetrieve': [
                 'hierarchy',
                 'content',
@@ -160,10 +207,11 @@ class DefaultStrategy(AbstractStrategy):
             'attributesToSnippet': [
                 'content:10'
             ],
+            'attributesForFaceting': ['tags'],
             'distinct': True,
             'attributeForDistinct': 'url',
-            # TODO: Allow passing custom weight to pages through the config
             'customRanking': [
+                'desc(weight.page_rank)',
                 'desc(weight.level)',
                 'desc(weight.position)'
             ],
@@ -199,26 +247,21 @@ class DefaultStrategy(AbstractStrategy):
 
         return settings
 
-    def get_all_parent_selectors(self, set_level):
-        """Returns a large selector that contains all the selectors for all the
-        levels above the specified one"""
-        parent_selectors = []
-        for level in self.levels:
-            if level == set_level:
-                break
-            parent_selectors.append(self.config.selectors[level])
-        return ",".join(parent_selectors)
+    # Check if tags are defined for the current_page or one of the parent page
+    def get_tags(self, current_page_url):
+        if current_page_url is not None:
+            for start_url in self.config.start_urls:
+                if start_url['url'] in current_page_url:
+                    return start_url['tags']
+        return []
 
-    def selector_level_matched(self, set_element):
-        """Returns which selector level this element is matching"""
-        levels = list(self.levels)
-        levels.append('text')
-        for level in levels:
-            matches = self.cssselect(self.config.selectors[level])
-            for match in matches:
-                if self.elements_are_equals(match, set_element):
-                    return level
-        return False
+    # Check if a page_rank is defined for the current_page or one of the parent page
+    def get_page_rank(self, current_page_url):
+        if current_page_url is not None:
+            for start_url in self.config.start_urls:
+                if start_url['url'] in current_page_url:
+                    return int(start_url['page_rank'])
+        return 0
 
     @staticmethod
     def get_anchor_string_from_element(element):

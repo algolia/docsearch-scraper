@@ -1,0 +1,20 @@
+{
+  "index_name": "prezly",
+  "allowed_domains": [
+    "docs.prezly.com"
+  ],
+  "start_urls": [
+    "http://docs.prezly.com/docs"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".docs-content .docs-header h1",
+    "lvl1": ".docs-content .docs-body h1",
+    "lvl2": ".docs-content .docs-body h2",
+    "text": ".docs-content .docs-body p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "js_render": true
+}

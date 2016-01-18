@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Load the config from the CONFIG environment variable
 """
@@ -22,8 +23,9 @@ class ConfigLoader(object):
     start_urls = None
     stop_urls = None
     strategy = None
-    strip_chars = None
+    strip_chars = u".,;:§¶"
     min_indexed_level = 0
+    urls = None
 
     def __init__(self):
         if os.environ['CONFIG'] is '':
@@ -42,13 +44,29 @@ class ConfigLoader(object):
         data['api_key'] = os.environ['API_KEY']
         data['index_prefix'] = os.environ['INDEX_PREFIX']
 
-
-
-
         # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
         for key, value in data.iteritems():
             setattr(self, key, value)
+
+        self.start_urls = self.parse_urls(self.start_urls)
+
+    @staticmethod
+    def parse_urls(config_start_urls):
+        start_urls = []
+        for start_url in config_start_urls:
+            if isinstance(start_url, basestring):
+                start_url = {'url': start_url}
+
+            if "page_rank" not in start_url:
+                start_url['page_rank'] = 0
+
+            if "tags" not in start_url:
+                start_url['tags'] = []
+
+            start_urls.append(start_url)
+
+        return start_urls
 
     @staticmethod
     def assert_config(user_data):
@@ -101,6 +119,19 @@ class ConfigLoader(object):
         if not isinstance(data.get('allowed_domains'), list):
             data['allowed_domains'] = [data['allowed_domains']]
 
+        # Set default strategy
+        data['strategy'] = data.get('strategy') or 'default'
 
+        # `js_render` is set to False by default unless `true` is specified
+        if isinstance(data.get('js_render'), bool):
+            data['js_render'] = data.get('js_render')
+        else:
+            data['js_render'] = False
+
+        # `js_render` is set to False by default unless `true` is specified
+        if isinstance(data.get('js_wait'), float):
+            data['js_wait'] = data.get('js_wait')
+        else:
+            data['js_wait'] = 0.5
 
         return data
