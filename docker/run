@@ -1,13 +1,18 @@
 #!/bin/bash
 
-echo $CONFIG | grep -qF '"js_render": true'
+python /root/check_js_render.py
 
 if [ "$?" -eq 0 ]
 then
   splash --proxy-profiles-path /etc/splash/proxy-profiles \
          --js-profiles-path /etc/splash/js-profiles       \
          --filters-path /etc/splash/filters               \
-         --lua-package-path /etc/splash/lua_modules/?.lua \
-         > /dev/null 2>&1 &
+         --lua-package-path /etc/splash/lua_modules/?.lua 2>&1 &
+
+  while ! nc -z localhost 8050; do
+    sleep 1
+    ((c++)) && ((c==10)) && echo "Splash has not started" && break
+  done
 fi
-python /root/src/index.py
+
+python /root/src/index.py 2>&1
