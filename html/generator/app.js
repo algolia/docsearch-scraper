@@ -5,6 +5,8 @@ var app = express();
 var URL = require('url');
 var path = require('path');
 
+var port = process.env.PORT || 3000;
+
 app.use(express.static('public'));
 
 app.get('/proxy', function(req, res) {
@@ -36,7 +38,7 @@ app.get('/proxy', function(req, res) {
       });
 });
 
-var server = app.listen(3000, function () {
+var server = app.listen(port, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port);
@@ -60,7 +62,7 @@ function proxy(html, url) {
   var $ = cheerio.load(html);
 
   $('head').append('<script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>');
-  $('body').append('<script src="http://localhost:3000/selector.js" type="text/javascript"></script>');
+  $('body').append('<script src="http://localhost:' + port + '/selector.js" type="text/javascript"></script>');
 
   $('a:not([href^="http://"])' +
     ':not([href^="https://"])' +
