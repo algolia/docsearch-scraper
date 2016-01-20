@@ -103,7 +103,7 @@ class ConfigLoader(object):
                     return urlparse(url).netloc
 
                 # Concatenating both list, being careful that they can be None
-                all_urls = [_['url'] for _ in data.get('start_urls', [])] + data.get('stop_urls', [])
+                all_urls = [_['url'] if not isinstance(_, basestring) else _ for _ in data.get('start_urls', [])] + data.get('stop_urls', [])
                 # Getting the list of domains for each of them
                 all_domains = [get_domain(_) for _ in all_urls]
                 # Removing duplicates
