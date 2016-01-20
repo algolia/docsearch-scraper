@@ -1,0 +1,15 @@
+{
+  "index_name": "senecajs",
+  "start_urls": [
+    "http://senecajs.org/api/",
+    "http://senecajs.org/plugins/"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".hp h1",
+    "lvl1": ".hp h2",
+    "lvl2": ".hp h3",
+    "text": ".hp p"
+  }
+}
