@@ -36,6 +36,7 @@ RUN pip3 install -e ./splash/
 
 # Copy DocSearch files
 COPY docker/run /root/
+COPY docker/check_js_render.py /root/
 COPY docker/test /root/
 RUN chmod +x /root/test
 RUN chmod +x /root/run
