@@ -7,6 +7,7 @@ Run the following commands :
 - `brew install python # will install pip`
 - `pip install scrapy`
 - `pip install algoliasearch`
+- `pip install scrapyjs`
 - `git clone git@github.com:algolia/documentation-scrapper.git`
 - `cd documentation-scrapper`
 
@@ -115,7 +116,7 @@ This is useful when you want to do more complex selection like selecting the par
 "selectors": {
   "lvl0": {
     "selector": "//li[@class="chapter active done"]/../../a",
-    "xpath": true
+    "type": "xpath"
   },
   "lvl1": "#content article h1",
   "lvl2": "#content section h3",
