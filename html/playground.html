@@ -75,7 +75,7 @@
                         localStorage['config'] = JSON.stringify($scope.config);
                     }
 
-                    if ($scope.config.appId != '' && $scope.config.apiKey != '' && $scope.config.indexName != '') {
+                    if ($scope.config.appId && $scope.config.apiKey && $scope.config.indexName) {
                         if (docSearch !== undefined) {
                             jQuery('.algolia-autocomplete').remove();
                             jQuery('.input-group').prepend('<input type="search" class="form-control" id="q">');
