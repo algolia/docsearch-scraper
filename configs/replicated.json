@@ -4,17 +4,23 @@
     "docs.replicated.com"
   ],
   "start_urls": [
-    "http://docs.replicated.com/"
+    "http://docs.replicated.com/docs"
   ],
   "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": ".docs-header h1",
-    "lvl1": ".content h1",
-    "lvl2": ".content h2",
-    "lvl3": ".content h3",
+    "lvl0": {
+        "selector": "//*[@class=\"sidebar-nav\"]/ul/li/*[@class=\"active\"]/../../preceding::h4[1]",
+        "type": "xpath",
+        "global": true
+    },
+    "lvl1": ".docs-header h1",
+    "lvl2": ".content h1",
+    "lvl3": ".content h2",
+    "lvl4": ".content h3",
     "text": ".content p, .content li"
   },
+  "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
   "js_render": true
