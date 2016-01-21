@@ -1,0 +1,28 @@
+{
+  "index_name": "influxdata",
+  "start_urls": [
+    "https://docs.influxdata.com/"
+  ],
+  "stop_urls": [
+  	"https://docs.influxdata.com/influxdb/v0.8/",
+  	"https://docs.influxdata.com/influxdb/v0.7/",
+  	"https://docs.influxdata.com/influxdb/v0.6/"
+  ],
+  "selectors_exclude": [
+  ],
+  "selectors": {
+    "lvl0": {
+    	"selector": "#product-switcher .product-switcher--current",
+    	"global": true
+    },
+    "lvl1": {
+    	"selector": "(//*[@class=\"page-content--container\"]/h1[1] | //*[@class=\"page-content--container\"]/h2[1])[1]",
+    	"type": "xpath"
+    },
+    "lvl2": "#page-content h3",
+    "lvl3": "#page-content h4",
+    "text": "#page-content p"
+  },
+  "custom_settings": {},
+  "min_indexed_level": 2
+}
