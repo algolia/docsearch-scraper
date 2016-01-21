@@ -134,4 +134,10 @@ class ConfigLoader(object):
         else:
             data['js_wait'] = 0.5
 
+        # `use_anchors` is set to True by default unless `false` is specified
+        if isinstance(data.get('use_anchors'), bool):
+            data['use_anchors'] = data.get('use_anchors')
+        else:
+            data['use_anchors'] = True
+
         return data
