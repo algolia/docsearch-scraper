@@ -36,6 +36,10 @@
                         <label for="loader">Load config</label>
                         <select ng-model="config.indexName" ng-options="value for value in indices" class="form-control" id="loader"></select>
                     </div>
+                    <div class="form-group">
+                        <label for="facetFilters">Facet Filters</label>
+                        <input ng-model="config.facetFilters" id="facetFilters" class="form-control" />
+                    </div>
                 </div>
             </div>
 
@@ -56,7 +60,8 @@
                     inputSelector: '#q',
                     autocompleteOptions: {
                         debug: "true"
-                    }
+                    },
+                    facetFilters: ''
                 };
 
 
@@ -74,6 +79,11 @@
                     if (!first_time) {
                         localStorage['config'] = JSON.stringify($scope.config);
                     }
+
+                    $scope.config.algoliaOptions = {
+                        'hitsPerPage': 5,
+                        'facetFilters': $scope.config.facetFilters
+                    };
 
                     if ($scope.config.appId && $scope.config.apiKey && $scope.config.indexName) {
                         if (docSearch !== undefined) {
@@ -103,7 +113,7 @@
                     }
                 };
 
-                angular.forEach(['config.appId', 'config.apiKey', 'config.indexName'], function(value, key) {
+                angular.forEach(['config.appId', 'config.apiKey', 'config.indexName', 'config.facetFilters'], function(value, key) {
                     $scope.$watch(value, function(newValue, oldValue) {
                         initDocSearch();
                     });
