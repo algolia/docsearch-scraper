@@ -1,0 +1,61 @@
+{
+  "index_name": "squarebit",
+  "start_urls": [
+    {
+      "url": "https://squarebit.co.uk/software/craft/searchplus/usage",
+      "tags": ["craft","searchplus"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/craft/charge/usage",
+      "tags": ["craft","charge"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/craft/shortlist/usage",
+      "tags": ["craft","shortlist"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/craft/maps/usage",
+      "tags": ["craft","maps"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/expressionengine/binder/usage",
+      "tags": ["expressionengine","binder"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/expressionengine/charge/usage",
+      "tags": ["expressionengine","charge"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/expressionengine/maps/usage",
+      "tags": ["expressionengine","maps"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/expressionengine/shortlist/usage",
+      "tags": ["expressionengine","shortlist"]
+    },
+    {
+      "url": "https://squarebit.co.uk/software/expressionengine/seed/usage",
+      "tags": ["expressionengine","seed"]
+    }
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [
+    ".quickjump"
+  ],
+  "selectors": {
+    "lvl0": {
+      "selector": "(//*[@class=\"tabsContent\"]//a[@class=\"active\"]/../../../a[1]|//*[@class=\"tabsContent\"]//a[@class=\"active\"])[1]",
+      "type": "xpath",
+      "global": true
+    },
+    "lvl1": "[data-content=usage] .tab__body h2",
+    "lvl2": "[data-content=usage] .tab__body h3",
+    "lvl3": "[data-content=usage] .tab__body h4",
+    "text": "[data-content=usage] .tab__body p"
+  },
+  "custom_settings": {
+  },
+  "strategy": "default",
+  "min_indexed_level": 1,
+  "js_render": true
+}
