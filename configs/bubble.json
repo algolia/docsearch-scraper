@@ -1,0 +1,18 @@
+{
+  "index_name": "bubble",
+  "start_urls": [
+    "https://bubble.is/reference"
+  ],
+  "stop_urls": [],
+  "selectors_exclude": [],
+  "selectors": {
+    "lvl0": ".content [style=\"font-size: 30px; margin-top: -150px; padding-top: 150px;\"]",
+    "lvl1": ".content [style=\"font-size: 22px; margin-top: -150px; padding-top: 150px;\"]",
+    "lvl2": ".content [style=\"font-size: 16px; margin-top: -150px; padding-top: 150px;\"]",
+    "text": ".content > div > div:not(.section)"
+  },
+  "custom_settings": {},
+  "js_render": true,
+  "js_wait": 5,
+  "strategy": "default"
+}

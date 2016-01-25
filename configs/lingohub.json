@@ -17,7 +17,7 @@
       "global": true
     },
     "lvl1": {
-      "selector": ".sidebar-nav > li > ul > li a.current_page_item",
+      "selector": ".sidebar-nav > li > ul > li.current_page_item a",
       "global": true
     },
     "lvl2": "div.entry-content.content h2",
