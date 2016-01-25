@@ -1,18 +1,46 @@
 {
   "index_name": "atinternet-solutions",
   "start_urls": [
-    "http://developers.atinternet-solutions.com"
+    {
+      "url": "http://developers.atinternet-solutions.com/android-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/javascript-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/apple-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/windows-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/category/android-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/category/windows-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/category/javascript-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com/category/apple-en",
+      "tags": ["en"]
+    },
+    {
+      "url": "http://developers.atinternet-solutions.com",
+      "tags": ["fr"]
+    }
   ],
   "stop_urls": [
-		"http://developers.atinternet-solutions.com/home",
-		"http://developers.atinternet-solutions.com/android-en",
-		"http://developers.atinternet-solutions.com/javascript-en",
-		"http://developers.atinternet-solutions.com/apple-en",
-		"http://developers.atinternet-solutions.com/windows-en",
-		"http://developers.atinternet-solutions.com/category/android-en",
-		"http://developers.atinternet-solutions.com/category/windows-en",
-		"http://developers.atinternet-solutions.com/category/javascript-en",
-		"http://developers.atinternet-solutions.com/category/apple-en",
+        "http://developers.atinternet-solutions.com/home",
+        "http://developers.atinternet-solutions.com/acceuil",
 		"http://developers.atinternet-solutions.com/.*?kw="
   ],
   "selectors_exclude": [
