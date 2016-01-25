@@ -42,7 +42,7 @@ class DocumentationSpider(CrawlSpider):
             ]
         else:
             DocumentationSpider.rules = [
-                Rule(link_extractor, callback="callback", follow=True)
+                Rule(link_extractor, callback="callback", process_request="remove_trailing_slash", follow=True)
             ]
 
         super(DocumentationSpider, self)._compile_rules()
@@ -61,12 +61,16 @@ class DocumentationSpider(CrawlSpider):
         response = response.replace(url=original_url)
         return self.parse(response)
 
+    def remove_trailing_slash(self, request):
+        return request.replace(url=request.url.rstrip('/'))
+
     def splash_request(self, request):
         request.meta['splash'] = {
             'endpoint': 'render.html',
             'args': {'wait': self.js_wait},
         }
-        return request
+
+        return remove_trailing_slash(request)
 
     def _response_downloaded(self, response):
         if '_splash_processed' in response.meta:
