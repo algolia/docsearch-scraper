@@ -32,7 +32,8 @@ class DocumentationSpider(CrawlSpider):
             allow=self.start_urls,
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
-            attrs=('href', 'src')
+            attrs=('href', 'src'),
+            canonicalize=False
         )
 
         if self.js_render:
@@ -52,7 +53,10 @@ class DocumentationSpider(CrawlSpider):
             yield Request(url, self.splash_parse_start_url, meta = {
                 'splash': {
                     'endpoint': 'render.html',
-                    'args': {'wait': self.js_wait}
+                    'args': {
+                        'wait': self.js_wait,
+                        'url': url,
+                    }
                 }
             })
 
@@ -65,10 +69,15 @@ class DocumentationSpider(CrawlSpider):
         return request.replace(url=request.url.rstrip('/'))
 
     def splash_request(self, request):
-        request.meta['splash'] = {
-            'endpoint': 'render.html',
-            'args': {'wait': self.js_wait},
-        }
+        request = Request(request.url, self.callback, meta = {
+            'splash': {
+                'endpoint': 'render.html',
+                'args': {
+                    'wait': self.js_wait,
+                    'url': request.url,
+                }
+            }
+        })
 
         return self.remove_trailing_slash(request)
 
@@ -89,9 +98,10 @@ class DocumentationSpider(CrawlSpider):
             return
 
         if self.js_render:
-            print response.meta['_splash_processed']['args']['url']
-        else:
-            print response.url
+            original_url = response.meta['_splash_processed']['args']['url']
+            response = response.replace(url=original_url)
+
+        print response.url
 
         records = self.strategy.get_records_from_response(response)
         self.algolia_helper.add_records(records)
