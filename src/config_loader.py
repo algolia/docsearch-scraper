@@ -19,7 +19,7 @@ class ConfigLoader(object):
     index_name = None
     index_prefix = None
     selectors = None
-    selectors_exclude = None
+    selectors_exclude = []
     start_urls = None
     stop_urls = None
     strategy = None
