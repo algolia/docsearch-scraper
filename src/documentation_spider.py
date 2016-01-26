@@ -70,7 +70,7 @@ class DocumentationSpider(CrawlSpider):
             'args': {'wait': self.js_wait},
         }
 
-        return remove_trailing_slash(request)
+        return self.remove_trailing_slash(request)
 
     def _response_downloaded(self, response):
         if '_splash_processed' in response.meta:
