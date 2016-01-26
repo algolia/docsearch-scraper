@@ -208,3 +208,23 @@ class TestInit:
         # Then
         assert actual.strategy == 'default'
 
+    def test_use_anchor_default(self):
+        """ Should set the `use_anchors` parameter to True by default """
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.use_anchors == True
+
+    def test_use_anchor_set_to_false(self):
+        """ Should set the `use_anchors` parameter to False """
+        # When
+        self.config({
+            'use_anchors': False
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.use_anchors == False
