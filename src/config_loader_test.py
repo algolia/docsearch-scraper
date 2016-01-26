@@ -17,7 +17,6 @@ class TestInit:
             'index_name': 'index_name',
             'index_prefix': 'index_prefix',
             'selectors': 'selectors',
-            'selectors_exclude': 'selectors_exclude',
             'start_urls': 'start_urls',
             'stop_urls': 'http://www.stopurl.com/',
             'strategy': 'strategy',
@@ -228,3 +227,28 @@ class TestInit:
 
         # Then
         assert actual.use_anchors == False
+
+    def test_selectors_exclude_default(self):
+        """ Should set the `selectors_exclude` parameter to [] by default """
+
+        # When
+        actual = ConfigLoader()
+
+        print actual, actual.selectors_exclude
+
+        # Then
+        assert actual.selectors_exclude == []
+
+    def test_selectors_exclude_set_override_default(self):
+        """ Default `selectors_exclude` should be override when set in the config """
+        # When
+        self.config({
+            'selectors_exclude': ['.test']
+        })
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.selectors_exclude == ['.test']
+
