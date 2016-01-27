@@ -16,9 +16,10 @@ class TestInit:
             'hash_strategy': 'hash_strategy',
             'index_name': 'index_name',
             'index_prefix': 'index_prefix',
-            'selectors': 'selectors',
-            'start_urls': 'start_urls',
-            'stop_urls': 'http://www.stopurl.com/',
+            'selectors': [],
+            'selectors_exclude': [],
+            'start_urls': ['http://www.starturl.com/'],
+            'stop_urls': ['http://www.stopurl.com/'],
             'strategy': 'strategy',
             'strip_chars': 'strip_chars'
         }
@@ -213,7 +214,7 @@ class TestInit:
         actual = ConfigLoader()
 
         # Then
-        assert actual.use_anchors == True
+        assert actual.use_anchors is True
 
     def test_use_anchor_set_to_false(self):
         """ Should set the `use_anchors` parameter to False """
@@ -226,15 +227,13 @@ class TestInit:
         actual = ConfigLoader()
 
         # Then
-        assert actual.use_anchors == False
+        assert actual.use_anchors is False
 
     def test_selectors_exclude_default(self):
         """ Should set the `selectors_exclude` parameter to [] by default """
 
         # When
         actual = ConfigLoader()
-
-        print actual, actual.selectors_exclude
 
         # Then
         assert actual.selectors_exclude == []
@@ -251,4 +250,3 @@ class TestInit:
 
         # Then
         assert actual.selectors_exclude == ['.test']
-

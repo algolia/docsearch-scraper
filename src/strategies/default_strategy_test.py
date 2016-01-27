@@ -16,30 +16,43 @@ SELECTORS = {
     "lvl5": "h6",
     "content": "p"
 }
-# Stub ENV variables read by ConfigLoader
-os.environ['CONFIG'] = json.dumps({
-    'allowed_domains': 'test',
-    'api_key': 'test',
-    'app_id': 'test',
-    'custom_settings': None,
-    'hash_strategy': 'test',
-    'index_name': 'test',
-    'index_prefix': 'test',
-    'selectors': SELECTORS,
-    'selectors_exclude': 'test',
-    'start_urls': 'test',
-    'stop_urls': 'test',
-    'strategy': 'test'
-})
 
-STRATEGY = DefaultStrategy(ConfigLoader())
-SELECTORS = STRATEGY.parse_selectors(SELECTORS)
+
+def get_strategy(config=None):
+
+    if config is None:
+        config = {}
+
+    global SELECTORS
+
+    modified_config = {
+        'allowed_domains': 'test',
+        'api_key': 'test',
+        'app_id': 'test',
+        'custom_settings': None,
+        'hash_strategy': 'test',
+        'index_name': 'test',
+        'index_prefix': 'test',
+        'selectors': SELECTORS,
+        'selectors_exclude': 'test',
+        'start_urls': 'test',
+        'stop_urls': 'test',
+        'strategy': 'test'
+    }
+
+    for key in config:
+        modified_config[key] = config[key]
+
+    # Stub ENV variables read by ConfigLoader
+    os.environ['CONFIG'] = json.dumps(modified_config)
+    return DefaultStrategy(ConfigLoader())
+
 
 class TestGetRecordsFromDom:
-
     def test_simple(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
           <h1>Foo</h1>
           <h2>Bar</h2>
@@ -48,7 +61,7 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 3
@@ -66,7 +79,8 @@ class TestGetRecordsFromDom:
 
     def test_text(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h1>Foo</h1>
@@ -76,7 +90,7 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 4
@@ -87,14 +101,15 @@ class TestGetRecordsFromDom:
 
     def test_text_with_utf8(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring(u"""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring(u"""
         <html><body>
             <p>UTF8 ‽✗✓ Madness</p>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert actual[0]['type'] == 'content'
@@ -102,7 +117,8 @@ class TestGetRecordsFromDom:
 
     def test_different_wrappers(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <header>
               <h1>Foo</h1>
@@ -126,7 +142,7 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 6
@@ -144,14 +160,15 @@ class TestGetRecordsFromDom:
 
     def test_selector_contains_elements(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1><a href="#">Foo</a><span></span></h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
@@ -173,7 +190,8 @@ class TestGetHierarchyRadio:
         }
 
         # When
-        actual = STRATEGY.get_hierarchy_radio(hierarchy)
+        strategy = get_strategy()
+        actual = strategy.get_hierarchy_radio(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -195,7 +213,8 @@ class TestGetHierarchyRadio:
         }
 
         # When
-        actual = STRATEGY.get_hierarchy_radio(hierarchy)
+        strategy = get_strategy()
+        actual = strategy.get_hierarchy_radio(hierarchy)
 
         # Then
         assert actual['lvl0'] is None
@@ -219,7 +238,8 @@ class TestGetHierarchyComplete:
         }
 
         # When
-        actual = STRATEGY.get_hierarchy_complete(hierarchy)
+        strategy = get_strategy()
+        actual = strategy.get_hierarchy_complete(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -241,7 +261,8 @@ class TestGetHierarchyComplete:
         }
 
         # When
-        actual = STRATEGY.get_hierarchy_complete(hierarchy)
+        strategy = get_strategy()
+        actual = strategy.get_hierarchy_complete(hierarchy)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -255,7 +276,8 @@ class TestGetAnchor:
 
     def test_name_on_heading(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2 name="bar">Bar</h2>
@@ -263,16 +285,17 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = STRATEGY.select(SELECTORS[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element)
+        actual = strategy.get_anchor(element)
 
         # Then
         assert actual == 'bar'
 
     def test_id_not_in_a_direct_parent(self):
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <div>
             <a id="bar"></a>
             <div>
@@ -284,10 +307,10 @@ class TestGetAnchor:
         """)
 
         level = 'lvl1'
-        element = STRATEGY.select(SELECTORS[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element)
+        actual = strategy.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -295,7 +318,8 @@ class TestGetAnchor:
 
     def test_id_on_heading(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2 id="bar">Bar</h2>
@@ -303,17 +327,18 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = STRATEGY.select(SELECTORS[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element)
+        actual = strategy.get_anchor(element)
 
         # Then
         assert actual == 'bar'
 
     def test_anchor_in_subelement(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2><a href="#" name="bar">Bar</a><span></span></h2>
@@ -321,17 +346,18 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = STRATEGY.select(SELECTORS[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element)
+        actual = strategy.get_anchor(element)
 
         # Then
         assert actual == 'bar'
 
     def test_no_anchor(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -339,10 +365,10 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl2'
-        element = STRATEGY.select(SELECTORS[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
 
         # When
-        actual = STRATEGY.get_anchor(element)
+        actual = strategy.get_anchor(element)
 
         # Then
         assert actual is None
@@ -350,18 +376,28 @@ class TestGetAnchor:
 class TestGetLevelWeight:
 
     def test_level_weight(self):
-        assert STRATEGY.get_level_weight('lvl0') == 100
-        assert STRATEGY.get_level_weight('lvl1') == 90
-        assert STRATEGY.get_level_weight('lvl2') == 80
-        assert STRATEGY.get_level_weight('lvl3') == 70
-        assert STRATEGY.get_level_weight('lvl4') == 60
-        assert STRATEGY.get_level_weight('lvl5') == 50
-        assert STRATEGY.get_level_weight('text') == 0
+        strategy = get_strategy()
+        assert strategy.get_level_weight('lvl0') == 100
+        assert strategy.get_level_weight('lvl1') == 90
+        assert strategy.get_level_weight('lvl2') == 80
+        assert strategy.get_level_weight('lvl3') == 70
+        assert strategy.get_level_weight('lvl4') == 60
+        assert strategy.get_level_weight('lvl5') == 50
+        assert strategy.get_level_weight('text') == 0
 
 class TestGetRecordsFromDom2:
     def test_text_with_only_three_levels(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': 'h1',
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'text': 'p'
+            }
+        })
+
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h1>Foo</h1>
@@ -370,15 +406,8 @@ class TestGetRecordsFromDom2:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': 'h1',
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'text': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 4
@@ -390,7 +419,18 @@ class TestGetRecordsFromDom2:
 class TestGetRecordsFromDomWithGlobalLevels:
     def test_global_title_at_the_end(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'h1',
+                    'global': 'true'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'text': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2>Bar</h2>
@@ -399,18 +439,8 @@ class TestGetRecordsFromDomWithGlobalLevels:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'global': 'true'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'text': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -429,7 +459,18 @@ class TestGetRecordsFromDomWithGlobalLevels:
 
     def test_several_match_for_global_selector(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors':{
+                'lvl0': {
+                    'selector': 'h1',
+                    'global': 'true'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2>Bar</h2>
@@ -439,18 +480,8 @@ class TestGetRecordsFromDomWithGlobalLevels:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'global': 'true'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert actual[3]['type'] == 'lvl0'
@@ -461,7 +492,21 @@ class TestGetRecordsFromDomWithGlobalLevels:
 
     def test_several_global_selectors(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'h1',
+                    'global': True
+                },
+                'lvl1': {
+                    'selector': 'h2',
+                    'global': 'true'
+                },
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2>Bar</h2>
@@ -471,21 +516,8 @@ class TestGetRecordsFromDomWithGlobalLevels:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'global': True
-            },
-            'lvl1': {
-                'selector': 'h2',
-                'global': 'true'
-            },
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert actual[0]['type'] == 'content'
@@ -497,7 +529,18 @@ class TestGetRecordsFromDomWithGlobalLevels:
 class TestGetRecordsFromDomWithXpath:
     def test_one_xpath(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'), \' title \')]',
+                    'type': 'xpath'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1 class="title">Foo</h1>
             <p>text</p>
@@ -506,18 +549,8 @@ class TestGetRecordsFromDomWithXpath:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'), \' title \')]',
-                'type': 'xpath'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -531,7 +564,24 @@ class TestGetRecordsFromDomWithXpath:
 
     def test_two_xpath_including_one_global(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
+                                ' \' title \')]',
+                    'type': 'xpath',
+                    'global': True
+                },
+                'lvl1': {
+                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
+                                ' \' subtitle \')]',
+                    'type': 'xpath'
+                },
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2 class="subtitle">Bar</h2>
@@ -541,24 +591,8 @@ class TestGetRecordsFromDomWithXpath:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
-                            ' \' title \')]',
-                'type': 'xpath',
-                'global': True
-            },
-            'lvl1': {
-                'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
-                            ' \' subtitle \')]',
-                'type': 'xpath'
-            },
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -578,7 +612,19 @@ class TestGetRecordsFromDomWithXpath:
 
     def test_select_parent_with_xpath(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': '//li[@class="active"]/../../../*[@class="title"]',
+                    'type': 'xpath',
+                    'global': True
+                },
+                'lvl1': 'li.active',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h3>Baz</h3>
@@ -594,19 +640,8 @@ class TestGetRecordsFromDomWithXpath:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': '//li[@class="active"]/../../../*[@class="title"]',
-                'type': 'xpath',
-                'global': True
-            },
-            'lvl1': 'li.active',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -622,7 +657,18 @@ class TestGetRecordsFromDomWithXpath:
 class TestGetRecordsFromDomWithDefaultValue:
     def test_default_value(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'h1',
+                    'default_value': 'Documentation'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2>Bar</h2>
@@ -630,18 +676,8 @@ class TestGetRecordsFromDomWithDefaultValue:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'default_value': 'Documentation'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -655,7 +691,18 @@ class TestGetRecordsFromDomWithDefaultValue:
 
     def test_default_value_for_text(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': 'h1',
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': {
+                    'selector': 'p',
+                    'default_value': 'Documentation'
+                }
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -663,18 +710,8 @@ class TestGetRecordsFromDomWithDefaultValue:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': 'h1',
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': {
-                'selector': 'p',
-                'default_value': 'Documentation'
-            }
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -688,7 +725,20 @@ class TestGetRecordsFromDomWithDefaultValue:
 
     def test_default_value_with_global(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'h1',
+                    'global': True,
+                    'default_value': 'Documentation'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
             <h2>Bar</h2>
@@ -696,19 +746,8 @@ class TestGetRecordsFromDomWithDefaultValue:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'global': True,
-                'default_value': 'Documentation'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -722,7 +761,19 @@ class TestGetRecordsFromDomWithDefaultValue:
 
     def test_default_value_should_not_override(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': {
+                    'selector': 'h1',
+                    'global': True,
+                    'default_value': 'Documentation'
+                },
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <p>text</p>
@@ -731,19 +782,8 @@ class TestGetRecordsFromDomWithDefaultValue:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            'lvl0': {
-                'selector': 'h1',
-                'global': True,
-                'default_value': 'Documentation'
-            },
-            'lvl1': 'h2',
-            'lvl2': 'h3',
-            'content': 'p'
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
 
@@ -758,7 +798,16 @@ class TestGetRecordsFromDomWithDefaultValue:
 class TestGetRecordsFromDomWithStripChars:
     def test_strip_chars(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            },
+            'strip_chars': ',.'
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>.Foo;</h1>
             <h2>!Bar.</h2>
@@ -767,16 +816,8 @@ class TestGetRecordsFromDomWithStripChars:
         </body></html>
         """)
 
-        STRATEGY.config.strip_chars = ',.'
-        STRATEGY.set_selectors({
-            "lvl0": "h1",
-            "lvl1": "h2",
-            "lvl2": "h3",
-            "content": "p"
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 4
@@ -788,7 +829,19 @@ class TestGetRecordsFromDomWithStripChars:
 
     def test_strip_chars_with_level_override(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'strip_chars': ',.',
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": {
+                    "selector": "h2",
+                    "strip_chars": "!"
+                },
+                "lvl2": "h3",
+                "content": "p"
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>.Foo;</h1>
             <h2>!Bar.</h2>
@@ -797,19 +850,8 @@ class TestGetRecordsFromDomWithStripChars:
         </body></html>
         """)
 
-        STRATEGY.config.strip_chars = ',.'
-        STRATEGY.set_selectors({
-            "lvl0": "h1",
-            "lvl1": {
-                "selector": "h2",
-                "strip_chars": "!"
-            },
-            "lvl2": "h3",
-            "content": "p"
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 4
@@ -822,7 +864,17 @@ class TestGetRecordsFromDomWithStripChars:
 class TestGetRecordsFromDomWithOldTestSelector:
     def test_test_selector(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "text": "p"
+            },
+            'strip_chars': ',.'
+        })
+
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
             <h1>Foo</h1>
             <h2>Bar</h2>
@@ -831,16 +883,8 @@ class TestGetRecordsFromDomWithOldTestSelector:
         </body></html>
         """)
 
-        STRATEGY.config.strip_chars = ',.'
-        STRATEGY.set_selectors({
-            "lvl0": "h1",
-            "lvl1": "h2",
-            "lvl2": "h3",
-            "text": "p"
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 4
@@ -854,15 +898,17 @@ class TestGetRecordsFromDomWithOldTestSelector:
 class TestGetSettings:
     def test_get_settings(self):
         # Given
-        STRATEGY.set_selectors({
-            "lvl0": "h1",
-            "lvl1": "h2",
-            "lvl2": "h3",
-            "content": "p"
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            }
         })
 
         # When
-        settings = STRATEGY.get_index_settings()
+        settings = strategy.get_index_settings()
 
         # Then
         expected_settings = [
@@ -881,18 +927,20 @@ class TestGetSettings:
 class TestAllowToBypassOneOrMoreLevels:
     def test_get_settings_with_one_non_searchable(self):
         # Given
-        STRATEGY.set_selectors({
-         "lvl0": {
-             "selector": "h1",
-             "searchable": False
-         },
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'selectors': {
+             "lvl0": {
+                 "selector": "h1",
+                 "searchable": False
+             },
+             "lvl1": "h2",
+             "lvl2": "h3",
+             "content": "p"
+            }
         })
 
         # When
-        settings = STRATEGY.get_index_settings()
+        settings = strategy.get_index_settings()
 
         # Then
         expected_settings = [
@@ -908,7 +956,15 @@ class TestAllowToBypassOneOrMoreLevels:
 
     def test_get_records_from_dom_with_empty_selector(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
          <h2>Bar</h2>
@@ -917,15 +973,8 @@ class TestAllowToBypassOneOrMoreLevels:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            "lvl0": "",
-            "lvl1": "h2",
-            "lvl2": "h3",
-            "content": "p"
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 3
@@ -937,7 +986,18 @@ class TestAllowToBypassOneOrMoreLevels:
 
     def test_get_records_from_dom_with_empty_selector_and_default_value(self):
         # Given
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": {
+                    "selector": "",
+                    "default_value": "Documentation"
+                },
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
          <h2>Bar</h2>
@@ -946,18 +1006,8 @@ class TestAllowToBypassOneOrMoreLevels:
         </body></html>
         """)
 
-        STRATEGY.set_selectors({
-            "lvl0": {
-                "selector": "",
-                "default_value": "Documentation"
-            },
-            "lvl1": "h2",
-            "lvl2": "h3",
-            "content": "p"
-        })
-
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert len(actual) == 3
@@ -970,87 +1020,104 @@ class TestAllowToBypassOneOrMoreLevels:
 class TestPageRank:
     def test_default_page_rank_should_be_zero(self):
         # Given
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'selectors': {
+             "lvl0": "h1",
+             "lvl1": "h2",
+             "lvl2": "h3",
+             "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom()
+        actual = strategy.get_records_from_dom()
 
         # Then
         assert actual[0]['weight']['page_rank'] == 0
 
     def test_positive_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 1, 'tags': []}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'start_urls': [{
+                'url': 'http://foo.bar/api',
+                'page_rank': 1
+            }],
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api")
+        actual = strategy.get_records_from_dom("http://foo.bar/api")
 
         # Then
         assert actual[0]['weight']['page_rank'] == 1
 
     def test_positive_sub_page_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 1, 'tags': []}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'start_urls': [{
+                'url': 'http://foo.bar/api',
+                'page_rank': 1
+            }],
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+        actual = strategy.get_records_from_dom("http://foo.bar/api/test")
 
         # Then
         assert actual[0]['weight']['page_rank'] == 1
 
     def test_negative_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': -1, 'tags': []}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'start_urls': {
+                'url': 'http://foo.bar/api',
+                'page_rank': -1
+            },
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+        actual = strategy.get_records_from_dom("http://foo.bar/api/test")
 
         # Then
         assert actual[0]['weight']['page_rank'] == -1
@@ -1058,44 +1125,54 @@ class TestPageRank:
 class TestTags:
     def test_adding_tags_for_page(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 0, 'tags': ["test"]}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'start_urls': {
+                'url': 'http://foo.bar/api',
+                'tags': ["test"]
+            },
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api")
+        actual = strategy.get_records_from_dom("http://foo.bar/api")
 
         # Then
         assert actual[0]['tags'] == ["test"]
 
     def test_adding_tags_for_subpage(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 0, 'tags': ["test"]}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        strategy = get_strategy({
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            },
+            'start_urls': {
+                'url': 'http://foo.bar/api',
+                'tags': ["test"]
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+        actual = strategy.get_records_from_dom("http://foo.bar/api/test")
 
         # Then
         assert actual[0]['tags'] == ["test"]
@@ -1103,22 +1180,28 @@ class TestTags:
 class TestRegexStartUrls:
     def test_regex_start_urls(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/.*'), 'page_rank': 0, 'tags': ["test"]}]
-        STRATEGY.set_selectors({
-         "lvl0": "h1",
-         "lvl1": "h2",
-         "lvl2": "h3",
-         "content": "p"
+        # Stub ENV variables read by ConfigLoader
+        strategy = get_strategy({
+            'start_urls': {
+                'url': 'http://foo.bar/.*',
+                'tags': ["test"]
+            },
+            'selectors': {
+                 "lvl0": "h1",
+                 "lvl1": "h2",
+                 "lvl2": "h3",
+                 "content": "p"
+            }
         })
 
-        STRATEGY.dom = lxml.html.fromstring("""
+        strategy.dom = lxml.html.fromstring("""
         <html><body>
          <h1>Foo</h1>
         </body></html>
         """)
 
         # When
-        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+        actual = strategy.get_records_from_dom("http://foo.bar/api/test")
 
         # Then
         assert actual[0]['tags'] == ["test"]
