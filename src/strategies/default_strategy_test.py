@@ -5,6 +5,7 @@ from strategies.default_strategy import DefaultStrategy
 import lxml.html
 import json
 import os
+import re
 
 SELECTORS = {
     "lvl0": "h1",
@@ -990,7 +991,7 @@ class TestPageRank:
 
     def test_positive_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 1, 'tags': []}]
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 1, 'tags': []}]
         STRATEGY.set_selectors({
          "lvl0": "h1",
          "lvl1": "h2",
@@ -1012,7 +1013,7 @@ class TestPageRank:
 
     def test_positive_sub_page_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 1, 'tags': []}]
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 1, 'tags': []}]
         STRATEGY.set_selectors({
          "lvl0": "h1",
          "lvl1": "h2",
@@ -1034,7 +1035,7 @@ class TestPageRank:
 
     def test_negative_page_rank(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': -1, 'tags': []}]
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': -1, 'tags': []}]
         STRATEGY.set_selectors({
          "lvl0": "h1",
          "lvl1": "h2",
@@ -1057,7 +1058,7 @@ class TestPageRank:
 class TestTags:
     def test_adding_tags_for_page(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 0, 'tags': ["test"]}]
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 0, 'tags': ["test"]}]
         STRATEGY.set_selectors({
          "lvl0": "h1",
          "lvl1": "h2",
@@ -1079,7 +1080,30 @@ class TestTags:
 
     def test_adding_tags_for_subpage(self):
         # Given
-        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'page_rank': 0, 'tags': ["test"]}]
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/api'), 'page_rank': 0, 'tags': ["test"]}]
+        STRATEGY.set_selectors({
+         "lvl0": "h1",
+         "lvl1": "h2",
+         "lvl2": "h3",
+         "content": "p"
+        })
+
+        STRATEGY.dom = lxml.html.fromstring("""
+        <html><body>
+         <h1>Foo</h1>
+        </body></html>
+        """)
+
+        # When
+        actual = STRATEGY.get_records_from_dom("http://foo.bar/api/test")
+
+        # Then
+        assert actual[0]['tags'] == ["test"]
+
+class TestRegexStartUrls:
+    def test_regex_start_urls(self):
+        # Given
+        STRATEGY.config.start_urls = [{'url': 'http://foo.bar/api', 'compiled_url': re.compile('http://foo.bar/.*'), 'page_rank': 0, 'tags': ["test"]}]
         STRATEGY.set_selectors({
          "lvl0": "h1",
          "lvl1": "h2",
