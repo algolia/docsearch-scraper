@@ -6,6 +6,7 @@ from urlparse import urlparse
 import os.path
 import json
 import os
+import re
 
 class ConfigLoader(object):
     """
@@ -21,6 +22,7 @@ class ConfigLoader(object):
     selectors = None
     selectors_exclude = []
     start_urls = None
+    compiled_start_urls = []
     stop_urls = None
     strategy = None
     strip_chars = u".,;:§¶"
@@ -57,6 +59,8 @@ class ConfigLoader(object):
         for start_url in config_start_urls:
             if isinstance(start_url, basestring):
                 start_url = {'url': start_url}
+
+            start_url['compiled_url'] = re.compile(start_url['url'])
 
             if "page_rank" not in start_url:
                 start_url['page_rank'] = 0
