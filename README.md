@@ -47,7 +47,7 @@ The config.json should look like:
     "strategy": "default",
     "strip_chars": " :;,.",
     "js_render": false,
-    "js_wait": 0.5
+    "js_wait": 0
 }
 ```
 
@@ -214,19 +214,16 @@ but all pages duplicates the main title (see [this issue][1]).
 
 The HTML code that we crawl is sometimes generated using Javascript. In those
 cases, the `js_render` option must be set to `true`. It will enable our
-internal proxy ([Splash][2]) to render pages before crawling them. To start a
-Splash proxy server using Docker, just type:
-`docker run -p 8050:8050 scrapinghub/splash`.
+internal proxy (Selenium) to render pages before crawling them.
 
 This parameter is optional and is set to `false` by default.
 
 ### `js_wait`
 
 The `js_wait` parameter lets you change the default waiting time to render the
-webpage with the Splash proxy. For more information, check the `wait` paramter
-from the [Splash API][3].
+webpage with the Selenium proxy.
 
-This parameter is optional and is set to `0.5` by default.
+This parameter is optional and is set to `0`s by default.
 
 ## Test the UX/UI with the playground
 
@@ -292,10 +289,10 @@ In production, you build the image from the default Docker file, then run the
 container.
 
 Several documentations are using Javascript to generate the HTML code. To
-handle those documentations, this image which embeds a Splash proxy in
+handle those documentations, this image which embeds our Selenium proxy in
 order to render webpages before crawling them. Note that your JSON
 configuration file must set the `js_render` parameter to `true`
-see [`js_render`](#js_render). If not, the Splash instance won't be started.
+see [`js_render`](#js_render). If not, the Selenium instance won't be started.
 
 ```
 $ docker build -t algolia/documentation-scrapper .
@@ -309,5 +306,3 @@ $ docker run \
 ```
 
 [1]: https://github.com/algolia/documentation-scrapper/issues/7
-[2]: https://github.com/scrapinghub/scrapy-splash
-[3]: http://splash.readthedocs.org/en/stable/api.html#render-html

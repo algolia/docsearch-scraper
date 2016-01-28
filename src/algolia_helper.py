@@ -11,15 +11,14 @@ class AlgoliaHelper:
         self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
         self.algolia_client.delete_index(self.index_name_tmp)
 
-    def add_records(self, records):
+    def add_records(self, records, url):
         """Add new records to the temporary index"""
         record_count = len(records)
 
         for i in xrange(0, record_count, 50):
             self.algolia_index_tmp.add_objects(records[i:i + 50])
 
-        print "Pushed " + str(record_count) + " records"
-
+        print "> DocSearch: " + url + " (" + str(record_count) + " records)"
 
     def commit_tmp_index(self, settings):
         """Overwrite the real index with the temporary one"""

@@ -1,10 +1,8 @@
 """
 DocumentationSpider
 """
-from scrapy.exceptions import CloseSpider
 from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy import Request
 
 class DocumentationSpider(CrawlSpider):
     """
@@ -13,6 +11,7 @@ class DocumentationSpider(CrawlSpider):
     algolia_helper = None
     strategy = None
     js_render = False
+    js_wait = 0
 
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
@@ -33,75 +32,23 @@ class DocumentationSpider(CrawlSpider):
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
-            canonicalize=False
+            canonicalize=(not config.use_anchors)
         )
 
-        if self.js_render:
-            self.start_requests = self.splash_start_requests
-            DocumentationSpider.rules = [
-                Rule(link_extractor, callback="callback", process_request="splash_request", follow=True)
-            ]
-        else:
-            DocumentationSpider.rules = [
-                Rule(link_extractor, callback="callback", process_request="remove_trailing_slash", follow=True)
-            ]
+        DocumentationSpider.rules = [
+            Rule(link_extractor, callback=self.add_records, follow=True),
+        ]
 
         super(DocumentationSpider, self)._compile_rules()
 
-    def splash_start_requests(self):
-        for url in self.start_urls:
-            yield Request(url, self.splash_parse_start_url, meta = {
-                'splash': {
-                    'endpoint': 'render.html',
-                    'args': {
-                        'wait': self.js_wait,
-                        'url': url,
-                    }
-                }
-            })
+    def link_filtering(self, links):
+        new_links = []
+        for link in links:
+            link.url = (link.url[-1] == '/' and link.url[:-1] or link.url)
+            new_links.append(link)
+        return new_links
 
-    def splash_parse_start_url(self, response):
-        original_url = response.meta['_splash_processed']['args']['url']
-        response = response.replace(url=original_url)
-        return self.parse(response)
-
-    def remove_trailing_slash(self, request):
-        return request.replace(url=request.url.rstrip('/'))
-
-    def splash_request(self, request):
-        request = Request(request.url, self.callback, meta = {
-            'splash': {
-                'endpoint': 'render.html',
-                'args': {
-                    'wait': self.js_wait,
-                    'url': request.url,
-                }
-            }
-        })
-
-        return self.remove_trailing_slash(request)
-
-    def _response_downloaded(self, response):
-        if '_splash_processed' in response.meta:
-            original_url = response.meta['_splash_processed']['args']['url']
-            response = response.replace(url=original_url)
-
-        rule = self._rules[response.meta['rule']]
-        return self._parse_response(response, rule.callback, rule.cb_kwargs, rule.follow)
-
-    def stop_and_close(self):
-        raise CloseSpider('CLOSE')
-
-    def callback(self, response):
-        """Callback fired on each page scrapped"""
-        if "text/html" not in response.headers['Content-Type']:
-            return
-
-        if self.js_render:
-            original_url = response.meta['_splash_processed']['args']['url']
-            response = response.replace(url=original_url)
-
-        print response.url
-
+    def add_records(self, response):
         records = self.strategy.get_records_from_response(response)
-        self.algolia_helper.add_records(records)
+        self.algolia_helper.add_records(records, response.url)
+        return self.parse(response)

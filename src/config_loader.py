@@ -179,11 +179,11 @@ class ConfigLoader(object):
         else:
             data['js_render'] = False
 
-        # `js_wait` is set to 0.5 by default it is specified
-        if isinstance(data.get('js_wait'), float):
+        # `js_wait` is set to 0s by default unless it is specified
+        if isinstance(data.get('js_wait'), int):
             data['js_wait'] = data.get('js_wait')
         else:
-            data['js_wait'] = 0.5
+            data['js_wait'] = 0
 
         # `use_anchors` is set to True by default unless `false` is specified
         if isinstance(data.get('use_anchors'), bool):

@@ -9,9 +9,11 @@
   ],
   "stop_urls": [
     "http://www.hull.io/docs/references/api/",
-    "http://www.hull.io/docs/references/hull_js/"
+    "http://www.hull.io/docs/references/hull_js/",
+    "#"
   ],
   "js_render": true,
+  "js_wait": 2,
   "selectors_exclude": [],
   "selectors": {
     "lvl0": ".tree-nav-section li.active > a, header a:nth-child(2), .documentation-header h1",
