@@ -3,8 +3,12 @@
   "start_urls": [
     "http://docs.codacy.com/docs"
   ],
-  "stop_urls": [],
+  "stop_urls": [
+    "^https",
+    "/edit$"
+  ],
   "js_render": true,
+  "download_timeout": 30,
   "selectors_exclude": [
     ".blocks-parent .section:first-child"
   ],

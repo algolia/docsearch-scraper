@@ -4,14 +4,11 @@ python /root/check_js_render.py
 
 if [ "$?" -eq 0 ]
 then
-  splash --proxy-profiles-path /etc/splash/proxy-profiles \
-         --js-profiles-path /etc/splash/js-profiles       \
-         --filters-path /etc/splash/filters               \
-         --lua-package-path /etc/splash/lua_modules/?.lua 2>&1 &
+  node /root/server.js 2>&1 &
 
-  while ! nc -z localhost 8050; do
+  while ! nc -z localhost 8090; do
     sleep 1
-    ((c++)) && ((c==10)) && echo "Splash has not started" && break
+    ((c++)) && ((c==10)) && echo "PhantomJS has not started" && break
   done
 fi
 

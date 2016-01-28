@@ -20,5 +20,6 @@
   },
   "custom_settings": {},
   "js_render": true,
+  "download_timeout": 120,
   "min_indexed_level": 1
 }

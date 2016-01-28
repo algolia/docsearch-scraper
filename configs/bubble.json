@@ -4,14 +4,7 @@
     "https://bubble.is/reference"
   ],
   "stop_urls": [
-    "https://bubble.is/reference#PropertyApplications",
-    "https://bubble.is/reference#Elements",
-    "https://bubble.is/reference#Interface",
-    "https://bubble.is/reference#API",
-    "https://bubble.is/reference#Events",
-    "https://bubble.is/reference#Plugins",
-    "https://bubble.is/reference#Workflow",
-    "https://bubble.is/reference#ApplicationSettings"
+    "#"
   ],
   "selectors_exclude": [
   ],
@@ -23,5 +16,6 @@
   },
   "custom_settings": {},
   "js_render": true,
+  "js_wait": 5,
   "strategy": "default"
 }
