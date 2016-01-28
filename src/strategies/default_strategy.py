@@ -251,7 +251,7 @@ class DefaultStrategy(AbstractStrategy):
     def get_tags(self, current_page_url):
         if current_page_url is not None:
             for start_url in self.config.start_urls:
-                if start_url['url'] in current_page_url:
+                if start_url['compiled_url'].match(current_page_url):
                     return start_url['tags']
         return []
 
@@ -259,7 +259,7 @@ class DefaultStrategy(AbstractStrategy):
     def get_page_rank(self, current_page_url):
         if current_page_url is not None:
             for start_url in self.config.start_urls:
-                if start_url['url'] in current_page_url:
+                if start_url['compiled_url'].match(current_page_url):
                     return int(start_url['page_rank'])
         return 0
 
