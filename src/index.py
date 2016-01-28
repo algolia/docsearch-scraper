@@ -6,6 +6,8 @@ from config_loader import ConfigLoader
 from documentation_spider import DocumentationSpider
 from scrapy.crawler import CrawlerProcess
 from strategies.default_strategy import DefaultStrategy
+from selenium_middleware import SeleniumMiddleware
+
 
 # disable boto (S3 download)
 from scrapy import optional_features
@@ -14,6 +16,9 @@ if 'boto' in optional_features:
     optional_features.remove('boto')
 
 CONFIG = ConfigLoader()
+
+if CONFIG.use_anchors:
+    import scrappy_patch
 
 ALGOLIA_HELPER = AlgoliaHelper(
     CONFIG.app_id,
@@ -31,16 +36,12 @@ if not CONFIG_STRATEGY in STRATEGIES:
 
 STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
 
-SPLASH_URL = 'http://localhost:8051/'
-
 PROCESS = CrawlerProcess({
     'LOG_ENABLED': '1',
     'LOG_LEVEL': 'ERROR',
     # 'LOG_LEVEL': 'DEBUG',
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-    'DOWNLOADER_MIDDLEWARES': {'scrapyjs.SplashMiddleware': 750},
-    'DUPEFILTER_CLASS': 'scrapyjs.SplashAwareDupeFilter',
-    'HTTPCACHE_STORAGE': 'scrapyjs.SplashAwareFSCacheStorage',
+    'DOWNLOADER_MIDDLEWARES': {'__main__.SeleniumMiddleware': 543},
 })
 
 PROCESS.crawl(
