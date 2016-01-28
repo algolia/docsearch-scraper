@@ -71,6 +71,7 @@ You can pass either a string or an array of urls. The crawler will go to each
 page in order, following every link it finds on the page. It will only stop if
 the domain is outside of the `allowed_domains` or if the link is blacklisted in
 `stop_urls`.
+Strings will be considered as regex.
 
 Note that it currently does not follow 301 redirects.
 

@@ -18,56 +18,6 @@ class AbstractStrategy(object):
 
     def __init__(self, config):
         self.config = config
-        self.config.selectors = self.parse_selectors(self.config.selectors)
-
-    def set_selectors(self, selectors):
-        self.config.selectors = self.parse_selectors(selectors)
-
-    @staticmethod
-    def parse_selectors(config_selectors):
-        selectors = {}
-
-        for key in config_selectors:
-            if key != 'text':
-                selectors[key] = config_selectors[key]
-            else:
-                # Backward compatibility, rename text to content
-                key = 'content'
-                selectors[key] = config_selectors['text']
-
-            # Backward compatibility, if it's a string then we put it in an object
-            if isinstance(selectors[key], basestring):
-                selectors[key] = {'selector': selectors[key]}
-
-            # Global
-            if 'global' in selectors[key]:
-                selectors[key]['global'] = bool(selectors[key]['global'])
-            else:
-                selectors[key]['global'] = False
-
-            # Type
-            if 'type' in selectors[key]:
-                if selectors[key]['type'] not in ['xpath', 'css']:
-                    raise Exception(selectors[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
-            else:
-                selectors[key]['type'] = 'css'
-
-            if selectors[key]['type'] == 'css':
-                selectors[key]['selector'] = AbstractStrategy.css_to_xpath(selectors[key]['selector'])
-
-            # We don't need it because everything is xpath now
-            selectors[key].pop('type')
-
-            # Default value
-            selectors[key]['default_value'] = selectors[key]['default_value'] if 'default_value' in selectors[key] else None
-
-            # Strip chars
-            selectors[key]['strip_chars'] = selectors[key]['strip_chars'] if 'strip_chars' in selectors[key] else None
-
-            # Searchable
-            selectors[key]['searchable'] = bool(selectors[key]['searchable']) if 'searchable' in selectors[key] else True
-
-        return selectors
 
     @staticmethod
     def pprint(data):

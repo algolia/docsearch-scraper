@@ -3,9 +3,10 @@
 Load the config from the CONFIG environment variable
 """
 from urlparse import urlparse
-import os.path
+from strategies.abstract_strategy import AbstractStrategy
 import json
 import os
+import re
 
 class ConfigLoader(object):
     """
@@ -21,6 +22,7 @@ class ConfigLoader(object):
     selectors = None
     selectors_exclude = []
     start_urls = None
+    compiled_start_urls = []
     stop_urls = None
     strategy = None
     strip_chars = u".,;:§¶"
@@ -50,6 +52,53 @@ class ConfigLoader(object):
             setattr(self, key, value)
 
         self.start_urls = self.parse_urls(self.start_urls)
+        self.selectors = self.parse_selectors(self.selectors)
+
+    @staticmethod
+    def parse_selectors(config_selectors):
+        selectors = {}
+
+        for key in config_selectors:
+            if key != 'text':
+                selectors[key] = config_selectors[key]
+            else:
+                # Backward compatibility, rename text to content
+                key = 'content'
+                selectors[key] = config_selectors['text']
+
+            # Backward compatibility, if it's a string then we put it in an object
+            if isinstance(selectors[key], basestring):
+                selectors[key] = {'selector': selectors[key]}
+
+            # Global
+            if 'global' in selectors[key]:
+                selectors[key]['global'] = bool(selectors[key]['global'])
+            else:
+                selectors[key]['global'] = False
+
+            # Type
+            if 'type' in selectors[key]:
+                if selectors[key]['type'] not in ['xpath', 'css']:
+                    raise Exception(selectors[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
+            else:
+                selectors[key]['type'] = 'css'
+
+            if selectors[key]['type'] == 'css':
+                selectors[key]['selector'] = AbstractStrategy.css_to_xpath(selectors[key]['selector'])
+
+            # We don't need it because everything is xpath now
+            selectors[key].pop('type')
+
+            # Default value
+            selectors[key]['default_value'] = selectors[key]['default_value'] if 'default_value' in selectors[key] else None
+
+            # Strip chars
+            selectors[key]['strip_chars'] = selectors[key]['strip_chars'] if 'strip_chars' in selectors[key] else None
+
+            # Searchable
+            selectors[key]['searchable'] = bool(selectors[key]['searchable']) if 'searchable' in selectors[key] else True
+
+        return selectors
 
     @staticmethod
     def parse_urls(config_start_urls):
@@ -57,6 +106,8 @@ class ConfigLoader(object):
         for start_url in config_start_urls:
             if isinstance(start_url, basestring):
                 start_url = {'url': start_url}
+
+            start_url['compiled_url'] = re.compile(start_url['url'])
 
             if "page_rank" not in start_url:
                 start_url['page_rank'] = 0
