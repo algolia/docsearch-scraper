@@ -1,20 +1,23 @@
 {
   "index_name": "onelogin",
-  "allowed_domains": [
-    "developers.onelogin.com"
-  ],
   "start_urls": [
     "https://developers.onelogin.com/docs"
   ],
-  "stop_urls": [
-    "https://developers.onelogin.com/login"
-  ],
+  "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-header h1",
-    "lvl1": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-body div.content.block-content.ready div.blocks-parent div.block.section.ng-scope div.ng-scope div.ng-isolate-scope h3",
-    "text": "body.layout.page-docs.body-none.theme-solid.header-solid.header-bg-size-contain.header-bg-pos-cc.header-overlay-triangles.lumosity-dark.undefined.theme-threes.ng-scope.os-windows div.wrapper div.container.body-container div.main-content div.main-head div.ng-scope div.row div.col-sm-9.border-left.section-right div.docs-content div.docs-body div.content.block-content.ready div.blocks-parent div.block.section.ng-scope div.ng-scope div.ng-isolate-scope p"
+    "lvl0": {
+      "selector": "//*[@class=\"sidebar-nav\"]/ul/li/a[@class=\"active\"]/../../preceding::h4[1]",
+      "type": "xpath"
+    },
+    "lvl1": ".docs-content h1",
+    "lvl2": ".docs-content h2",
+    "lvl3": ".docs-content h3",
+    "lvl4": ".docs-content h4",
+    "lvl5": ".docs-content h5",
+    "text": ".docs-content p, .docs-content span"
   },
-  "custom_settings": {},
-  "strategy": "default"
+  "min_indexed_level": 1,
+  "js_render": true,
+  "js_wait": 5
 }
