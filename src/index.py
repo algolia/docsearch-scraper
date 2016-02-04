@@ -7,6 +7,7 @@ from documentation_spider import DocumentationSpider
 from scrapy.crawler import CrawlerProcess
 from strategies.default_strategy import DefaultStrategy
 from phantom_middleware import PhantomMiddleware
+import scrappy_patch
 
 # disable boto (S3 download)
 from scrapy import optional_features

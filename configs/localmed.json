@@ -1,7 +1,7 @@
 {
   "index_name": "localmed",
   "start_urls": [
-    "https://www.localmed.com/styleguides/#"
+    "https://www.localmed.com/styleguides/#/"
   ],
   "stop_urls": [],
   "selectors_exclude": [],
