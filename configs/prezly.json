@@ -6,7 +6,9 @@
   "start_urls": [
     "http://docs.prezly.com/docs"
   ],
-  "stop_urls": [],
+  "stop_urls": [
+    "/edit$"
+  ],
   "selectors_exclude": [],
   "selectors": {
     "lvl0": ".docs-content .docs-header h1",
