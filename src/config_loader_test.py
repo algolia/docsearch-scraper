@@ -171,6 +171,7 @@ class TestInit:
         assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
 
     def test_start_url_should_add_default_page_rank_and_tags(self):
+        """ Should add default values for page_rank and tags """
         # Given
         self.config({
             'start_urls': [{"url": "http://www.foo.bar/"}]
@@ -184,6 +185,7 @@ class TestInit:
         assert actual.start_urls[0]['page_rank'] == 0
 
     def test_start_url_should_be_transform_to_object_if_string(self):
+        """ Should accept strings for start_urls as well as objects """
         # Given
         self.config({
             'start_urls': ['http://www.foo.bar/']
@@ -250,3 +252,11 @@ class TestInit:
 
         # Then
         assert actual.selectors_exclude == ['.test']
+
+    def test_use_anchor_default(self):
+        """ Should set the `use_anchors` parameter to True by default """
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.use_anchors is True
