@@ -1,37 +1,45 @@
 FROM ubuntu:14.04
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
+# Install selenium
+ENV LC_ALL C
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN true
+
+RUN useradd -d /home/seleuser -m seleuser
+RUN chown -R seleuser /home/seleuser
+RUN chgrp -R seleuser /home/seleuser
+
+RUN apt-get -y update
+RUN apt-get install -y -q software-properties-common wget
+RUN add-apt-repository -y ppa:chris-lea/node.js
+RUN add-apt-repository -y ppa:webupd8team/java
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
+  firefox \
+  oracle-java8-installer \
+  nodejs \
+  x11vnc \
+  xvfb
+
+RUN npm install -g \
+  selenium-standalone@3.0.2 \
+  && selenium-standalone install
+
 # Install DocSearch dependencies
 RUN apt-get update -y && apt-get install -y \
-      python-pip  \
-      python-dev  \
-      python-lxml \
+      curl        \
+      fontconfig  \
       libffi-dev  \
       libssl-dev  \
-      git
+      python-dev  \
+      python-lxml \
+      python-pip
+
+# Install Scrapy and AlgoliaSearch
 RUN pip install scrapy
-RUN pip install scrapyjs
 RUN pip install algoliasearch
+RUN pip install selenium
 
 # Put everything in /root
 WORKDIR /root
 
-# Install and configure Splash
-RUN git clone https://github.com/scrapinghub/splash
-RUN ./splash/dockerfiles/splash/provision.sh \
-    prepare_install                          \
-    install_msfonts                          \
-    install_builddeps                        \
-    install_deps                             \
-    install_extra_fonts                      \
-    install_pyqt5                            \
-    install_python_deps
-RUN pip3 install -e ./splash/
-
-# Create volumes for Splash
-VOLUME [                          \
-    "/etc/splash/proxy-profiles", \
-    "/etc/splash/js-profiles",    \
-    "/etc/splash/filters",        \
-    "/etc/splash/lua_modules"     \
-]

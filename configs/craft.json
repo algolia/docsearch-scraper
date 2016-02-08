@@ -1,14 +1,15 @@
 {
   "index_name": "craft",
   "start_urls": [
-    "http://doc.craft.ai/tutorials/doc/6/index.html"
+    "http://doc.craft.ai"
   ],
   "stop_urls": [
+    "\\.\\."
   ],
   "selectors_exclude": [],
   "selectors": {
     "lvl0": {
-      "selector": "//*[@class=\"summary\"]/li/ul/li[@class\"active\"]/../preceding::a[1]",
+      "selector": "//*[@class=\"summary\"]/li/ul/li[@class=\"active\"]/../preceding::a[1]",
       "type": "xpath",
       "global": true
     },
