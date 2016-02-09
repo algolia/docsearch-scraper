@@ -190,8 +190,6 @@ class DefaultStrategy(AbstractStrategy):
         if 'content' in self.config.selectors and self.config.selectors['content']['searchable']:
             attributes_to_index.append('content')
 
-        attributes_to_index.append('url,anchor')
-
         settings = {
             'attributesToIndex': attributes_to_index,
             'attributesToRetrieve': [

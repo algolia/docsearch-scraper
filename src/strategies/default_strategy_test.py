@@ -7,6 +7,7 @@ import json
 import os
 import re
 
+
 SELECTORS = {
     "lvl0": "h1",
     "lvl1": "h2",
@@ -949,8 +950,7 @@ class TestGetSettings:
                 'unordered(hierarchy.lvl0)',
                 'unordered(hierarchy.lvl1)',
                 'unordered(hierarchy.lvl2)',
-                'content',
-                'url,anchor'
+                'content'
         ]
 
         assert settings['attributesToIndex'] == expected_settings
@@ -979,8 +979,7 @@ class TestAllowToBypassOneOrMoreLevels:
             'unordered(hierarchy_radio.lvl2)',
             'unordered(hierarchy.lvl1)',
             'unordered(hierarchy.lvl2)',
-            'content',
-            'url,anchor'
+            'content'
         ]
 
         assert settings['attributesToIndex'] == expected_settings
