@@ -16,7 +16,7 @@ class SeleniumMiddleware(object):
     def process_request(self, request, spider):
         # If the JS rendering is not needed
         if not spider.js_render:
-            return request
+            return None
 
         if self.driver is None:
             self.driver = webdriver.Firefox()
