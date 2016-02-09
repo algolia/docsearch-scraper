@@ -22,6 +22,9 @@ class SeleniumMiddleware(object):
             self.driver = webdriver.Firefox()
             self.driver.implicitly_wait(10)
 
+        if request.url in self.seen:
+            return None
+
         self.seen[request.url] = True
 
         print "Getting " + request.url + " from selenium"
