@@ -7,7 +7,6 @@ Run the following commands :
 - `brew install python # will install pip`
 - `pip install scrapy`
 - `pip install algoliasearch`
-- `pip install scrapyjs`
 - `pip install selenium`
 - `git clone git@github.com:algolia/documentation-scrapper.git`
 - `cd documentation-scrapper`
