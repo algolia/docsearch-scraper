@@ -8,6 +8,7 @@ Run the following commands :
 - `pip install scrapy`
 - `pip install algoliasearch`
 - `pip install scrapyjs`
+- `pip install selenium`
 - `git clone git@github.com:algolia/documentation-scrapper.git`
 - `cd documentation-scrapper`
 
@@ -41,7 +42,7 @@ The config.json should look like:
       "lvl3": "#content section h4",
       "lvl4": "#content section h5",
       "lvl5": "#content section h6",
-      "content": "#content header p,#content section p,#content section ol"
+      "text": "#content header p,#content section p,#content section ol"
     },
     "custom_settings": {},
     "strategy": "default",
@@ -81,11 +82,11 @@ Note that it currently does not follow 301 redirects.
 
 This object contains all the CSS selectors that will be used to create the
 record hierarchy. It contains 6 levels (`lvl0`, `lvl1`, `lvl2`, `lvl3`, `lvl4`,
-`lvl5`) and `content`. You should fill at least the three first levels for better
+`lvl5`) and `text`. You should fill at least the three first levels for better
 relevance.
 
 A default config would be to target the page `title` or `h1` as `lvl0`, the `h2`
-as `lvl1` and `h3` as `lvl2`. `content` is usually any `p` of text.
+as `lvl1` and `h3` as `lvl2`. `text` is usually any `p` of text.
 
 #### Global selectors
 
@@ -104,7 +105,7 @@ the sidebar is after the content on dom.
   "lvl3": "#content section h4",
   "lvl4": "#content section h5",
   "lvl5": "#content section h6",
-  "content": "#content header p,#content section p,#content section ol"
+  "text": "#content header p,#content section p,#content section ol"
 }
 ```
 
@@ -124,7 +125,7 @@ This is useful when you want to do more complex selection like selecting the par
   "lvl3": "#content section h4",
   "lvl4": "#content section h5",
   "lvl5": "#content section h6",
-  "content": "#content header p,#content section p,#content section ol"
+  "text": "#content header p,#content section p,#content section ol"
 }
 ```
 
@@ -143,7 +144,7 @@ then for each record the default value will be set
   "lvl2": "#content section h4",
   "lvl3": "#content section h5",
   "lvl4": "#content section h6",
-  "content": "#content header p,#content section p,#content section ol"
+  "text": "#content header p,#content section p,#content section ol"
 }
 ```
 
@@ -161,7 +162,7 @@ You can override the default strip chars per level
   "lvl2": "#content section h4",
   "lvl3": "#content section h5",
   "lvl4": "#content section h6",
-  "content": "#content header p,#content section p,#content section ol"
+  "text": "#content header p,#content section p,#content section ol"
 }
 ```
 
