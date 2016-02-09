@@ -9,12 +9,14 @@
   ],
   "stop_urls": [
     "http://sap.github.io/BUILD_User_Assistance/Splash/index.html",
-    "http://sap.github.io/BUILD_User_Assistance/Splash/video.html",
     "http://sap.github.io/BUILD_User_Assistance/Splash/AdminConsoleHelp.html"
   ],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": "#nav-content ul ul > li.active > span",
+    "lvl0": {
+      "selector": "#nav-content ul ul > li.active > span",
+      "default_value": "Video"
+    },
     "lvl1": "h1.title",
     "lvl2": "h2.sectiontitle, h2.title, h2.section_title",
     "lvl3": "h3",
