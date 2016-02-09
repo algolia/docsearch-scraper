@@ -10,8 +10,7 @@ import time
 
 class SeleniumMiddleware(object):
     def __init__(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(10)
+        self.driver = None
         self.seen = {}
 
     def process_request(self, request, spider):
@@ -19,8 +18,9 @@ class SeleniumMiddleware(object):
         if not spider.js_render:
             return request
 
-        if request.url in self.seen:
-            return None
+        if self.driver is None:
+            self.driver = webdriver.Firefox()
+            self.driver.implicitly_wait(10)
 
         self.seen[request.url] = True
 

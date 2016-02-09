@@ -28,7 +28,7 @@ class DefaultStrategy(AbstractStrategy):
 
         # Add page-related attributes to the records
         for record in records:
-            if self.config.use_anchors and record['anchor'] is not None:
+            if not self.config.use_anchors and record['anchor'] is not None:
                 record['url'] = url + '#' + record['anchor']
             else:
                 record['url'] = url

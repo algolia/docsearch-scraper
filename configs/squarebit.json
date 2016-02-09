@@ -76,7 +76,9 @@
       "tags": ["expressionengine","seed"]
     }
   ],
-  "stop_urls": [],
+  "stop_urls": [
+    "#"
+  ],
   "selectors_exclude": [
     ".quickjump"
   ],
@@ -95,5 +97,6 @@
   "custom_settings": {
   },
   "strategy": "default",
-  "js_render": true
+  "js_render": true,
+  "min_indexed_level": 1
 }
