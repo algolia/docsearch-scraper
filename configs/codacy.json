@@ -5,9 +5,11 @@
   ],
   "stop_urls": [
     "^https",
-    "/edit$"
+    "/edit$",
+    "#"
   ],
   "js_render": true,
+  "js_wait": 2,
   "selectors_exclude": [
     ".blocks-parent .section:first-child"
   ],
