@@ -3,6 +3,7 @@ DocumentationSpider
 """
 from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+from scrapy.http import Request
 
 class DocumentationSpider(CrawlSpider):
     """
@@ -40,6 +41,10 @@ class DocumentationSpider(CrawlSpider):
         ]
 
         super(DocumentationSpider, self)._compile_rules()
+
+    def start_requests(self):
+        for url in self.start_urls:
+            yield Request(url, dont_filter=True, callback=self.add_records)
 
     def link_filtering(self, links):
         new_links = []
