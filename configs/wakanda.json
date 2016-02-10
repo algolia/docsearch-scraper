@@ -2,7 +2,7 @@
   "index_name": "wakanda",
   "start_urls": [
     "http://wakanda.github.io/angular-wakanda/#/doc/developer-guide/",
-    "http://wakanda.github.io/angular-wakanda/#/doc/api-reference/"
+    "http://wakanda.github.io/angular-wakanda/#/doc/api-reference"
   ],
   "stop_urls": [
   ],
