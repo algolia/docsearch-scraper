@@ -33,7 +33,7 @@ class DocumentationSpider(CrawlSpider):
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
-            canonicalize=(not config.use_anchors)
+            canonicalize=(not config.js_render or not config.use_anchors)
         )
 
         DocumentationSpider.rules = [
