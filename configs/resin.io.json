@@ -1,10 +1,11 @@
 {
   "index_name": "resin.io",
   "start_urls": [
-    "http://docs.resin.io"
+    "http://docs.resin.io/"
   ],
   "stop_urls": [
-    "http://docs.resin.io/#/pages/tools"
+    "http://docs.resin.io/#/pages/tools",
+    "#.+#"
   ],
   "selectors_exclude": [
     "#further-reading",
@@ -14,7 +15,8 @@
     "lvl0": {
       "selector": "//header//li[1]",
       "type": "xpath",
-      "global": true
+      "global": true,
+      "default_value": "Documentation"
     },
     "lvl1": "header li.active",
     "lvl2": ".content-wrapper h2",
@@ -24,9 +26,9 @@
     "text": ".content-wrapper p"
   },
   "custom_settings": {},
+  "min_indexed_level": 1,
   "strategy": "default",
   "js_render": true,
   "js_wait": 2,
-  "strip_chars": " :;,.#",
   "use_anchors": true
 }
