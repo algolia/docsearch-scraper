@@ -47,15 +47,26 @@ class AbstractStrategy(object):
         # then one more time if with custom strip_chars if there is some
         if strip_chars is not None:
             text = text.strip(strip_chars)
+
+        if len(text) == 0:
+            return None
+
         return text
 
     @staticmethod
     def get_text_from_nodes(elements, strip_chars=None):
         """Return the text content of a set of DOM nodes"""
+
         if len(elements) == 0:
             return None
 
-        return ' '.join([AbstractStrategy.get_text(element, strip_chars) for element in elements])
+        text = ' '.join([AbstractStrategy.get_text(element, strip_chars) for element in elements
+                         if AbstractStrategy.get_text(element, strip_chars) is not None])
+
+        if len(text) == 0:
+            return None
+
+        return text
 
     @staticmethod
     def remove_from_dom(dom, exclude_selectors):
