@@ -44,7 +44,7 @@ class DocumentationSpider(CrawlSpider):
 
     def start_requests(self):
         for url in self.start_urls:
-            yield Request(url, dont_filter=True, callback=self.add_records)
+            yield Request(url, dont_filter=False, callback=self.add_records)
 
     def link_filtering(self, links):
         new_links = []
