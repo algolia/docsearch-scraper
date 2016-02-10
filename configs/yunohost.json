@@ -1,7 +1,7 @@
 {
   "index_name": "yunohost",
   "start_urls": [
-    "https://yunohost.org/"
+    "https://yunohost.org/#"
   ],
   "stop_urls": [
     "edit"
