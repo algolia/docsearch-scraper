@@ -259,4 +259,4 @@ class TestInit:
         actual = ConfigLoader()
 
         # Then
-        assert actual.use_anchors is True
+        assert actual.use_anchors is False

@@ -225,6 +225,14 @@ webpage with the Selenium proxy.
 
 This parameter is optional and is set to `0`s by default.
 
+### `use_anchors`
+
+The `use_anchors` is need to be set to True for javascript doc when the hash is
+used to route the query. Internally this will disable the canonicalize feature that
+is removing the hash from the url.
+
+This parameter is optional and is set to False by default.
+
 ## Test the UX/UI with the playground
 
 To test it live, you can use the following HTML page:
