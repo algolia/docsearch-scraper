@@ -189,6 +189,6 @@ class ConfigLoader(object):
         if isinstance(data.get('use_anchors'), bool):
             data['use_anchors'] = data.get('use_anchors')
         else:
-            data['use_anchors'] = True
+            data['use_anchors'] = False
 
         return data
