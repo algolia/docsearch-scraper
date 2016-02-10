@@ -19,6 +19,7 @@
   },
   "strategy": "default",
   "js_render": true,
-  "use_anchors": true,
+  "js_wait": 2,
+  "use_anchors": false,
   "min_indexed_level": 2
 }
