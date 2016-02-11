@@ -4,9 +4,16 @@ Load the config from the CONFIG environment variable
 """
 from urlparse import urlparse
 from strategies.abstract_strategy import AbstractStrategy
+from js_executor import JsExecutor
+
+from selenium_middleware import SeleniumMiddleware
+from js_executor import JsExecutor
+from selenium import webdriver
+
 import json
 import os
 import re
+import copy
 
 class ConfigLoader(object):
     """
@@ -22,12 +29,13 @@ class ConfigLoader(object):
     selectors = None
     selectors_exclude = []
     start_urls = None
-    compiled_start_urls = []
     stop_urls = None
     strategy = None
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
     urls = None
+
+    driver = None
 
     def __init__(self):
         if os.environ['CONFIG'] is '':
@@ -51,8 +59,31 @@ class ConfigLoader(object):
         for key, value in data.iteritems():
             setattr(self, key, value)
 
+        if self.conf_need_browser():
+            self.init()
+
         self.start_urls = self.parse_urls(self.start_urls)
         self.selectors = self.parse_selectors(self.selectors)
+
+    def conf_need_browser(self):
+        conf = os.environ['CONFIG']
+
+        group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
+        results = re.findall(group_regex, conf)
+
+        return len(results) > 0 or self.js_render
+
+    def init(self):
+        # Start firefox if needed
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(1)
+        SeleniumMiddleware.driver = self.driver
+        JsExecutor.driver = self.driver
+
+    def destroy(self):
+        # Start firefox if needed
+        if self.driver is not None:
+            self.driver.quit()
 
     @staticmethod
     def parse_selectors(config_selectors):
@@ -100,6 +131,17 @@ class ConfigLoader(object):
 
         return selectors
 
+    def get_extra_facets(self):
+        extra_facets = []
+        for start_url in self.start_urls:
+            if len(start_url['url_attributes']) > 0:
+                for tag in start_url['url_attributes']:
+                    extra_facets.append(tag)
+
+        extra_facets = set(extra_facets)
+
+        return list(extra_facets)
+
     @staticmethod
     def parse_urls(config_start_urls):
         start_urls = []
@@ -115,7 +157,53 @@ class ConfigLoader(object):
             if "tags" not in start_url:
                 start_url['tags'] = []
 
-            start_urls.append(start_url)
+            matches = ConfigLoader.get_url_variables_name(start_url['url'])
+
+            start_url['url_attributes'] = matches
+
+            # If there is tag(s) we need to generate all possible urls
+            if len(matches) > 0:
+                values = {}
+                for match in matches:
+                    if 'variables' in start_url:
+                        if match in start_url['variables']:
+                            if isinstance(start_url['variables'][match], list):
+                                values[match] = start_url['variables'][match]
+                            else:
+                                if 'url' in start_url['variables'][match] and 'js' in start_url['variables'][match]:
+                                    executor = JsExecutor()
+                                    values[match] = executor.execute(start_url['variables'][match]['url'], start_url['variables'][match]['js'])
+                                else:
+                                    raise Exception("Bad arguments for variables." + match + " for url " + start_url['url'])
+                        else:
+                            raise Exception("Missing " + match + " in variables" + " for url " + start_url['url'])
+
+                start_urls = ConfigLoader.geturls(start_url, matches[0], matches[1:], values, start_urls)
+
+            # If there is no tag just keep it like this
+            else:
+                start_urls.append(start_url)
+
+        return start_urls
+
+    @staticmethod
+    def get_url_variables_name(url):
+        # Cache it to avoid to compile it several time
+        if not hasattr(ConfigLoader.get_url_variables_name, 'group_regex'):
+            ConfigLoader.get_url_variables_name.group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
+
+        return re.findall(ConfigLoader.get_url_variables_name.group_regex, url)
+
+    @staticmethod
+    def geturls(start_url, current_match, matches, values, start_urls):
+        for value in values[current_match]:
+            copy_start_url = copy.copy(start_url)
+            copy_start_url['url'] = copy_start_url['url'].replace("(?P<"+current_match+">.*?)", value)
+
+            if len(matches) == 0:
+                start_urls.append(copy_start_url)
+            else:
+                start_urls = ConfigLoader.geturls(copy_start_url, matches[0], matches[1:], values, start_urls)
 
         return start_urls
 
