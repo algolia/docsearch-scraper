@@ -2,6 +2,7 @@
 Default Strategy
 """
 from strategies.abstract_strategy import AbstractStrategy
+import re
 
 class DefaultStrategy(AbstractStrategy):
     """
@@ -161,7 +162,7 @@ class DefaultStrategy(AbstractStrategy):
                 'position': position
             }
 
-            records.append({
+            record = {
                 'anchor': anchor,
                 'content': content,
                 'hierarchy': hierarchy,
@@ -170,7 +171,22 @@ class DefaultStrategy(AbstractStrategy):
                 'weight': weight,
                 'type': current_level,
                 'tags': self.get_tags(current_page_url)
-            })
+            }
+
+            for start_url in self.config.start_urls:
+                if len(start_url['url_attributes']) > 0:
+                    compiled_url = start_url['compiled_url']
+                    result = re.search(compiled_url, current_page_url)
+
+                    if result > 0:
+                        for attr in compiled_url.groupindex:
+                            try:
+                                group = result.group(attr)
+                                record[attr] = group
+                            except:
+                                pass
+
+            records.append(record)
 
         return records
 
@@ -205,7 +221,7 @@ class DefaultStrategy(AbstractStrategy):
             'attributesToSnippet': [
                 'content:10'
             ],
-            'attributesForFaceting': ['tags'],
+            'attributesForFaceting': ['tags'] + self.config.get_extra_facets(),
             'distinct': True,
             'attributeForDistinct': 'url',
             'customRanking': [
