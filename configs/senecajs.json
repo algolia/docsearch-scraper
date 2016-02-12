@@ -7,9 +7,9 @@
   "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
-    "lvl0": ".hp h1",
-    "lvl1": ".hp h2",
-    "lvl2": ".hp h3",
-    "text": ".hp p"
+    "lvl0": ".txt-left h1",
+    "lvl1": ".txt-left h2",
+    "lvl2": ".txt-left h3",
+    "text": ".txt-left p"
   }
 }
