@@ -34,6 +34,7 @@ class ConfigLoader(object):
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
     urls = None
+    scrap_start_urls = True
 
     driver = None
 
