@@ -1,8 +1,9 @@
 """
 Default Strategy
 """
-from strategies.abstract_strategy import AbstractStrategy
+from src.strategies.abstract_strategy import AbstractStrategy
 import re
+
 
 class DefaultStrategy(AbstractStrategy):
     """

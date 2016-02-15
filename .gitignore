@@ -3,8 +3,7 @@ crawling_data
 index.php
 node_modules
 run
-src/*.pyc
 src/.cache/
 src/__pycache__/
-src/strategies/*.pyc
 src/strategies/__pycache__/
+*.pyc
