@@ -1,7 +1,7 @@
 """
 Default Strategy
 """
-from src.strategies.abstract_strategy import AbstractStrategy
+from abstract_strategy import AbstractStrategy
 import re
 
 
