@@ -26,6 +26,7 @@ class DocumentationSpider(CrawlSpider):
         self.strategy = strategy
         self.js_render = config.js_render
         self.js_wait = config.js_wait
+        self.scrap_start_urls = config.scrap_start_urls
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(
@@ -44,7 +45,10 @@ class DocumentationSpider(CrawlSpider):
 
     def start_requests(self):
         for url in self.start_urls:
-            yield Request(url, dont_filter=False, callback=self.add_records)
+            if self.scrap_start_urls:
+                yield Request(url, dont_filter=False, callback=self.add_records)
+            else:
+                yield Request(url, dont_filter=False)
 
     def link_filtering(self, links):
         new_links = []

@@ -5,22 +5,17 @@ SeleniumMiddleware
 from scrapy.http import Request, HtmlResponse
 
 import json
-from selenium import webdriver
 import time
 
 class SeleniumMiddleware(object):
     def __init__(self):
-        self.driver = None
         self.seen = {}
+        self.driver = SeleniumMiddleware.driver
 
     def process_request(self, request, spider):
         # If the JS rendering is not needed
         if not spider.js_render:
             return None
-
-        if self.driver is None:
-            self.driver = webdriver.Firefox()
-            self.driver.implicitly_wait(10)
 
         if request.url in self.seen:
             return None
@@ -28,6 +23,7 @@ class SeleniumMiddleware(object):
         self.seen[request.url] = True
 
         print "Getting " + request.url + " from selenium"
+
         self.driver.get(request.url)
         time.sleep(spider.js_wait)
 
