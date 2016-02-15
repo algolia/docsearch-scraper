@@ -1,10 +1,15 @@
 import json
 import os
 import sys
+import re
 
-config = json.loads(os.environ['CONFIG'])
+conf = os.environ['CONFIG']
+config = json.loads(conf)
 
-if 'js_render' in config and config['js_render']:
+group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
+results = re.findall(group_regex, conf)
+
+if ('js_render' in config and config['js_render']) or len(results) > 0:
         sys.exit(0)
 else:
         sys.exit(1)
