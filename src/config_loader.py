@@ -6,7 +6,7 @@ from urlparse import urlparse
 from strategies.abstract_strategy import AbstractStrategy
 from js_executor import JsExecutor
 
-from selenium_middleware import SeleniumMiddleware
+from custom_middleware import CustomMiddleware
 from js_executor import JsExecutor
 from selenium import webdriver
 
@@ -78,7 +78,7 @@ class ConfigLoader(object):
         # Start firefox if needed
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(1)
-        SeleniumMiddleware.driver = self.driver
+        CustomMiddleware.driver = self.driver
         JsExecutor.driver = self.driver
 
     def destroy(self):
