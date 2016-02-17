@@ -92,6 +92,7 @@
                         }
 
                         docSearch = docsearch($scope.config, {debug: true});
+                        jQuery('input#q').focus();
                     }
 
                     if ($scope.config.appId != '' && $scope.config.apiKey != '') {
