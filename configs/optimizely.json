@@ -1,5 +1,5 @@
 {
-  "index_name": "optimizely",
+  "index_name": "optimizely-developers",
   "allowed_domains": [
     "developers.optimizely.com"
   ],
@@ -20,5 +20,6 @@
     "lvl4": "#content h5",
     "text": "#content p, #content li"
   },
-  "strategy": "default"
+  "strategy": "default",
+  "min_indexed_level": 2
 }
