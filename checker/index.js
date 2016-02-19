@@ -162,7 +162,7 @@ aggregateWithBrowse.then(function (indices) {
 
     var payload = {
         "text": "",
-        "channel": "#documentation_search_",
+        "channel": "#docsearch_bot",
         "username": "docsearch-doctor",
         "icon_emoji": ":chart_with_upwards_trend:",
         "attachments": reports
