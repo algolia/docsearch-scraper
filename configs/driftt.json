@@ -1,10 +1,7 @@
 {
   "index_name": "driftt",
-  "allowed_domains": [
-    "help.driftt.com"
-  ],
   "start_urls": [
-    "http://help.driftt.com"
+    "http://help.drift.com"
   ],
   "stop_urls": [],
   "selectors_exclude": [],
