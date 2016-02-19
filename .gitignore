@@ -2,6 +2,8 @@
 crawling_data
 index.php
 node_modules
+checker/node_modules
+checker/run.sh
 run
 src/.cache/
 src/__pycache__/
