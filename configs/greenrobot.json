@@ -4,23 +4,19 @@
     "greenrobot.org"
   ],
   "start_urls": [
-    "http://greenrobot.org/"
+    {
+      "url": "http://greenrobot.org/(?P<category>.*?)/",
+      "variables": {
+        "category": ["eventbus", "greendao", "blog"]
+      }
+    }
   ],
   "stop_urls": [
-  "http://greenrobot.org/files",
-  "http://greenrobot.org/category",
-  "http://greenrobot.org/release",
-  "http://greenrobot.org/open-source",
-  "http://greenrobot.org/android",
-  "http://greenrobot.org/news",
-  "http://greenrobot.org/cloud",
-  "http://greenrobot.org/release",
-  "http://greenrobot.org/tag",
-  "http://greenrobot.org/javadoc"
   ],
   "selectors_exclude": [
   "div#respond",
-  "div#comments"
+  "div#comments",
+  "div#toc_container"
   ],
   "selectors": {
     "lvl0": "h1.entry-title",
