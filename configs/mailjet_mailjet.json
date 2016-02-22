@@ -1,5 +1,5 @@
 {
-    "index_name": "mailjet",
+    "index_name": "mailjet_mailjet",
     "allowed_domains": [
         "mailjet.com"
     ],
