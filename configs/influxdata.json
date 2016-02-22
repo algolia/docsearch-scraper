@@ -1,12 +1,20 @@
 {
   "index_name": "influxdata",
   "start_urls": [
-    "https://docs.influxdata.com/"
+    {
+      "url": "https://docs.influxdata.com/influxdb/v0.10/",
+      "tags": ["v0.10"]
+    },
+    {
+      "url": "https://docs.influxdata.com/influxdb/v0.9/",
+      "tags": ["v0.9"]
+    },
+    {
+      "url": "https://docs.influxdata.com/influxdb/v0.8/",
+      "tags": ["v0.8"]
+    }
   ],
   "stop_urls": [
-  	"https://docs.influxdata.com/influxdb/v0.8/",
-  	"https://docs.influxdata.com/influxdb/v0.7/",
-  	"https://docs.influxdata.com/influxdb/v0.6/"
   ],
   "selectors_exclude": [
   ],
