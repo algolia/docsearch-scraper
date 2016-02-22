@@ -13,7 +13,7 @@
                 <div class="col-md-9 left-panel">
                     <div class="input-group">
                         <div id=""></div>
-                        <input type="search" class="form-control" id="q">
+                        <input type="search" class="form-control" id="q" autofocus>
                         <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
@@ -76,7 +76,9 @@
 
 
                 var initDocSearch = function (first_time) {
-                    if (!first_time) {
+                    if (first_time) {
+                        jQuery('input#q').focus();
+                    } else {
                         localStorage['config'] = JSON.stringify($scope.config);
                     }
 
@@ -92,7 +94,6 @@
                         }
 
                         docSearch = docsearch($scope.config, {debug: true});
-                        jQuery('input#q').focus();
                     }
 
                     if ($scope.config.appId != '' && $scope.config.apiKey != '') {
@@ -116,7 +117,9 @@
 
                 angular.forEach(['config.appId', 'config.apiKey', 'config.indexName', 'config.facetFilters'], function(value, key) {
                     $scope.$watch(value, function(newValue, oldValue) {
-                        initDocSearch();
+                        if (newValue != oldValue) {
+                            initDocSearch();
+                        }
                     });
                 });
 
