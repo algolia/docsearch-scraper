@@ -22,5 +22,6 @@
     "attributeForDistinct": "hierarchy_complete.lvl2"
   },
   "strategy": "default",
-  "min_indexed_level": 1
+  "min_indexed_level": 1,
+  "nbHits": 226
 }

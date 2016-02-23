@@ -14,5 +14,6 @@
     "text": "div.content p"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 171
 }

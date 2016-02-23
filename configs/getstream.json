@@ -14,5 +14,6 @@
     "text": ".docs-content p, .docs-content .table td[data-title=\"Desc\"], .docs-content li"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 397
 }

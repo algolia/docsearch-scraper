@@ -30,5 +30,6 @@
   "strategy": "default",
   "js_render": true,
   "js_wait": 2,
-  "use_anchors": true
+  "use_anchors": true,
+  "nbHits": 1891
 }

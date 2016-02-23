@@ -16,5 +16,6 @@
     "text": ".container div.entry p, .container div.entry li"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 1066
 }

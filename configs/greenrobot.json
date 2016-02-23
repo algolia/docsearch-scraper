@@ -27,5 +27,6 @@
     "text": "div.entry-content p, div.entry-content li"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 614
 }

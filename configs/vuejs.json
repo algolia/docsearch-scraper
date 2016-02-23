@@ -30,5 +30,6 @@
   "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
-  "strip_chars": " :;,."
+  "strip_chars": " :;,.",
+  "nbHits": 1256
 }

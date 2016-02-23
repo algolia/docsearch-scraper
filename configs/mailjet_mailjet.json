@@ -19,5 +19,6 @@
     },
     "custom_settings": {},
     "hash_strategy": "link href",
-    "strategy": "default"
+    "strategy": "default",
+    "nbHits": 506
 }

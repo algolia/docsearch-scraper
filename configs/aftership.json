@@ -22,5 +22,6 @@
   },
   "strategy": "default",
   "strip_chars": " :;,.",
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 1284
 }
