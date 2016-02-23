@@ -69,5 +69,6 @@
   },
   "custom_settings": {},
   "strategy": "default",
-  "min_indexed_level": 3
+  "min_indexed_level": 3,
+  "nbHits": 6119
 }

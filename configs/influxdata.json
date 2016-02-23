@@ -32,5 +32,6 @@
     "text": "#page-content p"
   },
   "custom_settings": {},
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 3963
 }

@@ -11,5 +11,6 @@
     "lvl1": ".txt-left h2",
     "lvl2": ".txt-left h3",
     "text": ".txt-left p"
-  }
+  },
+  "nbHits": 181
 }

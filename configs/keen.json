@@ -32,5 +32,6 @@
     "text": "article p, .page-wrapper p"
   },
   "min_indexed_level": 2,
-  "js_render": true
+  "js_render": true,
+  "nbHits": 737
 }

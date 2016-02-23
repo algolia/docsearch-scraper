@@ -24,5 +24,6 @@
   "js_wait": 5,
   "custom_settings": {},
   "strategy": "default",
-  "min_indexed_level": 1
+  "min_indexed_level": 1,
+  "nbHits": 141
 }

@@ -16,5 +16,6 @@
     "text": ".doc-article p"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 701
 }
