@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-md-9 left-panel">
                     <div class="input-group">
-                        <div id=""></div>
+                    <div id=""></div>
                         <input type="search" class="form-control" id="q">
                         <span class="input-group-addon">
                             <i class="fa fa-search"></i>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group">
                         <label for="loader">Load config</label>
-                        <select ng-model="config.indexName" ng-options="value for value in indices" class="form-control" id="loader"></select>
+                        <select ng-model="config.indexName" ng-options="value for value in indices" ng-change="selectedIndexChanged()" class="form-control" id="loader"></select>
                     </div>
                     <div class="form-group">
                         <label for="facetFilters">Facet Filters</label>
@@ -64,6 +64,9 @@
                     facetFilters: ''
                 };
 
+                $scope.selectedIndexChanged = function(){
+                        setTimeout(function(){jQuery('input#q').focus();}, 50);
+                };
 
                 $scope.indices = [];
 
@@ -109,13 +112,20 @@
                                 });
                             }
                             $scope.$apply();
+
                         });
+                    }
+
+                    if (first_time) {
+                        jQuery('input#q').focus();
                     }
                 };
 
                 angular.forEach(['config.appId', 'config.apiKey', 'config.indexName', 'config.facetFilters'], function(value, key) {
                     $scope.$watch(value, function(newValue, oldValue) {
-                        initDocSearch();
+                        if (newValue != oldValue) {
+                            initDocSearch();
+                        }
                     });
                 });
 

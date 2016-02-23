@@ -9,3 +9,7 @@ src/.cache/
 src/__pycache__/
 src/strategies/__pycache__/
 *.pyc
+
+# IDE Files
+.idea/
+*.iml
