@@ -21,5 +21,6 @@
     "text": "#content p, #content li"
   },
   "strategy": "default",
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 2351
 }

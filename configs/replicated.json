@@ -23,5 +23,6 @@
   "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
-  "js_render": true
+  "js_render": true,
+  "nbHits": 1218
 }

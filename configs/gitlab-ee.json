@@ -4,6 +4,7 @@
   "start_urls": [
     "http://doc.gitlab.com/ee/"
   ],
+  "stop_urls": [],
   "selectors_exclude": [],
   "selectors": {
     "lvl0": ".wrapper h1[id]",
@@ -16,5 +17,6 @@
   },
   "custom_settings": {},
   "strategy": "default",
-  "strip_chars": " :;,."
+  "strip_chars": " :;,.",
+  "nbHits": 7776
 }

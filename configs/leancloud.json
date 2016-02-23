@@ -16,5 +16,6 @@
     "lvl4": "#content h5",
     "text": "#content p"
   },
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 6548
 }

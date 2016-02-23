@@ -12,5 +12,6 @@
     "lvl0": ".main-content h1",
     "lvl1": ".main-content h2.subTitle",
     "text": ".main-content p"
-  }
+  },
+  "nbHits": 331
 }

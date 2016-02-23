@@ -25,5 +25,6 @@
     "text": ".content p"
   },
   "min_indexed_level": 1,
-  "custom_settings": {}
+  "custom_settings": {},
+  "nbHits": 1253
 }

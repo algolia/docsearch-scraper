@@ -20,5 +20,6 @@
   },
   "custom_settings": {},
   "js_render": true,
-  "min_indexed_level": 1
+  "min_indexed_level": 1,
+  "nbHits": 1484
 }

@@ -15,5 +15,6 @@
     "text": "div.docs div.docs__content p, div.docs div.docs__content li"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 1217
 }

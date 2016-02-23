@@ -16,5 +16,6 @@
     "text": ".container-fluid .span9 p"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 229
 }
