@@ -23,5 +23,6 @@
     ],
     "selectors_exclude": [
       ".nav-list"
-    ]
+    ],
+    "nbHits": 1214
 }
