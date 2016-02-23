@@ -134,7 +134,13 @@ aggregateWithBrowse.then(function (indices) {
             report.fallback = name;
             report.title = name;
             report.color = color;
-            report.text = list.map(function (elt) { return '- ' + elt.name }).join('\n');
+            report.text = list.map(function (elt) {
+                var text = '- ' + elt.name
+                if (name === 'Indices with weird results') {
+                    text += ' (got ' + elt.nbHits + ' instead of ' + elt.supposedNbHits + ')';
+                }
+                return text;
+            }).join('\n');
 
             reports.push(report)
         }
