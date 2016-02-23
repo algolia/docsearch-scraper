@@ -20,5 +20,6 @@
   "js_render": true,
   "js_wait": 2,
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 264
 }

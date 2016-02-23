@@ -17,5 +17,6 @@
     "text": "#content div.method div.method-description p, #content div.method div.method-description table.attributes td"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 514
 }

@@ -13,5 +13,6 @@
     "text": ".content-container p"
   },
   "custom_settings": {},
-  "strategy": "default"
+  "strategy": "default",
+  "nbHits": 145
 }

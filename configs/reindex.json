@@ -19,5 +19,6 @@
     "lvl4": ".markdown h4",
     "text": ".markdown p"
   },
-  "strip_chars": " :;,.#"
+  "strip_chars": " :;,.#",
+  "nbHits": 765
 }

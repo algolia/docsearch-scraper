@@ -55,5 +55,6 @@
     "text": "main p, #content p"
   },
   "strategy": "default",
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 28617
 }

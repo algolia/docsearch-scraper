@@ -19,5 +19,6 @@
     "text": ".main-content .params-list span"
   },
   "strategy": "default",
-  "min_indexed_level": 1
+  "min_indexed_level": 1,
+  "nbHits": 2563
 }
