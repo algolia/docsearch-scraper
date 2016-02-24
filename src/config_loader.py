@@ -179,6 +179,8 @@ class ConfigLoader(object):
                         else:
                             raise Exception("Missing " + match + " in variables" + " for url " + start_url['url'])
 
+                start_url['values'] = values
+
                 start_urls = ConfigLoader.geturls(start_url, matches[0], matches[1:], values, start_urls)
 
             # If there is no tag just keep it like this
