@@ -27,10 +27,12 @@ class CustomMiddleware(object):
 
         self.driver.get(request.url)
         time.sleep(spider.js_wait)
+        body = self.driver.page_source.encode('utf-8')
+        url = self.driver.current_url
 
         return HtmlResponse(
-            url=request.url,
-            body=self.driver.page_source.encode('utf-8'),
+            url=url,
+            body=body,
             encoding='utf8'
         )
 
