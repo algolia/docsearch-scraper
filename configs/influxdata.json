@@ -2,16 +2,11 @@
   "index_name": "influxdata",
   "start_urls": [
     {
-      "url": "https://docs.influxdata.com/influxdb/v0.10/",
-      "tags": ["v0.10"]
-    },
-    {
-      "url": "https://docs.influxdata.com/influxdb/v0.9/",
-      "tags": ["v0.9"]
-    },
-    {
-      "url": "https://docs.influxdata.com/influxdb/v0.8/",
-      "tags": ["v0.8"]
+      "url": "https://docs.influxdata.com/(?P<project>.*?)/(?P<version>.*?)/",
+      "variables": {
+        "project": ["influxdb", "telegraf", "chronograf", "kapacitor"],
+        "version": ["v0.10", "v0.9", "v0.8"]
+      }
     }
   ],
   "stop_urls": [
@@ -19,14 +14,8 @@
   "selectors_exclude": [
   ],
   "selectors": {
-    "lvl0": {
-    	"selector": "#product-switcher .product-switcher--current",
-    	"global": true
-    },
-    "lvl1": {
-    	"selector": "(//*[@class=\"page-content--container\"]/h1[1] | //*[@class=\"page-content--container\"]/h2[1])[1]",
-    	"type": "xpath"
-    },
+    "lvl0": "#page-title h1",
+    "lvl1": "#page-content h2",
     "lvl2": "#page-content h3",
     "lvl3": "#page-content h4",
     "text": "#page-content p"
