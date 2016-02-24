@@ -183,7 +183,9 @@ class DefaultStrategy(AbstractStrategy):
                         for attr in compiled_url.groupindex:
                             try:
                                 group = result.group(attr)
-                                record[attr] = group
+
+                                if 'values' in start_url and attr in start_url['values'] and group in start_url['values'][attr]:
+                                    record[attr] = group
                             except:
                                 pass
 
