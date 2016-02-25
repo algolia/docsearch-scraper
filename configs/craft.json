@@ -1,7 +1,7 @@
 {
   "index_name": "craft",
   "start_urls": [
-    "http://doc.craft.ai"
+    "http://doc.craft.ai/"
   ],
   "stop_urls": [
     "\\.\\.",
