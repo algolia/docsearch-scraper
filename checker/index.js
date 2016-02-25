@@ -115,7 +115,7 @@ aggregateWithBrowse.then(function (indices) {
     });
 
     var potentialBadNumberOfRecords = indices.filter(function (index) {
-        return index.supposedNbHits !== undefined && Math.abs(index.nbHits - index.supposedNbHits) > (10 / 100 * index.supposedNbHits);
+        return index.supposedNbHits !== undefined && Math.abs(index.nbHits - index.supposedNbHits) > (20 / 100 * index.supposedNbHits);
     });
 
     var noSupposedNbHits = indices.filter(function (index) {
