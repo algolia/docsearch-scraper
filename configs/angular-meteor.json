@@ -44,5 +44,6 @@
     },
     "js_render": true,
     "js_wait": 1,
-    "nbHits": 2668
+    "docker_memory": 4096,
+    "nbHits": 4438
 }
