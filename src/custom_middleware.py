@@ -41,7 +41,14 @@ class CustomMiddleware(object):
         # If the url get redirected then this url gets crawled even if it's not allowed to
         # So we check if the final url is allowed
         for rule in spider._rules:
-            if not rule.link_extractor._link_allowed(response) and not (spider.scrap_start_urls and response.url in spider.start_urls):
+            if rule.link_extractor._link_allowed(response):
+                continue
+
+            if rule.link_extractor._link_allowed(request):
+                response.replace(url=request.url)
+                continue
+
+            if not (spider.scrap_start_urls and response.url in spider.start_urls):
                 print "Ignored: " + response.url
                 raise IgnoreRequest()
 
