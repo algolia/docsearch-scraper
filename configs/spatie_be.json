@@ -1,0 +1,26 @@
+{
+  "index_name": "spatie_be",
+  "start_urls": [
+    {
+      "url": "https://docs.spatie.be/(?P<project>.*?)/v3",
+      "variables": {
+        "project": ["laravel-medialibrary", "laravel-backup"]
+      }
+    }
+  ],
+  "stop_urls": [
+  ],
+  "selectors_exclude": [
+    "footer",
+    "header"
+  ],
+  "selectors": {
+    "lvl0": "nav li.active",
+    "lvl1": "article h1",
+    "lvl2": "article h2",
+    "lvl3": "article h3",
+    "lvl4": "article h4",
+    "text": "article p"
+  },
+  "nbHits": 947
+}
