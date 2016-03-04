@@ -2,13 +2,13 @@
   "index_name": "vuejs_cn",
   "start_urls": [
     {
-      "url": "http://cn.vuejs.org/api/",
+      "url": "http://vuejs.org.cn/api/",
       "page_rank": 1
     },
-    "http://cn.vuejs.org/guide/"
+    "http://vuejs.org.cn/guide/"
   ],
   "stop_urls": [
-    "http://cn.vuejs.org/guide/index.html"
+    "http://vuejs.org.cn/guide/index.html"
   ],
   "selectors_exclude": [
   	".sidebar h2 .version-select"
