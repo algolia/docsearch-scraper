@@ -4,8 +4,23 @@
     "facebook.github.io"
   ],
   "start_urls": [
-    "http://facebook.github.io/react-native/docs/getting-started.html",
-    "http://facebook.github.io/react-native/docs/.*"
+    {
+      "url": "http://facebook.github.io/react-native/releases/next/",
+      "tags": ["master"]
+    },
+    {
+      "url":"http://facebook.github.io/react-native/",
+      "tags": ["current"]
+    },
+    {
+      "url": "http://facebook.github.io/react-native/releases/(?P<tags>.*?)/",
+      "variables": {
+        "tags": {
+          "url": "http://facebook.github.io/react-native/versions.html",
+          "js": "return JSON.stringify(Array.from(document.querySelectorAll('.versions > ul > li > a')).map(function(e){ return e.textContent;}).filter(function(v){ return v.indexOf('master')===-1 && v.indexOf('current')===-1;}));"
+        }
+      }
+    }
   ],
   "stop_urls": [],
   "selectors_exclude": [
