@@ -1,5 +1,5 @@
 {
-  "index_name": "react-native",
+  "index_name": "react-native-versions",
   "allowed_domains": [
     "facebook.github.io"
   ],
@@ -42,5 +42,5 @@
   "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
-  "nbHits": 2973
+  "nbHits": 18923
 }
