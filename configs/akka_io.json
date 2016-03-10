@@ -4,7 +4,7 @@
     {
       "url": "http://doc.akka.io/docs/akka/(?P<version>.*?)/(?P<language>.*?).html",
       "variables": {
-        "language": ["scala", "java"],
+        "language": ["scala", "java", "general"],
         "version": {
           "url": "http://doc.akka.io/docs/akka/",
           "js": "var versions = []; for(var i = 0 ; i < document.getElementsByTagName(\"a\").length; i++) { versions.push(document.getElementsByTagName(\"a\")[i].attributes[0].value); }; versions = versions.filter(function(e) { return !e.startsWith('?') && e.endsWith(\"/\"); }).map(function(e) { return e.replace(/\\//g, ''); }); return JSON.stringify(versions);"
@@ -14,7 +14,7 @@
     {
       "url": "http://doc.akka.io/docs/akka/(?P<version>.*?)/(?P<language>.*?)/",
       "variables": {
-        "language": ["scala", "java"],
+        "language": ["scala", "java", "general"],
         "version": {
           "url": "http://doc.akka.io/docs/akka/",
           "js": "var versions = []; for(var i = 0 ; i < document.getElementsByTagName(\"a\").length; i++) { versions.push(document.getElementsByTagName(\"a\")[i].attributes[0].value); }; versions = versions.filter(function(e) { return !e.startsWith('?') && e.endsWith(\"/\"); }).map(function(e) { return e.replace(/\\//g, ''); }); return JSON.stringify(versions);"
@@ -24,7 +24,7 @@
     {
       "url": "http://doc.akka.io/docs/akka/(?P<version>.*?)/",
       "variables": {
-        "language": ["scala", "java"],
+        "language": ["scala", "java", "general"],
         "version": {
           "url": "http://doc.akka.io/docs/akka/",
           "js": "var versions = []; for(var i = 0 ; i < document.getElementsByTagName(\"a\").length; i++) { versions.push(document.getElementsByTagName(\"a\")[i].attributes[0].value); }; versions = versions.filter(function(e) { return !e.startsWith('?') && e.endsWith(\"/\"); }).map(function(e) { return e.replace(/\\//g, ''); }); return JSON.stringify(versions);"
