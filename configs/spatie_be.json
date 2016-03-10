@@ -15,12 +15,12 @@
     "header"
   ],
   "selectors": {
-    "lvl0": "nav li.active",
-    "lvl1": "article h1",
-    "lvl2": "article h2",
-    "lvl3": "article h3",
-    "lvl4": "article h4",
+    "lvl0": "article h1",
+    "lvl1": "article h2",
+    "lvl2": "article h3",
+    "lvl3": "article h4",
+    "lvl3": "article h5",
     "text": "article p"
   },
-  "nbHits": 186
+  "nbHits": 300
 }
