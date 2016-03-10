@@ -16,5 +16,6 @@
     "text": ".site-content p, tr[data-slds-token] td code"
   },
   "js_render": true,
-  "min_indexed_level": 2
+  "min_indexed_level": 2,
+  "nbHits": 6999
 }
