@@ -4,7 +4,15 @@
     "marionettejs.com"
   ],
   "start_urls": [
-    "http://marionettejs.com/docs/v2.4.4/"
+     {
+      "url": "http://marionettejs.com/docs/(?P<version>.*?)/",
+      "variables": {
+        "version": {
+          "url": "http://marionettejs.com/docs/current",
+          "js": " return JSON.stringify([$('#version-dropdown option:first').html().replace(/\\//g, '')]);"
+        }
+      }
+    }
   ],
   "stop_urls": [],
   "selectors_exclude": [],
