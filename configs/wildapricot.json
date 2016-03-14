@@ -1,14 +1,18 @@
 {
   "index_name": "wildapricot",
   "start_urls": [
+    {
+      "url": "http://help.wildapricot.com/display/DOC/Browser\\+application\\+release\\+history",
+      "page_rank": -1
+    },
     "http://help.wildapricot.com/display/DOC"
   ],
   "stop_urls": [
     "from=.*$",
     "jsessionid=.*$",
-    "http://help.wildapricot.com/display/DOC/Browser\\+application\\+release\\+history",
     "Update+.*$",
-    "Release+.*$"
+    "Release+.*$",
+    "from=.*$"
   ],
   "selectors_exclude": [
   ],
