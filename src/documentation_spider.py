@@ -28,6 +28,8 @@ class DocumentationSpider(CrawlSpider):
         self.js_wait = config.js_wait
         self.scrap_start_urls = config.scrap_start_urls
 
+        self.strict = config.strict
+
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(
             allow=self.start_urls,
