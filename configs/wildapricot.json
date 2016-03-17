@@ -21,7 +21,7 @@
     "lvl1": ".wiki-content h2",
     "lvl2": ".wiki-content h3",
     "lvl3": ".wiki-content h4",
-    "text": ".wiki-content p"
+    "text": ".wiki-content p, .wiki-content li"
   },
   "scrap_start_urls": false,
   "strict": true,
