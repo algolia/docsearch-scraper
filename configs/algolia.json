@@ -1,0 +1,28 @@
+{
+  "index_name": "algolia",
+  "allowed_domains": [
+    "www.algolia.com"
+  ],
+  "start_urls": [
+    "https://www.algolia.com/doc"
+  ],
+  "stop_urls": [
+  ],
+  "selectors_exclude": [
+    "#faq-listing",
+    ".btn",
+    ".faq-articles"
+  ],
+  "selectors": {
+    "lvl0": "#doc-tab-wrapper h1",
+    "lvl1": "#step-intro h2, #doc-tab-content .markdown-page h1, #faq-article .faq-breadcrumb .faq-category",
+    "lvl2": "#step-intro h3, #doc-tab-content .markdown-page h2, #faq-article .faq-breadcrumb .faq-title",
+    "lvl3": "#doc-tab-content .markdown-page h3",
+    "lvl4": "#doc-tab-content .markdown-page h4",
+    "lvl5": "#doc-tab-content .markdown-page h5",
+    "text": "#step-intro p, #doc-tab-content .markdown-page p, #doc-tab-content .markdown-page li, #faq-article p, #faq-article li"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "nbHits": 18351
+}
