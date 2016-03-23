@@ -27,6 +27,7 @@ class DocumentationSpider(CrawlSpider):
         self.js_render = config.js_render
         self.js_wait = config.js_wait
         self.scrap_start_urls = config.scrap_start_urls
+        self.remove_get_params = config.remove_get_params
 
         self.strict = config.strict
 

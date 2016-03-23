@@ -42,8 +42,14 @@ class AbstractStrategy(object):
     @staticmethod
     def get_text(element, strip_chars=None):
         """Return the text content of a DOM node"""
+        text = element
+
+        # Do not call text_content if not needed (Ex. xpath selector with text() doesn't return a node but a string)
+        if not isinstance(text, basestring):
+            text = text.text_content()
+
         # We call strip a first time for space, tab, newline, return and formfeed
-        text = element.text_content().strip()
+        text = text.strip()
         # then one more time if with custom strip_chars if there is some
         if strip_chars is not None:
             text = text.strip(strip_chars)

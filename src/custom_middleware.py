@@ -4,8 +4,8 @@ CustomMiddleware
 
 from scrapy.http import Request, HtmlResponse
 from scrapy.exceptions import IgnoreRequest
+from urlparse import urlparse
 
-import json
 import time
 
 class CustomMiddleware(object):
@@ -17,6 +17,11 @@ class CustomMiddleware(object):
 
         if not spider.js_render:
             return None
+
+        if spider.remove_get_params:
+            o = urlparse(request.url)
+            url_without_params = o.scheme + "://" + o.netloc + o.path
+            request = request.replace(url=url_without_params)
 
         if request.url in self.seen:
             return None
@@ -41,6 +46,11 @@ class CustomMiddleware(object):
         # If the url get redirected then this url gets crawled even if it's not allowed to
         # So we check if the final url is allowed
 
+        if spider.remove_get_params:
+            o = urlparse(response.url)
+            url_without_params = o.scheme + "://" + o.netloc + o.path
+            response = response.replace(url=url_without_params)
+
         for rule in spider._rules:
             if not spider.strict:
                 if rule.link_extractor._link_allowed(response):
@@ -52,6 +62,9 @@ class CustomMiddleware(object):
             else:
                 if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(request):
                     continue
+
+            if request.url in spider.start_urls and spider.scrap_start_urls is False:
+                continue
 
             if not (spider.scrap_start_urls and response.url in spider.start_urls):
                 print "Ignored: " + response.url
