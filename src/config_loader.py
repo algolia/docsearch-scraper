@@ -36,6 +36,7 @@ class ConfigLoader(object):
     urls = None
     scrap_start_urls = True
     strict = False
+    remove_get_params = False
 
     driver = None
 

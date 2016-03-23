@@ -191,3 +191,40 @@ class TestGetRecordsFromDom:
         assert actual[3]['hierarchy']['lvl1'] == 'Bar'
         assert actual[3]['hierarchy']['lvl2'] == 'Baz'
         assert actual[3]['content'] == 'text'
+
+    def test_xpath_text_feature(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "text": {
+                    "selector": "//*[@class=\"content\"]/text()[normalize-space()]",
+                    "type": "xpath"
+                }
+            },
+            'strip_chars': ',.'
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <div class="content">
+                <h1>Foo</h1>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+                text
+            </div>
+        </body></html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'content'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[3]['hierarchy']['lvl1'] == 'Bar'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz'
+        assert actual[3]['content'] == 'text'
