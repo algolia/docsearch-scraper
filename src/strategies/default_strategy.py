@@ -289,6 +289,8 @@ class DefaultStrategy(AbstractStrategy):
         Return a possible anchor for that element.
         Looks for name and id, and if not found will look in children
         """
+        if isinstance(element, basestring):
+            return None
 
         # Check the name or id on the element
         anchor = self.get_anchor_string_from_element(element)
