@@ -1,0 +1,20 @@
+{
+  "index_name": "bolt",
+  "start_urls": [
+    "http://docs-v3.bolt.cm"
+  ],
+  "stop_urls": [
+  ],
+  "selectors_exclude": [
+  ],
+  "selectors": {
+    "lvl0": ".content h1",
+    "lvl1": ".content h2",
+    "lvl2": ".content h3",
+    "lvl3": ".content h4",
+    "text": ".content p"
+  },
+  "custom_settings": {},
+  "strategy": "default",
+  "nbHits": 1929
+}
