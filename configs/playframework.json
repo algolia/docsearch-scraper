@@ -8,6 +8,17 @@
           "url": "https://www.playframework.com/documentation/latest/Home",
           "js": "var versions = $('#toolbar .switch:first .dropdown dd a').map(function(i, e) { return $(e).attr('href').split('/')[3]; }).toArray(); return JSON.stringify(versions);"
         }
+      },
+      "tags": ["en"]
+    },
+    {
+      "url": "https://www.playframework.com/documentation/(?P<tags>.*?)/(?P<version>.*?)/",
+      "variables": {
+        "version": {
+          "url": "https://www.playframework.com/documentation/latest/Home",
+          "js": "var versions = $('#toolbar .switch:first .dropdown dd a').map(function(i, e) { return $(e).attr('href').split('/')[3]; }).toArray(); return JSON.stringify(versions);"
+        },
+        "tags": ["tr", "ja"]
       }
     }
   ],
@@ -26,5 +37,5 @@
   "custom_settings": {},
   "strategy": "default",
   "min_indexed_level": 2,
-  "nbHits": 52506
+  "nbHits": 80310
 }
