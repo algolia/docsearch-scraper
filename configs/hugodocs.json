@@ -1,26 +1,26 @@
 {
   "index_name": "hugodocs",
-  "allowed_domains": [
-    "hugodocs.netlify.com"
-  ],
   "start_urls": [
-    "http://hugodocs.netlify.com/"
+    "https://gohugo.io/overview/introduction",
+    "https://gohugo.io/.*"
   ],
   "stop_urls": [
+    "/$"
   ],
   "selectors_exclude": [
+    ".footer-panel"
   ],
   "selectors": {
-  	"lvl0": ".content-wrapper h1",
-    "lvl1": ".content-wrapper h2",
-    "lvl2": ".content-wrapper h3",
-    "lvl3": ".content-wrapper h4",
-    "lvl4": ".content-wrapper h5",
-    "text": ".content-wrapper p"
+  	"lvl0": ".wrapper h1",
+    "lvl1": ".wrapper h2",
+    "lvl2": ".wrapper h3",
+    "lvl3": ".wrapper h4",
+    "lvl4": ".wrapper h5",
+    "text": ".wrapper p"
   },
   "custom_settings": {},
   "strategy": "default",
   "strip_chars": " :;,.",
-  "min_indexed_level": 1,
-  "nbHits": 2065
+  "min_indexed_level": 2,
+  "nbHits": 1511
 }
