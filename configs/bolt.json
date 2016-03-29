@@ -1,7 +1,7 @@
 {
   "index_name": "bolt",
   "start_urls": [
-    "http://docs-v3.bolt.cm"
+    "https://docs.bolt.cm"
   ],
   "stop_urls": [
   ],
