@@ -4,10 +4,17 @@
     "www.algolia.com"
   ],
   "start_urls": [
+    {
+      "url": "https://www.algolia.com/doc/(?P<language>.*?)",
+      "variables": {
+        "language": ["ruby", "rails", "python", "django", "php", "symfony", "laravel", "javascript", "go", "java", "scala", "objective-c", "swift", "android", "csharp"]
+      },
+      "page_rank": -1
+    },
     "https://www.algolia.com/doc"
   ],
   "stop_urls": [
-  "https://www.algolia.com/doc/faq"
+    "https://www.algolia.com/doc/faq"
   ],
   "selectors_exclude": [
     ".btn"
@@ -23,5 +30,5 @@
   },
   "custom_settings": {},
   "strategy": "default",
-  "nbHits": 18148
+  "nbHits": 9113
 }
