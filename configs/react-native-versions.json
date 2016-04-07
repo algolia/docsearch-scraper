@@ -17,7 +17,7 @@
       "variables": {
         "tags": {
           "url": "http://facebook.github.io/react-native/versions.html",
-          "js": "return JSON.stringify(Array.from(document.querySelectorAll('.versions > ul > li > a')).map(function(e){ return e.textContent;}).filter(function(v){ return v.indexOf('master')===-1 && v.indexOf('current')===-1;}));"
+          "js": "return JSON.stringify(Array.from(document.querySelectorAll('.versions th')).map(function(e){ return e.textContent.replace(/\\(current\\)/,'').replace(/-rc/,'').trim();}).filter(function(v){ return v.indexOf('master')===-1;}));"
         }
       }
     }
@@ -42,5 +42,5 @@
   "min_indexed_level": 1,
   "custom_settings": {},
   "strategy": "default",
-  "nbHits": 18923
+  "nbHits": 29569
 }
