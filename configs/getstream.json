@@ -1,8 +1,5 @@
 {
   "index_name": "getstream",
-  "allowed_domains": [
-    "getstream.io"
-  ],
   "start_urls": [
     "http://getstream.io/docs/"
   ],
