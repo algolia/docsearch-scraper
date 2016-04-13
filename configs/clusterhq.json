@@ -4,7 +4,7 @@
     "https://docs.clusterhq.com/en/latest"
   ],
   "stop_urls": [
-    "index.html"
+    ".*^(?!.*faq).*index.html"
   ],
   "selectors_exclude": [
     ".pods-eq em",
