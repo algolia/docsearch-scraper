@@ -47,7 +47,7 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
         }).sort(function (a, b) {
             return a.name.localeCompare(b.name);
         }).map(function (item) {
-            return readFile('../configs/' + item.name + ".json").then(function (data) {
+            return readFile('configs/' + item.name + ".json").then(function (data) {
                 resultItem = { name: item.name, config: data, noConfig: (data === undefined) }
 
                 if (data !== undefined) {
