@@ -13,3 +13,6 @@ src/strategies/__pycache__/
 # IDE Files
 .idea/
 *.iml
+
+configs/public
+configs/private
