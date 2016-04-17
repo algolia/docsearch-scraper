@@ -14,7 +14,8 @@ class TestGetHierarchyComplete:
             'lvl2': None,
             'lvl3': None,
             'lvl4': None,
-            'lvl5': None
+            'lvl5': None,
+            'lvl6': None
         }
 
         # When
@@ -28,6 +29,7 @@ class TestGetHierarchyComplete:
         assert actual['lvl3'] is None
         assert actual['lvl4'] is None
         assert actual['lvl5'] is None
+        assert actual['lvl6'] is None
 
     def test_many_levels(self):
         # Given
@@ -37,7 +39,8 @@ class TestGetHierarchyComplete:
             'lvl2': 'Baz',
             'lvl3': None,
             'lvl4': None,
-            'lvl5': None
+            'lvl5': None,
+            'lvl6': None,
         }
 
         # When
@@ -51,3 +54,4 @@ class TestGetHierarchyComplete:
         assert actual['lvl3'] is None
         assert actual['lvl4'] is None
         assert actual['lvl5'] is None
+        assert actual['lvl6'] is None
