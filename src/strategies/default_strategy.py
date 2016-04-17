@@ -13,7 +13,7 @@ class DefaultStrategy(AbstractStrategy):
 
     def __init__(self, config):
         super(DefaultStrategy, self).__init__(config)
-        self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5']
+        self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6']
         self.global_content = {}
         self.page_rank = {}
 
@@ -86,7 +86,7 @@ class DefaultStrategy(AbstractStrategy):
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = {}
         anchors = {}
-        for index in range(6):
+        for index in range(7):
             previous_hierarchy['lvl' + str(index)] = None
             anchors['lvl' + str(index)] = None
 
@@ -112,7 +112,7 @@ class DefaultStrategy(AbstractStrategy):
             hierarchy = previous_hierarchy.copy()
 
             # Update the hierarchy for each new header
-            current_level_int = int(current_level[3:]) if current_level != 'content' else 6 # 6 > lvl5
+            current_level_int = int(current_level[3:]) if current_level != 'content' else 7 # 7 > lvl6
 
             if current_level != 'content':
                 if current_level not in self.global_content:
@@ -122,7 +122,7 @@ class DefaultStrategy(AbstractStrategy):
 
                 anchors[current_level] = self.get_anchor(node)
 
-                for index in range(current_level_int + 1, 6):
+                for index in range(current_level_int + 1, 7):
                     hierarchy['lvl' + str(index)] = None
                     anchors['lvl' + str(index)] = None
                 previous_hierarchy = hierarchy
@@ -136,7 +136,7 @@ class DefaultStrategy(AbstractStrategy):
 
             # Getting the element anchor as the closest one
             anchor = None
-            for index in reversed(range(6)):
+            for index in reversed(range(7)):
                 potential_anchor = anchors['lvl' + str(index)]
                 if potential_anchor is None:
                     continue
@@ -345,7 +345,8 @@ class DefaultStrategy(AbstractStrategy):
             lvl2: Baz,
             lvl3: None,
             lvl4: None,
-            lvl5: None
+            lvl5: None,
+            lvl6: None
         }
         """
 
@@ -373,7 +374,8 @@ class DefaultStrategy(AbstractStrategy):
             lvl2: Foo > Bar > Baz,
             lvl3: None,
             lvl4: None,
-            lvl5: None
+            lvl5: None,
+            lvl6: None
         }
         """
         full_content = []

@@ -13,7 +13,8 @@ class TestGetHierarchyRadio:
             'lvl2': None,
             'lvl3': None,
             'lvl4': None,
-            'lvl5': None
+            'lvl5': None,
+            'lvl6': None
         }
 
         # When
@@ -27,6 +28,7 @@ class TestGetHierarchyRadio:
         assert actual['lvl3'] is None
         assert actual['lvl4'] is None
         assert actual['lvl5'] is None
+        assert actual['lvl6'] is None
 
     def test_sublevel(self):
         # Given
@@ -36,7 +38,8 @@ class TestGetHierarchyRadio:
             'lvl2': 'Baz',
             'lvl3': None,
             'lvl4': None,
-            'lvl5': None
+            'lvl5': None,
+            'lvl6': None
         }
 
         # When
@@ -50,3 +53,4 @@ class TestGetHierarchyRadio:
         assert actual['lvl3'] is None
         assert actual['lvl4'] is None
         assert actual['lvl5'] is None
+        assert actual['lvl6'] is None
