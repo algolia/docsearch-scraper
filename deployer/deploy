@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd /tmp
+mkdir docsearch_deploy
+cd docsearch_deploy
+
+git clone --depth 1 --branch master git@github.com:algolia/documentation-scraper.git scraper
+
+cd /tmp/docsearch_deploy/scraper/deployer/
+git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs.git public
+git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs-private.git private
+
+python /tmp/docsearch_deploy/scraper/deployer/src/index.py
+
+rm -rf /tmp/docsearch_deploy

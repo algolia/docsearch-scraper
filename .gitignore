@@ -16,3 +16,4 @@ src/strategies/__pycache__/
 
 configs/public
 configs/private
+/deploy

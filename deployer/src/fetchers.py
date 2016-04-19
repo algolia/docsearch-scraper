@@ -1,0 +1,38 @@
+import os
+import json
+
+import helpers
+
+def get_configs_from_repos():
+    configs = {}
+
+    base_dir = os.path.dirname(__file__)
+
+    for dir in ['public', 'private']:
+        dir = base_dir + '/../' + dir
+        for f in os.listdir(dir):
+            path = dir + '/' + f
+
+            if os.path.isfile(path):
+                txt = open(path, 'r').read()
+                config = json.loads(txt)
+                configs[config['index_name']] = config
+
+    print str(len(configs)) + " docs in public and private repo"
+
+    return configs
+
+
+def get_configs_from_website():
+    live_connectors = json.loads(helpers.make_request('/'))['connectors']
+    live_connectors.sort(key=lambda x: x['name'])
+
+    configs = {}
+    inverted = {}
+    for connector in live_connectors:
+        configs[connector['name']] = connector['configuration']
+        inverted[connector['name']] = connector['id']
+
+    print str(len(configs)) + " docs in website connectors"
+
+    return configs, inverted
