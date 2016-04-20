@@ -7,8 +7,8 @@ password = os.environ['WEBSITE_PASSWORD']
 
 base_url = 'https://www.algolia.com/api/1/docsearch'
 
-def confirm():
-    prompt = 'Confirm [y/n]:\n'
+def confirm(message="Confirm"):
+    prompt = message + ' [y/n]:\n'
 
     while True:
         ans = raw_input(prompt)
