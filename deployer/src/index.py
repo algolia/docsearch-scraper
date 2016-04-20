@@ -1,9 +1,11 @@
+import sys
+import os
+
 from dict_differ import DictDiffer
 import fetchers
 import algolia_helper
 import helpers
-import sys
-import os
+import snippeter
 
 
 if 'APP_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
@@ -79,6 +81,12 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
             algolia_helper.delete_docsearch_key(config)
             algolia_helper.delete_docsearch_index(config)
             algolia_helper.delete_docsearch_index(config + '_tmp')
+
+    if len(added) > 0 or len(changed) > 0:
+        print ""
+        if helpers.confirm('Do you want to get email templates for added and updated configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
+            for config in added:
+                print snippeter.get_email_for_config(config)
 
 else:
     print "Nothing to do"
