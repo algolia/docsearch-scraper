@@ -63,4 +63,7 @@ class DocumentationSpider(CrawlSpider):
     def add_records(self, response):
         records = self.strategy.get_records_from_response(response)
         self.algolia_helper.add_records(records, response.url)
+
+        DocumentationSpider.NB_INDEXED += len(records)
+
         return self.parse(response)
