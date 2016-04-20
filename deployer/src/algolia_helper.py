@@ -6,6 +6,32 @@ api_key = os.environ['API_KEY']
 
 algolia_client = algoliasearch.Client(app_id, api_key)
 
+def get_facets(config):
+    index = algolia_client.init_index(config)
+
+    try:
+        res = index.search('', {
+            'facets': '*',
+            'maxValuesPerFacet': 1000,
+            'hitsPerPage': 0
+        })
+    except Exception:
+        return None
+
+    if 'facets' in res:
+        return res['facets']
+
+    return None
+
+def update_docsearch_key(config, key):
+    index = algolia_client.init_index(config)
+
+    index.update_user_key(key, {
+        'indices': [config],
+        'description': 'docsearch frontend ' + config,
+        'acl': ['search']
+    })
+
 def get_docsearch_key(config):
     index = algolia_client.init_index(config)
     k = 'Not found'
@@ -21,7 +47,8 @@ def add_docsearch_key(config):
 
     response = index.add_user_key({
         'indices': [config],
-        'description': 'docsearch frontend ' + config
+        'description': 'docsearch frontend ' + config,
+        'acl': ['search']
     })
 
     return response['key']
