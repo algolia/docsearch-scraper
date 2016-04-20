@@ -16,6 +16,7 @@ if 'boto' in optional_features:
 
 CONFIG = ConfigLoader()
 CustomMiddleware.driver = CONFIG.driver
+DocumentationSpider.NB_INDEXED = 0
 
 if CONFIG.use_anchors:
     import scrapy_patch
@@ -57,3 +58,7 @@ PROCESS.stop()
 CONFIG.destroy()
 
 ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())
+
+print ""
+print 'nbhits: ' + str(DocumentationSpider.NB_INDEXED)
+print ""
