@@ -309,7 +309,7 @@ class ConfigLoader(object):
                     try:
                         self.config_content['nbHits'] = nb_hits
                         f = open(self.config_file, 'w')
-                        f.write(json.dumps(self.config_content, indent=2))
+                        f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
                         f.close()
                         print ""
                         print "[OK] " + self.config_file + " has been updated"
