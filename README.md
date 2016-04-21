@@ -15,7 +15,11 @@ Run the following commands :
 
 Usage:
 ```sh
-$ APPLICATION_ID=app_id API_KEY=api_key INDEX_PREFIX=prefix_ CONFIG="`cat configs/stripe.json`" python src/index.py
+$ APPLICATION_ID=app_id \
+  API_KEY=api_key \
+  INDEX_PREFIX=prefix_ \
+  CONFIG="configs/stripe.json" \
+  python src/index.py
 ```
 
 The config.json should look like:
