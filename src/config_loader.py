@@ -5,10 +5,12 @@ Load the config from the CONFIG environment variable
 from urlparse import urlparse
 from strategies.abstract_strategy import AbstractStrategy
 from js_executor import JsExecutor
+from collections import OrderedDict
 
 from custom_middleware import CustomMiddleware
 from js_executor import JsExecutor
 from selenium import webdriver
+import helpers
 
 import json
 import os
@@ -37,6 +39,8 @@ class ConfigLoader(object):
     scrap_start_urls = True
     strict = False
     remove_get_params = False
+    config_file = None
+    config_content = None
 
     driver = None
 
@@ -44,8 +48,15 @@ class ConfigLoader(object):
         if os.environ['CONFIG'] is '':
             exit('env `CONFIG` missing')
 
+        config = os.environ['CONFIG']
+
+        if os.path.isfile(config):
+            self.config_file = config
+            config = open(self.config_file, 'r').read()
+
         try:
-            data = json.loads(os.environ['CONFIG'])
+            data = json.loads(config, object_pairs_hook=OrderedDict)
+            self.config_content = copy.deepcopy(data)
         except ValueError:
             raise ValueError('CONFIG is not a valid JSON')
 
@@ -285,3 +296,23 @@ class ConfigLoader(object):
             data['use_anchors'] = False
 
         return data
+
+    def update_nb_hits(self, nb_hits):
+        if self.config_file is not None:
+            previous_nbhits = None if 'nbHits' not in self.config_content else self.config_content['nbHits']
+
+            if previous_nbhits is None or previous_nbhits != nb_hits:
+                print "previous nbhits: " + str(previous_nbhits)
+                print ""
+
+                if helpers.confirm('Do you want to update the nbHits in ' + self.config_file + ' ?'):
+                    try:
+                        self.config_content['nbHits'] = nb_hits
+                        f = open(self.config_file, 'w')
+                        f.write(json.dumps(self.config_content, indent=2))
+                        f.close()
+                        print ""
+                        print "[OK] " + self.config_file + " has been updated"
+                    except Exception:
+                        print ""
+                        print "[KO] " + "Was not able to update " + self.config_file
