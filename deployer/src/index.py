@@ -87,6 +87,8 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
         if helpers.confirm('Do you want to get email templates for added and updated configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
             for config in added:
                 print snippeter.get_email_for_config(config)
+            for config in changed:
+                print snippeter.get_email_for_config(config)
 
 else:
     print "Nothing to do"
