@@ -18,5 +18,3 @@ then
 fi
 
 python /root/src/index.py 2>&1
-
-killall -9 firefox
