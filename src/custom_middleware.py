@@ -67,7 +67,7 @@ class CustomMiddleware(object):
                 continue
 
             if not (spider.scrap_start_urls and response.url in spider.start_urls):
-                print "Ignored: " + response.url
+                print "\033[94m> Ignored:\033[0m " + response.url
                 raise IgnoreRequest()
 
         return response
