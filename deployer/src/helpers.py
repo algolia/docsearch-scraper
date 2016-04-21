@@ -24,13 +24,13 @@ def make_request(endpoint, type=None, configuration=None):
     url = base_url + endpoint
 
     if type == 'POST':
-        return requests.post(url, auth=(username, password), data={'configuration': json.dumps(configuration)})
+        return requests.post(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
 
     if type == 'DELETE':
         return requests.delete(url, auth=(username, password))
 
     if type == 'PUT':
-        return requests.put(url, auth=(username, password), data={'configuration': json.dumps(configuration)})
+        return requests.put(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
 
     r = requests.get(url, auth=(username, password))
 
