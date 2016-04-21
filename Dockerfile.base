@@ -37,6 +37,7 @@ RUN apt-get update -y && apt-get install -y \
       python-pip
 
 # Install Scrapy and AlgoliaSearch
+RUN pip install —-upgrade pip
 RUN pip install scrapy
 RUN pip install algoliasearch
 RUN pip install selenium
