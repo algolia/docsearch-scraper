@@ -27,6 +27,7 @@ RUN npm install -g \
 
 # Install DocSearch dependencies
 RUN apt-get update -y && apt-get install -y \
+      psmisc      \
       curl        \
       fontconfig  \
       libffi-dev  \
