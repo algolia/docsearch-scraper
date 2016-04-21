@@ -1,5 +1,6 @@
 import os
 import json
+from collections import OrderedDict
 
 import helpers
 
@@ -15,7 +16,7 @@ def get_configs_from_repos():
 
             if os.path.isfile(path):
                 txt = open(path, 'r').read()
-                config = json.loads(txt)
+                config = json.loads(txt, object_pairs_hook=OrderedDict)
                 configs[config['index_name']] = config
 
     print str(len(configs)) + " docs in public and private repo"
