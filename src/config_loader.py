@@ -4,7 +4,6 @@ Load the config from the CONFIG environment variable
 """
 from urlparse import urlparse
 from strategies.abstract_strategy import AbstractStrategy
-from js_executor import JsExecutor
 from collections import OrderedDict
 
 from custom_middleware import CustomMiddleware
@@ -41,6 +40,7 @@ class ConfigLoader(object):
     remove_get_params = False
     config_file = None
     config_content = None
+    config_original_content = None
 
     driver = None
 
@@ -55,6 +55,7 @@ class ConfigLoader(object):
             config = open(self.config_file, 'r').read()
 
         try:
+            self.config_original_content = config
             data = json.loads(config, object_pairs_hook=OrderedDict)
             self.config_content = copy.deepcopy(data)
         except ValueError:
@@ -80,10 +81,8 @@ class ConfigLoader(object):
         self.selectors = self.parse_selectors(self.selectors)
 
     def conf_need_browser(self):
-        conf = os.environ['CONFIG']
-
         group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
-        results = re.findall(group_regex, conf)
+        results = re.findall(group_regex, self.config_original_content)
 
         return len(results) > 0 or self.js_render
 

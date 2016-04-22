@@ -29,5 +29,5 @@ docker run \
     -e CONFIG="$config" \
     -v "${mount_path}:/root/src" \
     --name $container_name \
-    -t algolia/documentation-scrapper-dev \
+    -t algolia/documentation-scrapper \
     /root/run
