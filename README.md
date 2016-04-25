@@ -57,8 +57,8 @@ The config.json should look like:
 
 ## Configuration
 
-All config json files should be saved in `./configs`. Here is a list of all
-available options.
+Configuration files can be found here
+https://github.com/algolia/docsearch-configs
 
 ### `index_name`
 
@@ -237,6 +237,11 @@ is removing the hash from the url.
 
 This parameter is optional and is set to False by default.
 
+## Test the configuration with the generator
+
+The generator allows to both generate the selectors and visualize on pages
+what is actually selected. Refer to `html/generator/README.md` to use it.
+
 ## Test the UX/UI with the playground
 
 To test it live, you can use the following HTML page:
@@ -245,6 +250,12 @@ To test it live, you can use the following HTML page:
 # edit your credentials + index name in ./html/playground.html
 $ open ./html/playground.html
 ```
+
+## Deploying
+
+After pushing the configuration to the configuration repository you still have
+to deploy the scrapper using the deploy script of this repository.
+For more on how to use the script: `html/deploy/README.md`.
 
 ## Docker
 
