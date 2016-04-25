@@ -9,7 +9,7 @@
     </head>
     <body>
         <div id="playground" ng-app="playground" ng-controller="PlaygroundController">
-            <div class="row">
+            <div>
                 <div class="col-md-9 left-panel">
                     <div class="input-group">
                     <div id=""></div>
@@ -21,24 +21,30 @@
                 </div>
                 <div class="col-md-3 right-panel">
                     <div class="form-group">
+                        <input type="radio" ng-model="config.env" value="prod" name="prod"/>
+                        <span>Prod</span>
+                        <input type="radio" ng-model="config.env" value="dev" name="prod"/>
+                        <span>Dev</span>
+                    </div>
+                    <div class="form-group">
                         <label for="appId">App Id</label>
-                        <input ng-model="config.appId" id="appId" class="form-control" />
+                        <input ng-model="config[config.env].appId" id="appId" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="apiKey"><b>Admin</b> Api Key</label>
-                        <input type="password" ng-model="config.apiKey" id="apiKey" class="form-control" />
+                        <input type="password" ng-model="config[config.env].apiKey" id="apiKey" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="indexName">Index Name</label>
-                        <input ng-model="config.indexName" id="indexName" class="form-control" />
+                        <input ng-model="config[config.env].indexName" id="indexName" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="loader">Load config</label>
-                        <select ng-model="config.indexName" ng-options="value for value in indices" ng-change="selectedIndexChanged()" class="form-control" id="loader"></select>
+                        <select ng-model="config[config.env].indexName" ng-options="value for value in indices" ng-change="selectedIndexChanged()" class="form-control" id="loader"></select>
                     </div>
                     <div class="form-group">
                         <label for="facetFilters">Facet Filters</label>
-                        <input ng-model="config.facetFilters" id="facetFilters" class="form-control" />
+                        <input ng-model="config[config.env].facetFilters" id="facetFilters" class="form-control" />
                     </div>
                 </div>
             </div>
@@ -54,14 +60,27 @@
 
             playground.controller("PlaygroundController", function ($scope) {
                 $scope.config = {
-                    appId: '',
-                    apiKey: '',
-                    indexName: '',
-                    inputSelector: '#q',
-                    autocompleteOptions: {
-                        debug: "true"
+                    env: 'dev',
+                    dev: {
+                        appId: '',
+                        apiKey: '',
+                        indexName: '',
+                        inputSelector: '#q',
+                        autocompleteOptions: {
+                            debug: "true"
+                        },
+                        facetFilters: ''
                     },
-                    facetFilters: ''
+                    prod: {
+                        appId: '',
+                        apiKey: '',
+                        indexName: '',
+                        inputSelector: '#q',
+                        autocompleteOptions: {
+                            debug: "true"
+                        },
+                        facetFilters: ''
+                    }
                 };
 
                 $scope.selectedIndexChanged = function(){
@@ -83,22 +102,22 @@
                         localStorage['config'] = JSON.stringify($scope.config);
                     }
 
-                    $scope.config.algoliaOptions = {
+                    $scope.config[$scope.config.env].algoliaOptions = {
                         'hitsPerPage': 5,
-                        'facetFilters': $scope.config.facetFilters
+                        'facetFilters': $scope.config[$scope.config.env].facetFilters
                     };
 
-                    if ($scope.config.appId && $scope.config.apiKey && $scope.config.indexName) {
+                    if ($scope.config[$scope.config.env].appId && $scope.config[$scope.config.env].apiKey && $scope.config[$scope.config.env].indexName) {
                         if (docSearch !== undefined) {
                             jQuery('.algolia-autocomplete').remove();
                             jQuery('.input-group').prepend('<input type="search" class="form-control" id="q">');
                         }
 
-                        docSearch = docsearch($scope.config, {debug: true});
+                        docSearch = docsearch($scope.config[$scope.config.env], {debug: true});
                     }
 
-                    if ($scope.config.appId != '' && $scope.config.apiKey != '') {
-                        client = algoliasearch($scope.config.appId, $scope.config.apiKey, {
+                    if ($scope.config[$scope.config.env].appId != '' && $scope.config[$scope.config.env].apiKey != '') {
+                        client = algoliasearch($scope.config[$scope.config.env].appId, $scope.config[$scope.config.env].apiKey, {
                           protocol: 'https:'
                         });
 
@@ -121,7 +140,13 @@
                     }
                 };
 
-                angular.forEach(['config.appId', 'config.apiKey', 'config.indexName', 'config.facetFilters'], function(value, key) {
+                var values = [
+                    'config.env',
+                    'config.dev.appId', 'config.dev.apiKey', 'config.dev.indexName', 'config.dev.facetFilters',
+                    'config.prod.appId', 'config.prod.apiKey', 'config.prod.indexName', 'config.prod.facetFilters'
+                ];
+
+                angular.forEach(values, function(value, key) {
                     $scope.$watch(value, function(newValue, oldValue) {
                         if (newValue != oldValue) {
                             initDocSearch();
