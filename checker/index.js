@@ -51,7 +51,7 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
                 resultItem = { name: item.name, config: data, noConfig: (data === undefined) }
 
                 if (data !== undefined) {
-                    resultItem.supposedNbHits = data.nbHits || undefined;
+                    resultItem.supposedNbHits = data.nb_hits || undefined;
                 }
                 return resultItem;
             });
@@ -150,7 +150,7 @@ aggregateWithBrowse.then(function (indices) {
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
     sectionPrinter("Indices with bad records", badRecords, "danger");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
-    sectionPrinter("Config missing nbhits", noSupposedNbHits, "warning");
+    sectionPrinter("Config missing nb_hits", noSupposedNbHits, "warning");
 
 
     if (reports.length == 0) {
