@@ -52,7 +52,7 @@ class CustomMiddleware(object):
             response = response.replace(url=url_without_params)
 
         for rule in spider._rules:
-            if not spider.strict:
+            if not spider.strict_redirect:
                 if rule.link_extractor._link_allowed(response):
                     continue
 
