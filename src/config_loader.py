@@ -275,7 +275,7 @@ class ConfigLoader(object):
             data['allowed_domains'] = [data['allowed_domains']]
 
         # Set default strategy
-        data['strategy'] = data.get('strategy') or 'strategy'
+        data['strategy'] = data.get('strategy') or 'default'
 
         # `js_render` is set to False by default unless `true` is specified
         if isinstance(data.get('js_render'), bool):
