@@ -1,33 +1,54 @@
-# Documentation scrapper
+# Documentation scraper
 
-## Getting started for OSX
+BLABAL
 
-Run the following commands :
+## Getting started
 
-- `brew install python # will install pip`
+### With Docker
+
+The script will download the latest DocSearch container and run it:
+
+```sh
+$ git clone git@github.com:algolia/documentation-scraper.git
+$ cd documentation-scraper
+
+$ APPLICATION_ID=app_id API_KEY=api_key ./run.sh path/to/config.json
+```
+
+### Without Docker
+
+#### Install DocSearch
+
+- Install python
+  - `brew install python # will install pip`
+  - `apt-get install python`
+  - Or every other way 
 - `pip install scrapy`
 - `pip install algoliasearch`
 - `pip install selenium`
-- `git clone git@github.com:algolia/documentation-scrapper.git`
-- `cd documentation-scrapper`
+- `git clone git@github.com:algolia/documentation-scraper.git`
+- `cd documentation-scraper`
 
-## Run the scrapper
+#### Run the scraper
 
 Usage:
 ```sh
 $ APPLICATION_ID=app_id \
   API_KEY=api_key \
-  INDEX_PREFIX=prefix_ \
-  CONFIG="configs/stripe.json" \
+  CONFIG="path/to/config.json" \
   python src/index.py
 ```
 
-The config.json should look like:
+## Configuration format
+
+The configuration files can be found here
+https://github.com/algolia/docsearch-configs
+
+A configuration file should look like:
 
 ```json
 {
     "index_name": "stripe",
-    "allowed_domains": "stripe.com",
     "start_urls": [
         "https://stripe.com/docs"
     ],
@@ -46,26 +67,16 @@ The config.json should look like:
       "lvl4": "#content section h5",
       "lvl5": "#content section h6",
       "text": "#content header p,#content section p,#content section ol"
-    },
-    "custom_settings": {},
-    "strategy": "default",
-    "strip_chars": " :;,.",
-    "js_render": false,
-    "js_wait": 0
+    }
 }
 ```
-
-## Configuration
-
-Configuration files can be found here
-https://github.com/algolia/docsearch-configs
 
 ### `index_name`
 
 **Mandatory**
 
-Name of the Algolia index where all the data will be pushed. Will be prefixed
-with the `PREFIX` environment variable.
+Name of the Algolia index where all the data will be pushed. If the `PREFIX` environment variable is defined, it will be prefixed
+with it.
 
 ### `start_urls`
 
@@ -97,18 +108,12 @@ It's possible to make a selector global which mean that all records for the page
 this value. This is useful when you have a title that in right sidebar because
 the sidebar is after the content on dom.
 
-```
+```json
 "selectors": {
   "lvl0": {
     "selector": "#content header h1",
     "global": true
-  },
-  "lvl1": "#content article h1",
-  "lvl2": "#content section h3",
-  "lvl3": "#content section h4",
-  "lvl4": "#content section h5",
-  "lvl5": "#content section h6",
-  "text": "#content header p,#content section p,#content section ol"
+  }
 }
 ```
 
@@ -117,18 +122,12 @@ the sidebar is after the content on dom.
 By default selector are considered css selectors but you can specify that a selector is an xpath one.
 This is useful when you want to do more complex selection like selecting the parent of a node.
 
-```
+```json
 "selectors": {
   "lvl0": {
-    "selector": "//li[@class="chapter active done"]/../../a",
+    "selector": "//li[@class=\"chapter active done\"]/../../a",
     "type": "xpath"
-  },
-  "lvl1": "#content article h1",
-  "lvl2": "#content section h3",
-  "lvl3": "#content section h4",
-  "lvl4": "#content section h5",
-  "lvl5": "#content section h6",
-  "text": "#content header p,#content section p,#content section ol"
+  }
 }
 ```
 
@@ -137,35 +136,25 @@ This is useful when you want to do more complex selection like selecting the par
 You have the possibility to add a default value. If the given selector doesn't match anything in a page
 then for each record the default value will be set
 
-```
+```json
 "selectors": {
   "lvl0": {
     "selector": "#content article h1",
     "default_value": "Documentation"
-  },
-  "lvl1": "#content section h3",
-  "lvl2": "#content section h4",
-  "lvl3": "#content section h5",
-  "lvl4": "#content section h6",
-  "text": "#content header p,#content section p,#content section ol"
+  }
 }
 ```
 
 #### Strip Chars
 
-You can override the default strip chars per level
+You can override the default `strip_chars` per level
 
-```
+```json
 "selectors": {
   "lvl0": {
     "selector": "#content article h1",
     "strip_chars": " .,;:"
-  },
-  "lvl1": "#content section h3",
-  "lvl2": "#content section h4",
-  "lvl3": "#content section h5",
-  "lvl4": "#content section h6",
-  "text": "#content header p,#content section p,#content section ol"
+  }
 }
 ```
 
@@ -200,11 +189,6 @@ you can add them to the `selectors_exclude` key.
 This object is any custom Algolia settings you would like to pass to the index
 settings.
 
-### `strategy`
-
-Don't pay attention to this config option. We currently have only one strategy
-in the source code.
-
 ### `min_indexed_level`
 
 Lets you define the minimum level at which you want records to be indexed. For
@@ -237,6 +221,30 @@ is removing the hash from the url.
 
 This parameter is optional and is set to False by default.
 
+### `strip_chars`
+
+A list of character to remove from the text that is indexed.
+
+Default is ": " .,;:§¶"
+
+### `scrap_start_urls`
+
+Default if `false`
+
+### `remove_get_params`
+
+Default if `false`
+
+### `strict_redirect`
+
+Default if `false`
+
+### `nb_hits`
+
+The number of object that should be indexed. Only used by the [`checker`](#checker).
+
+Default is `0`.
+
 ## Test the configuration with the generator
 
 The generator allows to both generate the selectors and visualize on pages
@@ -254,12 +262,12 @@ $ open ./html/playground.html
 ## Deploying
 
 After pushing the configuration to the configuration repository you still have
-to deploy the scrapper using the deploy script of this repository.
+to deploy the scraper using the deploy script of this repository.
 For more on how to use the script: `html/deploy/README.md`.
 
-## Docker
+## Development
 
-### Development
+### Docker
 
 You can build a development version of the image, to be used in development. It
 will build the exact same image than the prod one but will expect the
@@ -270,7 +278,7 @@ the script in a Docker environment.
 First, build the development image:
 
 ```sh
-docker build -t algolia/documentation-scrapper-dev -f Dockerfile.dev .
+docker build -t algolia/documentation-scraper-dev -f Dockerfile.dev .
 ```
 
 Then, use a script to remove any dev container and rebuild it.
@@ -285,7 +293,7 @@ $ docker run \
     -e CONFIG="$(cat configs/docname.json)" \
     -v `pwd`/src:/root/src \
     --name docname \
-    -t algolia/documentation-scrapper-dev \
+    -t algolia/documentation-scraper-dev \
     /root/run
 ```
 
@@ -301,7 +309,7 @@ $ docker run \
     -e CONFIG="$(cat configs/docname.json)" \
     -v `pwd`/src:/root/src \
     --name docname \
-    -t algolia/documentation-scrapper-dev \
+    -t algolia/documentation-scraper-dev \
     /root/test
 
 ```
@@ -318,14 +326,22 @@ configuration file must set the `js_render` parameter to `true`
 see [`js_render`](#js_render). If not, the Selenium instance won't be started.
 
 ```
-$ docker build -t algolia/documentation-scrapper .
+$ docker build -t algolia/documentation-scraper .
 $ docker run \
     -e APPLICATION_ID=appId \
     -e API_KEY=apiKey \
     -e INDEX_PREFIX=prefix_ \
     -e CONFIG="$(cat configs/docname.json)" \
     --name docname \
-    -t algolia/documentation-scrapper
+    -t algolia/documentation-scraper
 ```
 
-[1]: https://github.com/algolia/documentation-scrapper/issues/7
+### Checker
+
+The checker, in `checker` directory, is an automatic tool to check that the crwaling infra behind DocSearch is running and that configurations do not have issues.
+
+### Deployer
+
+The deployer, in `deployer` directory, is an automatic tool to deploy new configuration in the crawling infra of Algolia
+
+[1]: https://github.com/algolia/documentation-scraper/issues/7

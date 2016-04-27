@@ -71,4 +71,3 @@ class CustomMiddleware(object):
                 raise IgnoreRequest()
 
         return response
-
