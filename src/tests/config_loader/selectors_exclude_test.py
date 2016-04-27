@@ -2,6 +2,8 @@
 
 from src.config_loader import ConfigLoader
 from abstract import config
+import os
+import json
 
 class TestSelectorsExclude:
     def test_selectors_exclude_default(self):
@@ -27,3 +29,26 @@ class TestSelectorsExclude:
 
         # Then
         assert actual.selectors_exclude == ['.test']
+
+    def test_selectors_exclude_is_not_mandatory(self):
+        """ Allow not passing selectors_exclude """
+        # Given
+        conf = {
+            'allowed_domains': 'allowed_domains',
+            'api_key': 'api_key',
+            'app_id': 'app_id',
+            'index_name': 'index_name',
+            'index_prefix': 'index_prefix',
+            'selectors': [],
+            'start_urls': ['http://www.starturl.com/'],
+            'stop_urls': ['http://www.stopurl.com/']
+        }
+
+        os.environ['CONFIG'] = json.dumps(conf)
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.selectors_exclude == []
+

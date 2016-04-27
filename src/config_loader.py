@@ -30,7 +30,7 @@ class ConfigLoader(object):
     selectors = None
     selectors_exclude = []
     start_urls = None
-    stop_urls = None
+    stop_urls = []
     strategy = None
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
@@ -230,7 +230,7 @@ class ConfigLoader(object):
         # Set default values
         default_data = {
             'start_urls': [],
-            'stop_url': []
+            'stop_urls': []
         }
         data = default_data.copy()
         data.update(user_data)
