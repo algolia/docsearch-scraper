@@ -104,9 +104,36 @@ var aggregateWithBrowse = new Promise(function (resolve, reject) {
     });
 });
 
+var aggregateWithSettings = new Promise(function (resolve, reject) {
+    aggregateWithBrowse.then(function (indices) {
+        indices = indices.map(function (elt, i) {
+            return new Promise(function (resolve, reject) {
+                var index = client.initIndex(elt.name);
 
-aggregateWithBrowse.then(function (indices) {
-    var empty_indices = indices.filter(function (index) {
+                elt.anomalyInSettings = false;
+                index.getSettings(function(err, content) {
+                    settings = ['attributesToIndex', 'attributesToHighlight', 'attributesToRetrieve'];
+
+                    settings.forEach(function (setting) {
+                        if (content[setting] === undefined || content[setting] === null || content[setting].length <= 0) {
+                            elt.anomalyInSettings = true;
+                        }
+                    });
+
+                    resolve(elt);
+                });
+            });
+        });
+
+        return Promise.all(indices).then(function (indices) {
+            resolve(indices);
+        });
+    });
+});
+
+
+aggregateWithSettings.then(function (indices) {
+    var emptyIndices = indices.filter(function (index) {
         return index.nbHits === 0;
     });
 
@@ -114,8 +141,26 @@ aggregateWithBrowse.then(function (indices) {
         return index.noConfig === true;
     });
 
+    var anomalyInSettings = indices.filter(function (index) {
+        return index.anomalyInSettings === true;
+    });
+
     var potentialBadNumberOfRecords = indices.filter(function (index) {
-        return index.supposedNbHits !== undefined && Math.abs(index.nbHits - index.supposedNbHits) > (20 / 100 * index.supposedNbHits);
+        if (index.supposedNbHits !== undefined) {
+            return true;
+        }
+
+        /** Increase of 100% **/
+        if (index.nbHits - index.supposedNbHits > index.supposedNbHits) {
+            return true;
+        }
+
+        /** Decrease of 20% **/
+        if (index.supposedNbHits - index.nbHits > 20 / 100 * index.supposedNbHits) {
+            return true;
+        }
+
+        return false;
     });
 
     var noSupposedNbHits = indices.filter(function (index) {
@@ -146,7 +191,8 @@ aggregateWithBrowse.then(function (indices) {
         }
     };
 
-    sectionPrinter("Empty indices", empty_indices, "danger");
+    sectionPrinter("Empty indices", emptyIndices, "danger");
+    sectionPrinter("Anomaly in settings", anomalyInSettings, "danger");
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
     sectionPrinter("Indices with bad records", badRecords, "danger");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");

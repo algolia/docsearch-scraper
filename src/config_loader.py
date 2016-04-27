@@ -34,10 +34,11 @@ class ConfigLoader(object):
     strategy = None
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
-    urls = None
     scrap_start_urls = True
     strict = False
     remove_get_params = False
+
+    # data storage, starting here attribute are not config params
     config_file = None
     config_content = None
     config_original_content = None
