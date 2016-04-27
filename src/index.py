@@ -21,12 +21,6 @@ DocumentationSpider.NB_INDEXED = 0
 if CONFIG.use_anchors:
     import scrapy_patch
 
-ALGOLIA_HELPER = AlgoliaHelper(
-    CONFIG.app_id,
-    CONFIG.api_key,
-    CONFIG.index_name
-)
-
 STRATEGIES = {
     'default': DefaultStrategy
 }
@@ -36,6 +30,13 @@ if not CONFIG_STRATEGY in STRATEGIES:
     exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
 
 STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
+
+ALGOLIA_HELPER = AlgoliaHelper(
+    CONFIG.app_id,
+    CONFIG.api_key,
+    CONFIG.index_name,
+    STRATEGY.get_index_settings()
+)
 
 PROCESS = CrawlerProcess({
     'LOG_ENABLED': '1',
@@ -57,7 +58,7 @@ PROCESS.stop()
 
 CONFIG.destroy()
 
-ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())
+ALGOLIA_HELPER.commit_tmp_index()
 
 
 print ""
