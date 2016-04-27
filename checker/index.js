@@ -151,7 +151,7 @@ aggregateWithSettings.then(function (indices) {
         }
 
         /** Increase of 100% **/
-        if (index.nbHits - index.supposedNbHits > index.supposedNbHits) {
+        if (index.nbHits - index.supposedNbHits > 2 * index.supposedNbHits) {
             return true;
         }
 
