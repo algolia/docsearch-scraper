@@ -29,7 +29,7 @@ class DocumentationSpider(CrawlSpider):
         self.scrap_start_urls = config.scrap_start_urls
         self.remove_get_params = config.remove_get_params
 
-        self.strict = config.strict
+        self.strict_redirect = config.strict_redirect
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(

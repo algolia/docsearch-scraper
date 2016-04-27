@@ -35,7 +35,7 @@ class ConfigLoader(object):
     strip_chars = u".,;:§¶"
     min_indexed_level = 0
     scrap_start_urls = True
-    strict = False
+    strict_redirect = False
     remove_get_params = False
 
     # data storage, starting here attribute are not config params
