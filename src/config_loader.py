@@ -298,15 +298,15 @@ class ConfigLoader(object):
 
     def update_nb_hits(self, nb_hits):
         if self.config_file is not None:
-            previous_nbhits = None if 'nbHits' not in self.config_content else self.config_content['nbHits']
+            previous_nb_hits = None if 'nb_hits' not in self.config_content else self.config_content['nb_hits']
 
-            if previous_nbhits is None or previous_nbhits != nb_hits:
-                print "previous nbhits: " + str(previous_nbhits)
+            if previous_nb_hits is None or previous_nb_hits != nb_hits:
+                print "previous nb_hits: " + str(previous_nb_hits)
                 print ""
 
-                if helpers.confirm('Do you want to update the nbHits in ' + self.config_file + ' ?'):
+                if helpers.confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?'):
                     try:
-                        self.config_content['nbHits'] = nb_hits
+                        self.config_content['nb_hits'] = nb_hits
                         f = open(self.config_file, 'w')
                         f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
                         f.close()

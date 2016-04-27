@@ -18,3 +18,4 @@ configs/public
 configs/private
 /deploy
 /test.sh
+run.docker

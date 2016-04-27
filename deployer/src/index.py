@@ -47,7 +47,7 @@ if len(changed) > 0:
     print "Will be updated :"
     for config in changed:
         log = " - " + config + ' (' + ', '.join(changed_attributes[config]) + ')'
-        if len(changed_attributes[config]) != 1 or 'nbHits' not in changed_attributes[config]:
+        if len(changed_attributes[config]) != 1 or 'nb_hits' not in changed_attributes[config]:
             log = '\033[0;35m' + log + '\033[0m'
         print log
 

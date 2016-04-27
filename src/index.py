@@ -61,7 +61,7 @@ ALGOLIA_HELPER.commit_tmp_index(STRATEGY.get_index_settings())
 
 
 print ""
-print 'nbhits: ' + str(DocumentationSpider.NB_INDEXED)
+print 'Nb hits: ' + str(DocumentationSpider.NB_INDEXED)
 
 CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
 
