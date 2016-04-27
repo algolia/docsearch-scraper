@@ -42,7 +42,7 @@ $(function(){
     $('iframe').attr('src', '/proxy?url=' + $('#start-urls').val().split("\n")[0]);
   });
 
-  $('#config').on('change', updateUI); 
+  $('#config').on('change', updateUI);
 
   function onPathClick(path) {
     var selectedLevel = window.currentLevel;
@@ -82,7 +82,7 @@ $(function(){
     $('.levels .text input').val(config.selectors.text);
 
     $('#stop-urls').val(config.stop_urls);
-    
+
     var startUrls = config.start_urls;
     $('#start-urls').val(startUrls);
     $('iframe').attr('src', '/proxy?url=' + startUrls[0]);
@@ -113,7 +113,6 @@ $(function(){
       selectors_exclude: [],
       selectors: {},
       custom_settings: {},
-      strategy: "default"
     };
     var minIndexedLevel = +$('#min_indexed_level').val();
     if (minIndexedLevel > 0) {
@@ -129,6 +128,6 @@ $(function(){
         config.selectors[lvl] = v;
       }
     });
-    return config 
+    return config
   }
 });
