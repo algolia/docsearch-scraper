@@ -2,6 +2,8 @@
 
 from src.config_loader import ConfigLoader
 from abstract import config
+import json
+import os
 
 class TestStopUrls:
     def test_stop_urls_accept_single_value(self):
@@ -16,3 +18,25 @@ class TestStopUrls:
 
         # Then
         assert actual.stop_urls == ['www.foo.bar']
+
+    def test_stop_urls_is_not_mandatory(self):
+        """ Allow not passing stop_urls """
+        # Given
+        conf = {
+            'allowed_domains': 'allowed_domains',
+            'api_key': 'api_key',
+            'app_id': 'app_id',
+            'index_name': 'index_name',
+            'index_prefix': 'index_prefix',
+            'selectors': [],
+            'selectors_exclude': [],
+            'start_urls': ['http://www.starturl.com/']
+        }
+
+        os.environ['CONFIG'] = json.dumps(conf)
+
+        # When
+        actual = ConfigLoader()
+
+        # Then
+        assert actual.stop_urls == []
