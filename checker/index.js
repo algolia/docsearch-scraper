@@ -146,7 +146,7 @@ aggregateWithSettings.then(function (indices) {
     });
 
     var potentialBadNumberOfRecords = indices.filter(function (index) {
-        if (index.supposedNbHits !== undefined) {
+        if (index.supposedNbHits === undefined) {
             return true;
         }
 
