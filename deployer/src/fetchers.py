@@ -14,6 +14,9 @@ def get_configs_from_repos():
         for f in os.listdir(dir):
             path = dir + '/' + f
 
+            if 'json' not in path:
+                continue
+
             if os.path.isfile(path):
                 txt = open(path, 'r').read()
                 config = json.loads(txt, object_pairs_hook=OrderedDict)
