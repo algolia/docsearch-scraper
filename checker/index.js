@@ -179,6 +179,11 @@ aggregateWithSettings.then(function (indices) {
             report.fallback = name;
             report.title = name;
             report.color = color;
+
+            if (color == "danger") {
+                list.push({name: "<!channel>"});
+            }
+
             report.text = list.map(function (elt) {
                 var text = '- ' + elt.name
                 if (name === 'Indices with weird results') {
@@ -197,7 +202,6 @@ aggregateWithSettings.then(function (indices) {
     sectionPrinter("Indices with bad records", badRecords, "danger");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
     sectionPrinter("Config missing nb_hits", noSupposedNbHits, "warning");
-
 
     if (reports.length == 0) {
         reports.push({
