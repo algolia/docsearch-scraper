@@ -26,6 +26,8 @@ $ APPLICATION_ID=app_id API_KEY=api_key ./run.sh path/to/config.json
 - `pip install scrapy`
 - `pip install algoliasearch`
 - `pip install selenium`
+- `pip install tldextract`
+- `pip install piperclip`
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
 
@@ -257,6 +259,12 @@ To test it live, you can use the following HTML page:
 ```sh
 # edit your credentials + index name in ./html/playground.html
 $ open ./html/playground.html
+```
+
+## Bootstrapping a config
+
+```sh
+$ ./bootstrap-config
 ```
 
 ## Deploying

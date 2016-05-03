@@ -2,10 +2,11 @@ import requests
 import json
 import os
 
-username = os.environ['WEBSITE_USERNAME']
-password = os.environ['WEBSITE_PASSWORD']
+username = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
+password = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
 
 base_url = 'https://www.algolia.com/api/1/docsearch'
+
 
 def confirm(message="Confirm"):
     prompt = message + ' [y/n]:\n'
@@ -19,6 +20,12 @@ def confirm(message="Confirm"):
             return True
         if ans == 'n' or ans == 'N':
             return False
+
+
+def get_user_value(message):
+    prompt = message
+    return raw_input(prompt)
+
 
 def make_request(endpoint, type=None, configuration=None):
     url = base_url + endpoint
