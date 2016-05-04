@@ -359,7 +359,14 @@ It could happen that the crawled website returned duplicated data.
 Most of the time, this is because the crawled website, got the same url with two different scheme.
 If there is `http://website.com/page` and `http://website.com/page/`, notice the second one, the url is ended by `/`, and for the scrapper, this is two different urls.
 
-The solution is to add the url you don't want to crawl, to the `stop_urls` in the `config.json`. 
+In most of the cases, you'll only have to add a regex to the `stop_urls` in the `config.json` : 
+```
+$ "stop_urls": [
+  "/$"
+]
+```
+
+But sometimes, the website's url you want to scrap are all ending with `/`, so just specify which url you want to get rid of, like this : 
 ```
 $ "stop_urls": [
     "http://website.com/page/"
