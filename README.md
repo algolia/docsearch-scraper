@@ -386,6 +386,12 @@ $ "stop_urls": [
 *Good :*
 ```
 $ "stop_urls": [
+    "/$"
+  ]
+```
+Or : 
+```
+$ "stop_urls": [
     "http://website.com/page/"
   ]
 ```
