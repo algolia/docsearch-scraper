@@ -1,11 +1,13 @@
 import sys
 import os
+import itertools
 
 from dict_differ import DictDiffer
 import fetchers
 import algolia_helper
 import helpers
 import snippeter
+import emails
 
 
 if 'APP_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
@@ -90,8 +92,12 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
             for config in changed:
                 print snippeter.get_email_for_config(config)
 
+        for app in itertools.chain(added, changed):
+            if helpers.confirm('\nDo you want to add emails for {}?'.format(app)):
+                emails.add(app)
+
+    for app in removed:
+        emails.delete(app)
 else:
     print "Nothing to do"
-
-
 
