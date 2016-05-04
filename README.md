@@ -346,10 +346,39 @@ $ docker run \
 
 ### Checker
 
-The checker, in `checker` directory, is an automatic tool to check that the crwaling infra behind DocSearch is running and that configurations do not have issues.
+The checker, in `checker` directory, is an automatic tool to check that the crawling infra behind DocSearch is running and that configurations do not have issues.
 
 ### Deployer
 
 The deployer, in `deployer` directory, is an automatic tool to deploy new configuration in the crawling infra of Algolia
 
 [1]: https://github.com/algolia/documentation-scraper/issues/7
+
+### Possible issues
+It could happen that the crawled website returned duplicated data. 
+Most of the time, this is because the crawled website, got the same url with two different scheme.
+If there is `http://website.com/page` and `http://website.com/page/`, notice the second one, the url is ended by `/`, and for the scrapper, this is two different urls.
+
+The solution is to add the url you don't want to crawl, to the `stop_urls` in the `config.json`. 
+```
+$ "stop_urls": [
+    "http://website.com/page/"
+  ]
+```
+And that way, only the first one will be taken in consideration. 
+
+---
+*Be careful to remove any hashsigns from the urls if it contains some*
+
+*Bad :*
+```
+$ "stop_urls": [
+    "http://website.com/page/#foo"
+  ]
+```
+*Good :*
+```
+$ "stop_urls": [
+    "http://website.com/page/"
+  ]
+```
