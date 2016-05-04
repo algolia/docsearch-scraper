@@ -1,7 +1,5 @@
 # Documentation scraper
 
-BLABAL
-
 ## Getting started
 
 ### With Docker
@@ -23,11 +21,7 @@ $ APPLICATION_ID=app_id API_KEY=api_key ./run.sh path/to/config.json
   - `brew install python # will install pip`
   - `apt-get install python`
   - Or every other way 
-- `pip install scrapy`
-- `pip install algoliasearch`
-- `pip install selenium`
-- `pip install tldextract`
-- `pip install piperclip`
+- `pip install -r requirements.txt`
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
 
