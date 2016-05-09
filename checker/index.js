@@ -163,6 +163,16 @@ aggregateWithSettings.then(function (indices) {
         return false;
     });
 
+    var configButNoEmail = indices.filter(function (index) {
+        var path = 'configs_private/infos/' + index.name + '.txt'
+        try {
+            var stats = fs.statSync(path);
+            return !index.noConfig && stats.size === 0;
+        } catch (e) {
+            return !index.noConfig;
+        }
+    });
+
     var noSupposedNbHits = indices.filter(function (index) {
         return index.supposedNbHits === undefined;
     });
@@ -201,12 +211,13 @@ aggregateWithSettings.then(function (indices) {
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
     sectionPrinter("Indices with bad records", badRecords, "danger");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
-    sectionPrinter("Config missing nb_hits", noSupposedNbHits, "warning");
+    sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
+    sectionPrinter("Configs missing email", configButNoEmail, "warning")
 
     if (reports.length == 0) {
         reports.push({
             color: "good",
-            text: "Everything allright \\o/"
+            text: "Everything alright \\o/"
         })
     }
 
