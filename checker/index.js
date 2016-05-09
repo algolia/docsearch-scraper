@@ -40,6 +40,20 @@ var readFile = function (path) {
     });
 };
 
+var fileSize = function (path) {
+    return new Promise(function (resolve, reject) {
+        fs.stat(path, function(err, stats) {
+            var size = undefined;
+
+            if (!err) {
+                size = stats.size;
+            }
+
+            resolve(size);
+        });
+    });
+};
+
 var aggregateConfigs = new Promise(function (resolve, reject) {
     client.listIndexes().then(function (content) {
         var indices = content.items.filter(function (item) {
@@ -131,8 +145,24 @@ var aggregateWithSettings = new Promise(function (resolve, reject) {
     });
 });
 
+var aggregateWithEmails = new Promise(function (resolve, reject) {
+    aggregateWithSettings.then(function (indices) {
+        indices = indices.map(function (elt, i) {
+            var privatePath = 'configs_private/infos/'+ elt.name + '.txt';
+            return fileSize(privatePath).then(function (size) {
+                elt.noEmail = !elt.noConfig && (size === undefined || size === 0);
+                return elt;
+            });
+        });
 
-aggregateWithSettings.then(function (indices) {
+        return Promise.all(indices).then(function (indices) {
+            resolve(indices);
+        });
+    });
+});
+
+
+aggregateWithEmails.then(function (indices) {
     var emptyIndices = indices.filter(function (index) {
         return index.nbHits === 0;
     });
@@ -164,13 +194,7 @@ aggregateWithSettings.then(function (indices) {
     });
 
     var configButNoEmail = indices.filter(function (index) {
-        var path = 'configs_private/infos/' + index.name + '.txt'
-        try {
-            var stats = fs.statSync(path);
-            return !index.noConfig && stats.size === 0;
-        } catch (e) {
-            return !index.noConfig;
-        }
+        return index.noEmail === true;
     });
 
     var noSupposedNbHits = indices.filter(function (index) {
@@ -212,7 +236,7 @@ aggregateWithSettings.then(function (indices) {
     sectionPrinter("Indices with bad records", badRecords, "danger");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
-    sectionPrinter("Configs missing email", configButNoEmail, "warning")
+    sectionPrinter("Configs missing email", configButNoEmail, "warning");
 
     if (reports.length == 0) {
         reports.push({
