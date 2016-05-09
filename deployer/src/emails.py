@@ -62,10 +62,10 @@ def _commit_push(config_name, action):
     old_dir = os.getcwd()
     os.chdir(dir_)
 
-    dev_null = open(os.devnull, 'w')
-    sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
-    sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
-    sp.call(['git', 'push'], stdout=dev_null, stderr=sp.STDOUT)
+    with open(os.devnull, 'w') as dev_null:
+        sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
+        sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
+        sp.call(['git', 'push'], stdout=dev_null, stderr=sp.STDOUT)
 
     os.chdir(old_dir)
 
