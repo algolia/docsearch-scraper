@@ -18,7 +18,8 @@ def get_configs_from_repos():
                 continue
 
             if os.path.isfile(path):
-                txt = open(path, 'r').read()
+                with open(path, 'r') as f:
+                    txt = f.read()
                 config = json.loads(txt, object_pairs_hook=OrderedDict)
                 configs[config['index_name']] = config
 

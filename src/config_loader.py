@@ -53,7 +53,8 @@ class ConfigLoader(object):
 
         if os.path.isfile(config):
             self.config_file = config
-            config = open(self.config_file, 'r').read()
+            with open(self.config_file, 'r') as f:
+                config = f.read()
 
         try:
             self.config_original_content = config
@@ -308,9 +309,8 @@ class ConfigLoader(object):
                 if helpers.confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?'):
                     try:
                         self.config_content['nb_hits'] = nb_hits
-                        f = open(self.config_file, 'w')
-                        f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
-                        f.close()
+                        with open(self.config_file, 'w') as f:
+                            f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
                         print ""
                         print "[OK] " + self.config_file + " has been updated"
                     except Exception:
