@@ -10,7 +10,7 @@ repo_root=$(pwd)
 # change the following config. After it's done, just start `./run` to start
 # scraping and indexing.
 app_id=${APPLICATION_ID:-"YOUR_APP_ID"}
-api_key=${API_+KEY:-"YOUR_API_KEY"}
+api_key=${API_KEY:-"YOUR_API_KEY"}
 container_name="DocSearch"
 prefix=""
 
