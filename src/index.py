@@ -1,5 +1,3 @@
-#!/usr/bin/python2
-
 """
 documentationSearch scrapper main entry point
 """
