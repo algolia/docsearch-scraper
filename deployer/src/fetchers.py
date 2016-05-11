@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 import helpers
 
+
 def get_configs_from_repos():
     configs = {}
 

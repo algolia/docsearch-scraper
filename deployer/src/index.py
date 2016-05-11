@@ -9,8 +9,7 @@ import helpers
 import snippeter
 import emails
 
-
-if 'APP_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
+if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print ""
     print "ERROR: missing configuration"
     print ""

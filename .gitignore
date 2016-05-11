@@ -9,6 +9,7 @@ src/.cache/
 src/__pycache__/
 src/strategies/__pycache__/
 *.pyc
+.env
 
 # IDE Files
 .idea/
