@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. venv/bin/activate
+
 python /root/check_js_render.py
 
 if [ "$?" -eq 0 ]

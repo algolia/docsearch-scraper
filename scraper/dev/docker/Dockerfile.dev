@@ -5,8 +5,11 @@
 
 FROM algolia/base-documentation-scrapper
 MAINTAINER Algolia <documentationsearch@algolia.com>
+ARG USE_PYTHON3=false
 
-RUN pip2 install pytest
+# Install correct python version and dependencies
+RUN sh /root/setup_python.sh $USE_PYTHON3
+RUN . venv/bin/activate && pip install pytest
 
 # Copy DocSearch files
 COPY scraper/dev/docker/bin/run /root/

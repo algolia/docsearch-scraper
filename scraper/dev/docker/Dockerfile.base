@@ -31,15 +31,14 @@ RUN apt-get update -y && apt-get install -y \
       fontconfig  \
       libffi-dev  \
       libssl-dev  \
+      libxml2-dev \
+      libxslt-dev \
       python-dev  \
-      python-lxml \
       python-pip
 
-# Install Scrapy and AlgoliaSearch
-RUN pip install -U pip
-RUN pip install scrapy
-RUN pip install algoliasearch
-RUN pip install selenium
+
+COPY requirements.txt /root/
+COPY scraper/dev/docker/bin/setup_python.sh /root/
 
 # Put everything in /root
 WORKDIR /root
