@@ -18,8 +18,12 @@ class AbstractCommand(object):
         return []
 
     @staticmethod
-    def build_docker_file(file, image="algolia/documentation-scrapper-dev"):
-        return AbstractCommand.exec_shell_command(["docker", "build", "-t", image, "-f", file, "."])
+    def build_docker_file(file, image="algolia/documentation-scrapper-dev", python3=False):
+        cmd = ["docker", "build", "-t", image, "-f", file]
+        if python3:
+            cmd.extend(['--build-arg', 'USE_PYTHON3=true'])
+        cmd.append('.')
+        return AbstractCommand.exec_shell_command(cmd)
 
     @staticmethod
     def exec_shell_command(arguments, env=None):
