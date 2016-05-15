@@ -239,10 +239,13 @@ aggregateWithEmails.then(function (indices) {
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
 
     if (reports.length == 0) {
-        reports.push({
-            color: "good",
-            text: "Everything alright \\o/"
-        })
+        var now = new Date();
+        if (now.getHours()) {
+            reports.push({
+                color: "good",
+                text: "I am alive and everything alright \\o/"
+            })
+        }
     }
 
     reports.sort(function (a, b) {
