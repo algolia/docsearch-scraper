@@ -89,7 +89,8 @@ if CREDENTIALS:
 
 if ADMIN:
     cmds.append(DeployConfigs())
-    cmds.append(DeployDockerImages())
+    cmds.append(DeployDockerScraperImages())
+    cmds.append(DeployDockerDoctorImages())
     cmds.append(RunDoctor())
 
 
