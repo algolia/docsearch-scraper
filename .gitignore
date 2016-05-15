@@ -1,10 +1,7 @@
 .DS_Store
 crawling_data
-index.php
 node_modules
 checker/node_modules
-checker/run.sh
-/run
 src/.cache/
 src/__pycache__/
 src/strategies/__pycache__/
@@ -17,6 +14,3 @@ src/strategies/__pycache__/
 
 configs/public
 configs/private
-/deploy
-/test.sh
-run.docker
