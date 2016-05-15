@@ -9,8 +9,7 @@ import helpers
 import snippeter
 import emails
 
-
-if 'APP_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
+if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print ""
     print "ERROR: missing configuration"
     print ""
@@ -73,7 +72,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
                 print config + ' (' + key + ')'
                 helpers.make_request('/' + config_id, 'PUT', ref_configs[config])
-                helpers.make_request('/' + config_id + '/reindex', 'POST', ref_configs[config])
+                helpers.make_request('/' + config_id + '/reindex', 'POST')
 
         for config in removed:
             config_id = str(inverted_actual_configs[config])

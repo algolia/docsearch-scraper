@@ -1,8 +1,8 @@
-import tldextract
 import json
-import pyperclip
 from collections import OrderedDict
 
+import tldextract
+import pyperclip
 import helpers
 
 config = OrderedDict((
