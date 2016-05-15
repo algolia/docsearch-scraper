@@ -240,7 +240,7 @@ aggregateWithEmails.then(function (indices) {
 
     if (reports.length == 0) {
         var now = new Date();
-        if (now.getHours()) {
+        if (now.getHours() == 10) {
             reports.push({
                 color: "good",
                 text: "I am alive and everything alright \\o/"
