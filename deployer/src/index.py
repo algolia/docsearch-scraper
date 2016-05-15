@@ -72,7 +72,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
                 print config + ' (' + key + ')'
                 helpers.make_request('/' + config_id, 'PUT', ref_configs[config])
-                helpers.make_request('/' + config_id + '/reindex', 'POST', ref_configs[config])
+                helpers.make_request('/' + config_id + '/reindex', 'POST')
 
         for config in removed:
             config_id = str(inverted_actual_configs[config])

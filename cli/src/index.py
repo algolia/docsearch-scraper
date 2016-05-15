@@ -2,11 +2,13 @@ import sys
 from os import getcwd, path, environ
 from dotenv import load_dotenv
 
+env_file = getcwd() + '/.env'
+load_dotenv(env_file)
+
 from helpers import get_color
 from helpers import printer
 from helpers import print_error
 from helpers import print_command_help
-from commands import confirm
 
 from commands.bootstrap_config import BootstrapConfig
 from commands.install_dependencies import InstallDependencies
@@ -20,8 +22,7 @@ from commands.deploy_docker_images import DeployDockerImages
 from commands.deploy_configs import DeployConfigs
 from commands.run_config_docker import RunConfigDocker
 from commands.run_doctor import RunDoctor
-
-env_file = getcwd() + '/.env'
+from commands.reindex_connector import ReindexConnector
 
 if not path.isfile(env_file):
     print ""
@@ -79,6 +80,7 @@ cmds.append(BuildDockerScraper())
 cmds.append(BuildDockerDoctor())
 cmds.append(RunTests())
 cmds.append(PlaygroundConfig())
+cmds.append(ReindexConnector())
 
 if CREDENTIALS:
     cmds.append(RunConfig())
