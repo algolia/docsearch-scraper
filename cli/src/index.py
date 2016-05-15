@@ -18,7 +18,8 @@ from commands.build_docker_scraper import BuildDockerScraper
 from commands.build_docker_doctor import BuildDockerDoctor
 from commands.run_tests import RunTests
 from commands.run_config import RunConfig
-from commands.deploy_docker_images import DeployDockerImages
+from commands.deploy_docker_scraper_images import DeployDockerScraperImages
+from commands.deploy_docker_doctor_image import DeployDockerDoctorImages
 from commands.deploy_configs import DeployConfigs
 from commands.run_config_docker import RunConfigDocker
 from commands.run_doctor import RunDoctor
