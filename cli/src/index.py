@@ -157,6 +157,8 @@ else:
                 printer("")
                 print_command_help(command)
             else:
-                command.run(sys.argv[2:])
+                exit(command.run(sys.argv[2:]))
     else:
         print_error("Command \"" + sys.argv[1] + "\" not found")
+
+exit(1)

@@ -28,4 +28,4 @@ class RunDoctor(AbstractCommand):
             'algolia/documentation-checker'
         ]
 
-        self.exec_shell_command(run_command)
+        return self.exec_shell_command(run_command)

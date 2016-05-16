@@ -9,4 +9,4 @@ class DeployDockerDoctorImages(AbstractCommand):
         return 'Deploy docker doctor image'
 
     def run(self, args):
-        self.exec_shell_command(['./cli/scripts/publish_docker_doctor_image.sh'])
+        return self.exec_shell_command(['./cli/scripts/publish_docker_doctor_image.sh'])

@@ -10,3 +10,4 @@ class Help(AbstractCommand):
 
     def run(self, args):
         print "Docsearch v1.0"
+        return 0
