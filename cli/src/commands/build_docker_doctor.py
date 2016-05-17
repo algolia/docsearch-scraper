@@ -9,4 +9,4 @@ class BuildDockerDoctor(AbstractCommand):
         return 'Build doctor image'
 
     def run(self, args):
-        self.build_docker_file("doctor/dev/docker/Dockerfile", "algolia/documentation-checker")
+        return self.build_docker_file("doctor/dev/docker/Dockerfile", "algolia/documentation-checker")

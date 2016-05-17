@@ -19,4 +19,4 @@ class RunConfig(AbstractCommand):
         env = environ.copy()
         env.update({'CONFIG': args[0], 'INDEX_PREFIX': ""})
 
-        self.exec_shell_command(run_command, env)
+        return self.exec_shell_command(run_command, env)

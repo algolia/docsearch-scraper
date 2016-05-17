@@ -10,4 +10,4 @@ class DeployConfigs(AbstractCommand):
         return 'Deploy configs'
 
     def run(self, args):
-        self.exec_shell_command(['./deployer/deploy'])
+        return self.exec_shell_command(['./deployer/deploy'])

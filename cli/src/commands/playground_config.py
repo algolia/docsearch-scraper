@@ -13,4 +13,4 @@ class PlaygroundConfig(AbstractCommand):
         # TODO more generic way to get the path
         playground_path = getcwd() + "/playground/index.html"
 
-        self.exec_shell_command(["open", playground_path])
+        return self.exec_shell_command(["open", playground_path])

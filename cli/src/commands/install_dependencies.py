@@ -9,4 +9,4 @@ class InstallDependencies(AbstractCommand):
         return 'Install all dependencies needed to administrate docsearch'
 
     def run(self, args):
-        self.exec_shell_command(["pip", "install", "-r", "requirements.txt"])
+        return self.exec_shell_command(["pip", "install", "-r", "requirements.txt"])

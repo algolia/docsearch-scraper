@@ -9,4 +9,4 @@ class BootstrapConfig(AbstractCommand):
         return 'Boostrap a docsearch config'
 
     def run(self, args):
-        self.exec_shell_command(["python", "deployer/src/config_creator.py"])
+        return self.exec_shell_command(["python", "deployer/src/config_creator.py"])

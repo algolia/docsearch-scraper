@@ -19,4 +19,5 @@ class ReindexConnector(AbstractCommand):
         configs, inverted = get_configs_from_website()
         connector_name = args[0]
         make_request('/' + str(inverted[connector_name]) + '/reindex', 'POST')
+        return 0
 

@@ -9,7 +9,9 @@ class RunTests(AbstractCommand):
         return 'Run tests'
 
     def run(self, args):
-        self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
+        if code != 0:
+            return code
 
         self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev-test"])
         self.exec_shell_command(["docker", "rm", "documentation-scrapper-dev-test"])
@@ -36,4 +38,4 @@ class RunTests(AbstractCommand):
 
         print
         print " ".join(run_command)
-        self.exec_shell_command(run_command)
+        return self.exec_shell_command(run_command)

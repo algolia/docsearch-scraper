@@ -20,7 +20,7 @@ class AbstractCommand(object):
 
     @staticmethod
     def build_docker_file(file, image="algolia/documentation-scrapper-dev"):
-        AbstractCommand.exec_shell_command(["docker", "build", "-t", image, "-f", file, "."])
+        return AbstractCommand.exec_shell_command(["docker", "build", "-t", image, "-f", file, "."])
 
     @staticmethod
     def exec_shell_command(arguments, env=None):
@@ -29,4 +29,4 @@ class AbstractCommand(object):
         merge_env = environ.copy()
         merge_env.update(env)
 
-        call(arguments, env=merge_env)
+        return call(arguments, env=merge_env)

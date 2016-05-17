@@ -41,4 +41,4 @@ class RunConfigDocker(AbstractCommand):
             '/root/run'
         ]
 
-        self.exec_shell_command(run_command)
+        return self.exec_shell_command(run_command)
