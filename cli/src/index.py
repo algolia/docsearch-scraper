@@ -43,6 +43,12 @@ if not path.isfile(env_file):
     ans = raw_input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
     f.write("WEBSITE_PASSWORD=" + ans + "\n")
 
+    ans = raw_input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
+    f.write("SCHEDULER_USERNAME=" + ans + "\n")
+
+    ans = raw_input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
+    f.write("SCHEDULER_PASSWORD=" + ans + "\n")
+
     ans = raw_input("What is your SLACK_HOOK (Leave empty unless you have it): ")
     if ans != "":
         f.write("SLACK_HOOK=" + ans + "\n")

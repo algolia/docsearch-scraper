@@ -15,7 +15,7 @@ class RunDoctor(AbstractCommand):
         self.exec_shell_command(["docker", "stop", "documentation-checker"])
         self.exec_shell_command(["docker", "rm", "documentation-checker"])
 
-        config = '{"appId": "' + environ.get('APPLICATION_ID') + '", "apiKey": "' + environ.get('API_KEY') + '", "slackHook": "' + environ.get('SLACK_HOOK') + '", "deployKey": "' + environ.get('DEPLOY_KEY') + '"}'
+        config = '{"appId": "' + environ.get('APPLICATION_ID') + '", "apiKey": "' + environ.get('API_KEY') + '", "slackHook": "' + environ.get('SLACK_HOOK') + '", "deployKey": "' + environ.get('DEPLOY_KEY') + '", "schedulerUsername": "' + environ.get('SCHEDULER_USERNAME') + '", "schedulerPassword": "' + environ.get('SCHEDULER_PASSWORD') + '"}'
 
         run_command = [
             'docker',

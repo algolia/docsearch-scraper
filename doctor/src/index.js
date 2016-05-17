@@ -2,6 +2,8 @@ var algoliasearch = require('algoliasearch');
 var fs = require('fs');
 var Slack = require('node-slackr');
 
+var request = require('request');
+
 var config = process.env.CONFIG;
 
 if (config === undefined) {
@@ -14,6 +16,17 @@ config = JSON.parse(config);
 var appId = config.appId;
 var apiKey = config.apiKey;
 var slackHook = config.slackHook;
+
+var schedulerUsername = config.schedulerUsername;
+var schedulerPassword = config.schedulerPassword;
+
+var websiteUsername = config.websiteUsername;
+var websitePassword = config.websitePassword;
+
+if (schedulerUsername === undefined || schedulerPassword === undefined) {
+    console.error("Missing schedulerUsername or schedulerPassword");
+    process.exit(1);
+}
 
 if (apiKey === undefined || appId === undefined) {
     console.error("Missing appId or apiKey");
@@ -161,14 +174,61 @@ var aggregateWithEmails = new Promise(function (resolve, reject) {
     });
 });
 
+var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
+    aggregateWithEmails.then(function (indices) {
+        var url = "https://" + schedulerUsername + ":" + schedulerPassword + "@crawlers.algolia.com/1/crawlers";
 
-aggregateWithEmails.then(function (indices) {
+        request({ url : url }, function (error, response, body) {
+            crawlers = JSON.parse(body).crawlers;
+
+            var mapping = {};
+
+            crawlers.forEach(function (crawler) {
+                if (crawler.docker_image === 'algolia/documentation-scrapper') {
+                    if (mapping[crawler.configuration.index_name] === undefined) {
+                        mapping[crawler.configuration.index_name] = [];
+                    }
+                    mapping[crawler.configuration.index_name].push(crawler.id);
+                }
+            });
+
+            var duplicates = {};
+
+            for (var key in mapping) {
+                if (mapping[key].length > 1) {
+                    duplicates[key] = mapping[key];
+                }
+            }
+
+            indices = indices.map(function (index) {
+                index.duplicateCrawlers = false;
+
+                for (var key in duplicates) {
+                    if (key == index.name) {
+                        index.duplicateCrawlers = true;
+                        index.duplicateCrawlersList = duplicates[key];
+                    }
+                }
+
+                return index;
+            });
+
+            resolve(indices);
+        });
+    });
+});
+
+aggregateWithDuplicateCrawlers.then(function (indices) {
     var emptyIndices = indices.filter(function (index) {
         return index.nbHits === 0;
     });
 
     var indexButNoConfig = indices.filter(function (index) {
         return index.noConfig === true;
+    });
+
+    var duplicateCrawlers = indices.filter(function (index) {
+        return index.duplicateCrawlers === true;
     });
 
     var anomalyInSettings = indices.filter(function (index) {
@@ -220,16 +280,25 @@ aggregateWithEmails.then(function (indices) {
 
             report.text = list.map(function (elt) {
                 var text = '- ' + elt.name
-                if (name === 'Indices with weird results') {
-                    text += ' (got ' + elt.nbHits + ' instead of ' + elt.supposedNbHits + ')';
+
+                if (elt.name != '<!channel>') {
+                    if (name === 'Indices with weird results') {
+                        text += ' (got ' + elt.nbHits + ' instead of ' + elt.supposedNbHits + ')';
+                    }
+
+                    if (name === 'Duplicate crawlers') {
+                        text += ' (' + elt.duplicateCrawlersList.join(', ') + ')';
+                    }
                 }
+
                 return text;
             }).join('\n');
 
-            reports.push(report)
+            reports.push(report);
         }
     };
 
+    sectionPrinter("Duplicate crawlers", duplicateCrawlers, "danger");
     sectionPrinter("Empty indices", emptyIndices, "danger");
     sectionPrinter("Anomaly in settings", anomalyInSettings, "danger");
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
