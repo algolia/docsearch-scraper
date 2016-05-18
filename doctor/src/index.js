@@ -28,6 +28,11 @@ if (schedulerUsername === undefined || schedulerPassword === undefined) {
     process.exit(1);
 }
 
+if (websiteUsername === undefined || websitePassword === undefined) {
+    console.error("Missing websiteUsername or websitePassword");
+    process.exit(1);
+}
+
 if (apiKey === undefined || appId === undefined) {
     console.error("Missing appId or apiKey");
     process.exit(1);
@@ -184,7 +189,7 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
             var mapping = {};
 
             crawlers.forEach(function (crawler) {
-                if (crawler.docker_image === 'algolia/documentation-scrapper') {
+                if (crawler.docker_image === 'algolia/documentation-scrapper' && crawler.application_id === 'BH4D9OD16A') {
                     if (mapping[crawler.configuration.index_name] === undefined) {
                         mapping[crawler.configuration.index_name] = [];
                     }
@@ -203,6 +208,10 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
             indices = indices.map(function (index) {
                 index.duplicateCrawlers = false;
 
+                index.crawler_id = crawlers.find(function (crawler) {
+                    return crawler.configuration.index_name === index.name;
+                }).id;
+
                 for (var key in duplicates) {
                     if (key == index.name) {
                         index.duplicateCrawlers = true;
@@ -218,7 +227,35 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
     });
 });
 
-aggregateWithDuplicateCrawlers.then(function (indices) {
+var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
+    var url = "https://" + websiteUsername + ":" + websitePassword + "@www.algolia.com/api/1/docsearch";
+
+    aggregateWithDuplicateCrawlers.then(function (indices) {
+        request({ url : url }, function (error, response, body) {
+            var connectors = JSON.parse(body).connectors;
+
+            indices = indices.map(function (index) {
+                var index_connectors = connectors.filter(function (connector) {
+                    return connector.name == index.name;
+                });
+
+                index.noConnector = (index_connectors.length === 0);
+                index.duplicateConnectors = (index_connectors.length > 1);
+
+                if (!index.noConnector) {
+                    index.crawler_id = index_connectors[0].crawler_id;
+                }
+
+                return index;
+            });
+
+            resolve(indices);
+        });
+
+    });
+});
+
+aggregateCrawlerInfo.then(function (indices) {
     var emptyIndices = indices.filter(function (index) {
         return index.nbHits === 0;
     });
@@ -233,6 +270,14 @@ aggregateWithDuplicateCrawlers.then(function (indices) {
 
     var anomalyInSettings = indices.filter(function (index) {
         return index.anomalyInSettings === true;
+    });
+
+    var noConnector = indices.filter(function (index) {
+        return index.noConnector === true;
+    });
+
+    var duplicateConnectors = indices.filter(function (index) {
+        return index.duplicateConnectors === true;
     });
 
     var potentialBadNumberOfRecords = indices.filter(function (index) {
@@ -288,6 +333,10 @@ aggregateWithDuplicateCrawlers.then(function (indices) {
 
                     if (name === 'Duplicate crawlers') {
                         text += ' (' + elt.duplicateCrawlersList.join(', ') + ')';
+
+                        if (elt.crawler_id !== undefined) {
+                            text = text.replace(elt.crawler_id, '*' + elt.crawler_id + '*');
+                        }
                     }
                 }
 
@@ -299,6 +348,8 @@ aggregateWithDuplicateCrawlers.then(function (indices) {
     };
 
     sectionPrinter("Duplicate crawlers", duplicateCrawlers, "danger");
+    sectionPrinter("Duplicate connector", duplicateConnectors, "warning");
+    sectionPrinter("No connector found", noConnector, "warning");
     sectionPrinter("Empty indices", emptyIndices, "danger");
     sectionPrinter("Anomaly in settings", anomalyInSettings, "danger");
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
