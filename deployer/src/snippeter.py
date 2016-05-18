@@ -12,6 +12,7 @@ def _is_automatically_updated(config, attribute):
                             return True
     return False
 
+
 def get_email_for_config(config):
     base_template = """\n==============================\nHi there,
 
@@ -53,7 +54,7 @@ Have a nice day :)\n==============================\n"""
 
     if facets is not None:
         facet_template = "\n"
-        configs = fetchers.get_configs_from_repos()
+        configs, inverted = fetchers.get_configs_from_website()
 
         example_phrase = []
         example_code = []

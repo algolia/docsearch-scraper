@@ -1,6 +1,5 @@
 from subprocess import call
 from os import environ
-from helpers import printer
 
 class AbstractCommand(object):
     def run(self, args):

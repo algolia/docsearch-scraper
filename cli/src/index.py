@@ -24,6 +24,7 @@ from commands.deploy_configs import DeployConfigs
 from commands.run_config_docker import RunConfigDocker
 from commands.run_doctor import RunDoctor
 from commands.reindex_connector import ReindexConnector
+from commands.generate_email import GenerateEmail
 
 if not path.isfile(env_file):
     print ""
@@ -88,6 +89,7 @@ cmds.append(BuildDockerDoctor())
 cmds.append(RunTests())
 cmds.append(PlaygroundConfig())
 cmds.append(ReindexConnector())
+cmds.append(GenerateEmail())
 
 if CREDENTIALS:
     cmds.append(RunConfig())
@@ -100,16 +102,20 @@ if ADMIN:
     cmds.append(RunDoctor())
 
 
-def print_usage():
-    printer("Docsearch CLI", 1)
-    printer("")
-    printer("Usage:", 2)
-    printer("  ./docsearch command [options] [arguments]")
-    printer("")
-    printer("Options:", 2)
-    printer("  " + get_color(1) + "--help" + get_color() + (' ' * 4) + 'Display help message')
+def print_usage(no_ansi=False):
+    printer("Docsearch CLI", 1, no_ansi)
+    printer("", 4, no_ansi)
+    printer("Usage:", 2, no_ansi)
+    printer("  ./docsearch command [options] [arguments]", 4, no_ansi)
+    printer("", 4, no_ansi)
+    printer("Options:", 2, no_ansi)
 
-    printer("")
+    if no_ansi:
+        printer("  " + "--help" + (' ' * 4) + 'Display help message', 4, no_ansi)
+    else:
+        printer("  " + get_color(1) + "--help" + get_color() + (' ' * 4) + 'Display help message', 4)
+
+    printer("", 4, no_ansi)
 
     groups = {}
 
@@ -127,14 +133,18 @@ def print_usage():
 
         groups[group].append(cmd)
 
-    printer("Available commands:", 2)
+    printer("Available commands:", 2, no_ansi)
 
     for key in sorted(groups.keys()):
         if key != "":
-            printer(" " + key, 2)
+            printer(" " + key, 2, no_ansi)
         for cmd in groups[key]:
             nb_spaces = longest_cmd_name + 2 - len(cmd.get_name())
-            printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description())
+            if no_ansi:
+                printer("  " + cmd.get_name() + (' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
+            else:
+                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(), no_ansi)
+
 
 def find_command(name, cmds):
     for cmd in cmds:
@@ -143,28 +153,35 @@ def find_command(name, cmds):
 
     return None
 
-if len(sys.argv) == 1:
-    print_usage()
-else:
+
+def run():
     help_needed = "--help" in sys.argv
 
     if help_needed:
         del sys.argv[sys.argv.index("--help")]
 
-    command = find_command(sys.argv[1], cmds)
+    no_ansi = "--no-ansi" in sys.argv
 
-    if command is not None:
-        if help_needed:
-            print_command_help(command)
-        else:
-            if len(sys.argv[2:]) < len(command.get_options()):
-                printer("")
-                print_error("Missing at least one argument")
-                printer("")
+    if no_ansi:
+        del sys.argv[sys.argv.index("--no-ansi")]
+
+    if len(sys.argv) == 1:
+        print_usage(no_ansi)
+    else:
+        command = find_command(sys.argv[1], cmds)
+
+        if command is not None:
+            if help_needed:
                 print_command_help(command)
             else:
-                exit(command.run(sys.argv[2:]))
-    else:
-        print_error("Command \"" + sys.argv[1] + "\" not found")
+                if len(sys.argv[2:]) < len(command.get_options()):
+                    printer("")
+                    print_error("Missing at least one argument")
+                    printer("")
+                    print_command_help(command)
+                else:
+                    exit(command.run(sys.argv[2:]))
+        else:
+            print_error("Command \"" + sys.argv[1] + "\" not found")
 
-exit(1)
+    exit(1)

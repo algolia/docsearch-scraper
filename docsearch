@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-python ./cli/src/index.py "$@"
+from cli.src.index import run
+
+run()
