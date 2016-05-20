@@ -241,6 +241,7 @@ class DefaultStrategy(AbstractStrategy):
             #   to attribute
             'ranking': [
                 'words',
+                'filters',
                 'typo',
                 'attribute',
                 'proximity',
