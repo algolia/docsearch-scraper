@@ -174,20 +174,16 @@ class DefaultStrategy(AbstractStrategy):
                 'tags': self.get_tags(current_page_url)
             }
 
-            for start_url in self.config.start_urls:
-                if len(start_url['url_attributes']) > 0:
+            if current_page_url is not None:
+                for start_url in self.config.start_urls:
                     compiled_url = start_url['compiled_url']
                     result = re.search(compiled_url, current_page_url)
 
                     if result > 0:
-                        for attr in compiled_url.groupindex:
-                            try:
-                                group = result.group(attr)
-
-                                if 'values' in start_url and attr in start_url['values'] and group in start_url['values'][attr]:
-                                    record[attr] = group
-                            except:
-                                pass
+                        for attr in start_url['url_attributes']:
+                            value = start_url['url_attributes'][attr]
+                            if value is not None:
+                                record[attr] = value
 
             records.append(record)
 

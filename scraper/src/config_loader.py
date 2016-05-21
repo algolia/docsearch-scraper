@@ -149,9 +149,8 @@ class ConfigLoader(object):
     def get_extra_facets(self):
         extra_facets = []
         for start_url in self.start_urls:
-            if len(start_url['url_attributes']) > 0:
-                for tag in start_url['url_attributes']:
-                    extra_facets.append(tag)
+            for tag in start_url['url_attributes']:
+                extra_facets.append(tag)
 
         extra_facets = set(extra_facets)
 
@@ -174,7 +173,9 @@ class ConfigLoader(object):
 
             matches = ConfigLoader.get_url_variables_name(start_url['url'])
 
-            start_url['url_attributes'] = matches
+            start_url['url_attributes'] = {}
+            for match in matches:
+                start_url['url_attributes'][match] = None
 
             # If there is tag(s) we need to generate all possible urls
             if len(matches) > 0:
@@ -192,8 +193,6 @@ class ConfigLoader(object):
                                     raise Exception("Bad arguments for variables." + match + " for url " + start_url['url'])
                         else:
                             raise Exception("Missing " + match + " in variables" + " for url " + start_url['url'])
-
-                start_url['values'] = values
 
                 start_urls = ConfigLoader.geturls(start_url, matches[0], matches[1:], values, start_urls)
 
@@ -216,6 +215,10 @@ class ConfigLoader(object):
         for value in values[current_match]:
             copy_start_url = copy.copy(start_url)
             copy_start_url['url'] = copy_start_url['url'].replace("(?P<"+current_match+">.*?)", value)
+            copy_start_url['compiled_url'] = re.compile(copy_start_url['url'])
+            # Fix weird reference issue
+            copy_start_url['url_attributes'] = copy.deepcopy(start_url['url_attributes'])
+            copy_start_url['url_attributes'][current_match] = value
 
             if len(matches) == 0:
                 start_urls.append(copy_start_url)
