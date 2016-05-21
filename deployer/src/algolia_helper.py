@@ -1,8 +1,8 @@
 from algoliasearch import algoliasearch
 import os
 
-app_id = os.environ['APPLICATION_ID']
-api_key = os.environ['API_KEY']
+app_id = os.environ['APPLICATION_ID'] if 'APPLICATION_ID' in os.environ else ''
+api_key = os.environ['API_KEY'] if 'API_KEY' in os.environ else ''
 
 algolia_client = algoliasearch.Client(app_id, api_key)
 
