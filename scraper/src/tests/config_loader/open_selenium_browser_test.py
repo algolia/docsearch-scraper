@@ -1,7 +1,9 @@
 # coding: utf-8
 
+from __future__ import absolute_import
+
 from src.config_loader import ConfigLoader
-from abstract import config
+from .abstract import config
 
 class TestOpenSeleniumBrowser:
     def test_browser_not_needed_by_default(self):
@@ -12,7 +14,7 @@ class TestOpenSeleniumBrowser:
         assert actual.conf_need_browser() is False
 
     def test_browser_needed_when_js_render_true(self, monkeypatch):
-        from mocked_init import MockedInit
+        from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
         # When
@@ -25,7 +27,7 @@ class TestOpenSeleniumBrowser:
         assert actual.conf_need_browser() is True
 
     def test_browser_needed_when_config_contains_automatic_tag(self, monkeypatch):
-        from mocked_init import MockedInit
+        from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 

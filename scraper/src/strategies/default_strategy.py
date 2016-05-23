@@ -1,8 +1,9 @@
 """
 Default Strategy
 """
-from abstract_strategy import AbstractStrategy
+from .abstract_strategy import AbstractStrategy
 import re
+from past.builtins import basestring
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -179,7 +180,7 @@ class DefaultStrategy(AbstractStrategy):
                     compiled_url = start_url['compiled_url']
                     result = re.search(compiled_url, current_page_url)
 
-                    if result > 0:
+                    if result:
                         for attr in start_url['url_attributes']:
                             value = start_url['url_attributes'][attr]
                             if value is not None:

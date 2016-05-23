@@ -43,10 +43,10 @@ else:
 dump = json.dumps(config, separators=(',', ': '), indent=2)
 pyperclip.copy(dump)
 
-print ""
-print "============="
-print dump
-print "============="
-print ""
-print "Config copied to clipboard [OK]"
-print ""
+print("")
+print("=============")
+print(dump)
+print("=============")
+print("")
+print("Config copied to clipboard [OK]")
+print("")

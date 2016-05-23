@@ -15,7 +15,7 @@ env:
 install:
   - touch .env
   - pip install -r requirements.txt
-  - ./docsearch docker:build-scraper
+  - ./docsearch docker:build-scraper $USE_PYTHON3
 
 script:
   - ./docsearch test $USE_PYTHON3

@@ -64,9 +64,9 @@ CONFIG.destroy()
 ALGOLIA_HELPER.commit_tmp_index()
 
 
-print ""
-print 'Nb hits: ' + str(DocumentationSpider.NB_INDEXED)
+print("")
+print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
 
 CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
 
-print ""
+print("")

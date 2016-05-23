@@ -1,7 +1,9 @@
 # coding: utf-8
 
+from __future__ import absolute_import
+
 from src.config_loader import ConfigLoader
-from abstract import config
+from .abstract import config
 
 class TestDomains:
     def test_allowed_domains_start(self):

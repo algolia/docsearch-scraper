@@ -1,7 +1,9 @@
 # coding: utf-8
 
+from __future__ import absolute_import
+
 from src.config_loader import ConfigLoader
-from abstract import config
+from .abstract import config
 import pytest
 
 class TestStartUrls:
@@ -68,7 +70,7 @@ class TestStartUrls:
         assert actual.start_urls[0]['url'] == 'http://www.foo.bar/'
 
     def test_start_urls_should_be_generated_when_there_is_automatic_tagging(self, monkeypatch):
-        from mocked_init import MockedInit
+        from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 

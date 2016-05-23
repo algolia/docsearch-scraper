@@ -1,4 +1,4 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 from os import getcwd, environ
 
 class RunConfigDocker(AbstractCommand):

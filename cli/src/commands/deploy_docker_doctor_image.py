@@ -1,4 +1,4 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 
 
 class DeployDockerDoctorImages(AbstractCommand):

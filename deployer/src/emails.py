@@ -9,14 +9,14 @@ def _prompt_command(emails):
     prompt = '===\na <emails>... (add), d <nb> (delete), c <nb> <new> (change), empty to confirm\n> '
 
     for i, e in enumerate(emails):
-        print '{}) {}'.format(i, e)
+        print('{}) {}'.format(i, e))
     ans = raw_input(prompt).strip().split()
 
     if len(ans) == 0:
         return emails
 
     if len(ans) < 2:
-        print '/!\ Missing number'
+        print('/!\ Missing number')
         return _prompt_command(emails)
 
     if ans[0] == 'a':
@@ -25,21 +25,21 @@ def _prompt_command(emails):
         try:
             idx = int(ans[1])
         except ValueError:
-            print '/!\ Not a valid integer'
+            print('/!\ Not a valid integer')
             return _prompt_command(emails)
         if idx >= len(emails):
-            print '/!\ Out of bounds'
+            print('/!\ Out of bounds')
             return _prompt_command(emails)
 
         if ans[0] == 'd':
             del emails[idx]
         else:
             if len(ans) < 3:
-                print '/!\ Missing new email'
+                print('/!\ Missing new email')
                 return _prompt_command(emails)
             emails[idx] = ans[2]
     else:
-        print '/!\ Invalid command `%s`'.format(' '.join(ans))
+        print('/!\ Invalid command `%s`'.format(' '.join(ans)))
         return _prompt_command(emails)
 
     return emails

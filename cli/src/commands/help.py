@@ -1,4 +1,4 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 
 
 class Help(AbstractCommand):
@@ -9,5 +9,5 @@ class Help(AbstractCommand):
         return 'Get information about docsearch'
 
     def run(self, args):
-        print "Docsearch v1.0"
+        print("Docsearch v1.0")
         return 0

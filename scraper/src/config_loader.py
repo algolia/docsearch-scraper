@@ -2,19 +2,34 @@
 """
 Load the config from the CONFIG environment variable
 """
-from urlparse import urlparse
+
+from __future__ import absolute_import
+
 from collections import OrderedDict
+from past.builtins import basestring
 import json
 import os
 import re
 import copy
 
-from strategies.abstract_strategy import AbstractStrategy
-from custom_middleware import CustomMiddleware
-from js_executor import JsExecutor
 from selenium import webdriver
-import helpers
 
+try:
+    from strategies.abstract_strategy import AbstractStrategy
+    from custom_middleware import CustomMiddleware
+    from js_executor import JsExecutor
+    from selenium import webdriver
+    import helpers
+except ImportError:
+    from .strategies.abstract_strategy import AbstractStrategy
+    from .custom_middleware import CustomMiddleware
+    from .js_executor import JsExecutor
+    from . import helpers
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 class ConfigLoader(object):
     """
@@ -73,7 +88,7 @@ class ConfigLoader(object):
 
         # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
-        for key, value in data.iteritems():
+        for key, value in data.items():
             setattr(self, key, value)
 
         if self.conf_need_browser():
@@ -180,9 +195,9 @@ class ConfigLoader(object):
             start_url['url_attributes'] = {}
             for match in matches:
                 if len(start_url['url']) > 2 and start_url['url'][-2:] == '?)':
-                    print '\033[0;35mWARNING: ' + start_url['url'] + ' finish by a variable.' \
-                                                           ' The regex probably won\'t work as expected.' \
-                                                           ' Add a \'/\' or \'$\' to make it work properly\033[0m'
+                    print('\033[0;35mWARNING: ' + start_url['url'] + ' finish by a variable.'
+                                                           ' The regex probably won\'t work as expected.'
+                                                           ' Add a \'/\' or \'$\' to make it work properly\033[0m')
                 start_url['url_attributes'][match] = None
 
             # If there is tag(s) we need to generate all possible urls
@@ -314,16 +329,16 @@ class ConfigLoader(object):
             previous_nb_hits = None if 'nb_hits' not in self.config_content else self.config_content['nb_hits']
 
             if previous_nb_hits is None or previous_nb_hits != nb_hits:
-                print "previous nb_hits: " + str(previous_nb_hits)
-                print ""
+                print( "previous nb_hits: " + str(previous_nb_hits))
+                print("")
 
                 if helpers.confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?'):
                     try:
                         self.config_content['nb_hits'] = nb_hits
                         with open(self.config_file, 'w') as f:
                             f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
-                        print ""
-                        print "[OK] " + self.config_file + " has been updated"
+                        print("")
+                        print("[OK] " + self.config_file + " has been updated")
                     except Exception:
-                        print ""
-                        print "[KO] " + "Was not able to update " + self.config_file
+                        print("")
+                        print("[KO] " + "Was not able to update " + self.config_file)

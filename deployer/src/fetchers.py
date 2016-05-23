@@ -2,7 +2,7 @@ import os
 import json
 from collections import OrderedDict
 
-import helpers
+from . import helpers
 
 
 def get_configs_from_repos():
@@ -24,7 +24,7 @@ def get_configs_from_repos():
                 config = json.loads(txt, object_pairs_hook=OrderedDict)
                 configs[config['index_name']] = config
 
-    print str(len(configs)) + " docs in public and private repo"
+    print(str(len(configs)) + " docs in public and private repo")
 
     return configs
 
@@ -39,6 +39,6 @@ def get_configs_from_website():
         configs[connector['name']] = connector['configuration']
         inverted[connector['name']] = connector['id']
 
-    print str(len(configs)) + " docs in website connectors"
+    print(str(len(configs)) + " docs in website connectors")
 
     return configs, inverted

@@ -1,65 +1,66 @@
 import sys
 from os import getcwd, path, environ
 from dotenv import load_dotenv
+from builtins import input
 
 env_file = getcwd() + '/.env'
 load_dotenv(env_file)
 
-from helpers import get_color
-from helpers import printer
-from helpers import print_error
-from helpers import print_command_help
+from .helpers import get_color
+from .helpers import printer
+from .helpers import print_error
+from .helpers import print_command_help
 
-from commands.bootstrap_config import BootstrapConfig
-from commands.install_dependencies import InstallDependencies
-from commands.playground_config import PlaygroundConfig
-from commands.help import Help
-from commands.build_docker_scraper import BuildDockerScraper
-from commands.build_docker_doctor import BuildDockerDoctor
-from commands.run_tests import RunTests
-from commands.run_config import RunConfig
-from commands.deploy_docker_scraper_images import DeployDockerScraperImages
-from commands.deploy_docker_doctor_image import DeployDockerDoctorImages
-from commands.deploy_configs import DeployConfigs
-from commands.run_config_docker import RunConfigDocker
-from commands.run_doctor import RunDoctor
-from commands.reindex_connector import ReindexConnector
-from commands.generate_email import GenerateEmail
+from .commands.bootstrap_config import BootstrapConfig
+from .commands.install_dependencies import InstallDependencies
+from .commands.playground_config import PlaygroundConfig
+from .commands.help import Help
+from .commands.build_docker_scraper import BuildDockerScraper
+from .commands.build_docker_doctor import BuildDockerDoctor
+from .commands.run_tests import RunTests
+from .commands.run_config import RunConfig
+from .commands.deploy_docker_scraper_images import DeployDockerScraperImages
+from .commands.deploy_docker_doctor_image import DeployDockerDoctorImages
+from .commands.deploy_configs import DeployConfigs
+from .commands.run_config_docker import RunConfigDocker
+from .commands.run_doctor import RunDoctor
+from .commands.reindex_connector import ReindexConnector
+from .commands.generate_email import GenerateEmail
 
 if not path.isfile(env_file):
-    print ""
-    print "No .env found. Let's create one."
+    print("")
+    print("No .env found. Let's create one.")
 
     f = open(env_file, "w")
 
-    ans = raw_input("What is your Algolia APPLICATION_ID: ")
+    ans = input("What is your Algolia APPLICATION_ID: ")
     f.write("APPLICATION_ID=" + ans + "\n")
 
-    ans = raw_input("What is your Algolia API_KEY: ")
+    ans = input("What is your Algolia API_KEY: ")
     f.write("API_KEY=" + ans + "\n")
 
-    ans = raw_input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
+    ans = input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
     f.write("WEBSITE_USERNAME=" + ans + "\n")
 
-    ans = raw_input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
+    ans = input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
     f.write("WEBSITE_PASSWORD=" + ans + "\n")
 
-    ans = raw_input("What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
+    ans = input("What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
     f.write("SCHEDULER_USERNAME=" + ans + "\n")
 
-    ans = raw_input("What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
+    ans = input("What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
     f.write("SCHEDULER_PASSWORD=" + ans + "\n")
 
-    ans = raw_input("What is your SLACK_HOOK (Leave empty unless you have it): ")
+    ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
     if ans != "":
         f.write("SLACK_HOOK=" + ans + "\n")
 
-        ans = raw_input("What is your DEPLOY_KEY (Leave empty unless you have it): ")
+        ans = input("What is your DEPLOY_KEY (Leave empty unless you have it): ")
         f.write("DEPLOY_KEY=" + ans + "\n")
 
     f.close()
 
-    print ""
+    print("")
 
 load_dotenv(env_file)
 
@@ -174,7 +175,7 @@ def run():
             if help_needed:
                 print_command_help(command)
             else:
-                if len(sys.argv[2:]) < len(command.get_options()):
+                if len(sys.argv[2:]) < command.nb_options():
                     printer("")
                     print_error("Missing at least one argument")
                     printer("")
