@@ -5,30 +5,30 @@ from dotenv import load_dotenv
 env_file = getcwd() + '/.env'
 load_dotenv(env_file)
 
-from helpers import get_color
-from helpers import printer
-from helpers import print_error
-from helpers import print_command_help
+from .helpers import get_color
+from .helpers import printer
+from .helpers import print_error
+from .helpers import print_command_help
 
-from commands.bootstrap_config import BootstrapConfig
-from commands.install_dependencies import InstallDependencies
-from commands.playground_config import PlaygroundConfig
-from commands.help import Help
-from commands.build_docker_scraper import BuildDockerScraper
-from commands.build_docker_doctor import BuildDockerDoctor
-from commands.run_tests import RunTests
-from commands.run_config import RunConfig
-from commands.deploy_docker_scraper_images import DeployDockerScraperImages
-from commands.deploy_docker_doctor_image import DeployDockerDoctorImages
-from commands.deploy_configs import DeployConfigs
-from commands.run_config_docker import RunConfigDocker
-from commands.run_doctor import RunDoctor
-from commands.reindex_connector import ReindexConnector
-from commands.generate_email import GenerateEmail
+from .commands.bootstrap_config import BootstrapConfig
+from .commands.install_dependencies import InstallDependencies
+from .commands.playground_config import PlaygroundConfig
+from .commands.help import Help
+from .commands.build_docker_scraper import BuildDockerScraper
+from .commands.build_docker_doctor import BuildDockerDoctor
+from .commands.run_tests import RunTests
+from .commands.run_config import RunConfig
+from .commands.deploy_docker_scraper_images import DeployDockerScraperImages
+from .commands.deploy_docker_doctor_image import DeployDockerDoctorImages
+from .commands.deploy_configs import DeployConfigs
+from .commands.run_config_docker import RunConfigDocker
+from .commands.run_doctor import RunDoctor
+from .commands.reindex_connector import ReindexConnector
+from .commands.generate_email import GenerateEmail
 
 if not path.isfile(env_file):
-    print ""
-    print "No .env found. Let's create one."
+    print("")
+    print("No .env found. Let's create one.")
 
     f = open(env_file, "w")
 
@@ -59,7 +59,7 @@ if not path.isfile(env_file):
 
     f.close()
 
-    print ""
+    print("")
 
 load_dotenv(env_file)
 

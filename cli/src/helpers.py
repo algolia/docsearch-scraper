@@ -15,9 +15,9 @@ def get_color(color=4):
 
 def printer(text, color=4, no_ansi=False):
     if no_ansi is True:
-        print text
+        print(text)
     else:
-        print get_color(color) + text + get_color()
+        print(get_color(color) + text + get_color())
 
 
 def print_error(message):
@@ -34,7 +34,7 @@ def print_command_help(command, no_ansi=False):
     printer("Options:", 2)
 
     options = command.get_options()
-    options.sort(cmp=lambda x,y: cmp(x['name'], y['name']))
+    options = sorted(options, key=lambda x: x['name'])
     options = options + [{'name': '--help', 'description': 'Display help message'}]
 
     longest_option = 0

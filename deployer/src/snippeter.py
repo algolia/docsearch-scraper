@@ -1,5 +1,4 @@
-import algolia_helper
-import fetchers
+from . import algolia_helper, fetchers
 
 
 def _is_automatically_updated(config, attribute):

@@ -1,4 +1,4 @@
-from abstract_build_docker import AbstractBuildDocker
+from .abstract_build_docker import AbstractBuildDocker
 
 
 class BuildDockerScraper(AbstractBuildDocker):

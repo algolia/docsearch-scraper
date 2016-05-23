@@ -306,16 +306,16 @@ class ConfigLoader(object):
             previous_nb_hits = None if 'nb_hits' not in self.config_content else self.config_content['nb_hits']
 
             if previous_nb_hits is None or previous_nb_hits != nb_hits:
-                print "previous nb_hits: " + str(previous_nb_hits)
-                print ""
+                print( "previous nb_hits: " + str(previous_nb_hits))
+                print("")
 
                 if helpers.confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?'):
                     try:
                         self.config_content['nb_hits'] = nb_hits
                         with open(self.config_file, 'w') as f:
                             f.write(json.dumps(self.config_content, indent=2, separators=(',', ': ')))
-                        print ""
-                        print "[OK] " + self.config_file + " has been updated"
+                        print("")
+                        print("[OK] " + self.config_file + " has been updated")
                     except Exception:
-                        print ""
-                        print "[KO] " + "Was not able to update " + self.config_file
+                        print("")
+                        print("[KO] " + "Was not able to update " + self.config_file)

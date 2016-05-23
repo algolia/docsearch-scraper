@@ -20,9 +20,9 @@ class AlgoliaHelper:
         for i in xrange(0, record_count, 50):
             self.algolia_index_tmp.add_objects(records[i:i + 50])
 
-        print "\033[92m> DocSearch: \033[0m" + url + " (\033[93m" + str(record_count) + " records\033[0m)"
+        print("\033[92m> DocSearch: \033[0m" + url + " (\033[93m" + str(record_count) + " records\033[0m)")
 
     def commit_tmp_index(self):
         """Overwrite the real index with the temporary one"""
-        # print "Update settings"
+        # print("Update settings")
         self.algolia_client.move_index(self.index_name_tmp, self.index_name)

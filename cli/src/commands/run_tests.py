@@ -1,4 +1,4 @@
-from abstract_build_docker import AbstractBuildDocker
+from .abstract_build_docker import AbstractBuildDocker
 from os import getcwd
 from ..helpers import print_error
 
@@ -38,5 +38,5 @@ class RunTests(AbstractBuildDocker):
         ]
 
         print
-        print " ".join(run_command)
+        print(" ".join(run_command))
         return self.exec_shell_command(run_command)

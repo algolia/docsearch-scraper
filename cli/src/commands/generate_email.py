@@ -1,4 +1,4 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 
 from deployer.src.snippeter import get_email_for_config
 
@@ -13,4 +13,4 @@ class GenerateEmail(AbstractCommand):
         return [{"name": "name", "description": "name of the docsearch you want to generate the email"}]
 
     def run(self, args):
-        print get_email_for_config(args[0])
+        print(get_email_for_config(args[0]))

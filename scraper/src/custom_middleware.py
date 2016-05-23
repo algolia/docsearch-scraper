@@ -28,7 +28,7 @@ class CustomMiddleware(object):
 
         self.seen[request.url] = True
 
-        print "Getting " + request.url + " from selenium"
+        print("Getting " + request.url + " from selenium")
 
         self.driver.get(request.url)
         time.sleep(spider.js_wait)
@@ -67,7 +67,7 @@ class CustomMiddleware(object):
                 continue
 
             if not (spider.scrap_start_urls and response.url in spider.start_urls):
-                print "\033[94m> Ignored:\033[0m " + response.url
+                print("\033[94m> Ignored:\033[0m " + response.url)
                 raise IgnoreRequest()
 
         return response
