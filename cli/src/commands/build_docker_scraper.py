@@ -9,10 +9,10 @@ class BuildDockerScraper(AbstractCommand):
         return 'Build scraper images (dev, prod, test)'
 
     def run(self, args):
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.base")
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.base", "algolia/base-documentation-scrapper")
         if code != 0:
             return code
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
         if code != 0:
             return code
-        return self.build_docker_file("scraper/dev/docker/Dockerfile")
+        return self.build_docker_file("scraper/dev/docker/Dockerfile", "algolia/documentation-scrapper")
