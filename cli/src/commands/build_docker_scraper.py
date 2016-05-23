@@ -1,7 +1,7 @@
-from abstract_command import AbstractCommand
+from abstract_build_docker import AbstractBuildDocker
 
 
-class BuildDockerScraper(AbstractCommand):
+class BuildDockerScraper(AbstractBuildDocker):
     def get_name(self):
         return 'docker:build-scraper'
 
@@ -12,7 +12,7 @@ class BuildDockerScraper(AbstractCommand):
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.base", "algolia/base-documentation-scrapper")
         if code != 0:
             return code
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev", python3=args[0])
         if code != 0:
             return code
-        return self.build_docker_file("scraper/dev/docker/Dockerfile", "algolia/documentation-scrapper")
+        return self.build_docker_file("scraper/dev/docker/Dockerfile", "algolia/documentation-scrapper", args[0])
