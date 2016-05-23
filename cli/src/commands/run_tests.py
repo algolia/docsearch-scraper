@@ -37,6 +37,6 @@ class RunTests(AbstractBuildDocker):
             '/root/test'
         ]
 
-        print
+        print()
         print(" ".join(run_command))
         return self.exec_shell_command(run_command)

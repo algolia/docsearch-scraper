@@ -20,4 +20,4 @@ def request_fingerprint_non_canonicalize(request, include_headers=None):
     return cache[include_headers]
 
 
-scrapy.utils.request.request_fingerprint(= request_fingerprint_non_canonicalize)
+scrapy.utils.request.request_fingerprint = request_fingerprint_non_canonicalize
