@@ -82,6 +82,9 @@ class ConfigLoader(object):
         self.start_urls = self.parse_urls(self.start_urls)
         self.selectors = self.parse_selectors(self.selectors)
 
+        if self.conf_need_browser() and not self.js_render:
+            self.destroy()
+
     def conf_need_browser(self):
         group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
         results = re.findall(group_regex, self.config_original_content)
@@ -99,6 +102,7 @@ class ConfigLoader(object):
         # Start firefox if needed
         if self.driver is not None:
             self.driver.quit()
+            self.driver = None
 
     @staticmethod
     def parse_selectors(config_selectors):
@@ -175,6 +179,10 @@ class ConfigLoader(object):
 
             start_url['url_attributes'] = {}
             for match in matches:
+                if len(start_url['url']) > 2 and start_url['url'][-2:] == '?)':
+                    print '\033[0;35mWARNING: ' + start_url['url'] + ' finish by a variable.' \
+                                                           ' The regex probably won\'t work as expected.' \
+                                                           ' Add a \'/\' or \'$\' to make it work properly\033[0m'
                 start_url['url_attributes'][match] = None
 
             # If there is tag(s) we need to generate all possible urls
