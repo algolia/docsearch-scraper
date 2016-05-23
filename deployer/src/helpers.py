@@ -30,15 +30,32 @@ def get_user_value(message):
 def make_request(endpoint, type=None, configuration=None):
     url = base_url + endpoint
 
+    success_codes = [200, 201, 204]
+
     if type == 'POST':
-        return requests.post(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+        r = requests.post(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+
+        if r.status_code / 100 != 2:
+            print "ISSUE for POST request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': '))
+        return r
 
     if type == 'DELETE':
-        return requests.delete(url, auth=(username, password))
+        r = requests.delete(url, auth=(username, password))
+
+        if r.status_code not in success_codes:
+            print "ISSUE for DELETE request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': '))
+        return r
 
     if type == 'PUT':
-        return requests.put(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+        r = requests.put(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+        print r.status_code
+        if r.status_code / 100 != 2:
+            print "ISSUE for PUT request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': '))
+        return r
 
     r = requests.get(url, auth=(username, password))
+
+    if r.status_code / 100 != 2:
+        print "ISSUE for GET request : " + url + " with params: None"
 
     return r.text

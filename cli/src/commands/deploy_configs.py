@@ -13,4 +13,9 @@ class DeployConfigs(AbstractCommand):
             print "The APP_ID is not BH4D9OD16A. You can not deploy configs if you are not using the docsearch account"
             exit(1)
 
-        return self.exec_shell_command(['./deployer/deploy'])
+        command = ['./deployer/deploy']
+
+        if len(args) > 0 and args[0] == '--debug':
+            command.append('--debug')
+
+        return self.exec_shell_command(command)
