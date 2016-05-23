@@ -15,3 +15,6 @@ class MockedInit:
 
     def execute_script(self, js):
         return self.expected_response
+
+    def quit(self):
+        return
