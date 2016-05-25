@@ -1,10 +1,21 @@
 language: python
 sudo: required
 
+before_install:
+  - sudo apt-get update -y
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+
 services:
   - docker
 
-script:
+env:
+  - USE_PYTHON3=false
+  - USE_PYTHON3=true
+
+install:
   - touch .env
-  - ./docsearch docker:build-scraper
-  - ./docsearch test
+  - pip install -r requirements.txt
+  - ./docsearch docker:build-scraper $USE_PYTHON3
+
+script:
+  - ./docsearch test $USE_PYTHON3

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from abstract import get_strategy
+from .abstract import get_strategy
 
 class TestGetSettings:
     def test_get_settings(self):

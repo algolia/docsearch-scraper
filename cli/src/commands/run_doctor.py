@@ -1,6 +1,6 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 from os import environ
-from build_docker_doctor import BuildDockerDoctor
+from .build_docker_doctor import BuildDockerDoctor
 
 class RunDoctor(AbstractCommand):
     def get_name(self):

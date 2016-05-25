@@ -1,7 +1,8 @@
-from abstract_command import AbstractCommand
+from .abstract_build_docker import AbstractBuildDocker
 from os import getcwd
+from ..helpers import print_error
 
-class RunTests(AbstractCommand):
+class RunTests(AbstractBuildDocker):
     def get_name(self):
         return 'test'
 
@@ -9,7 +10,8 @@ class RunTests(AbstractCommand):
         return 'Run tests'
 
     def run(self, args):
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
+        py3 = self.get_option('python3', args)
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev", python3=py3)
         if code != 0:
             return code
 
@@ -36,6 +38,6 @@ class RunTests(AbstractCommand):
             '/root/test'
         ]
 
-        print
-        print " ".join(run_command)
+        print("")
+        print(" ".join(run_command))
         return self.exec_shell_command(run_command)

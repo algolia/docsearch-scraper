@@ -1,9 +1,10 @@
 # coding: utf-8
 
+from __future__ import absolute_import
 import os
 
 from src.config_loader import ConfigLoader
-from abstract import config
+from .abstract import config
 import pytest
 
 

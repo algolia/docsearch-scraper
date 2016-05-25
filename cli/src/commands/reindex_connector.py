@@ -1,4 +1,4 @@
-from abstract_command import AbstractCommand
+from .abstract_command import AbstractCommand
 from deployer.src.helpers import make_request
 from deployer.src.fetchers import get_configs_from_website
 

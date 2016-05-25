@@ -17,9 +17,22 @@ class AbstractCommand(object):
     def get_options(self):
         return []
 
-    @staticmethod
-    def build_docker_file(file, image="algolia/documentation-scrapper-dev"):
-        return AbstractCommand.exec_shell_command(["docker", "build", "-t", image, "-f", file, "."])
+    def nb_options(self):
+        return len(list(filter(lambda x: x.get('optional') is None,
+                          self.get_options())))
+
+    def get_option(self, name, args):
+        options = self.get_options()
+        index = [i for i, j in enumerate(options) if j['name'] == name]
+        if len(index) == 0:
+            return None
+        else:
+            index = index[0]
+
+        if index < len(args):
+            return args[index]
+        else:
+            return options[index]['optional']
 
     @staticmethod
     def exec_shell_command(arguments, env=None):

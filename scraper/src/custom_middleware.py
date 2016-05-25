@@ -4,9 +4,13 @@ CustomMiddleware
 
 from scrapy.http import Request, HtmlResponse
 from scrapy.exceptions import IgnoreRequest
-from urlparse import urlparse
 
 import time
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 class CustomMiddleware(object):
     def __init__(self):
@@ -28,7 +32,7 @@ class CustomMiddleware(object):
 
         self.seen[request.url] = True
 
-        print "Getting " + request.url + " from selenium"
+        print("Getting " + request.url + " from selenium")
 
         self.driver.get(request.url)
         time.sleep(spider.js_wait)
@@ -67,7 +71,7 @@ class CustomMiddleware(object):
                 continue
 
             if not (spider.scrap_start_urls and response.url in spider.start_urls):
-                print "\033[94m> Ignored:\033[0m " + response.url
+                print("\033[94m> Ignored:\033[0m " + response.url)
                 raise IgnoreRequest()
 
         return response
