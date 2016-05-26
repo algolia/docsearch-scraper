@@ -1,7 +1,14 @@
+from __future__ import absolute_import
+
 """
 Default Strategy
 """
-from .abstract_strategy import AbstractStrategy
+
+try:
+    from abstract_strategy import AbstractStrategy
+except ImportError:
+    from .abstract_strategy import AbstractStrategy
+
 import re
 from past.builtins import basestring
 
