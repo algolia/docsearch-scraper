@@ -1,4 +1,10 @@
-from . import algolia_helper, fetchers
+from __future__ import absolute_import
+
+try:
+    import algolia_helper
+    import fetchers
+except ImportError:
+    from . import algolia_helper, fetchers
 
 
 def _is_automatically_updated(config, attribute):

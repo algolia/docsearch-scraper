@@ -1,8 +1,13 @@
+from __future__ import absolute_import
+
 import os
 import json
 from collections import OrderedDict
 
-from . import helpers
+try:
+    import helpers
+except ImportError:
+    from . import helpers
 
 
 def get_configs_from_repos():
