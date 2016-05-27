@@ -3,7 +3,7 @@ from os import environ
 
 class RunConfig(AbstractCommand):
     def get_name(self):
-        return 'config:run'
+        return 'run'
 
     def get_description(self):
         return 'Run a config'

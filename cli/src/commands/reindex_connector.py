@@ -8,7 +8,7 @@ class ReindexConnector(AbstractCommand):
         return 'connector:reindex'
 
     def get_description(self):
-        return 'Run a config'
+        return 'Reindex a connector'
 
     def get_usage(self):
         return super(ReindexConnector, self).get_usage() + " config"
