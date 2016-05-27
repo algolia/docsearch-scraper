@@ -228,3 +228,92 @@ class TestGetRecordsFromDom:
         assert actual[3]['hierarchy']['lvl1'] == 'Bar'
         assert actual[3]['hierarchy']['lvl2'] == 'Baz'
         assert actual[3]['content'] == 'text'
+
+    def test_multiple_selectors_set(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'api': {
+                    "lvl0": "h1",
+                    "lvl1": "h2",
+                    "lvl2": "h3",
+                    "content": "p"
+                },
+                'guide': {
+                    "lvl0": "h1",
+                },
+            },
+            'start_urls': [
+                {
+                    'url': 'http://test.com/docs/guide',
+                    'selectors_key': 'guide'
+                },
+                {
+                    'url': 'http://test.com/docs/api',
+                    'selectors_key': 'api'
+                }
+            ]
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>.Foo;</h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>,text,</p>
+        </body></html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom('http://test.com/docs/api/methods')
+
+        # Then
+        assert len(actual) == 4
+        assert actual[3]['type'] == 'content'
+        assert actual[3]['hierarchy']['lvl0'] == 'Foo'
+        assert actual[3]['hierarchy']['lvl1'] == '!Bar'
+        assert actual[3]['hierarchy']['lvl2'] == 'Baz!'
+        assert actual[3]['content'] == 'text'
+
+    def test_multiple_selectors_set_2(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'api': {
+                    "lvl0": "h1",
+                    "lvl1": "h2",
+                    "lvl2": "h3",
+                    "content": "p"
+                },
+                'guides': {
+                    "lvl0": "h1",
+                },
+            },
+            'start_urls': [
+                {
+                    'url': 'http://test.com/docs/guides',
+                    'selectors_key': 'guides'
+                },
+                {
+                    'url': 'http://test.com/docs/api',
+                    'selectors_key': 'api'
+                }
+            ]
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>.Foo;</h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>,text,</p>
+        </body></html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom('http://test.com/docs/guides/tutorial1')
+
+        # Then
+        assert len(actual) == 1
+        assert actual[0]['type'] == 'lvl0'
+        assert actual[0]['hierarchy']['lvl0'] == 'Foo'

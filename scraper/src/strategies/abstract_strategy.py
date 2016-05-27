@@ -35,10 +35,24 @@ class AbstractStrategy(object):
 
         return lxml.html.fromstring(body)
 
-    def get_strip_chars(self, level):
-        if self.config.selectors[level]['strip_chars'] is None:
+    def get_strip_chars(self, level, selectors):
+        if selectors[level]['strip_chars'] is None:
             return self.config.strip_chars
-        return self.config.selectors[level]['strip_chars']
+        return selectors[level]['strip_chars']
+
+    def get_selectors_set(self, url):
+        selectors_key = 'default'
+
+        if url is not None:
+            for start_url in self.config.start_urls:
+                if re.search(start_url['compiled_url'], url) is not None:
+                    selectors_key = start_url['selectors_key']
+                    break
+
+        if selectors_key not in self.config.selectors:
+            raise Exception('No set of selectors found for: ' + url)
+
+        return self.config.selectors[selectors_key]
 
     @staticmethod
     def get_text(element, strip_chars=None):

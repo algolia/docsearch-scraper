@@ -120,48 +120,58 @@ class ConfigLoader(object):
             self.driver = None
 
     @staticmethod
-    def parse_selectors(config_selectors):
-        selectors = {}
-
+    def parse_selectors_set(config_selectors):
+        selectors_set = {}
         for key in config_selectors:
             if key != 'text':
-                selectors[key] = config_selectors[key]
+                selectors_set[key] = config_selectors[key]
             else:
                 # Backward compatibility, rename text to content
                 key = 'content'
-                selectors[key] = config_selectors['text']
+                selectors_set[key] = config_selectors['text']
 
             # Backward compatibility, if it's a string then we put it in an object
-            if isinstance(selectors[key], basestring):
-                selectors[key] = {'selector': selectors[key]}
+            if isinstance(selectors_set[key], basestring):
+                selectors_set[key] = {'selector': selectors_set[key]}
 
             # Global
-            if 'global' in selectors[key]:
-                selectors[key]['global'] = bool(selectors[key]['global'])
+            if 'global' in selectors_set[key]:
+                selectors_set[key]['global'] = bool(selectors_set[key]['global'])
             else:
-                selectors[key]['global'] = False
+                selectors_set[key]['global'] = False
 
             # Type
-            if 'type' in selectors[key]:
-                if selectors[key]['type'] not in ['xpath', 'css']:
-                    raise Exception(selectors[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
+            if 'type' in selectors_set[key]:
+                if selectors_set[key]['type'] not in ['xpath', 'css']:
+                    raise Exception(
+                        selectors_set[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
             else:
-                selectors[key]['type'] = 'css'
+                selectors_set[key]['type'] = 'css'
 
-            if selectors[key]['type'] == 'css':
-                selectors[key]['selector'] = AbstractStrategy.css_to_xpath(selectors[key]['selector'])
+            if selectors_set[key]['type'] == 'css':
+                selectors_set[key]['selector'] = AbstractStrategy.css_to_xpath(selectors_set[key]['selector'])
 
             # We don't need it because everything is xpath now
-            selectors[key].pop('type')
+            selectors_set[key].pop('type')
 
             # Default value
-            selectors[key]['default_value'] = selectors[key]['default_value'] if 'default_value' in selectors[key] else None
+            selectors_set[key]['default_value'] = selectors_set[key]['default_value'] if 'default_value' in selectors_set[
+                key] else None
 
             # Strip chars
-            selectors[key]['strip_chars'] = selectors[key]['strip_chars'] if 'strip_chars' in selectors[key] else None
+            selectors_set[key]['strip_chars'] = selectors_set[key]['strip_chars'] if 'strip_chars' in selectors_set[key] else None
 
-            # Searchable
-            selectors[key]['searchable'] = bool(selectors[key]['searchable']) if 'searchable' in selectors[key] else True
+        return selectors_set
+
+    @staticmethod
+    def parse_selectors(config_selectors):
+        selectors = {}
+
+        if 'lvl0' in config_selectors:
+            config_selectors = {'default': config_selectors}
+
+        for selectors_key in config_selectors:
+            selectors[selectors_key] = ConfigLoader.parse_selectors_set(config_selectors[selectors_key])
 
         return selectors
 
@@ -189,6 +199,9 @@ class ConfigLoader(object):
 
             if "tags" not in start_url:
                 start_url['tags'] = []
+
+            if "selectors_key" not in start_url:
+                start_url['selectors_key'] = 'default'
 
             matches = ConfigLoader.get_url_variables_name(start_url['url'])
 
