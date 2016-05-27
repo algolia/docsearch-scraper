@@ -15,7 +15,7 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = strategy.get_anchor(element)
@@ -37,7 +37,7 @@ class TestGetAnchor:
         """)
 
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = strategy.get_anchor(element)
@@ -57,7 +57,7 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = strategy.get_anchor(element)
@@ -76,7 +76,7 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = strategy.get_anchor(element)
@@ -95,7 +95,7 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl2'
-        element = strategy.select(strategy.config.selectors[level]['selector'])[0]
+        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = strategy.get_anchor(element)

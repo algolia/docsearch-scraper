@@ -59,12 +59,14 @@ class DefaultStrategy(AbstractStrategy):
 
         used_levels = []
 
+        selectors = self.get_selectors_set(current_page_url)
+
         # Because all levels might not be used we check if the level is present in the config
         for level in levels:
-            if level not in self.config.selectors:
+            if level not in selectors:
                 break
             used_levels.append(level)
-        if 'content' in self.config.selectors:
+        if 'content' in selectors:
             used_levels.append('content')
 
         levels = used_levels
@@ -73,7 +75,7 @@ class DefaultStrategy(AbstractStrategy):
         nodes_per_level = {}
 
         for level in levels:
-            level_selector = self.config.selectors[level]
+            level_selector = selectors[level]
 
             if len(level_selector['selector']) > 0:
                 selector_all.append(level_selector['selector'])
@@ -84,7 +86,7 @@ class DefaultStrategy(AbstractStrategy):
                 nodes_per_level[level] = matching_dom_nodes
             else:
                 # Be safe in case the selector match more than once by concatenating all the matching content
-                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes, self.get_strip_chars(level))
+                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes, self.get_strip_chars(level, selectors))
                 global_nodes = matching_dom_nodes
                 # We only want 1 record
                 nodes_per_level[level] = [global_nodes[0]] if len(global_nodes) > 0 else []
@@ -124,7 +126,7 @@ class DefaultStrategy(AbstractStrategy):
 
             if current_level != 'content':
                 if current_level not in self.global_content:
-                    hierarchy[current_level] = self.get_text(node, self.get_strip_chars(current_level))
+                    hierarchy[current_level] = self.get_text(node, self.get_strip_chars(current_level, selectors))
                 else:
                     hierarchy[current_level] = self.global_content[current_level]
 
@@ -152,16 +154,16 @@ class DefaultStrategy(AbstractStrategy):
                 break
 
             # We only save content for the 'text' matches
-            content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level))
+            content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level, selectors))
 
             # Handle default values
-            for level in self.config.selectors:
+            for level in selectors:
                 if level != 'content':
-                    if hierarchy[level] is None and self.config.selectors[level]['default_value'] is not None:
-                        hierarchy[level] = self.config.selectors[level]['default_value']
+                    if hierarchy[level] is None and selectors[level]['default_value'] is not None:
+                        hierarchy[level] = selectors[level]['default_value']
                 else:
-                    if content is None and self.config.selectors[level]['default_value'] is not None:
-                        content = self.config.selectors['content']['default_value']
+                    if content is None and selectors[level]['default_value'] is not None:
+                        content = selectors['content']['default_value']
 
             hierarchy_radio = self.get_hierarchy_radio(hierarchy)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
@@ -201,17 +203,23 @@ class DefaultStrategy(AbstractStrategy):
         attributes_to_index = []
 
         # We first look for matches in the exact titles
+
         for level in self.levels:
-            if level in self.config.selectors and self.config.selectors[level]['searchable']:
-                attributes_to_index.append('unordered(hierarchy_radio.' + level + ')')
+            for selectors_key in self.config.selectors:
+                attr_to_index = 'unordered(hierarchy_radio.' + level + ')'
+                if level in self.config.selectors[selectors_key] and attr_to_index not in attributes_to_index:
+                    attributes_to_index.append(attr_to_index)
 
         # Then in the whole title hierarchy
         for level in self.levels:
-            if level in self.config.selectors and self.config.selectors[level]['searchable']:
-                attributes_to_index.append('unordered(hierarchy.' + level + ')')
+            for selectors_key in self.config.selectors:
+                attr_to_index = 'unordered(hierarchy.' + level + ')'
+                if level in self.config.selectors[selectors_key] and attr_to_index not in attributes_to_index:
+                    attributes_to_index.append(attr_to_index)
 
-        if 'content' in self.config.selectors and self.config.selectors['content']['searchable']:
-            attributes_to_index.append('content')
+        for selectors_key in self.config.selectors:
+            if 'content' in self.config.selectors[selectors_key] and 'content' not in attributes_to_index:
+                attributes_to_index.append('content')
 
         settings = {
             'attributesToIndex': attributes_to_index,

@@ -101,6 +101,7 @@ class TestGetRecordsFromDomWithXpath:
                 'content': 'p'
             }
         })
+
         strategy.dom = lxml.html.fromstring("""
         <html><body>
             <p>text</p>
