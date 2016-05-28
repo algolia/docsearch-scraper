@@ -207,16 +207,23 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
 
             indices = indices.map(function (index) {
                 index.duplicateCrawlers = false;
+                index.noCrawler = false;
 
-                index.crawler_id = crawlers.find(function (crawler) {
+                crawler = crawlers.find(function (crawler) {
                     return crawler.configuration.index_name === index.name;
-                }).id;
+                });
 
-                for (var key in duplicates) {
-                    if (key == index.name) {
-                        index.duplicateCrawlers = true;
-                        index.duplicateCrawlersList = duplicates[key];
+                if (crawler) {
+                    index.crawler_id = crawler.id;
+
+                    for (var key in duplicates) {
+                        if (key == index.name) {
+                            index.duplicateCrawlers = true;
+                            index.duplicateCrawlersList = duplicates[key];
+                        }
                     }
+                } else {
+                    index.noCrawler = true;
                 }
 
                 return index;
@@ -274,6 +281,10 @@ aggregateCrawlerInfo.then(function (indices) {
 
     var noConnector = indices.filter(function (index) {
         return index.noConnector === true;
+    });
+
+    var noCrawler = indices.filter(function (index) {
+        return index.noCrawler === true;
     });
 
     var duplicateConnectors = indices.filter(function (index) {
@@ -350,6 +361,7 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Duplicate crawlers", duplicateCrawlers, "danger");
     sectionPrinter("Duplicate connector", duplicateConnectors, "warning");
     sectionPrinter("No connector found", noConnector, "warning");
+    sectionPrinter("No crawler found", noConnector, "warning");
     sectionPrinter("Empty indices", emptyIndices, "danger");
     sectionPrinter("Anomaly in settings", anomalyInSettings, "danger");
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
