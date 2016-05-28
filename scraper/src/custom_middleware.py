@@ -9,8 +9,9 @@ import time
 
 try:
     from urlparse import urlparse
+    from urllib import unquote_plus
 except ImportError:
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse, unquote_plus
 
 class CustomMiddleware(object):
     def __init__(self):
@@ -34,7 +35,7 @@ class CustomMiddleware(object):
 
         print("Getting " + request.url + " from selenium")
 
-        self.driver.get(request.url)
+        self.driver.get(unquote_plus(request.url)) # Decode url otherwise firefox is not happy. Ex /#%21/ => /#!/%21
         time.sleep(spider.js_wait)
         body = self.driver.page_source.encode('utf-8')
         url = self.driver.current_url
