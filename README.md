@@ -2,7 +2,7 @@
 
 ## Getting started
 
-#### Install DocSearch
+### Install DocSearch
 
 - Install python
   - `brew install python # will install pip`
@@ -13,7 +13,7 @@
 - `cd documentation-scraper`
 - Depending on what you want to do you might also need to install **docker** especially to run tests
 
-#### Use Docsearch
+### Use Docsearch
 
 Create a `.env` file at the root of the project
 
@@ -55,4 +55,12 @@ Available commands:
   config:docker-run     Run a config using docker
  docker
   docker:build-scraper  Build scraper images (dev, prod, test)
+```
+
+### Admin task
+For some actions like deploying you might need to use different credentials than the one in the .env file
+To do this you need to override them when running the cli tool:
+
+```
+APPLICATION_ID= API_KEY= ./docsearch deploy:configs
 ```

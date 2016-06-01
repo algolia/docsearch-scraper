@@ -1,5 +1,6 @@
 from .abstract_command import AbstractCommand
 
+
 class AbstractBuildDocker(AbstractCommand):
     def get_options(self):
         return [{'name': 'python3',

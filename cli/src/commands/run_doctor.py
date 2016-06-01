@@ -10,6 +10,7 @@ class RunDoctor(AbstractCommand):
         return 'Run the doctor'
 
     def run(self, args):
+        self.check_docsearch_app_id('run the doctor')
         BuildDockerDoctor().run([])
 
         self.exec_shell_command(["docker", "stop", "documentation-checker"])

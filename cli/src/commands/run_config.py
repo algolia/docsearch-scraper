@@ -15,6 +15,7 @@ class RunConfig(AbstractCommand):
         return [{"name": "config", "description": "path to the config to run"}]
 
     def run(self, args):
+        self.check_not_docsearch_app_id('run a config manually')
         run_command = ["python", "scraper/src/index.py"]
         env = environ.copy()
         env.update({'CONFIG': args[0], 'INDEX_PREFIX': ""})

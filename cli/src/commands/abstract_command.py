@@ -1,6 +1,7 @@
 from subprocess import call
 from os import environ
 
+
 class AbstractCommand(object):
     def run(self, args):
         raise Exception('run need to be implemented')
@@ -33,6 +34,16 @@ class AbstractCommand(object):
             return args[index]
         else:
             return options[index]['optional']
+
+    def check_docsearch_app_id(self, action_description):
+        if environ.get('APPLICATION_ID') != 'BH4D9OD16A':
+            print("The APP_ID is not BH4D9OD16A. You can not " + action_description + " if you are not using the docsearch account")
+            exit(1)
+
+    def check_not_docsearch_app_id(self, action_description):
+        if environ.get('APPLICATION_ID') == 'BH4D9OD16A':
+            print("The APP_ID is BH4D9OD16A. You can not " + action_description + " if you are using the docsearch account")
+            exit(1)
 
     @staticmethod
     def exec_shell_command(arguments, env=None):

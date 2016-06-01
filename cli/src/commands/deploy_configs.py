@@ -9,9 +9,7 @@ class DeployConfigs(AbstractCommand):
         return 'Deploy configs'
 
     def run(self, args):
-        if environ.get('APPLICATION_ID') != 'BH4D9OD16A':
-            print("The APP_ID is not BH4D9OD16A. You can not deploy configs if you are not using the docsearch account")
-            exit(1)
+        self.check_docsearch_app_id('deploy configs')
 
         command = ['./deployer/deploy']
 

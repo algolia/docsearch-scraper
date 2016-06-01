@@ -15,6 +15,8 @@ class RunConfigDocker(AbstractCommand):
         return [{"name": "config", "description": "path to the config to run"}]
 
     def run(self, args):
+        self.check_not_docsearch_app_id('run a config manually')
+
         self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev"])
         self.exec_shell_command(["docker", "rm", "documentation-scrapper-dev"])
 
