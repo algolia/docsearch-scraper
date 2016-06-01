@@ -23,14 +23,14 @@ API_KEY=
 If you are Algolia employee and want to manage docsearch account
 your need to add the following variables in your `.env` file
 
-``
+```
 WEBSITE_USERNAME=
 WEBSITE_PASSWORD=
 SLACK_HOOK=
 SCHEDULER_USERNAME=
 SCHEDULER_PASSWORD=
 DEPLOY_KEY=
-``
+```
 
 #### Use the project
 
@@ -38,6 +38,21 @@ DEPLOY_KEY=
 
 ```sh
 $ ./docsearch
-```
+Docsearch CLI
 
-will print the usage
+Usage:
+  ./docsearch command [options] [arguments]
+
+Options:
+  --help    Display help message
+
+Available commands:
+  test                  Run tests
+  playground            Launch the playground
+  run                   Run a config
+ config
+  config:bootstrap      Boostrap a docsearch config
+  config:docker-run     Run a config using docker
+ docker
+  docker:build-scraper  Build scraper images (dev, prod, test)
+```
