@@ -12,8 +12,8 @@
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
 - Depending on what you want to do you might also need to install **docker** especially to run tests
-Create a `.env` file at the root of the project
 
+- Create a `.env` file at the root of the project
 
 ```
 APPLICATION_ID=
