@@ -13,7 +13,9 @@
 - `cd documentation-scraper`
 - Depending on what you want to do you might also need to install **docker** especially to run tests
 
-- Create a `.env` file at the root of the project
+#### Use Docsearch
+
+Create a `.env` file at the root of the project
 
 ```
 APPLICATION_ID=
@@ -31,8 +33,6 @@ SCHEDULER_USERNAME=
 SCHEDULER_PASSWORD=
 DEPLOY_KEY=
 ```
-
-#### Use Docsearch
 
 **You should be able to do everything** with the docsearch CLI tool:
 
