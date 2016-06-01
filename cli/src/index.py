@@ -12,9 +12,7 @@ from .helpers import print_error
 from .helpers import print_command_help
 
 from .commands.bootstrap_config import BootstrapConfig
-from .commands.install_dependencies import InstallDependencies
 from .commands.playground_config import PlaygroundConfig
-from .commands.help import Help
 from .commands.build_docker_scraper import BuildDockerScraper
 from .commands.build_docker_doctor import BuildDockerDoctor
 from .commands.run_tests import RunTests
@@ -83,24 +81,22 @@ if 'WEBSITE_PASSWORD' not in environ or len(environ['WEBSITE_PASSWORD']) == 0:
 cmds = []
 
 cmds.append(BootstrapConfig())
-cmds.append(InstallDependencies())
-cmds.append(Help())
 cmds.append(BuildDockerScraper())
-cmds.append(BuildDockerDoctor())
 cmds.append(RunTests())
 cmds.append(PlaygroundConfig())
-cmds.append(ReindexConnector())
-cmds.append(GenerateEmail())
 
 if CREDENTIALS:
     cmds.append(RunConfig())
     cmds.append(RunConfigDocker())
 
 if ADMIN:
+    cmds.append(GenerateEmail())
+    cmds.append(ReindexConnector())
     cmds.append(DeployConfigs())
     cmds.append(DeployDockerScraperImages())
     cmds.append(DeployDockerDoctorImages())
     cmds.append(RunDoctor())
+    cmds.append(BuildDockerDoctor())
 
 
 def print_usage(no_ansi=False):
