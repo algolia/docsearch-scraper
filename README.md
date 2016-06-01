@@ -32,7 +32,7 @@ SCHEDULER_PASSWORD=
 DEPLOY_KEY=
 ```
 
-#### Use the project
+#### Use Docsearch
 
 **You should be able to do everything** with the docsearch CLI tool:
 
