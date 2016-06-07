@@ -39,7 +39,7 @@ You're now a few steps away from having it working on your website:
 </script>
 
 - Add a search input if you don't have any yet, and update the inputSelector value in the code snippet to a CSS selector that targets your input field.{{FACETS}}
-- Optionally customize the look and feel by following the DocSearch documentation
+- Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
 
 Feel free to get back to us if you have any issues or questions regarding the integration.
 We'd also be happy to get your feedback and thoughts about DocSearch - so we can continue to improve it.
