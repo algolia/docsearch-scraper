@@ -24,6 +24,7 @@ from .commands.run_config_docker import RunConfigDocker
 from .commands.run_doctor import RunDoctor
 from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
+from .commands.modify_emails import UpdateEmails, DeleteEmails
 
 if not path.isfile(env_file):
     print("")
@@ -97,6 +98,8 @@ if ADMIN:
     cmds.append(DeployDockerDoctorImages())
     cmds.append(RunDoctor())
     cmds.append(BuildDockerDoctor())
+    cmds.append(UpdateEmails())
+    cmds.append(DeleteEmails())
 
 
 def print_usage(no_ansi=False):
