@@ -1,4 +1,4 @@
-from subprocess import call
+from subprocess import Popen
 from os import environ
 
 
@@ -52,4 +52,12 @@ class AbstractCommand(object):
         merge_env = environ.copy()
         merge_env.update(env)
 
-        return call(arguments, env=merge_env)
+        p = Popen(arguments, env=merge_env)
+        try:
+            p.wait()
+        except KeyboardInterrupt:
+            p.kill()
+            p.wait()
+            p.returncode = 1
+
+        return p.returncode
