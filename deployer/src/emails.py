@@ -45,22 +45,20 @@ def _prompt_command(emails):
     return emails
 
 
-def _retrieve(config_name):
-    base_dir = path.dirname(__file__)
-    txt = path.join(base_dir, '..', 'private', 'infos', config_name + '.txt')
+def _retrieve(config_name, config_dir):
+    txt = path.join(config_dir, 'infos', config_name + '.txt')
     if path.isfile(txt):
         with open(txt, 'r') as f:
             return [l.strip() for l in f.readlines()]
     return []
 
 
-def _commit_push(config_name, action):
-    dir_ = path.join(path.dirname(__file__), '..', 'private')
+def _commit_push(config_name, action, config_dir):
     txt = path.join('infos', config_name + '.txt')
     commit_message = 'deploy: {} emails for {}'.format(action, config_name)
 
     old_dir = os.getcwd()
-    os.chdir(dir_)
+    os.chdir(config_dir)
 
     with open(os.devnull, 'w') as dev_null:
         sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
@@ -70,15 +68,14 @@ def _commit_push(config_name, action):
     os.chdir(old_dir)
 
 
-def _write(emails, config_name):
-    base_dir = path.dirname(__file__)
-    txt = path.join(base_dir, '..', 'private', 'infos', config_name + '.txt')
+def _write(emails, config_name, config_dir):
+    txt = path.join(config_dir, 'infos', config_name + '.txt')
     with open(txt, 'w') as f:
         f.write('\n'.join(emails))
 
 
-def _prompt_emails(config_name):
-    emails = _retrieve(config_name)
+def _prompt_emails(config_name, config_dir):
+    emails = _retrieve(config_name, config_dir)
 
     while True:
         old = emails[:]
@@ -89,15 +86,22 @@ def _prompt_emails(config_name):
     return emails
 
 
-def add(config_name):
-    emails = _prompt_emails(config_name)
-    _write(emails, config_name)
-    _commit_push(config_name, 'Update')
+def add(config_name, config_dir=None):
+    if config_dir is None:
+        basedir = path.dirname(__file__)
+        config_dir = path.join(basedir, '..', 'private')
+
+    emails = _prompt_emails(config_name, config_dir)
+    _write(emails, config_name, config_dir)
+    _commit_push(config_name, 'Update', config_dir)
 
 
-def delete(config_name):
-    base_dir = path.dirname(__file__)
-    txt = path.join(base_dir, '..', 'private', 'infos', config_name + '.txt')
+def delete(config_name, config_dir=None):
+    if config_dir is None:
+        basedir = path.dirname(__file__)
+        config_dir = path.join(basedir, '..', 'private')
+
+    txt = path.join(config_dir, 'infos', config_name + '.txt')
     if path.isfile(txt) and helpers.confirm('Delete emails for {}'.format(config_name)):
         os.remove(txt)
-        _commit_push(config_name, 'Delete')
+        _commit_push(config_name, 'Delete', config_dir)
