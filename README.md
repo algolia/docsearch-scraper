@@ -10,6 +10,7 @@
   - Or every other way 
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
+- `pip install -r requirements.txt`
 - Depending on what you want to do you might also need to install **docker** especially to run tests
 
 ### Use Docsearch
