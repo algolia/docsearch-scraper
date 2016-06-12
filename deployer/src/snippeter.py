@@ -35,7 +35,7 @@ You're now a few steps away from having it working on your website:
   apiKey: '{{API_KEY}}',
   indexName: '{{INDEX_NAME}}',
   inputSelector: '### REPLACE ME ####'{{ALGOLIA_OPTIONS}},
-  debug: false, // Set debug to true if you want to inspect the dropdown
+  debug: false // Set debug to true if you want to inspect the dropdown
 });
 </script>
 
