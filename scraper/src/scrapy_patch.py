@@ -1,4 +1,6 @@
 import scrapy.utils.request
+from OpenSSL import SSL
+from scrapy.core.downloader.contextfactory import ScrapyClientContextFactory
 
 # patching scrappy to avoid canonalizing urls in the reactor
 def request_fingerprint_non_canonicalize(request, include_headers=None):
@@ -21,3 +23,14 @@ def request_fingerprint_non_canonicalize(request, include_headers=None):
 
 
 scrapy.utils.request.request_fingerprint = request_fingerprint_non_canonicalize
+
+# following https://github.com/scrapy/scrapy/issues/1429#issuecomment-131782133
+# this seems to be the best option to avoid SSLv3 issues
+class CustomContextFactory(ScrapyClientContextFactory):
+    """
+    Custom context factory that allows SSL negotiation.
+    """
+
+    def __init__(self):
+        # Use SSLv23_METHOD so we can use protocol negotiation
+        self.method = SSL.SSLv23_METHOD

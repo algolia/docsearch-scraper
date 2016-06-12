@@ -47,6 +47,7 @@ PROCESS = CrawlerProcess({
     # 'LOG_LEVEL': 'DEBUG',
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
     'DOWNLOADER_MIDDLEWARES': {'__main__.CustomMiddleware': 900},# Need to be > 600 to be after the redirectMiddleware
+    'DOWNLOADER_CLIENTCONTEXTFACTORY': 'scrapy_patch.CustomContextFactory'
 })
 
 PROCESS.crawl(

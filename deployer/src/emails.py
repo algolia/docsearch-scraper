@@ -2,7 +2,7 @@ import os
 import os.path as path
 import subprocess as sp
 
-import helpers
+from . import helpers
 
 
 def _prompt_command(emails):
