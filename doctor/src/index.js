@@ -249,8 +249,12 @@ var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
                 index.noConnector = (index_connectors.length === 0);
                 index.duplicateConnectors = (index_connectors.length > 1);
 
+                index.isConnectorActive = false;
+
                 if (!index.noConnector) {
                     index.crawler_id = index_connectors[0].crawler_id;
+                    index.isConnectorActive = index_connectors[0].active;
+                    index.connectorId = index_connectors[0].id;
                 }
 
                 return index;
@@ -264,7 +268,7 @@ var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
 
 aggregateCrawlerInfo.then(function (indices) {
     var emptyIndices = indices.filter(function (index) {
-        return index.nbHits === 0;
+        return index.isConnectorActive && index.nbHits === 0;
     });
 
     var indexButNoConfig = indices.filter(function (index) {
@@ -291,7 +295,20 @@ aggregateCrawlerInfo.then(function (indices) {
         return index.duplicateConnectors === true;
     });
 
+    var nonActiveConnectors = indices.filter(function (index) {
+        return index.isConnectorActive === false;
+    });
+
+
     var potentialBadNumberOfRecords = indices.filter(function (index) {
+        if (index.isConnectorActive === false) {
+            return false;
+        }
+        /** Already caught be empty index **/
+        if (index.nbHits === 0) {
+            return false;
+        }
+
         if (index.supposedNbHits === undefined) {
             return true;
         }
@@ -318,7 +335,7 @@ aggregateCrawlerInfo.then(function (indices) {
     });
 
     var badRecords = indices.filter(function (index) {
-        return index.allRecordsHaveH1 === false || index.allRecordsHaveSomeContent === false;
+        return index.isConnectorActive && (index.allRecordsHaveH1 === false || index.allRecordsHaveSomeContent === false);
     });
 
     var reports = [];
@@ -329,6 +346,7 @@ aggregateCrawlerInfo.then(function (indices) {
             report.fallback = name;
             report.title = name;
             report.color = color;
+            report.list = list;
 
             if (color == "danger") {
                 list.push({name: "<!channel>"});
@@ -369,6 +387,7 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
+    sectionPrinter("Disabled connectors", nonActiveConnectors, "warning");
 
     if (reports.length == 0) {
         var now = new Date();
@@ -386,6 +405,20 @@ aggregateCrawlerInfo.then(function (indices) {
         return colors.indexOf(a.color) > colors.indexOf(b.color);
     });
 
+    var badReports = reports.filter(function (report) {
+        return report.color !== 'good';
+    });
+
+    var badIndices = [];
+
+    badReports.forEach(function (report) {
+        report.list.forEach(function (index) {
+            if (index.isConnectorActive) {
+                badIndices.push(index.connectorId);
+            }
+        });
+    });
+
     var payload = {
         "text": "",
         "channel": "#docsearch-notif",
@@ -397,4 +430,9 @@ aggregateCrawlerInfo.then(function (indices) {
     slack = new Slack(slackHook);
 
     slack.notify(payload);
+
+    badIndices.forEach(function (connectorId) {
+        var url = "https://" + websiteUsername + ":" + websitePassword + "@www.algolia.com/api/1/docsearch/" + connectorId + "/reindex";
+        request.post(url);
+    });
 });
