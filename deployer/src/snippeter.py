@@ -28,9 +28,9 @@ You're now a few steps away from having it working on your website:
 - Copy the following CSS/JS snippets and add them to your page
 
 <!-- at the end of the HEAD -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
 <!-- at the end of the BODY -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
 <script type="text/javascript"> docsearch({
   apiKey: '{{API_KEY}}',
   indexName: '{{INDEX_NAME}}',
