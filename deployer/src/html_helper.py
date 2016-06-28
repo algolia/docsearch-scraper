@@ -170,6 +170,7 @@ def get_links(url, body):
 
 
 def get_main_selector(url):
+    return "FIXME"
     content = get_content_from_url(url)
 
     links = [link.url for link in get_links(url, content) if link.url != url and link.url + '/' != url]
