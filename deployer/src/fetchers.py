@@ -40,10 +40,11 @@ def get_configs_from_website():
 
     configs = {}
     inverted = {}
+    crawler_ids = {}
+
     for connector in live_connectors:
         configs[connector['name']] = connector['configuration']
         inverted[connector['name']] = connector['id']
+        crawler_ids[connector['name']] = connector['crawler_id']
 
-    print(str(len(configs)) + " docs in website connectors")
-
-    return configs, inverted
+    return configs, inverted, crawler_ids

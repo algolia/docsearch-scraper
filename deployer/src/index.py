@@ -23,7 +23,7 @@ print("=======================")
 print("")
 
 ref_configs = fetchers.get_configs_from_repos()
-actual_configs, inverted_actual_configs = fetchers.get_configs_from_website()
+actual_configs, inverted_actual_configs, crawler_ids = fetchers.get_configs_from_website()
 
 differ = DictDiffer(ref_configs, actual_configs)
 

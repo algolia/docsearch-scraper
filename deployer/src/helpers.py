@@ -26,6 +26,8 @@ def get_user_value(message):
     prompt = message
     return raw_input(prompt)
 
+def make_custom_get_request(url):
+    return requests.get(url)
 
 def make_request(endpoint, type=None, configuration=None):
     url = base_url + endpoint
