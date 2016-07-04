@@ -17,7 +17,7 @@ class ReindexConnector(AbstractCommand):
         return [{"name": "name", "description": "name of the connector to reindex"}]
 
     def run(self, args):
-        configs, inverted = get_configs_from_website()
+        configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
         make_request('/' + str(inverted[connector_name]) + '/reindex', 'POST')
         return 0

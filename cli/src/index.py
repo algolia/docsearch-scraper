@@ -25,6 +25,7 @@ from .commands.run_doctor import RunDoctor
 from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
+from .commands.get_logs import GetLogs
 
 if not path.isfile(env_file):
     print("")
@@ -100,6 +101,7 @@ if ADMIN:
     cmds.append(BuildDockerDoctor())
     cmds.append(UpdateEmails())
     cmds.append(DeleteEmails())
+    cmds.append(GetLogs())
 
 
 def print_usage(no_ansi=False):

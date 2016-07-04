@@ -61,7 +61,7 @@ Have a nice day :)\n==============================\n"""
 
     if facets is not None:
         facet_template = "\n"
-        configs, inverted = fetchers.get_configs_from_website()
+        configs, inverted, crawler_ids = fetchers.get_configs_from_website()
 
         example_phrase = []
         example_code = []
