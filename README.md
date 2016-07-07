@@ -30,7 +30,7 @@ This project is a collection of submodules, each one in it’s own directory:
 
 ### Set up Docsearch
 
-Create a `.env` file at the root of the project
+Create a file named `.env` file at the root of the project
 
 ```
 APPLICATION_ID=
