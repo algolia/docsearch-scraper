@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "$CONFIG" | jq ".deployKey" -r > ~/id_rsa.github
+mkdir ~/.ssh
+cat << EOF > ~/.ssh/config
+host github.com
+ HostName github.com
+ IdentityFile ~/id_rsa.github
+ User git
+EOF
+chmod 400 ~/id_rsa.github
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+cd /root/checker
+git clone https://github.com/algolia/docsearch-configs.git configs
+git clone git@github.com:algolia/docsearch-configs-private.git configs_private
+mv configs_private/*.json configs/
+node index.js
