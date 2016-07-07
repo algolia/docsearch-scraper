@@ -1,6 +1,6 @@
-# Documentation scraper
+# DocSearch scraper
 
-This is the repository for the DocSearch scaper. You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation. 
+This is the repository for the scraper for the [DocSearch project](https://community.algolia.com/docsearch/). You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation. 
 
 DocSearch is in fact 3 different projects.
 * The front-end of DocSearch: https://github.com/algolia/docsearch
@@ -13,7 +13,6 @@ This project is a collection of submodules, each one in its own directory:
 * doctor: A monitoring/repair tool to check if the indices built by the scraper are in good shape
 * playground: An HTML page to easily test DocSearch indices
 * scraper: The core of the scraper. It reads the configuration file, fetches the web pages and indexes them in Algolia.
-
 
 ## Getting started
 
