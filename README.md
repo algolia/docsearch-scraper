@@ -1,5 +1,20 @@
 # Documentation scraper
 
+This is the repository for the DocSearch scaper. You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation. 
+
+DocSearch is in fact 3 different projects.
+* The front-end of DocSearch: https://github.com/algolia/docsearch
+* The scraper which browse & index web pages: https://github.com/algolia/docsearch-scraper
+* The configurations for the scraper: https://github.com/algolia/docsearch-configs
+
+This project is a collection of submodules, each one in it’s own directory:
+* cli: A command line tool to manage DocSearch. Run `./docsearch` and follow the steps
+* deployer: Tool used by Algolia to deploy the configuration in our mesos infrastructure
+* doctor: A monitoring/repairing tool to check if the indices built by the scraper are in good shape
+* playground: An HTML page to easily test DocSearch indices
+* scraper: The core of the scraper. It reads the configuration file, fetch the web pages and index them in Algolia.
+
+
 ## Getting started
 
 ### Install Docsearch
@@ -57,8 +72,17 @@ you'll have a list of options you can use and a lot of live and working examples
 
 #### Crawl the website
 
+Without docker
+
 ```sh
 $ ./docsearch run /path/to/your/config
+```
+
+With docker
+
+```sh
+$ ./docsearch docker:build-scraper #Build the docker file
+$ ./docsearch config:docker-run /path/to/your/config #run the docker container
 ```
 
 #### Check that everything went well
