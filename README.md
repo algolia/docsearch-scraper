@@ -4,15 +4,15 @@ This is the repository for the DocSearch scaper. You can run it on your own, or 
 
 DocSearch is in fact 3 different projects.
 * The front-end of DocSearch: https://github.com/algolia/docsearch
-* The scraper which browse & index web pages: https://github.com/algolia/docsearch-scraper
+* The scraper which browses & indexes web pages: https://github.com/algolia/docsearch-scraper
 * The configurations for the scraper: https://github.com/algolia/docsearch-configs
 
-This project is a collection of submodules, each one in it’s own directory:
+This project is a collection of submodules, each one in its own directory:
 * cli: A command line tool to manage DocSearch. Run `./docsearch` and follow the steps
 * deployer: Tool used by Algolia to deploy the configuration in our mesos infrastructure
-* doctor: A monitoring/repairing tool to check if the indices built by the scraper are in good shape
+* doctor: A monitoring/repair tool to check if the indices built by the scraper are in good shape
 * playground: An HTML page to easily test DocSearch indices
-* scraper: The core of the scraper. It reads the configuration file, fetch the web pages and index them in Algolia.
+* scraper: The core of the scraper. It reads the configuration file, fetches the web pages and indexes them in Algolia.
 
 
 ## Getting started
@@ -22,13 +22,13 @@ This project is a collection of submodules, each one in it’s own directory:
 - Install python
   - `brew install python # will install pip`
   - `apt-get install python`
-  - Or every other way 
+  - Or any other way 
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
 - `pip install -r requirements.txt`
-- Depending on what you want to do you might also need to install **docker** especially to run tests
+- Depending on what you want to do you might also need to install **docker**, especially to run tests.
 
-### Set up Docsearch
+### Set up DocSearch
 
 Create a `.env` file at the root of the project
 
@@ -62,11 +62,11 @@ Available commands:
   docker:build-scraper  Build scraper images (dev, prod, test)
 ```
 
-### Use Docsearch
+### Use DocSearch
 
 #### Create a config
 
-To use docsearch the first thing you need is to create the config for the crawler.
+To use DocSearch the first thing you need is to create the config for the crawler.
 For more details about configs, check out https://github.com/algolia/docsearch-configs,
 you'll have a list of options you can use and a lot of live and working examples
 
@@ -87,8 +87,8 @@ $ ./docsearch config:docker-run /path/to/your/config #run the docker container
 
 #### Check that everything went well
 
-open `./playground/index.html` in your browser, enter your credentials, your index name, and do type some queries
-to make sure everything is ok
+Open `./playground/index.html` in your browser, enter your credentials, your index name, and type some queries
+to make sure everything is ok.
 
 #### Use docsearch frontend
 
@@ -106,12 +106,12 @@ var search = docsearch({
 });
 ```
 
-And your good to go
+And you are good to go!
 
 ### Admin task
 
-If you are Algolia employee and want to manage docsearch account
-your need to add the following variables in your `.env` file
+If you are Algolia employee and want to manage a DocSearch account,
+you'll need to add the following variables in your `.env` file
 
 ```
 WEBSITE_USERNAME=
@@ -124,7 +124,7 @@ DEPLOY_KEY=
 
 The cli will then have more commands for you to run
 
-For some actions like deploying you might need to use different credentials than the one in the .env file
+For some actions like deploying you might need to use different credentials than the ones in the .env file.
 To do this you need to override them when running the cli tool:
 
 ```
