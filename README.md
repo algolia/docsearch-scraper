@@ -30,14 +30,14 @@ This project is a collection of submodules, each one in its own directory:
 
 ### Set up DocSearch
 
-Create a file named `.env` file at the root of the project
+Create a file named `.env` file at the root of the project:
 
 ```
 APPLICATION_ID=
 API_KEY=
 ```
 
-To have the APPLICATION_ID and API_KEY, you need to create an [https://www.algolia.com/users/sign_up](Algolia account)
+To have the APPLICATION_ID and API_KEY, you need to create an [https://www.algolia.com/users/sign_up](Algolia account).
 
 **You should be able to do everything** with the docsearch CLI tool:
 
@@ -68,17 +68,17 @@ Available commands:
 
 To use DocSearch the first thing you need is to create the config for the crawler.
 For more details about configs, check out https://github.com/algolia/docsearch-configs,
-you'll have a list of options you can use and a lot of live and working examples
+you'll have a list of options you can use and a lot of live and working examples.
 
 #### Crawl the website
 
-Without docker
+Without docker:
 
 ```sh
 $ ./docsearch run /path/to/your/config
 ```
 
-With docker
+With docker:
 
 ```sh
 $ ./docsearch docker:build-scraper #Build the docker file
@@ -87,8 +87,7 @@ $ ./docsearch config:docker-run /path/to/your/config #run the docker container
 
 #### Check that everything went well
 
-Open `./playground/index.html` in your browser, enter your credentials, your index name, and type some queries
-to make sure everything is ok.
+Open `./playground/index.html` in your browser, enter your credentials, your index name, and type some queries to make sure everything is ok.
 
 #### Use docsearch frontend
 
@@ -111,7 +110,7 @@ And you are good to go!
 ### Admin task
 
 If you are Algolia employee and want to manage a DocSearch account,
-you'll need to add the following variables in your `.env` file
+you'll need to add the following variables in your `.env` file:
 
 ```
 WEBSITE_USERNAME=
@@ -122,7 +121,7 @@ SCHEDULER_PASSWORD=
 DEPLOY_KEY=
 ```
 
-The cli will then have more commands for you to run
+The cli will then have more commands for you to run.
 
 For some actions like deploying you might need to use different credentials than the ones in the .env file.
 To do this you need to override them when running the cli tool:
