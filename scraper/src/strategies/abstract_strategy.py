@@ -30,10 +30,11 @@ class AbstractStrategy(object):
         """Get the DOM representation of the webpage"""
         try:
             body = response.body.decode(response.encoding)
-        except UnicodeError:
-            body = response.body
+            result = lxml.html.fromstring(body)
+        except (UnicodeError, ValueError):
+            result = lxml.html.fromstring(response.body)
 
-        return lxml.html.fromstring(body)
+        return result
 
     def get_strip_chars(self, level, selectors):
         if selectors[level]['strip_chars'] is None:
