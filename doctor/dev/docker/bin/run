@@ -14,5 +14,6 @@ ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 cd /root/checker
 git clone https://github.com/algolia/docsearch-configs.git configs
 git clone git@github.com:algolia/docsearch-configs-private.git configs_private
-mv configs_private/*.json configs/
+mv configs/configs/*.json configs/
+mv configs_private/configs/*.json configs/
 node index.js
