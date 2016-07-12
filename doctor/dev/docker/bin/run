@@ -12,8 +12,9 @@ chmod 400 ~/id_rsa.github
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
 cd /root/checker
-git clone https://github.com/algolia/docsearch-configs.git configs
+git clone https://github.com/algolia/docsearch-configs.git configs_public
 git clone git@github.com:algolia/docsearch-configs-private.git configs_private
-mv configs/configs/*.json configs/
+mkdir configs
+mv configs_public/configs/*.json configs/
 mv configs_private/configs/*.json configs/
 node index.js
