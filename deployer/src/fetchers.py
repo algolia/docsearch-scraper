@@ -15,7 +15,7 @@ def get_configs_from_repos():
 
     base_dir = os.path.dirname(__file__)
 
-    for dir in ['public', 'private']:
+    for dir in ['public/configs', 'private/configs']:
         dir = base_dir + '/../' + dir
         for f in os.listdir(dir):
             path = dir + '/' + f
