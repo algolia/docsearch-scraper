@@ -215,6 +215,7 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
 
                 if (crawler) {
                     index.crawler_id = crawler.id;
+                    index.didNotRunForMoreThanOneDay = (Date.now() - Date.parse(crawler.run_at)) / 1000 / 3600 > 24 * 1.5
 
                     for (var key in duplicates) {
                         if (key == index.name) {
@@ -297,6 +298,10 @@ aggregateCrawlerInfo.then(function (indices) {
 
     var nonActiveConnectors = indices.filter(function (index) {
         return index.isConnectorActive === false;
+    });
+
+    var didNotRunForMoreThanOneDay = indices.filter(function (index) {
+        return index.didNotRunForMoreThanOneDay === true;
     });
 
 
@@ -388,6 +393,7 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
     sectionPrinter("Disabled connectors", nonActiveConnectors, "warning");
+    sectionPrinter("Did not run for more than one day", didNotRunForMoreThanOneDay, "warning");
 
     if (reports.length == 0) {
         var now = new Date();
