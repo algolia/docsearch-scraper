@@ -46,6 +46,10 @@
                         <label for="facetFilters">Facet Filters</label>
                         <input ng-model="config[config.env].facetFilters" id="facetFilters" class="form-control" />
                     </div>
+                    <div class="form-group">
+                        <label for="optionalFacetFilters">Optional Facet Filters</label>
+                        <input ng-model="config[config.env].optionalFacetFilters" id="optionalFacetFilters" class="form-control" />
+                    </div>
                 </div>
             </div>
 
@@ -69,7 +73,8 @@
                         autocompleteOptions: {
                             debug: "true"
                         },
-                        facetFilters: ''
+                        facetFilters: '',
+                        optionalFacetFilters: ''
                     },
                     prod: {
                         appId: '',
@@ -79,7 +84,8 @@
                         autocompleteOptions: {
                             debug: "true"
                         },
-                        facetFilters: ''
+                        facetFilters: '',
+                        optionalFacetFilters: ''
                     }
                 };
 
@@ -96,7 +102,6 @@
                     $scope.config = JSON.parse(localStorage['config']);
                 }
 
-
                 var initDocSearch = function (first_time) {
                     if (!first_time) {
                         localStorage['config'] = JSON.stringify($scope.config);
@@ -104,7 +109,8 @@
 
                     $scope.config[$scope.config.env].algoliaOptions = {
                         'hitsPerPage': 5,
-                        'facetFilters': $scope.config[$scope.config.env].facetFilters
+                        'facetFilters': $scope.config[$scope.config.env].facetFilters,
+                        'optionalFacetFilters': $scope.config[$scope.config.env].optionalFacetFilters
                     };
 
                     if ($scope.config[$scope.config.env].appId && $scope.config[$scope.config.env].apiKey && $scope.config[$scope.config.env].indexName) {
@@ -142,8 +148,8 @@
 
                 var values = [
                     'config.env',
-                    'config.dev.appId', 'config.dev.apiKey', 'config.dev.indexName', 'config.dev.facetFilters',
-                    'config.prod.appId', 'config.prod.apiKey', 'config.prod.indexName', 'config.prod.facetFilters'
+                    'config.dev.appId', 'config.dev.apiKey', 'config.dev.indexName', 'config.dev.facetFilters', 'config.dev.optionalFacetFilters',
+                    'config.prod.appId', 'config.prod.apiKey', 'config.prod.indexName', 'config.prod.facetFilters', 'config.prod.optionalFacetFilters'
                 ];
 
                 angular.forEach(values, function(value, key) {
