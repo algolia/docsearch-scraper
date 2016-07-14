@@ -40,6 +40,10 @@ RUN apt-get update -y && apt-get install -y \
 COPY requirements.txt /root/
 COPY scraper/dev/docker/bin/setup_python.sh /root/
 
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-linux64.tar.gz
+RUN tar xvf geckodriver-v0.9.0-linux64.tar.gz
+RUN mv geckodriver wires; cp wires /usr/bin/
+
 # Put everything in /root
 WORKDIR /root
 

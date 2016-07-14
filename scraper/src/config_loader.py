@@ -11,6 +11,7 @@ import json
 import os
 import re
 import copy
+import platform
 
 from selenium import webdriver
 
@@ -19,6 +20,7 @@ try:
     from custom_middleware import CustomMiddleware
     from js_executor import JsExecutor
     from selenium import webdriver
+    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
     import helpers
 except ImportError:
     from .strategies.abstract_strategy import AbstractStrategy
@@ -120,7 +122,11 @@ class ConfigLoader(object):
 
     def init(self):
         # Start firefox if needed
-        self.driver = webdriver.Firefox()
+        caps = DesiredCapabilities.FIREFOX
+        caps["marionette"] = True
+        binary = "/Applications/Firefox.app/Contents/MacOS/firefox" if platform.system() == 'Darwin' else "/usr/bin/firefox"
+        caps["binary"] = binary
+        self.driver = webdriver.Firefox(capabilities=caps)
         self.driver.implicitly_wait(1)
         CustomMiddleware.driver = self.driver
         JsExecutor.driver = self.driver

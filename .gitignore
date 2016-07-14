@@ -11,6 +11,7 @@ src/strategies/__pycache__/
 # IDE Files
 .idea/
 *.iml
+geckodriver.log
 
 configs/public
 configs/private

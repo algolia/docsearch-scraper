@@ -24,7 +24,7 @@ queuelib==1.4.2
 requests==2.10.0
 requests-file==1.4
 Scrapy==1.1.0
-selenium==2.53.2
+selenium==2.53.6
 service-identity==16.0.0
 six==1.10.0
 tldextract==2.0.1
