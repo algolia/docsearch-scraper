@@ -97,8 +97,20 @@ class ConfigLoader(object):
         self.start_urls = self.parse_urls(self.start_urls)
         self.selectors = self.parse_selectors(self.selectors)
 
+        self .min_indexed_level = self.get_min_indexed_level_object(self.min_indexed_level)
+
         if self.conf_need_browser() and not self.js_render:
             self.destroy()
+
+    @staticmethod
+    def get_min_indexed_level_object(min_indexed_level):
+        min_indexed_level_object = min_indexed_level
+        if isinstance(min_indexed_level, int):
+            min_indexed_level_object = {
+                'default': min_indexed_level_object
+            }
+
+        return min_indexed_level_object
 
     def conf_need_browser(self):
         group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
@@ -250,6 +262,7 @@ class ConfigLoader(object):
     def geturls(start_url, current_match, matches, values, start_urls):
         for value in values[current_match]:
             copy_start_url = copy.copy(start_url)
+            copy_start_url['original_url'] = copy_start_url['url']
             copy_start_url['url'] = copy_start_url['url'].replace("(?P<"+current_match+">.*?)", value)
             copy_start_url['compiled_url'] = re.compile(copy_start_url['url'])
             # Fix weird reference issue

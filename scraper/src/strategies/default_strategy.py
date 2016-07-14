@@ -40,6 +40,7 @@ class DefaultStrategy(AbstractStrategy):
         for record in records:
             if (not self.config.js_render or not self.config.use_anchors) and record['anchor'] is not None:
                 record['url'] = url + '#' + record['anchor']
+                record['url_without_variables'] = record['url_without_variables'] + '#' + record['anchor']
             else:
                 record['url'] = url
 
@@ -137,7 +138,7 @@ class DefaultStrategy(AbstractStrategy):
                     anchors['lvl' + str(index)] = None
                 previous_hierarchy = hierarchy
 
-            if current_level_int < self.config.min_indexed_level:
+            if current_level_int < self.get_min_indexed_level_for_url(current_page_url):
                 continue
 
             for index in range(0, current_level_int + 1):
@@ -185,6 +186,8 @@ class DefaultStrategy(AbstractStrategy):
             }
 
             if current_page_url is not None:
+                record['url_without_variables'] = current_page_url
+
                 for start_url in self.config.start_urls:
                     compiled_url = start_url['compiled_url']
                     result = re.search(compiled_url, current_page_url)
@@ -194,6 +197,7 @@ class DefaultStrategy(AbstractStrategy):
                             value = start_url['url_attributes'][attr]
                             if value is not None:
                                 record[attr] = value
+                                record['url_without_variables'] = start_url['original_url'].replace("(?P<" + attr + ">.*?)", "")
 
             records.append(record)
 
@@ -203,7 +207,6 @@ class DefaultStrategy(AbstractStrategy):
         attributes_to_index = []
 
         # We first look for matches in the exact titles
-
         for level in self.levels:
             for selectors_key in self.config.selectors:
                 attr_to_index = 'unordered(hierarchy_radio.' + level + ')'
@@ -242,7 +245,7 @@ class DefaultStrategy(AbstractStrategy):
             'customRanking': [
                 'desc(weight.page_rank)',
                 'desc(weight.level)',
-                'desc(weight.position)'
+                'asc(weight.position)'
             ],
             # Default ranking is: typo, geo, words, proximity, attribute, exact, custom
             # - We removed geo as this is irrelevant

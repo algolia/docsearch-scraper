@@ -41,7 +41,7 @@ class AbstractStrategy(object):
             return self.config.strip_chars
         return selectors[level]['strip_chars']
 
-    def get_selectors_set(self, url):
+    def get_selectors_set_key(self, url):
         selectors_key = 'default'
 
         if url is not None:
@@ -50,10 +50,23 @@ class AbstractStrategy(object):
                     selectors_key = start_url['selectors_key']
                     break
 
+        return selectors_key
+
+    def get_selectors_set(self, url):
+        selectors_key = self.get_selectors_set_key(url)
+
         if selectors_key not in self.config.selectors:
             raise Exception('No set of selectors found for: ' + url)
 
         return self.config.selectors[selectors_key]
+
+    def get_min_indexed_level_for_url(self, url):
+        selectors_key = self.get_selectors_set_key(url)
+
+        if selectors_key not in self.config.min_indexed_level:
+            return self.config.min_indexed_level['default']
+
+        return self.config.min_indexed_level[selectors_key]
 
     @staticmethod
     def get_text(element, strip_chars=None):
