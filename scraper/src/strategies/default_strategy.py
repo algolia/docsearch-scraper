@@ -44,6 +44,8 @@ class DefaultStrategy(AbstractStrategy):
             else:
                 record['url'] = url
 
+            record['no_variables'] = record['url'] == record['url_without_variables']
+
         return records
 
     def get_records_from_dom(self, current_page_url=None):
@@ -239,7 +241,7 @@ class DefaultStrategy(AbstractStrategy):
             'attributesToSnippet': [
                 'content:10'
             ],
-            'attributesForFaceting': ['tags'] + self.config.get_extra_facets(),
+            'attributesForFaceting': ['tags', 'no_variables'] + self.config.get_extra_facets(),
             'distinct': True,
             'attributeForDistinct': 'url',
             'customRanking': [
