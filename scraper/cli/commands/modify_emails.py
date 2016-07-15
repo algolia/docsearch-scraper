@@ -3,8 +3,7 @@ from os import path
 import subprocess as sp
 
 from .abstract_command import AbstractCommand
-
-from deployer.src.emails import add, delete
+from ...deployer.emails import add, delete
 
 
 def _ensure_configs_private():
@@ -54,4 +53,3 @@ class DeleteEmails(AbstractCommand):
         p = _ensure_configs_private()
         for config in args:
             delete(config,  path.join(p, 'private'))
-

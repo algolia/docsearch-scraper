@@ -1,10 +1,9 @@
 # coding: utf-8
-
-from __future__ import absolute_import
-
-from src.config_loader import ConfigLoader
-from .abstract import config
 import pytest
+
+from ...config_loader import ConfigLoader
+from .abstract import config
+
 
 class TestStartUrls:
     def test_mandatory_start_urls(self):

@@ -1,11 +1,8 @@
 # coding: utf-8
-
-from __future__ import absolute_import
-
 import json
 import os
 
-from src.config_loader import ConfigLoader
+from ...config_loader import ConfigLoader
 from .abstract import config
 
 

@@ -1,9 +1,7 @@
 # coding: utf-8
-
-from __future__ import absolute_import
-
-from src.config_loader import ConfigLoader
+from ...config_loader import ConfigLoader
 from .abstract import config
+
 
 class TestOpenSeleniumBrowser:
     def test_browser_not_needed_by_default(self):

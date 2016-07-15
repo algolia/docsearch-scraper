@@ -1,9 +1,8 @@
 # coding: utf-8
 
-from __future__ import absolute_import
-
-from src.config_loader import ConfigLoader
+from ...config_loader import ConfigLoader
 from .abstract import config
+
 
 class TestAnchors:
     def test_use_anchor_default(self):

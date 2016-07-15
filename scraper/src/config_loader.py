@@ -1,9 +1,7 @@
 # coding: utf-8
 """
-Load the config from the CONFIG environment variable
+Load the config json file.
 """
-
-from __future__ import absolute_import
 
 from collections import OrderedDict
 from past.builtins import basestring
@@ -14,23 +12,18 @@ import copy
 import platform
 
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-try:
-    from strategies.abstract_strategy import AbstractStrategy
-    from custom_middleware import CustomMiddleware
-    from js_executor import JsExecutor
-    from selenium import webdriver
-    import helpers
-except ImportError:
-    from .strategies.abstract_strategy import AbstractStrategy
-    from .custom_middleware import CustomMiddleware
-    from .js_executor import JsExecutor
-    from . import helpers
+from .strategies.abstract_strategy import AbstractStrategy
+from .custom_middleware import CustomMiddleware
+from .js_executor import JsExecutor
+from . import helpers
 
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
+
 
 class ConfigLoader(object):
     """
@@ -61,12 +54,7 @@ class ConfigLoader(object):
 
     driver = None
 
-    def __init__(self):
-        if os.environ['CONFIG'] is '':
-            exit('env `CONFIG` missing')
-
-        config = os.environ['CONFIG']
-
+    def __init__(self, config, index_prefix):
         if os.path.isfile(config):
             self.config_file = config
             with open(self.config_file, 'r') as f:
@@ -85,7 +73,7 @@ class ConfigLoader(object):
         # Merge other ENV variables
         data['app_id'] = os.environ['APPLICATION_ID']
         data['api_key'] = os.environ['API_KEY']
-        data['index_prefix'] = os.environ['INDEX_PREFIX']
+        data['index_prefix'] = index_prefix
 
         # Expose all the data as attributes
         data['index_name'] = data['index_prefix'] + data['index_name']
@@ -356,7 +344,7 @@ class ConfigLoader(object):
             previous_nb_hits = None if 'nb_hits' not in self.config_content else self.config_content['nb_hits']
 
             if previous_nb_hits is None or previous_nb_hits != nb_hits:
-                print( "previous nb_hits: " + str(previous_nb_hits))
+                print("previous nb_hits: " + str(previous_nb_hits))
                 print("")
 
                 if helpers.confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?'):
