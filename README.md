@@ -94,16 +94,17 @@ Open `./playground/index.html` in your browser, enter your credentials, your ind
 
 Just add this snippet to your documentation:
 
-```
+```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
 <script type="text/javascript" src="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
-
-var search = docsearch({
-  apiKey: '<API_KEY>',
-  indexName: '<INDEX_NAME>',
-  inputSelector: '<YOUR_INPUT_DOM_SELECTOR>',
-  debug: false
-});
+<script>
+  var search = docsearch({
+    apiKey: '<API_KEY>',
+    indexName: '<INDEX_NAME>',
+    inputSelector: '<YOUR_INPUT_DOM_SELECTOR>',
+    debug: false
+  });
+</script>
 ```
 
 And you are good to go!
