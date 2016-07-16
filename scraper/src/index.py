@@ -20,7 +20,7 @@ except ImportError:
     pass
 
 
-def run_config(config, index_prefix):
+def run_config(config, index_prefix=''):
     CONFIG = ConfigLoader(config, index_prefix)
     CustomMiddleware.driver = CONFIG.driver
     DocumentationSpider.NB_INDEXED = 0
