@@ -210,7 +210,9 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
                 index.noCrawler = false;
 
                 crawler = crawlers.find(function (crawler) {
-                    return crawler.configuration.index_name === index.name;
+                    return crawler.configuration.index_name === index.name &&
+                        crawler.docker_image === 'algolia/documentation-scrapper' &&
+                        crawler.application_id === 'BH4D9OD16A';
                 });
 
                 if (crawler) {
