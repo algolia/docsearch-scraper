@@ -1,10 +1,11 @@
-from algoliasearch import algoliasearch
 import os
+from algoliasearch import algoliasearch
 
 app_id = os.environ['APPLICATION_ID'] if 'APPLICATION_ID' in os.environ else ''
 api_key = os.environ['API_KEY'] if 'API_KEY' in os.environ else ''
 
 algolia_client = algoliasearch.Client(app_id, api_key)
+
 
 def get_facets(config):
     index = algolia_client.init_index(config)
@@ -23,6 +24,7 @@ def get_facets(config):
 
     return None
 
+
 def update_docsearch_key(config, key):
     index = algolia_client.init_index(config)
 
@@ -31,6 +33,7 @@ def update_docsearch_key(config, key):
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
     })
+
 
 def get_docsearch_key(config):
     index = algolia_client.init_index(config)
@@ -41,6 +44,7 @@ def get_docsearch_key(config):
             k = key['value']
 
     return k
+
 
 def add_docsearch_key(config):
     index = algolia_client.init_index(config)
@@ -53,12 +57,14 @@ def add_docsearch_key(config):
 
     return response['key']
 
+
 def delete_docsearch_key(config):
     index = algolia_client.init_index(config)
 
     for key in index.list_user_keys()['keys']:
         if 'description' in key and 'docsearch frontend' in key['description']:
             index.delete_user_key(key['value'])
+
 
 def delete_docsearch_index(config):
     algolia_client.delete_index(config)

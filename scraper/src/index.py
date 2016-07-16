@@ -1,12 +1,14 @@
 """
 documentationSearch scrapper main entry point
 """
-from algolia_helper import AlgoliaHelper
-from config_loader import ConfigLoader
-from documentation_spider import DocumentationSpider
+
 from scrapy.crawler import CrawlerProcess
-from strategies.default_strategy import DefaultStrategy
-from custom_middleware import CustomMiddleware
+
+from .algolia_helper import AlgoliaHelper
+from .config_loader import ConfigLoader
+from .documentation_spider import DocumentationSpider
+from .strategies.default_strategy import DefaultStrategy
+from .custom_middleware import CustomMiddleware
 
 try:
     # disable boto (S3 download)
@@ -17,57 +19,59 @@ try:
 except ImportError:
     pass
 
-CONFIG = ConfigLoader()
-CustomMiddleware.driver = CONFIG.driver
-DocumentationSpider.NB_INDEXED = 0
 
-if CONFIG.use_anchors:
-    import scrapy_patch
+def run_config(config, index_prefix=''):
+    CONFIG = ConfigLoader(config, index_prefix)
+    CustomMiddleware.driver = CONFIG.driver
+    DocumentationSpider.NB_INDEXED = 0
 
-STRATEGIES = {
-    'default': DefaultStrategy
-}
+    if CONFIG.use_anchors:
+        from . import scrapy_patch
 
-CONFIG_STRATEGY = CONFIG.strategy
-if CONFIG_STRATEGY not in STRATEGIES:
-    exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
+    STRATEGIES = {
+        'default': DefaultStrategy
+    }
 
-STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
+    CONFIG_STRATEGY = CONFIG.strategy
+    if CONFIG_STRATEGY not in STRATEGIES:
+        exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
 
-ALGOLIA_HELPER = AlgoliaHelper(
-    CONFIG.app_id,
-    CONFIG.api_key,
-    CONFIG.index_name,
-    STRATEGY.get_index_settings()
-)
+    STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
 
-PROCESS = CrawlerProcess({
-    'LOG_ENABLED': '1',
-    'LOG_LEVEL': 'ERROR',
-    # 'LOG_LEVEL': 'DEBUG',
-    'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36',
-    'DOWNLOADER_MIDDLEWARES': {'__main__.CustomMiddleware': 900},# Need to be > 600 to be after the redirectMiddleware
-    'DOWNLOADER_CLIENTCONTEXTFACTORY': 'scrapy_patch.CustomContextFactory'
-})
+    ALGOLIA_HELPER = AlgoliaHelper(
+        CONFIG.app_id,
+        CONFIG.api_key,
+        CONFIG.index_name,
+        STRATEGY.get_index_settings()
+    )
 
-PROCESS.crawl(
-    DocumentationSpider,
-    config=CONFIG,
-    algolia_helper=ALGOLIA_HELPER,
-    strategy=STRATEGY
-)
+    PROCESS = CrawlerProcess({
+        'LOG_ENABLED': '1',
+        'LOG_LEVEL': 'ERROR',
+        # 'LOG_LEVEL': 'DEBUG',
+        'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36',
+        'DOWNLOADER_MIDDLEWARES': {'scraper.src.custom_middleware.CustomMiddleware': 900},# Need to be > 600 to be after the redirectMiddleware
+        'DOWNLOADER_CLIENTCONTEXTFACTORY': 'scraper.src.scrapy_patch.CustomContextFactory'
+    })
 
-PROCESS.start()
-PROCESS.stop()
+    PROCESS.crawl(
+        DocumentationSpider,
+        config=CONFIG,
+        algolia_helper=ALGOLIA_HELPER,
+        strategy=STRATEGY
+    )
 
-CONFIG.destroy()
+    PROCESS.start()
+    PROCESS.stop()
 
-ALGOLIA_HELPER.commit_tmp_index()
+    CONFIG.destroy()
+
+    ALGOLIA_HELPER.commit_tmp_index()
 
 
-print("")
-print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
+    print("")
+    print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
 
-CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
+    CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
 
-print("")
+    print("")

@@ -1,10 +1,6 @@
-from __future__ import absolute_import
+from past.builtins import basestring
 
-try:
-    import algolia_helper
-    import fetchers
-except ImportError:
-    from . import algolia_helper, fetchers
+from . import algolia_helper, fetchers
 
 
 def _is_automatically_updated(config, attribute):
@@ -83,7 +79,7 @@ Have a nice day :)\n==============================\n"""
                 example_options.append("\"" + name + ":$" + name.upper() + "\"")
 
         if len(example_options) > 0:
-            algolia_options += "\n  algoliaOptions: { 'facetFilters': ["+ (', '.join(example_options)) +"] }"
+            algolia_options += "\n  algoliaOptions: { 'facetFilters': [" + (', '.join(example_options)) + "] }"
             facet_template += base_example_template.replace('{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase))\
                                                    .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
 

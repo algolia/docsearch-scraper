@@ -2,7 +2,8 @@ import os
 import os.path as path
 import subprocess as sp
 
-import helpers
+from builtins import input
+from . import helpers
 
 
 def _prompt_command(emails):
@@ -10,7 +11,7 @@ def _prompt_command(emails):
 
     for i, e in enumerate(emails):
         print('{}) {}'.format(i, e))
-    ans = raw_input(prompt).strip().split()
+    ans = input(prompt).strip().split()
 
     if len(ans) == 0:
         return emails

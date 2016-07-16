@@ -1,4 +1,3 @@
-
 class DictDiffer(object):
     def __init__(self, current_dict, past_dict):
         self.current_dict, self.past_dict = current_dict, past_dict

@@ -1,32 +1,31 @@
 # coding: utf-8
-
-from __future__ import absolute_import
-
-from src.config_loader import ConfigLoader
-from .abstract import config
 import pytest
+
+from ...config_loader import ConfigLoader
+from .abstract import config
+
 
 class TestStartUrls:
     def test_mandatory_start_urls(self):
         """ Should throw if no start_urls passed """
         # Given
-        config({
+        c = config({
             'start_urls': None
         })
 
         # When / Then
         with pytest.raises(ValueError):
-            ConfigLoader()
+            ConfigLoader(c)
 
     def test_start_urls_accept_single_value(self):
         """ Allow passing start_urls as string instead of array """
         # Given
-        config({
+        c = config({
             'start_urls': 'www.foo.bar'
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.start_urls[0]['url'] == 'www.foo.bar'
@@ -34,23 +33,23 @@ class TestStartUrls:
     def test_start_urls_should_have_at_least_one_element(self):
         """ Should throw if start_urls does not have at least one element """
         # Given
-        config({
+        c = config({
             'start_urls': []
         })
 
         # When / Then
         with pytest.raises(ValueError):
-            ConfigLoader()
+            ConfigLoader(c)
 
     def test_start_url_should_add_default_page_rank_and_tags(self):
         """ Should add default values for page_rank and tags """
         # Given
-        config({
+        c = config({
             'start_urls': [{"url": "http://www.foo.bar/"}]
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.start_urls[0]['tags'] == []
@@ -59,12 +58,12 @@ class TestStartUrls:
     def test_start_url_should_be_transform_to_object_if_string(self):
         """ Should accept strings for start_urls as well as objects """
         # Given
-        config({
+        c = config({
             'start_urls': ['http://www.foo.bar/']
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.start_urls[0]['url'] == 'http://www.foo.bar/'
@@ -75,7 +74,7 @@ class TestStartUrls:
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         # When
-        config({
+        c = config({
             "start_urls": [
                 {
                     "url": "https://test.com/doc/(?P<version>.*?)/(?P<type_of_content>.*?)/",
@@ -87,7 +86,7 @@ class TestStartUrls:
             ]
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert len(actual.start_urls) == 12
         assert actual.start_urls[0]['url'] == "https://test.com/doc/1.0/book/"

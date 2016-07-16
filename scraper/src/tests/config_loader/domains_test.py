@@ -1,22 +1,19 @@
 # coding: utf-8
-
-from __future__ import absolute_import
-
-from src.config_loader import ConfigLoader
+from ...config_loader import ConfigLoader
 from .abstract import config
 
 class TestDomains:
     def test_allowed_domains_start(self):
         """ Should populate allowed_domains from start_urls """
         # Given
-        config({
+        c = config({
             'start_urls': 'http://www.foo.bar/',
             'stop_urls': [],
             'allowed_domains': None
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.allowed_domains == ['www.foo.bar']
@@ -24,14 +21,14 @@ class TestDomains:
     def test_allowed_domains_start_stop(self):
         """ Should populate allowed_domains from both start and stop urls """
         # Given
-        config({
+        c = config({
             'start_urls': 'http://www.foo.bar/',
             'stop_urls': 'http://www.algolia.com/',
             'allowed_domains': None
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
@@ -39,7 +36,7 @@ class TestDomains:
     def test_allowed_domains_unique(self):
         """ Should populate a list of unique domains """
         # Given
-        config({
+        c = config({
             'start_urls': 'http://www.foo.bar/',
             'stop_urls': [
                 'http://www.algolia.com/',
@@ -49,7 +46,7 @@ class TestDomains:
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.allowed_domains == ['www.foo.bar', 'www.algolia.com']
@@ -58,12 +55,12 @@ class TestDomains:
         """ Should allow passing allowed_domains as a string instead of an array
         """
         # Given
-        config({
+        c = config({
             'allowed_domains': 'www.foo.bar'
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.allowed_domains == ['www.foo.bar']

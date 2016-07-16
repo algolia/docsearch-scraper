@@ -2,10 +2,10 @@
 CustomMiddleware
 """
 
+import time
+
 from scrapy.http import Request, HtmlResponse
 from scrapy.exceptions import IgnoreRequest
-
-import time
 
 try:
     from urlparse import urlparse

@@ -1,8 +1,10 @@
-from .abstract_command import AbstractCommand
-from deployer.src.helpers import make_custom_get_request
-from deployer.src.fetchers import get_configs_from_website
-from os import environ
 import json
+from os import environ
+
+from .abstract_command import AbstractCommand
+from ...deployer.helpers import make_custom_get_request
+from ...deployer.fetchers import get_configs_from_website
+
 
 class GetLogs(AbstractCommand):
     def get_name(self):
@@ -34,6 +36,4 @@ class GetLogs(AbstractCommand):
             print(log['content'])
             print('')
 
-
         return 0
-

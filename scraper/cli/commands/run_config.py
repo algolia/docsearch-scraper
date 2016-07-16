@@ -1,5 +1,6 @@
 from .abstract_command import AbstractCommand
-from os import environ
+from ...src.index import run_config
+
 
 class RunConfig(AbstractCommand):
     def get_name(self):
@@ -16,8 +17,4 @@ class RunConfig(AbstractCommand):
 
     def run(self, args):
         self.check_not_docsearch_app_id('run a config manually')
-        run_command = ["python", "scraper/src/index.py"]
-        env = environ.copy()
-        env.update({'CONFIG': args[0], 'INDEX_PREFIX': ""})
-
-        return self.exec_shell_command(run_command, env)
+        return run_config(args[0])

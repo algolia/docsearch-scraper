@@ -1,16 +1,11 @@
-from __future__ import absolute_import
-
 """
 Default Strategy
 """
 
-try:
-    from abstract_strategy import AbstractStrategy
-except ImportError:
-    from .abstract_strategy import AbstractStrategy
-
 import re
 from past.builtins import basestring
+
+from .abstract_strategy import AbstractStrategy
 
 
 class DefaultStrategy(AbstractStrategy):

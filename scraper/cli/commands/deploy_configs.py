@@ -1,5 +1,5 @@
 from .abstract_command import AbstractCommand
-from os import environ
+
 
 class DeployConfigs(AbstractCommand):
     def get_name(self):

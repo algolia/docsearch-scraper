@@ -2,6 +2,8 @@ import requests
 import json
 import os
 
+from builtins import input
+
 username = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
 password = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
 
@@ -12,7 +14,7 @@ def confirm(message="Confirm"):
     prompt = message + ' [y/n]:\n'
 
     while True:
-        ans = raw_input(prompt)
+        ans = input(prompt)
         if ans not in ['y', 'Y', 'n', 'N']:
             print('please enter y or n.')
             continue
@@ -24,10 +26,12 @@ def confirm(message="Confirm"):
 
 def get_user_value(message):
     prompt = message
-    return raw_input(prompt)
+    return input(prompt)
+
 
 def make_custom_get_request(url):
     return requests.get(url)
+
 
 def make_request(endpoint, type=None, configuration=None):
     url = base_url + endpoint

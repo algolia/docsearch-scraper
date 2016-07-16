@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 class MockedInit:
     def __init__(self, expected_response=None):
         self.expected_response = expected_response

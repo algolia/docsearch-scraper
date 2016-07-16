@@ -22,4 +22,4 @@ def config(additional_config={}):
     }
     final_config = base_config.copy()
     final_config.update(additional_config)
-    os.environ['CONFIG'] = json.dumps(final_config)
+    return json.dumps(final_config)
