@@ -10,6 +10,7 @@ import os
 import re
 import copy
 import platform
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -21,8 +22,9 @@ from . import helpers
 
 try:
     from urlparse import urlparse
+    from urllib import unquote_plus
 except ImportError:
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse, unquote_plus
 
 
 class ConfigLoader(object):
@@ -46,6 +48,7 @@ class ConfigLoader(object):
     scrap_start_urls = True
     strict_redirect = False
     remove_get_params = False
+    login = None
 
     # data storage, starting here attribute are not config params
     config_file = None
@@ -86,7 +89,11 @@ class ConfigLoader(object):
         self.start_urls = self.parse_urls(self.start_urls)
         self.selectors = self.parse_selectors(self.selectors)
 
-        self .min_indexed_level = self.get_min_indexed_level_object(self.min_indexed_level)
+        self.min_indexed_level = self.get_min_indexed_level_object(self.min_indexed_level)
+
+        if self.login is not None:
+            self.js_render = True
+            self.open_login_url()
 
         if self.conf_need_browser() and not self.js_render:
             self.destroy()
@@ -238,6 +245,10 @@ class ConfigLoader(object):
                 start_urls.append(start_url)
 
         return start_urls
+
+    def open_login_url(self):
+        self.driver.get(unquote_plus(self.login['url']))
+        time.sleep(self.login['time'])
 
     @staticmethod
     def get_url_variables_name(url):
