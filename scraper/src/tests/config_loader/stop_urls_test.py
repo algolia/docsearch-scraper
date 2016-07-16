@@ -10,12 +10,12 @@ class TestStopUrls:
     def test_stop_urls_accept_single_value(self):
         """ Allow passing stop_urls as string instead of array """
         # Given
-        config({
+        c = config({
             'stop_urls': 'www.foo.bar'
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.stop_urls == ['www.foo.bar']
@@ -34,10 +34,8 @@ class TestStopUrls:
             'start_urls': ['http://www.starturl.com/']
         }
 
-        os.environ['CONFIG'] = json.dumps(conf)
-
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(json.dumps(conf))
 
         # Then
         assert actual.stop_urls == []

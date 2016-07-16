@@ -54,7 +54,7 @@ class ConfigLoader(object):
 
     driver = None
 
-    def __init__(self, config, index_prefix):
+    def __init__(self, config, index_prefix=''):
         if os.path.isfile(config):
             self.config_file = config
             with open(self.config_file, 'r') as f:

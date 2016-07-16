@@ -6,12 +6,12 @@ class TestDefaultStategy:
     def test_default_strategy(self):
         """ Should use default strategy if none is passed """
         # When
-        config({
+        c = config({
             'strategy': None
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.strategy == 'default'

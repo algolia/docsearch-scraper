@@ -10,10 +10,10 @@ class TestSelectorsExclude:
     def test_selectors_exclude_default(self):
         """ Should set the `selectors_exclude` parameter to [] by default """
 
-        config()
+        c = config()
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.selectors_exclude == []
@@ -21,12 +21,12 @@ class TestSelectorsExclude:
     def test_selectors_exclude_set_override_default(self):
         """ Default `selectors_exclude` should be override when set in the config """
         # When
-        config({
+        c = config({
             'selectors_exclude': ['.test']
         })
 
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         # Then
         assert actual.selectors_exclude == ['.test']
@@ -45,10 +45,8 @@ class TestSelectorsExclude:
             'stop_urls': ['http://www.stopurl.com/']
         }
 
-        os.environ['CONFIG'] = json.dumps(conf)
-
         # When
-        actual = ConfigLoader()
+        actual = ConfigLoader(json.dumps(conf))
 
         # Then
         assert actual.selectors_exclude == []

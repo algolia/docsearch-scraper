@@ -5,9 +5,9 @@ from .abstract import config
 
 class TestOpenSeleniumBrowser:
     def test_browser_not_needed_by_default(self):
-        config()
+        c = config()
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.conf_need_browser() is False
 
@@ -16,11 +16,11 @@ class TestOpenSeleniumBrowser:
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
         # When
-        config({
+        c = config({
             "js_render": True
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.conf_need_browser() is True
 
@@ -30,7 +30,7 @@ class TestOpenSeleniumBrowser:
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         # When
-        config({
+        c = config({
             "start_urls": [
                 {
                     "url": "https://symfony.com/doc/(?P<version>.*?)/(?P<type_of_content>.*?)/",
@@ -45,6 +45,6 @@ class TestOpenSeleniumBrowser:
             ]
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.conf_need_browser() is True

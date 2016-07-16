@@ -44,6 +44,4 @@ def get_strategy(config=None):
     for key in config:
         modified_config[key] = config[key]
 
-    # Stub ENV variables read by ConfigLoader
-    os.environ['CONFIG'] = json.dumps(modified_config)
-    return DefaultStrategy(ConfigLoader())
+    return DefaultStrategy(ConfigLoader(json.dumps(modified_config)))

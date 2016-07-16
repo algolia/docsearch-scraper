@@ -4,9 +4,9 @@ from .abstract import config
 
 class TestGetExtraFacets:
     def test_extra_facets_should_be_empty_by_default(self):
-        config()
+        c = config()
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.get_extra_facets() == []
 
@@ -15,7 +15,7 @@ class TestGetExtraFacets:
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
-        config({
+        c = config({
             "start_urls": [
                 {
                     "url": "https://test.com/doc/(?P<type_of_content>.*?)/",
@@ -26,7 +26,7 @@ class TestGetExtraFacets:
             ]
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.get_extra_facets() == ["type_of_content"]
 
@@ -35,7 +35,7 @@ class TestGetExtraFacets:
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
-        config({
+        c = config({
             "start_urls": [
                 {
                     "url": "https://test.com/doc/(?P<type_of_content>.*?)/",
@@ -52,7 +52,7 @@ class TestGetExtraFacets:
             ]
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         assert actual.get_extra_facets() == ["type_of_content"]
 
@@ -61,7 +61,7 @@ class TestGetExtraFacets:
         monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
-        config({
+        c = config({
             "start_urls": [
                 {
                     "url": "https://test.com/doc/(?P<type_of_content>.*?)/(?P<version>.*?)",
@@ -79,7 +79,7 @@ class TestGetExtraFacets:
             ]
         })
 
-        actual = ConfigLoader()
+        actual = ConfigLoader(c)
 
         extra_facets = actual.get_extra_facets()
 
