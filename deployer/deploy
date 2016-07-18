@@ -10,7 +10,7 @@ else
     cp -r /Users/maxiloc/www/docsearch-scraper . && mv docsearch-scraper scraper
 fi
 
-cd /tmp/docsearch_deploy/scraper/deployer/
+cd /tmp/docsearch_deploy/scraper/scraper/deployer/
 git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs.git public
 git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs-private.git private
 
