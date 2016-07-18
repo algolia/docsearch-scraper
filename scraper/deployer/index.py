@@ -2,12 +2,12 @@ import sys
 import os
 import itertools
 
-from dict_differ import DictDiffer
-import fetchers
-import algolia_helper
-import helpers
-import snippeter
-import emails
+from .dict_differ import DictDiffer
+from . import fetchers
+from . import algolia_helper
+from . import helpers
+from . import snippeter
+from . import emails
 
 if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print("")
