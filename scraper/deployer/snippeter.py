@@ -64,6 +64,8 @@ Have a nice day :)\n==============================\n"""
         example_options = []
 
         for name, values in facets.iteritems():
+            if name == "no_variables":
+                continue
             keys = values.keys()
             keys.sort()
 
