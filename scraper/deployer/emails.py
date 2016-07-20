@@ -90,7 +90,7 @@ def _prompt_emails(config_name, config_dir):
 def add(config_name, config_dir=None):
     if config_dir is None:
         basedir = path.dirname(__file__)
-        config_dir = path.join(basedir, '..', 'private')
+        config_dir = path.join(basedir, '../../deployer/private')
 
     emails = _prompt_emails(config_name, config_dir)
     _write(emails, config_name, config_dir)
