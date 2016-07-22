@@ -49,6 +49,9 @@ class ConfigLoader(object):
     strict_redirect = False
     remove_get_params = False
     login = None
+    keep_tags = []
+    extra_records = []
+
 
     # data storage, starting here attribute are not config params
     config_file = None
@@ -82,6 +85,8 @@ class ConfigLoader(object):
         data['index_name'] = data['index_prefix'] + data['index_name']
         for key, value in data.items():
             setattr(self, key, value)
+
+        AbstractStrategy.keep_tags = self.keep_tags
 
         if self.conf_need_browser():
             self.init()
@@ -368,3 +373,6 @@ class ConfigLoader(object):
                     except Exception:
                         print("")
                         print("[KO] " + "Was not able to update " + self.config_file)
+
+    def get_extra_records(self):
+        return self.extra_records

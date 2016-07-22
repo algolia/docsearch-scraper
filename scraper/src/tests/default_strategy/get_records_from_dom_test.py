@@ -317,3 +317,49 @@ class TestGetRecordsFromDom:
         assert len(actual) == 1
         assert actual[0]['type'] == 'lvl0'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
+
+    def test_keep_tags(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'api': {
+                    "lvl0": "h1",
+                    "lvl1": "h2",
+                    "lvl2": "h3",
+                    "content": "p"
+                },
+                'guides': {
+                    "lvl0": "h1",
+                },
+            },
+            "keep_tags": [
+                "code"
+            ],
+            'start_urls': [
+                {
+                    'url': 'http://test.com/docs/guides',
+                    'selectors_key': 'guides'
+                },
+                {
+                    'url': 'http://test.com/docs/api',
+                    'selectors_key': 'api'
+                }
+            ]
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1><code>Foo</code></h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>text</p>
+        </body></html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom('http://test.com/docs/guides/tutorial1')
+
+        # Then
+        assert len(actual) == 1
+        assert actual[0]['type'] == 'lvl0'
+        assert actual[0]['hierarchy']['lvl0'] == '<code>Foo</code>'

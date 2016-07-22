@@ -66,6 +66,10 @@ def run_config(config, index_prefix=''):
 
     CONFIG.destroy()
 
+    extra_records = CONFIG.get_extra_records()
+    if len(extra_records) > 0:
+        ALGOLIA_HELPER.add_records(extra_records, "Extra records")
+
     ALGOLIA_HELPER.commit_tmp_index()
 
 

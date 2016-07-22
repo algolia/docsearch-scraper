@@ -69,13 +69,32 @@ class AbstractStrategy(object):
         return self.config.min_indexed_level[selectors_key]
 
     @staticmethod
+    def itertext(node):
+        tag = node.tag
+        if not isinstance(tag, basestring) and tag is not None:
+            return
+
+        if node.text:
+            if node.tag not in AbstractStrategy.keep_tags:
+                yield node.text
+            else:
+                yield '<' + node.tag + '>' + node.text + '</' + node.tag + '>'
+        for e in node:
+            for s in AbstractStrategy.itertext(e):
+                yield s
+            if e.tail:
+                yield e.tail
+
+    @staticmethod
     def get_text(element, strip_chars=None):
         """Return the text content of a DOM node"""
         text = element
 
         # Do not call text_content if not needed (Ex. xpath selector with text() doesn't return a node but a string)
         if not isinstance(text, basestring):
-            text = text.text_content()
+            text = ""
+            for s in AbstractStrategy.itertext(element):
+                text = text + " " + s
 
         # We call strip a first time for space, tab, newline, return and formfeed
         text = text.strip()
