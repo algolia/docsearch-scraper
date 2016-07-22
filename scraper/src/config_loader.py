@@ -15,10 +15,10 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from .strategies.abstract_strategy import AbstractStrategy
-from .custom_middleware import CustomMiddleware
-from .js_executor import JsExecutor
-from . import helpers
+from strategies.abstract_strategy import AbstractStrategy
+from custom_middleware import CustomMiddleware
+from js_executor import JsExecutor
+import helpers
 
 try:
     from urlparse import urlparse

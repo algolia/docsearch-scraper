@@ -4,11 +4,11 @@ documentationSearch scrapper main entry point
 
 from scrapy.crawler import CrawlerProcess
 
-from .algolia_helper import AlgoliaHelper
-from .config_loader import ConfigLoader
-from .documentation_spider import DocumentationSpider
-from .strategies.default_strategy import DefaultStrategy
-from .custom_middleware import CustomMiddleware
+from algolia_helper import AlgoliaHelper
+from config_loader import ConfigLoader
+from documentation_spider import DocumentationSpider
+from strategies.default_strategy import DefaultStrategy
+from custom_middleware import CustomMiddleware
 
 try:
     # disable boto (S3 download)
@@ -45,13 +45,21 @@ def run_config(config, index_prefix=''):
         STRATEGY.get_index_settings()
     )
 
+    DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'
+    DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
+
+    if __name__ == '__main__':
+        DOWNLOADER_MIDDLEWARES_PATH = 'custom_middleware.CustomMiddleware'
+        DOWNLOADER_CLIENTCONTEXTFACTORY = 'scrapy_patch.CustomContextFactory'
+
     PROCESS = CrawlerProcess({
         'LOG_ENABLED': '1',
         'LOG_LEVEL': 'ERROR',
         # 'LOG_LEVEL': 'DEBUG',
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36',
-        'DOWNLOADER_MIDDLEWARES': {'scraper.src.custom_middleware.CustomMiddleware': 900},# Need to be > 600 to be after the redirectMiddleware
-        'DOWNLOADER_CLIENTCONTEXTFACTORY': 'scraper.src.scrapy_patch.CustomContextFactory'
+        'DOWNLOADER_MIDDLEWARES': {DOWNLOADER_MIDDLEWARES_PATH: 900},
+    # Need to be > 600 to be after the redirectMiddleware
+        'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY
     })
 
     PROCESS.crawl(
@@ -79,3 +87,7 @@ def run_config(config, index_prefix=''):
     CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
 
     print("")
+
+if __name__ == '__main__':
+    from os import environ
+    run_config(environ['CONFIG'])
