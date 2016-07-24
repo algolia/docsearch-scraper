@@ -26,7 +26,7 @@ def run_config(config, index_prefix=''):
     DocumentationSpider.NB_INDEXED = 0
 
     if CONFIG.use_anchors:
-        from . import scrapy_patch
+        import scrapy_patch
 
     STRATEGIES = {
         'default': DefaultStrategy
