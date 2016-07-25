@@ -1,5 +1,5 @@
+from deployer.src.config_creator import create_config
 from .abstract_command import AbstractCommand
-from ...deployer.config_creator import create_config
 
 
 class BootstrapConfig(AbstractCommand):

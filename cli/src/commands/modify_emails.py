@@ -2,8 +2,8 @@ import os
 from os import path
 import subprocess as sp
 
+from deployer.src.emails import add, delete
 from .abstract_command import AbstractCommand
-from ...deployer.emails import add, delete
 
 
 def _ensure_configs_private():

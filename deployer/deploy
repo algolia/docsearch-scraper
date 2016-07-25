@@ -15,6 +15,6 @@ git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs.git
 git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs-private.git private
 
 cd /tmp/docsearch_deploy/scraper
-python -m scraper.deployer.index
+python -m deployer.src.index
 
 rm -rf /tmp/docsearch_deploy

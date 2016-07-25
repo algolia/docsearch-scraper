@@ -1,5 +1,5 @@
+from scraper.src.index import run_config
 from .abstract_command import AbstractCommand
-from ...src.index import run_config
 
 
 class RunConfig(AbstractCommand):

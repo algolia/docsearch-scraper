@@ -1,7 +1,7 @@
 import pyperclip
 
+from deployer.src.snippeter import get_email_for_config
 from .abstract_command import AbstractCommand
-from ...deployer.snippeter import get_email_for_config
 
 
 class GenerateEmail(AbstractCommand):

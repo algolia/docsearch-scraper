@@ -1,9 +1,9 @@
 import json
 from os import environ
 
+from deployer.src.helpers import make_custom_get_request
+from deployer.src.fetchers import get_configs_from_website
 from .abstract_command import AbstractCommand
-from ...deployer.helpers import make_custom_get_request
-from ...deployer.fetchers import get_configs_from_website
 
 
 class GetLogs(AbstractCommand):
