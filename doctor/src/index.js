@@ -394,12 +394,14 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
-    sectionPrinter("Disabled connectors", nonActiveConnectors, "warning");
     sectionPrinter("Did not run for more than one day", didNotRunForMoreThanOneDay, "warning");
 
-    if (reports.length == 0) {
-        var now = new Date();
-        if (now.getHours() == 10) {
+    if (now.getHours() == 10) {
+        sectionPrinter("Disabled connectors", nonActiveConnectors, "warning");
+        
+        if (reports.length == 0) {
+            var now = new Date();
+
             reports.push({
                 color: "good",
                 text: "I am alive and everything alright \\o/"
