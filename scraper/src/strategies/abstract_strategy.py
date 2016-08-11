@@ -96,6 +96,8 @@ class AbstractStrategy(object):
             text = text.replace(html.escape(opening_tag), opening_tag)
             text = text.replace(html.escape(closing_tag), closing_tag)
 
+        text = text.replace('&amp;', '&')
+
         return text
 
     @staticmethod
