@@ -143,6 +143,7 @@ var aggregateWithSettings = new Promise(function (resolve, reject) {
                 var index = client.initIndex(elt.name);
 
                 elt.anomalyInSettings = false;
+                elt.crawling_issue = false;
                 index.getSettings(function(err, content) {
                     settings = ['attributesToIndex', 'attributesToHighlight', 'attributesToRetrieve'];
 
@@ -151,6 +152,10 @@ var aggregateWithSettings = new Promise(function (resolve, reject) {
                             elt.anomalyInSettings = true;
                         }
                     });
+
+                    if (content.userData !== undefined && content.userData.crawling_issue !== undefined && content.userData.crawling_issue === true) {
+                        elt.crawling_issue = true;
+                    }
 
                     resolve(elt);
                 });
@@ -302,6 +307,10 @@ aggregateCrawlerInfo.then(function (indices) {
         return index.isConnectorActive === false;
     });
 
+    var crawlingIssue = indices.filter(function (index) {
+        return index.crawling_issue === true;
+    });
+
     var didNotRunForMoreThanOneDay = indices.filter(function (index) {
         return index.didNotRunForMoreThanOneDay === true;
     });
@@ -395,6 +404,7 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
     sectionPrinter("Did not run for more than one day", didNotRunForMoreThanOneDay, "warning");
+    sectionPrinter("Crawling issue", crawlingIssue, "warning");
 
     var now = new Date();
 
