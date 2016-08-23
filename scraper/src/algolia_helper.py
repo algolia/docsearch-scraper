@@ -10,6 +10,7 @@ class AlgoliaHelper:
         self.algolia_client = algoliasearch.Client(app_id, api_key)
         self.index_name = index_name
         self.index_name_tmp = index_name + '_tmp'
+        self.algolia_index = self.algolia_client.init_index(self.index_name)
         self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
         self.algolia_client.delete_index(self.index_name_tmp)
         self.algolia_index_tmp.set_settings(settings)
@@ -27,3 +28,10 @@ class AlgoliaHelper:
         """Overwrite the real index with the temporary one"""
         # print("Update settings")
         self.algolia_client.move_index(self.index_name_tmp, self.index_name)
+
+    def report_crawling_issue(self):
+        self.algolia_index.set_settings({
+            'userData': {
+                'crawling_issue': True
+            }
+        })

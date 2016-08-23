@@ -78,13 +78,16 @@ def run_config(config, index_prefix=''):
     if len(extra_records) > 0:
         ALGOLIA_HELPER.add_records(extra_records, "Extra records")
 
-    ALGOLIA_HELPER.commit_tmp_index()
-
-
     print("")
-    print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
 
-    CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
+    if DocumentationSpider.NB_INDEXED > 0:
+        ALGOLIA_HELPER.commit_tmp_index()
+        print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
+        CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
+    else:
+        print('Crawling issue: nbHits 0 for ' + CONFIG.index_name)
+        ALGOLIA_HELPER.report_crawling_issue()
+
 
     print("")
 
