@@ -22,7 +22,8 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
   libasound2 \
   libgtk2.0-0
 
-RUN wget https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
+RUN wget https://demos.algolia.com/downloads/firefox-mozilla-build_45.0.2-0ubuntu1_amd64.tar.bz2
+RUN tar -xjvf firefox-mozilla-build_45.0.2-0ubuntu1_amd64.tar.bz2
 RUN dpkg -i firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
 
 RUN npm install -g \
