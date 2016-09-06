@@ -43,7 +43,7 @@ class DocumentationSpider(CrawlSpider):
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
         link_extractor = LxmlLinkExtractor(
-            allow='.*',
+            allow=self.start_urls,
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
@@ -52,7 +52,7 @@ class DocumentationSpider(CrawlSpider):
         )
 
         DocumentationSpider.rules = [
-            Rule(link_extractor, callback=self.add_records, follow=False),
+            Rule(link_extractor, callback=self.add_records, follow=True),
         ]
 
         super(DocumentationSpider, self)._compile_rules()

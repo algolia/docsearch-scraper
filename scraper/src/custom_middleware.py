@@ -50,9 +50,10 @@ class CustomMiddleware(object):
         # If the url get redirected then this url gets crawled even if it's not allowed to
         # So we check if the final url is allowed
 
-        o = urlparse(response.url)
-        url_without_params = o.scheme + "://" + o.netloc + o.path
-        response = response.replace(url=url_without_params)
+        if spider.remove_get_params:
+            o = urlparse(response.url)
+            url_without_params = o.scheme + "://" + o.netloc + o.path
+            response = response.replace(url=url_without_params)
 
         for rule in spider._rules:
             if not spider.strict_redirect:
