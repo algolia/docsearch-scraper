@@ -19,7 +19,7 @@ class CustomMiddleware(object):
         self.driver = CustomMiddleware.driver
 
     def process_request(self, request, spider):
-
+        
         if not spider.js_render:
             return None
 
