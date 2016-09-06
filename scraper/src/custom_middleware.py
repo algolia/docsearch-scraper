@@ -19,7 +19,6 @@ class CustomMiddleware(object):
         self.driver = CustomMiddleware.driver
 
     def process_request(self, request, spider):
-
         if not spider.js_render:
             return None
 
@@ -51,10 +50,9 @@ class CustomMiddleware(object):
         # If the url get redirected then this url gets crawled even if it's not allowed to
         # So we check if the final url is allowed
 
-        if spider.remove_get_params:
-            o = urlparse(response.url)
-            url_without_params = o.scheme + "://" + o.netloc + o.path
-            response = response.replace(url=url_without_params)
+        o = urlparse(response.url)
+        url_without_params = o.scheme + "://" + o.netloc + o.path
+        response = response.replace(url=url_without_params)
 
         for rule in spider._rules:
             if not spider.strict_redirect:

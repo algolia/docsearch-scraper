@@ -1,6 +1,7 @@
 import sys
 import os
 import itertools
+import algoliasearch
 
 from .dict_differ import DictDiffer
 from . import fetchers
@@ -68,9 +69,16 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
             for config in changed:
                 config_id = str(inverted_actual_configs[config])
-                key = algolia_helper.get_docsearch_key(config)
+                message = config
 
-                print(config + ' (' + key + ')')
+                try:
+                    key = algolia_helper.get_docsearch_key(config)
+                    message = message + ' (' + key + ')'
+                except algoliasearch.helpers.AlgoliaException:
+                    pass
+
+                print(message)
+
                 helpers.make_request('/' + config_id, 'PUT', ref_configs[config])
                 helpers.make_request('/' + config_id + '/reindex', 'POST')
 

@@ -248,7 +248,7 @@ class ConfigLoader(object):
             # If there is no tag just keep it like this
             else:
                 start_urls.append(start_url)
-
+            print(start_urls)
         return start_urls
 
     def open_login_url(self):
@@ -278,6 +278,9 @@ class ConfigLoader(object):
                 start_urls.append(copy_start_url)
             else:
                 start_urls = ConfigLoader.geturls(copy_start_url, matches[0], matches[1:], values, start_urls)
+
+        print("/////////")
+        print(start_urls)
 
         return start_urls
 

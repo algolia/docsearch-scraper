@@ -3,9 +3,6 @@ from os import getcwd, path, environ
 from dotenv import load_dotenv
 from builtins import input
 
-env_file = getcwd() + '/.env'
-load_dotenv(env_file)
-
 from .helpers import get_color
 from .helpers import printer
 from .helpers import print_error
@@ -27,42 +24,46 @@ from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.get_logs import GetLogs
 
-if not path.isfile(env_file):
-    print("")
-    print("No .env found. Let's create one.")
+if 'APPLICATION_ID' not in environ and 'API_KEY' not in environ:
+    env_file = getcwd() + '/.env'
+    load_dotenv(env_file)
 
-    f = open(env_file, "w")
+    if not path.isfile(env_file):
+        print("")
+        print("No .env found. Let's create one.")
 
-    ans = input("What is your Algolia APPLICATION_ID: ")
-    f.write("APPLICATION_ID=" + ans + "\n")
+        f = open(env_file, "w")
 
-    ans = input("What is your Algolia API_KEY: ")
-    f.write("API_KEY=" + ans + "\n")
+        ans = input("What is your Algolia APPLICATION_ID: ")
+        f.write("APPLICATION_ID=" + ans + "\n")
 
-    ans = input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_USERNAME=" + ans + "\n")
+        ans = input("What is your Algolia API_KEY: ")
+        f.write("API_KEY=" + ans + "\n")
 
-    ans = input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_PASSWORD=" + ans + "\n")
+        ans = input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
+        f.write("WEBSITE_USERNAME=" + ans + "\n")
 
-    ans = input("What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_USERNAME=" + ans + "\n")
+        ans = input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
+        f.write("WEBSITE_PASSWORD=" + ans + "\n")
 
-    ans = input("What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_PASSWORD=" + ans + "\n")
+        ans = input("What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
+        f.write("SCHEDULER_USERNAME=" + ans + "\n")
 
-    ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
-    if ans != "":
-        f.write("SLACK_HOOK=" + ans + "\n")
+        ans = input("What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
+        f.write("SCHEDULER_PASSWORD=" + ans + "\n")
 
-        ans = input("What is your DEPLOY_KEY (Leave empty unless you have it): ")
-        f.write("DEPLOY_KEY=" + ans + "\n")
+        ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
+        if ans != "":
+            f.write("SLACK_HOOK=" + ans + "\n")
 
-    f.close()
+            ans = input("What is your DEPLOY_KEY (Leave empty unless you have it): ")
+            f.write("DEPLOY_KEY=" + ans + "\n")
 
-    print("")
+        f.close()
 
-load_dotenv(env_file)
+        print("")
+
+    load_dotenv(env_file)
 
 ADMIN = True
 CREDENTIALS = True
