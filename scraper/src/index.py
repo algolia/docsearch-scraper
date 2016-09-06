@@ -62,8 +62,6 @@ def run_config(config, index_prefix=''):
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY
     })
 
-    ALGOLIA_HELPER.clear_index()
-
     PROCESS.crawl(
         DocumentationSpider,
         config=CONFIG,

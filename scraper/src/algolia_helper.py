@@ -29,10 +29,6 @@ class AlgoliaHelper:
         # print("Update settings")
         self.algolia_client.move_index(self.index_name_tmp, self.index_name)
 
-    def clear_index(self):
-        print("clearing index...")
-        self.algolia_index.clear_index()
-
     def report_crawling_issue(self):
         self.algolia_index.set_settings({
             'userData': {
