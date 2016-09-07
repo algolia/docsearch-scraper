@@ -268,7 +268,10 @@ class DefaultStrategy(AbstractStrategy):
             'minProximity': 2,
             'ignorePlurals': True,
             'advancedSyntax': True,
-            'removeWordsIfNoResults': 'allOptional'
+            'removeWordsIfNoResults': 'allOptional',
+            'userData': {
+                'crawling_issue': False
+            }
         }
 
         # apply custom updates

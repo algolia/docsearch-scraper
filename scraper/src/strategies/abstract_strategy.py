@@ -5,6 +5,7 @@ from past.builtins import basestring
 import lxml
 import re
 import json
+import html
 
 """
 Abstract Strategy
@@ -86,6 +87,20 @@ class AbstractStrategy(object):
                 yield e.tail
 
     @staticmethod
+    def escape(text):
+        text = html.escape(text)
+
+        for tag in AbstractStrategy.keep_tags:
+            opening_tag = "<" + tag + ">"
+            closing_tag = "</" + tag + ">"
+            text = text.replace(html.escape(opening_tag), opening_tag)
+            text = text.replace(html.escape(closing_tag), closing_tag)
+
+        text = text.replace('&amp;', '&')
+
+        return text
+
+    @staticmethod
     def get_text(element, strip_chars=None):
         """Return the text content of a DOM node"""
         text = element
@@ -105,7 +120,7 @@ class AbstractStrategy(object):
         if len(text) == 0:
             return None
 
-        return text
+        return AbstractStrategy.escape(text)
 
     @staticmethod
     def get_text_from_nodes(elements, strip_chars=None):
@@ -120,7 +135,7 @@ class AbstractStrategy(object):
         if len(text) == 0:
             return None
 
-        return text
+        return AbstractStrategy.escape(text)
 
     @staticmethod
     def remove_from_dom(dom, exclude_selectors):
