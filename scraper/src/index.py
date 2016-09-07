@@ -58,7 +58,7 @@ def run_config(config, index_prefix=''):
         # 'LOG_LEVEL': 'DEBUG',
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36',
         'DOWNLOADER_MIDDLEWARES': {DOWNLOADER_MIDDLEWARES_PATH: 900},
-    # Need to be > 600 to be after the redirectMiddleware
+        # Need to be > 600 to be after the redirectMiddleware
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY
     })
 
