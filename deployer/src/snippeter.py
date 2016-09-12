@@ -81,7 +81,7 @@ Have a nice day :)\n==============================\n"""
                 example_options.append("\"" + name + ":$" + name.upper() + "\"")
 
         if len(example_options) > 0:
-            algolia_options += "\n  algoliaOptions: { 'facetFilters': [" + (', '.join(example_options)) + "] }"
+            algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (', '.join(example_options)) + "] }"
             facet_template += base_example_template.replace('{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase))\
                                                    .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
 
