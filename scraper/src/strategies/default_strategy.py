@@ -24,6 +24,14 @@ class DefaultStrategy(AbstractStrategy):
         """
         Main method called from the DocumentationSpider. Will be passed the HTTP
         response and will return a list of all records"""
+
+        if len(self.config.stop_content) > 0:
+            body = self.get_body(response)
+
+            for stop_content in self.config.stop_content:
+                if stop_content in body:
+                    return []
+
         self.dom = self.get_dom(response)
         self.dom = self.remove_from_dom(self.dom, self.config.selectors_exclude)
 

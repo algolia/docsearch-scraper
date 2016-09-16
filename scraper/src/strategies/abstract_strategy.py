@@ -27,6 +27,14 @@ class AbstractStrategy(object):
         print(json.dumps(data, indent=2, sort_keys=True, separators=(',', ': ')))
 
     @staticmethod
+    def get_body(response):
+        try:
+            body = response.body.decode(response.encoding)
+            return body
+        except (UnicodeError, ValueError):
+            return response.body
+
+    @staticmethod
     def get_dom(response):
         """Get the DOM representation of the webpage"""
         try:

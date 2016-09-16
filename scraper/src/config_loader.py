@@ -51,6 +51,7 @@ class ConfigLoader(object):
     login = None
     keep_tags = []
     extra_records = []
+    stop_content = []
 
 
     # data storage, starting here attribute are not config params

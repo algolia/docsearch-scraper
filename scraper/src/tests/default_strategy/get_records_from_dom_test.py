@@ -2,6 +2,7 @@
 
 from .abstract import get_strategy
 import lxml.html
+from scrapy.http import TextResponse
 
 class TestGetRecordsFromDom:
     def test_simple(self):
@@ -363,3 +364,35 @@ class TestGetRecordsFromDom:
         assert len(actual) == 1
         assert actual[0]['type'] == 'lvl0'
         assert actual[0]['hierarchy']['lvl0'] == '<code>Foo</code>'
+
+
+    def test_stop_content(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            },
+            'start_urls': [
+                'http://test.com/docs/guides'
+            ],
+            'stop_content': '404'
+        })
+
+        html = """
+        <html><body>
+            <h1><code>Foo</code></h1>
+            <h2>!Bar.</h2>
+            <h3>,Baz!</h3>
+            <p>404 Page Not Found</p>
+        </body></html>
+        """
+
+        response = TextResponse('http://test.com/docs/guides', body=html, encoding='utf-8')
+        # When
+        actual = strategy.get_records_from_response(response)
+
+        # Then
+        assert len(actual) == 0
