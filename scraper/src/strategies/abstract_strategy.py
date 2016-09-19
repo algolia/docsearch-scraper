@@ -154,7 +154,7 @@ class AbstractStrategy(object):
                 continue
 
             for match in matches:
-                match.getparent().remove(match)
+                match.drop_tree()
 
         return dom
 

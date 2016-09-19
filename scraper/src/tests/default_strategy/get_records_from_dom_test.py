@@ -396,3 +396,67 @@ class TestGetRecordsFromDom:
 
         # Then
         assert len(actual) == 0
+
+    def test_selectors_exclude_tail(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "text": "p"
+            },
+            'selectors_exclude': ['.test'],
+            'start_urls': [
+                'http://test.com/docs/guides'
+            ],
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1><code>Foo</code></h1>
+            <h2>Bar<a class="test" href="/lol">test</a></h2>
+        </body></html>
+        """)
+
+        strategy.dom = strategy.remove_from_dom(strategy.dom, strategy.config.selectors_exclude)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 2
+        assert actual[1]['type'] == 'lvl1'
+        assert actual[1]['hierarchy']['lvl1'] == 'Bar'
+
+    def test_selectors_exclude_tail2(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "text": "p"
+            },
+            'selectors_exclude': ['.test'],
+            'start_urls': [
+                'http://test.com/docs/guides'
+            ],
+        })
+
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1><code>Foo</code></h1>
+            <h2><a class="test" href="/lol">test</a>Bar</h2>
+        </body></html>
+        """)
+
+        strategy.dom = strategy.remove_from_dom(strategy.dom, strategy.config.selectors_exclude)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 2
+        assert actual[1]['type'] == 'lvl1'
+        assert actual[1]['hierarchy']['lvl1'] == 'Bar'

@@ -50,4 +50,3 @@ class TestSelectorsExclude:
 
         # Then
         assert actual.selectors_exclude == []
-
