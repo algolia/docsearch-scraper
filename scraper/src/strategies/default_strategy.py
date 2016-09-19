@@ -171,7 +171,7 @@ class DefaultStrategy(AbstractStrategy):
                     if content is None and selectors[level]['default_value'] is not None:
                         content = selectors['content']['default_value']
 
-            hierarchy_radio = self.get_hierarchy_radio(hierarchy)
+            hierarchy_radio = self.get_hierarchy_radio(hierarchy, current_level)
             hierarchy_complete = self.get_hierarchy_complete(hierarchy)
             weight = {
                 'page_rank': self.get_page_rank(current_page_url),
@@ -360,7 +360,7 @@ class DefaultStrategy(AbstractStrategy):
         # No more parent, we have no anchor
         return None
 
-    def get_hierarchy_radio(self, hierarchy):
+    def get_hierarchy_radio(self, hierarchy, current_level):
         """Returns the radio hierarchy for the record, where only one level is
         filled and the others are empty
         Ex: {
@@ -378,7 +378,7 @@ class DefaultStrategy(AbstractStrategy):
         is_found = False
         for level in reversed(self.levels):
             value = hierarchy[level]
-            if is_found is False and value is not None:
+            if is_found is False and value is not None and current_level != 'content':
                 is_found = True
                 hierarchy_radio[level] = value
                 continue
