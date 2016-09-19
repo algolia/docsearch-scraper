@@ -24,7 +24,7 @@ This project is a collection of submodules, each one in its own directory:
   - Or any other way 
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
-- `pip install -r requirements.txt`
+- `pip install --user -r requirements.txt`
 - Download geckodriver from https://github.com/mozilla/geckodriver/releases, extract it
 - rename the `geckodriver` executable to `wires` and make it accessible in the path
 - Depending on what you want to do you might also need to install **docker**, especially to run tests.
