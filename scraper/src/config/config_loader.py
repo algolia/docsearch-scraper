@@ -72,12 +72,13 @@ class ConfigLoader(object):
         except ValueError:
             raise ValueError('CONFIG is not a valid JSON')
 
-        if self.conf_need_browser():
-            self.init()
-
         # Fill self from config
         for key, value in data.items():
             setattr(self, key, value)
+
+        # Start browser if needed
+        if self.conf_need_browser():
+            self.init()
 
         # Validate
         ConfigValidator(self).validate()
@@ -86,6 +87,7 @@ class ConfigLoader(object):
         self._parse()
         self._parse_env()
 
+        # Stop browser if needed
         if self.conf_need_browser() and not self.js_render:
             self.destroy()
 
