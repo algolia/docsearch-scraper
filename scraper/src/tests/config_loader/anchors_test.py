@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from ...config_loader import ConfigLoader
+from ...config.config_loader import ConfigLoader
 from .abstract import config
 
 

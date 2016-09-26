@@ -1,7 +1,8 @@
 import time
 import json
 
-class JsExecutor():
+
+class JsExecutor:
     def __init__(self):
         self.driver = JsExecutor.driver
 

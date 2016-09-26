@@ -33,8 +33,6 @@ class RunConfigDocker(AbstractCommand):
             '-e',
             'API_KEY=' + environ.get('API_KEY'),
             '-e',
-            'INDEX_PREFIX=""',
-            '-e',
             "CONFIG=" + config,
             '-v',
             getcwd() + '/scraper/src:/root/src',

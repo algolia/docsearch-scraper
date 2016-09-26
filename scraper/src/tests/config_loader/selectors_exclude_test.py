@@ -2,7 +2,7 @@
 import os
 import json
 
-from ...config_loader import ConfigLoader
+from ...config.config_loader import ConfigLoader
 from .abstract import config
 
 
@@ -34,19 +34,18 @@ class TestSelectorsExclude:
     def test_selectors_exclude_is_not_mandatory(self):
         """ Allow not passing selectors_exclude """
         # Given
-        conf = {
+        conf = config({
             'allowed_domains': 'allowed_domains',
             'api_key': 'api_key',
             'app_id': 'app_id',
             'index_name': 'index_name',
-            'index_prefix': 'index_prefix',
             'selectors': [],
             'start_urls': ['http://www.starturl.com/'],
             'stop_urls': ['http://www.stopurl.com/']
-        }
+        })
 
         # When
-        actual = ConfigLoader(json.dumps(conf))
+        actual = ConfigLoader(conf)
 
         # Then
         assert actual.selectors_exclude == []

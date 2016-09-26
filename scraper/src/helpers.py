@@ -1,4 +1,6 @@
 from builtins import input
+from cssselect import HTMLTranslator
+
 
 def confirm(message="Confirm"):
     prompt = message + ' [y/n]:\n'
@@ -12,3 +14,7 @@ def confirm(message="Confirm"):
             return True
         if ans == 'n' or ans == 'N':
             return False
+
+
+def css_to_xpath(css):
+    return HTMLTranslator().css_to_xpath(css) if len(css) > 0 else ""

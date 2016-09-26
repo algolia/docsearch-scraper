@@ -1,4 +1,4 @@
-algoliasearch==1.8.0
+algoliasearch==1.9.2
 attrs==16.0.0
 cffi==1.6.0
 click==6.6

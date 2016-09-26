@@ -26,8 +26,6 @@ class RunTests(AbstractBuildDocker):
             '-e',
             'API_KEY=""',
             '-e',
-            'INDEX_PREFIX=""',
-            '-e',
             'CONFIG=""',
             '-v',
             getcwd() + '/scraper/src:/root/src',
