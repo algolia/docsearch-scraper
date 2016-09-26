@@ -3,10 +3,9 @@
 from __future__ import absolute_import
 
 import json
-import os
 
-from src.config_loader import ConfigLoader
-from src.strategies.default_strategy import DefaultStrategy
+from ...config.config_loader import ConfigLoader
+from ...strategies.default_strategy import DefaultStrategy
 
 SELECTORS = {
     "lvl0": "h1",
@@ -33,12 +32,14 @@ def get_strategy(config=None):
         'custom_settings': None,
         'hash_strategy': 'test',
         'index_name': 'test',
-        'index_prefix': 'test',
         'selectors': SELECTORS,
         'selectors_exclude': 'test',
-        'start_urls': 'test',
-        'stop_urls': 'test',
-        'strategy': 'test'
+        'start_urls': ['test'],
+        'stop_urls': ['test'],
+        'strategy': 'test',
+        'js_render': False,
+        'js_wait': 0,
+        'use_anchors': False
     }
 
     for key in config:

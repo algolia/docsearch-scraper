@@ -1,7 +1,7 @@
 # coding: utf-8
 import pytest
 
-from ...config_loader import ConfigLoader
+from ...config.config_loader import ConfigLoader
 from .abstract import config
 
 
@@ -17,18 +17,18 @@ class TestStartUrls:
         with pytest.raises(ValueError):
             ConfigLoader(c)
 
-    def test_start_urls_accept_single_value(self):
+    def test_start_urls_doesnt_accept_single_value(self):
         """ Allow passing start_urls as string instead of array """
         # Given
         c = config({
             'start_urls': 'www.foo.bar'
         })
 
-        # When
-        actual = ConfigLoader(c)
-
-        # Then
-        assert actual.start_urls[0]['url'] == 'www.foo.bar'
+        with pytest.raises(Exception) as excinfo:
+            # When
+            ConfigLoader(c)
+            # Then
+            assert 'start_urls should be list' in str(excinfo.value)
 
     def test_start_urls_should_have_at_least_one_element(self):
         """ Should throw if start_urls does not have at least one element """

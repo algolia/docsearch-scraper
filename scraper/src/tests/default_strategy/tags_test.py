@@ -8,10 +8,10 @@ class TestTags:
     def test_adding_tags_for_page(self):
         # Given
         strategy = get_strategy({
-            'start_urls': {
+            'start_urls': [{
                 'url': 'http://foo.bar/api',
                 'tags': ["test"]
-            },
+            }],
             'selectors': {
                  "lvl0": "h1",
                  "lvl1": "h2",
@@ -41,10 +41,10 @@ class TestTags:
                  "lvl2": "h3",
                  "content": "p"
             },
-            'start_urls': {
+            'start_urls': [{
                 'url': 'http://foo.bar/api',
                 'tags': ["test"]
-            }
+            }]
         })
 
         strategy.dom = lxml.html.fromstring("""
@@ -63,10 +63,12 @@ class TestTags:
         # Given
         # Stub ENV variables read by ConfigLoader
         strategy = get_strategy({
-            'start_urls': {
-                'url': 'http://foo.bar/.*',
-                'tags': ["test"]
-            },
+            'start_urls': [
+                {
+                    'url': 'http://foo.bar/.*',
+                    'tags': ["test"]
+                }
+            ],
             'selectors': {
                  "lvl0": "h1",
                  "lvl1": "h2",

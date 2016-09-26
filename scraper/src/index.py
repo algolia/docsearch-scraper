@@ -5,7 +5,7 @@ documentationSearch scrapper main entry point
 from scrapy.crawler import CrawlerProcess
 
 from algolia_helper import AlgoliaHelper
-from config_loader import ConfigLoader
+from config.config_loader import ConfigLoader
 from documentation_spider import DocumentationSpider
 from strategies.default_strategy import DefaultStrategy
 from custom_middleware import CustomMiddleware
@@ -20,8 +20,8 @@ except ImportError:
     pass
 
 
-def run_config(config, index_prefix=''):
-    CONFIG = ConfigLoader(config, index_prefix)
+def run_config(config):
+    CONFIG = ConfigLoader(config)
     CustomMiddleware.driver = CONFIG.driver
     DocumentationSpider.NB_INDEXED = 0
 

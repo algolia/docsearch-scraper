@@ -1,4 +1,3 @@
-from cssselect import HTMLTranslator
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from past.builtins import basestring
@@ -20,6 +19,7 @@ class AbstractStrategy(object):
 
     def __init__(self, config):
         self.config = config
+        AbstractStrategy.keep_tags = config.keep_tags
 
     @staticmethod
     def pprint(data):
@@ -176,10 +176,6 @@ class AbstractStrategy(object):
         if matches:
             return 100 - int(matches.group(1)) * 10
         return 0
-
-    @staticmethod
-    def css_to_xpath(css):
-        return HTMLTranslator().css_to_xpath(css) if len(css) > 0 else ""
 
     def select(self, path):
         """Select an element in the current DOM using specified CSS selector"""

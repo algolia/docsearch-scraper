@@ -85,10 +85,10 @@ class TestPageRank:
     def test_negative_page_rank(self):
         # Given
         strategy = get_strategy({
-            'start_urls': {
+            'start_urls': [{
                 'url': 'http://foo.bar/api',
                 'page_rank': -1
-            },
+            }],
             'selectors': {
                  "lvl0": "h1",
                  "lvl1": "h2",

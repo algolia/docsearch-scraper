@@ -53,13 +53,6 @@ class DocumentationSpider(CrawlSpider):
             else:
                 yield Request(url, dont_filter=False)
 
-    def link_filtering(self, links):
-        new_links = []
-        for link in links:
-            link.url = (link.url[-1] == '/' and link.url[:-1] or link.url)
-            new_links.append(link)
-        return new_links
-
     def add_records(self, response):
         records = self.strategy.get_records_from_response(response)
         self.algolia_helper.add_records(records, response.url)
