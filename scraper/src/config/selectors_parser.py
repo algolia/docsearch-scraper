@@ -1,3 +1,5 @@
+from six import string_types
+
 from ..helpers import css_to_xpath
 
 
@@ -15,7 +17,7 @@ class SelectorsParser(object):
                 selectors_set[key] = config_selectors['text']
 
             # Backward compatibility, if it's a string then we put it in an object
-            if isinstance(selectors_set[key], basestring):
+            if isinstance(selectors_set[key], string_types):
                 selectors_set[key] = {'selector': selectors_set[key]}
 
             # Global

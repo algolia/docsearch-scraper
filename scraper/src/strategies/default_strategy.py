@@ -3,7 +3,7 @@ Default Strategy
 """
 
 import re
-from past.builtins import basestring
+from six import string_types
 
 from .abstract_strategy import AbstractStrategy
 
@@ -313,7 +313,7 @@ class DefaultStrategy(AbstractStrategy):
         Return a possible anchor for that element.
         Looks for name and id, and if not found will look in children
         """
-        if isinstance(element, basestring):
+        if isinstance(element, string_types):
             return None
 
         # Check the name or id on the element

@@ -1,5 +1,6 @@
 # coding: utf-8
 from ...config.config_loader import ConfigLoader
+from ...config.browser_handler import BrowserHandler
 from .abstract import config
 
 
@@ -9,7 +10,7 @@ class TestOpenSeleniumBrowser:
 
         actual = ConfigLoader(c)
 
-        assert actual.conf_need_browser() is False
+        assert BrowserHandler.conf_need_browser(actual.config_original_content, actual.js_render) is False
 
     def test_browser_needed_when_js_render_true(self, monkeypatch):
         from .mocked_init import MockedInit
@@ -22,7 +23,7 @@ class TestOpenSeleniumBrowser:
 
         actual = ConfigLoader(c)
 
-        assert actual.conf_need_browser() is True
+        assert BrowserHandler.conf_need_browser(actual.config_original_content, actual.js_render) is True
 
     def test_browser_needed_when_config_contains_automatic_tag(self, monkeypatch):
         from .mocked_init import MockedInit
@@ -47,4 +48,4 @@ class TestOpenSeleniumBrowser:
 
         actual = ConfigLoader(c)
 
-        assert actual.conf_need_browser() is True
+        assert BrowserHandler.conf_need_browser(actual.config_original_content, actual.js_render) is True

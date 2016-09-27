@@ -1,5 +1,6 @@
 import re
 import copy
+from six import string_types
 
 try:
     from urlparse import urlparse
@@ -11,10 +12,12 @@ from ..js_executor import JsExecutor
 
 
 class UrlsParser(object):
-    def parse(self, config_start_urls):
+
+    @staticmethod
+    def parse(config_start_urls):
         start_urls = []
         for start_url in config_start_urls:
-            if isinstance(start_url, basestring):
+            if isinstance(start_url, string_types):
                 start_url = {'url': start_url}
 
             start_url['compiled_url'] = re.compile(start_url['url'])
@@ -28,7 +31,7 @@ class UrlsParser(object):
             if "selectors_key" not in start_url:
                 start_url['selectors_key'] = 'default'
 
-            matches = self.get_url_variables_name(start_url['url'])
+            matches = UrlsParser.get_url_variables_name(start_url['url'])
 
             start_url['url_attributes'] = {}
             for match in matches:
@@ -57,7 +60,7 @@ class UrlsParser(object):
                         else:
                             raise Exception("Missing " + match + " in variables" + " for url " + start_url['url'])
 
-                start_urls = self.geturls(start_url, matches[0], matches[1:], values, start_urls)
+                start_urls = UrlsParser.geturls(start_url, matches[0], matches[1:], values, start_urls)
 
             # If there is no tag just keep it like this
             else:
@@ -73,7 +76,8 @@ class UrlsParser(object):
 
         return re.findall(UrlsParser.get_url_variables_name.group_regex, url)
 
-    def geturls(self, start_url, current_match, matches, values, start_urls):
+    @staticmethod
+    def geturls(start_url, current_match, matches, values, start_urls):
         for value in values[current_match]:
             copy_start_url = copy.copy(start_url)
             copy_start_url['original_url'] = copy_start_url['url']
@@ -86,9 +90,20 @@ class UrlsParser(object):
             if len(matches) == 0:
                 start_urls.append(copy_start_url)
             else:
-                start_urls = self.geturls(copy_start_url, matches[0], matches[1:], values, start_urls)
+                start_urls = UrlsParser.geturls(copy_start_url, matches[0], matches[1:], values, start_urls)
 
         return start_urls
+
+    @staticmethod
+    def get_extra_facets(start_urls):
+        extra_facets = []
+        for start_url in start_urls:
+            for tag in start_url['url_attributes']:
+                extra_facets.append(tag)
+
+        extra_facets = set(extra_facets)
+
+        return list(extra_facets)
 
     @staticmethod
     def build_allowed_domains(start_urls, stop_urls):
@@ -97,7 +112,7 @@ class UrlsParser(object):
             return urlparse(url).netloc
 
         # Concatenating both list, being careful that they can be None
-        all_urls = [_['url'] if not isinstance(_, basestring) else _ for _ in start_urls] + stop_urls
+        all_urls = [_['url'] if not isinstance(_, string_types) else _ for _ in start_urls] + stop_urls
         # Getting the list of domains for each of them
         all_domains = [get_domain(_) for _ in all_urls]
         # Removing duplicates

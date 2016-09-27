@@ -4,11 +4,12 @@ documentationSearch scrapper main entry point
 
 from scrapy.crawler import CrawlerProcess
 
-from algolia_helper import AlgoliaHelper
-from config.config_loader import ConfigLoader
-from documentation_spider import DocumentationSpider
-from strategies.default_strategy import DefaultStrategy
-from custom_middleware import CustomMiddleware
+from .algolia_helper import AlgoliaHelper
+from .config.config_loader import ConfigLoader
+from .documentation_spider import DocumentationSpider
+from .strategies.default_strategy import DefaultStrategy
+from .custom_middleware import CustomMiddleware
+from .config.browser_handler import BrowserHandler
 
 try:
     # disable boto (S3 download)
@@ -21,38 +22,30 @@ except ImportError:
 
 
 def run_config(config):
-    CONFIG = ConfigLoader(config)
-    CustomMiddleware.driver = CONFIG.driver
+    config = ConfigLoader(config)
+    CustomMiddleware.driver = config.driver
     DocumentationSpider.NB_INDEXED = 0
 
-    if CONFIG.use_anchors:
-        import scrapy_patch
+    if config.use_anchors:
+        from . import scrapy_patch
 
-    STRATEGIES = {
-        'default': DefaultStrategy
-    }
+    strategy = DefaultStrategy(config)
 
-    CONFIG_STRATEGY = CONFIG.strategy
-    if CONFIG_STRATEGY not in STRATEGIES:
-        exit("Strategy '" + CONFIG_STRATEGY + "' does not exist")
-
-    STRATEGY = STRATEGIES[CONFIG_STRATEGY](CONFIG)
-
-    ALGOLIA_HELPER = AlgoliaHelper(
-        CONFIG.app_id,
-        CONFIG.api_key,
-        CONFIG.index_name,
-        STRATEGY.get_index_settings()
+    algolia_helper = AlgoliaHelper(
+        config.app_id,
+        config.api_key,
+        config.index_name,
+        strategy.get_index_settings()
     )
 
     DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'
     DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
 
     if __name__ == '__main__':
-        DOWNLOADER_MIDDLEWARES_PATH = 'custom_middleware.CustomMiddleware'
-        DOWNLOADER_CLIENTCONTEXTFACTORY = 'scrapy_patch.CustomContextFactory'
+        DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_middleware.CustomMiddleware'
+        DOWNLOADER_CLIENTCONTEXTFACTORY = 'src.scrapy_patch.CustomContextFactory'
 
-    PROCESS = CrawlerProcess({
+    process = CrawlerProcess({
         'LOG_ENABLED': '1',
         'LOG_LEVEL': 'ERROR',
         # 'LOG_LEVEL': 'DEBUG',
@@ -62,32 +55,31 @@ def run_config(config):
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY
     })
 
-    PROCESS.crawl(
+    process.crawl(
         DocumentationSpider,
-        config=CONFIG,
-        algolia_helper=ALGOLIA_HELPER,
-        strategy=STRATEGY
+        config=config,
+        algolia_helper=algolia_helper,
+        strategy=strategy
     )
 
-    PROCESS.start()
-    PROCESS.stop()
+    process.start()
+    process.stop()
 
-    CONFIG.destroy()
+    # Kill browser if needed
+    BrowserHandler.destroy(config.driver)
 
-    extra_records = CONFIG.get_extra_records()
-    if len(extra_records) > 0:
-        ALGOLIA_HELPER.add_records(extra_records, "Extra records")
+    if len(config.extra_records) > 0:
+        algolia_helper.add_records(config.extra_records, "Extra records")
 
     print("")
 
     if DocumentationSpider.NB_INDEXED > 0:
-        ALGOLIA_HELPER.commit_tmp_index()
+        algolia_helper.commit_tmp_index()
         print('Nb hits: ' + str(DocumentationSpider.NB_INDEXED))
-        CONFIG.update_nb_hits(DocumentationSpider.NB_INDEXED)
+        config.update_nb_hits(DocumentationSpider.NB_INDEXED)
     else:
-        print('Crawling issue: nbHits 0 for ' + CONFIG.index_name)
-        ALGOLIA_HELPER.report_crawling_issue()
-
+        print('Crawling issue: nbHits 0 for ' + config.index_name)
+        algolia_helper.report_crawling_issue()
 
     print("")
 

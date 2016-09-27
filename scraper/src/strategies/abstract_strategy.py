@@ -1,6 +1,6 @@
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from past.builtins import basestring
+from six import string_types
 import lxml
 import re
 import json
@@ -80,7 +80,7 @@ class AbstractStrategy(object):
     @staticmethod
     def itertext(node):
         tag = node.tag
-        if not isinstance(tag, basestring) and tag is not None:
+        if not isinstance(tag, string_types) and tag is not None:
             return
 
         if node.text:
@@ -114,7 +114,7 @@ class AbstractStrategy(object):
         text = element
 
         # Do not call text_content if not needed (Ex. xpath selector with text() doesn't return a node but a string)
-        if not isinstance(text, basestring):
+        if not isinstance(text, string_types):
             text = ""
             for s in AbstractStrategy.itertext(element):
                 text = text + " " + s

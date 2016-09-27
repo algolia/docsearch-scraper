@@ -19,4 +19,4 @@ then
   done
 fi
 
-python /root/src/index.py 2>&1
+python -m src.index 2>&1
