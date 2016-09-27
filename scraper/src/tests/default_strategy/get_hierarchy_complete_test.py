@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import lxml.html
 from .abstract import get_strategy
+from ...strategies.hierarchy import Hierarchy
 
 
 class TestGetHierarchyComplete:
@@ -20,7 +20,7 @@ class TestGetHierarchyComplete:
 
         # When
         strategy = get_strategy()
-        actual = strategy.get_hierarchy_complete(hierarchy)
+        actual = Hierarchy.get_hierarchy_complete(hierarchy, strategy.levels)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -45,7 +45,7 @@ class TestGetHierarchyComplete:
 
         # When
         strategy = get_strategy()
-        actual = strategy.get_hierarchy_complete(hierarchy)
+        actual = Hierarchy.get_hierarchy_complete(hierarchy, strategy.levels)
 
         # Then
         assert actual['lvl0'] == 'Foo'

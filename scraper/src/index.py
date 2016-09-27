@@ -10,6 +10,7 @@ from .documentation_spider import DocumentationSpider
 from .strategies.default_strategy import DefaultStrategy
 from .custom_middleware import CustomMiddleware
 from .config.browser_handler import BrowserHandler
+from .strategies.algolia_settings import AlgoliaSettings
 
 try:
     # disable boto (S3 download)
@@ -35,7 +36,7 @@ def run_config(config):
         config.app_id,
         config.api_key,
         config.index_name,
-        strategy.get_index_settings()
+        AlgoliaSettings.get(config, strategy.levels)
     )
 
     DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'

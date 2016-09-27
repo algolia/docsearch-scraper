@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .abstract import get_strategy
+from ...strategies.algolia_settings import AlgoliaSettings
 
 class TestGetSettings:
     def test_get_settings(self):
@@ -15,7 +16,7 @@ class TestGetSettings:
         })
 
         # When
-        settings = strategy.get_index_settings()
+        settings = AlgoliaSettings.get(strategy.config, strategy.levels)
 
         # Then
         expected_settings = [

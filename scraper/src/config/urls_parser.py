@@ -123,3 +123,37 @@ class UrlsParser(object):
             all_domains_unique.append(domain)
 
         return all_domains_unique
+
+    # Check if tags are defined for the current_page or one of the parent page
+    @staticmethod
+    def get_tags(current_page_url, start_urls):
+        if current_page_url is not None:
+            for start_url in start_urls:
+                if start_url['compiled_url'].match(current_page_url):
+                    return start_url['tags']
+        return []
+
+    # Check if a page_rank is defined for the current_page or one of the parent page
+    @staticmethod
+    def get_page_rank(current_page_url, start_urls):
+        if current_page_url is not None:
+            for start_url in start_urls:
+                if start_url['compiled_url'].match(current_page_url):
+                    return int(start_url['page_rank'])
+        return 0
+
+
+    @staticmethod
+    def get_url_variables(current_page_url, start_urls):
+        url_without_variables = current_page_url
+
+        for start_url in start_urls:
+            compiled_url = start_url['compiled_url']
+            result = re.search(compiled_url, current_page_url)
+
+            if result:
+                for attr in start_url['url_attributes']:
+                    value = start_url['url_attributes'][attr]
+                    if value is not None:
+                        yield attr, value, url_without_variables
+

@@ -2,6 +2,7 @@
 
 import lxml.html
 from .abstract import get_strategy
+from ...strategies.hierarchy import Hierarchy
 
 class TestGetHierarchyRadio:
 
@@ -19,7 +20,7 @@ class TestGetHierarchyRadio:
 
         # When
         strategy = get_strategy()
-        actual = strategy.get_hierarchy_radio(hierarchy, 'lvl0')
+        actual = Hierarchy.get_hierarchy_radio(hierarchy, 'lvl0', strategy.levels)
 
         # Then
         assert actual['lvl0'] == 'Foo'
@@ -44,7 +45,7 @@ class TestGetHierarchyRadio:
 
         # When
         strategy = get_strategy()
-        actual = strategy.get_hierarchy_radio(hierarchy, 'lvl2')
+        actual = Hierarchy.get_hierarchy_radio(hierarchy, 'lvl2', strategy.levels)
 
         # Then
         assert actual['lvl0'] is None
@@ -69,7 +70,7 @@ class TestGetHierarchyRadio:
 
         # When
         strategy = get_strategy()
-        actual = strategy.get_hierarchy_radio(hierarchy, 'content')
+        actual = Hierarchy.get_hierarchy_radio(hierarchy, 'content', strategy.levels)
 
         # Then
         assert actual['lvl0'] is None
