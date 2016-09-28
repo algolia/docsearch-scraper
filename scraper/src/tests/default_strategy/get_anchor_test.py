@@ -2,6 +2,7 @@
 
 import lxml.html
 from .abstract import get_strategy
+from ...strategies.anchor import Anchor
 
 class TestGetAnchor:
     def test_name_on_heading(self):
@@ -18,7 +19,7 @@ class TestGetAnchor:
         element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
-        actual = strategy.get_anchor(element)
+        actual = Anchor.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -40,7 +41,7 @@ class TestGetAnchor:
         element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
-        actual = strategy.get_anchor(element)
+        actual = Anchor.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -60,7 +61,7 @@ class TestGetAnchor:
         element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
-        actual = strategy.get_anchor(element)
+        actual = Anchor.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -79,7 +80,7 @@ class TestGetAnchor:
         element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
-        actual = strategy.get_anchor(element)
+        actual = Anchor.get_anchor(element)
 
         # Then
         assert actual == 'bar'
@@ -98,7 +99,7 @@ class TestGetAnchor:
         element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
-        actual = strategy.get_anchor(element)
+        actual = Anchor.get_anchor(element)
 
         # Then
         assert actual is None

@@ -1,0 +1,70 @@
+
+
+class Hierarchy:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def get_hierarchy_radio(hierarchy, current_level, levels):
+        """Returns the radio hierarchy for the record, where only one level is
+        filled and the others are empty
+        Ex: {
+            lvl0: None,
+            lvl1: None,
+            lvl2: Baz,
+            lvl3: None,
+            lvl4: None,
+            lvl5: None,
+            lvl6: None
+        }
+        """
+
+        hierarchy_radio = {}
+        is_found = False
+        for level in reversed(levels):
+            if level == 'content':
+                continue
+
+            value = hierarchy[level]
+            if is_found is False and value is not None and current_level != 'content':
+                is_found = True
+                hierarchy_radio[level] = value
+                continue
+
+            hierarchy_radio[level] = None
+
+        return hierarchy_radio
+
+    @staticmethod
+    def get_hierarchy_complete(hierarchy, levels):
+        """Returns the hierarchy complete hierarchy of the record, where each
+        level includes the previous levels, separated with ">".
+
+        Works well with the instantsearch.js hierarchicalMenu widget
+        Ex: {
+            lvl0: Foo,
+            lvl1: Foo > Bar,
+            lvl2: Foo > Bar > Baz,
+            lvl3: None,
+            lvl4: None,
+            lvl5: None,
+            lvl6: None
+        }
+        """
+        full_content = []
+        hierarchy_complete = {}
+        for level in levels:
+
+            if level == 'content':
+                continue
+
+            content = hierarchy[level]
+
+            if content is None:
+                hierarchy_complete[level] = None
+                continue
+
+            full_content.append(content)
+            hierarchy_complete[level] = " > ".join(full_content)
+
+        return hierarchy_complete

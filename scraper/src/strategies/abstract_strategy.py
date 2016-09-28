@@ -180,9 +180,3 @@ class AbstractStrategy(object):
     def select(self, path):
         """Select an element in the current DOM using specified CSS selector"""
         return XPath(path)(self.dom) if len(path) > 0 else []
-
-    def get_index_settings(self):
-        raise Exception('get_index_settings need to be implemented')
-
-    def get_records_from_response(self):
-        raise Exception('get_records_from_response need to be implemented')
