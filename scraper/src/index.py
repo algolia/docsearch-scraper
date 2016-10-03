@@ -11,6 +11,7 @@ from .strategies.default_strategy import DefaultStrategy
 from .custom_middleware import CustomMiddleware
 from .config.browser_handler import BrowserHandler
 from .strategies.algolia_settings import AlgoliaSettings
+from .strategies.camelizer import Camelizer
 
 try:
     # disable boto (S3 download)
@@ -71,6 +72,9 @@ def run_config(config):
 
     if len(config.extra_records) > 0:
         algolia_helper.add_records(config.extra_records, "Extra records")
+
+    if len(Camelizer.synonyms) > 0:
+        algolia_helper.add_synonyms(Camelizer.synonyms)
 
     print("")
 

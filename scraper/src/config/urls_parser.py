@@ -145,8 +145,6 @@ class UrlsParser(object):
 
     @staticmethod
     def get_url_variables(current_page_url, start_urls):
-        url_without_variables = current_page_url
-
         for start_url in start_urls:
             compiled_url = start_url['compiled_url']
             result = re.search(compiled_url, current_page_url)
@@ -155,5 +153,6 @@ class UrlsParser(object):
                 for attr in start_url['url_attributes']:
                     value = start_url['url_attributes'][attr]
                     if value is not None:
+                        url_without_variables = start_url['original_url'].replace("(?P<" + attr + ">.*?)", "")
                         yield attr, value, url_without_variables
 
