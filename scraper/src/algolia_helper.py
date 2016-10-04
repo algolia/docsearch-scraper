@@ -24,6 +24,10 @@ class AlgoliaHelper:
 
         print("\033[94m> DocSearch: \033[0m" + url + " (\033[93m" + str(record_count) + " records\033[0m)")
 
+    def add_synonyms(self, synonyms):
+        self.algolia_index_tmp.batch_synonyms(synonyms)
+        print("\033[94m> DocSearch: \033[0m" + "Synonyms" + " (\033[93m" + str(len(synonyms)) + " synonyms\033[0m)")
+
     def commit_tmp_index(self):
         """Overwrite the real index with the temporary one"""
         # print("Update settings")

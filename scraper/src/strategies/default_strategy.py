@@ -8,6 +8,7 @@ from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
 from .hierarchy import Hierarchy
 from ..config.urls_parser import UrlsParser
+from .camelizer import Camelizer
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -21,6 +22,7 @@ class DefaultStrategy(AbstractStrategy):
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6']
         self.global_content = {}
         self.page_rank = {}
+        Camelizer.synonyms = []
 
     def get_records_from_response(self, response):
         """
@@ -36,23 +38,6 @@ class DefaultStrategy(AbstractStrategy):
         records = self.get_records_from_dom(response.url)
 
         return records
-
-    def _get_text_content_for_level(self, node, current_level, selectors):
-        if current_level in self.global_content:
-            return self.global_content[current_level]
-
-        return self.get_text(node, self.get_strip_chars(current_level, selectors))
-
-    @staticmethod
-    def _get_closest_anchor(anchors):
-        # Getting the element anchor as the closest one
-        for index in reversed(range(7)):
-            potential_anchor = anchors['lvl' + str(index)]
-            if potential_anchor is None:
-                continue
-            return potential_anchor
-
-        return None
 
     def _update_hierarchy_with_global_content(self, hierarchy, current_level_int):
         for index in range(0, current_level_int + 1):
@@ -134,6 +119,11 @@ class DefaultStrategy(AbstractStrategy):
                 'url_without_variables': current_page_url
             }
 
+            # Uncamelize everything
+            record['content'] = Camelizer.uncamelize_string(record['content'])
+            record['hierarchy'] = Camelizer.uncamelize_hierarchy(record['hierarchy'])
+            record['hierarchy_radio'] = Camelizer.uncamelize_hierarchy(record['hierarchy_radio'])
+
             if current_page_url is not None:
                 # Add variables to the record
                 for attr, value, url_without_variables in UrlsParser.get_url_variables(current_page_url, self.config.start_urls):
@@ -147,6 +137,23 @@ class DefaultStrategy(AbstractStrategy):
             records.append(record)
 
         return records
+
+    def _get_text_content_for_level(self, node, current_level, selectors):
+        if current_level in self.global_content:
+            return self.global_content[current_level]
+
+        return self.get_text(node, self.get_strip_chars(current_level, selectors))
+
+    @staticmethod
+    def _get_closest_anchor(anchors):
+        # Getting the element anchor as the closest one
+        for index in reversed(range(7)):
+            potential_anchor = anchors['lvl' + str(index)]
+            if potential_anchor is None:
+                continue
+            return potential_anchor
+
+        return None
 
     @staticmethod
     def _generate_empty_hierarchy():
