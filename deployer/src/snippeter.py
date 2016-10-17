@@ -37,7 +37,7 @@ You're now a few steps away from having it working on your website:
 
 - Add a search input if you don't have any yet, and update the inputSelector value in the code snippet to a CSS selector that targets your input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
-- You can also check your configuration in the github repo (https://github.com/algolia/docsearch-configs). Feel free to open pull requests!
+- You can also check your configuration in the github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json). Feel free to open pull requests!
 
 Feel free to get back to us if you have any issues or questions regarding the integration.
 We'd also be happy to get your feedback and thoughts about DocSearch - so we can continue to improve it.
