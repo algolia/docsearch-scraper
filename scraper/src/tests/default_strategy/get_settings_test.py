@@ -20,11 +20,17 @@ class TestGetSettings:
 
         # Then
         expected_settings = [
+                'unordered(hierarchy_radio_camel.lvl0)',
                 'unordered(hierarchy_radio.lvl0)',
+                'unordered(hierarchy_radio_camel.lvl1)',
                 'unordered(hierarchy_radio.lvl1)',
+                'unordered(hierarchy_radio_camel.lvl2)',
                 'unordered(hierarchy_radio.lvl2)',
+                'unordered(hierarchy_camel.lvl0)',
                 'unordered(hierarchy.lvl0)',
+                'unordered(hierarchy_camel.lvl1)',
                 'unordered(hierarchy.lvl1)',
+                'unordered(hierarchy_camel.lvl2)',
                 'unordered(hierarchy.lvl2)',
                 'content'
         ]

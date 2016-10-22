@@ -121,6 +121,8 @@ class DefaultStrategy(AbstractStrategy):
 
             # Uncamelize everything
             record['content'] = Camelizer.uncamelize_string(record['content'])
+            record['hierarchy_camel'] = record['hierarchy']
+            record['hierarchy_radio_camel'] = record['hierarchy_radio']
             record['hierarchy'] = Camelizer.uncamelize_hierarchy(record['hierarchy'])
             record['hierarchy_radio'] = Camelizer.uncamelize_hierarchy(record['hierarchy_radio'])
 

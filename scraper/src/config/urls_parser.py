@@ -153,6 +153,6 @@ class UrlsParser(object):
                 for attr in start_url['url_attributes']:
                     value = start_url['url_attributes'][attr]
                     if value is not None:
-                        url_without_variables = start_url['original_url'].replace("(?P<" + attr + ">.*?)", "")
-                        yield attr, value, url_without_variables
+                        current_page_url = current_page_url.replace(value, '')
+                        yield attr, value, current_page_url
 

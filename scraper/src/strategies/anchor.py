@@ -21,7 +21,7 @@ class Anchor:
         # Check the name or id on the element
         anchor = Anchor._get_anchor_string_from_element(element)
 
-        if anchor is not None:
+        if anchor is not None and anchor != '':
             return anchor
 
         # Check on child
