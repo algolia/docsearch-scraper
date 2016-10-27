@@ -38,7 +38,7 @@ APPLICATION_ID=
 API_KEY=
 ```
 
-To have the APPLICATION_ID and API_KEY, you need to create an [https://www.algolia.com/users/sign_up](Algolia account).
+To have the APPLICATION_ID and API_KEY, you need to create an [Algolia account](https://www.algolia.com/users/sign_up).
 
 **You should be able to do everything** with the docsearch CLI tool:
 
