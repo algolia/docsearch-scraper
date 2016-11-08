@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "algoliasearch": "^3.12.0",
-    "node-slackr": "^0.1.2",
+    "node-slackr": "^0.1.4",
     "request": "^2.72.0"
   }
 }

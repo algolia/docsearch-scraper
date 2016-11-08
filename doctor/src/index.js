@@ -442,7 +442,7 @@ aggregateCrawlerInfo.then(function (indices) {
 
     var payload = {
         "text": "",
-        "channel": "#docsearch-notif",
+        "channel": "#notif-docsearch",
         "username": "docsearch-doctor",
         "icon_emoji": ":chart_with_upwards_trend:",
         "attachments": reports
@@ -450,7 +450,9 @@ aggregateCrawlerInfo.then(function (indices) {
 
     slack = new Slack(slackHook);
 
-    slack.notify(payload);
+    slack.notify(payload, function (err, result) {
+        console.log(err, result);
+    });
 
     badIndices.forEach(function (connectorId) {
         var url = "https://" + websiteUsername + ":" + websitePassword + "@www.algolia.com/api/1/docsearch/" + connectorId + "/reindex";
