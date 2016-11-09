@@ -1,11 +1,14 @@
 import requests
 import json
 import os
+from slacker import Slacker
 
 from builtins import input
 
 username = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
 password = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
+
+slack_hook = os.environ['SLACK_HOOK'] if 'SLACK_HOOK' in os.environ else ''
 
 base_url = 'https://www.algolia.com/api/1/docsearch'
 
@@ -65,3 +68,18 @@ def make_request(endpoint, type=None, configuration=None):
         print("ISSUE for GET request : " + url + " with params: None")
 
     return r.text
+
+
+def send_slack_notif(reports):
+    if slack_hook == '':
+        print('NO SLACK_HOOK')
+
+    slack = Slacker(None, slack_hook)
+
+    slack.incomingwebhook.post({
+        "text": "",
+        "channel": "#test-notif",
+        "username": "Deployer",
+        "icon_emoji": ":rocket:",
+        "attachments": reports
+    })

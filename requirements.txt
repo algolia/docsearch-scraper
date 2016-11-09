@@ -31,3 +31,4 @@ tldextract==2.0.1
 Twisted==16.2.0
 w3lib==1.14.2
 zope.interface==4.2.0
+slacker==0.9.29

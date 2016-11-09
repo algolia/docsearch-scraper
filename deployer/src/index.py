@@ -32,37 +32,50 @@ added = differ.added()
 removed = differ.removed()
 changed, changed_attributes = differ.changed()
 
+added_log = ""
+updated_log = ""
+removed_log = ""
+
 if len(added) > 0:
     print("")
     print("Will be added :")
     for config in added:
-        print(" - " + config)
+        added_log += " - " + config + "\n"
+    print(added_log)
 
 if len(removed) > 0:
     print("")
     print("Will be delete :")
     for config in removed:
-        print(" - " + config)
+        removed_log += " - " + config + "\n"
+    print(removed_log)
 
 if len(changed) > 0:
     print("")
     print("Will be updated :")
     for config in changed:
         log = " - " + config + ' (' + ', '.join(changed_attributes[config]) + ')'
+        cli_log = log
         if len(changed_attributes[config]) != 1 or 'nb_hits' not in changed_attributes[config]:
-            log = '\033[0;35m' + log + '\033[0m'
-        print(log)
+            cli_log = '\033[0;35m' + log + '\033[0m'
+        updated_log += log + "\n"
+        print(cli_log)
 
 print("")
 
 if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
     if helpers.confirm() is True:
+        reports = []
         if len(added) > 0:
             print("")
             for config in added:
                 key = algolia_helper.add_docsearch_key(config)
                 print(config + ' (' + key + ')')
                 helpers.make_request('/', 'POST', ref_configs[config])
+            reports.append({
+                'title': 'Added connectors',
+                'text': added_log
+            })
 
         if len(changed) > 0:
             print("")
@@ -81,15 +94,26 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
                 helpers.make_request('/' + config_id, 'PUT', ref_configs[config])
                 helpers.make_request('/' + config_id + '/reindex', 'POST')
+            reports.append({
+                'title': 'Updated connectors',
+                'text': updated_log
+            })
 
-        for config in removed:
-            config_id = str(inverted_actual_configs[config])
+        if len(removed) > 0:
+            for config in removed:
+                config_id = str(inverted_actual_configs[config])
 
-            helpers.make_request('/' + config_id, 'DELETE')
+                helpers.make_request('/' + config_id, 'DELETE')
 
-            algolia_helper.delete_docsearch_key(config)
-            algolia_helper.delete_docsearch_index(config)
-            algolia_helper.delete_docsearch_index(config + '_tmp')
+                algolia_helper.delete_docsearch_key(config)
+                algolia_helper.delete_docsearch_index(config)
+                algolia_helper.delete_docsearch_index(config + '_tmp')
+
+            reports.append({
+                'title': 'Removed connectors',
+                'text': removed_log
+            })
+        helpers.send_slack_notif(reports)
 
     if len(added) > 0 or len(changed) > 0:
         print("")
