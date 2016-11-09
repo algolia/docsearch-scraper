@@ -78,7 +78,7 @@ def send_slack_notif(reports):
 
     slack.incomingwebhook.post({
         "text": "",
-        "channel": "#test-notif",
+        "channel": "#notif-docsearch",
         "username": "Deployer",
         "icon_emoji": ":rocket:",
         "attachments": reports
