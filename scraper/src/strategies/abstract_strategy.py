@@ -31,7 +31,7 @@ class AbstractStrategy(object):
         try:
             body = response.body.decode(response.encoding)
             return body
-        except (UnicodeError, ValueError):
+        except (UnicodeError, ValueError, AttributeError):
             return response.body
 
     @staticmethod

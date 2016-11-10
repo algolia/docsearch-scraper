@@ -51,11 +51,7 @@ var readFile = function (path) {
             if (err) {
                 data = undefined
             } else {
-                try {
-                    data = JSON.parse(data);
-                } catch (e) {
-                    console.log(e);
-                }
+                data = JSON.parse(data);
             }
             resolve(data);
         });
