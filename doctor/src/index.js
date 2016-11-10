@@ -104,25 +104,23 @@ var aggregateWithBrowse = new Promise(function (resolve, reject) {
 
                 var browser = index.browseAll();
                 var nbHits = 0;
-                var allRecordsHaveH1 = true;
-                var allRecordsHaveSomeContent = false;
+                var recordsMissingLvl0 = 0;
 
                 browser.on('result', function onResult(content) {
                     nbHits += content.hits.length;
 
                     content.hits.forEach(function (item) {
-                        hasH1 = item.hierarchy !== undefined && item.hierarchy.h1 !== null && item.hierarchy.h1 != "";
-                        hasContent = item.hierarchy !== undefined && item.hierarchy.content !== null && item.hierarchy.content != "";
+                        hasLvl0 = item.hierarchy !== undefined && item.hierarchy.lvl0 !== null && item.hierarchy.lvl0 != "";
 
-                        allRecordsHaveH1 = allRecordsHaveH1 && hasH1;
-                        allRecordsHaveSomeContent = allRecordsHaveSomeContent || hasContent;
+                        if (hasLvl0 === false) {
+                            recordsMissingLvl0 += 1;
+                        }
                     });
                 });
 
                 browser.on('end', function onEnd() {
                     elt.nbHits = nbHits;
-                    elt.allRecordsHaveH1 = nbHits == 0 || allRecordsHaveH1;
-                    elt.allRecordsHaveSomeContent = nbHits == 0 || allRecordsHaveSomeContent;
+                    elt.recordsMissingLvl0 = recordsMissingLvl0;
 
                     delete(elt.config);
                     resolve(elt);
@@ -351,7 +349,7 @@ aggregateCrawlerInfo.then(function (indices) {
     });
 
     var badRecords = indices.filter(function (index) {
-        return index.isConnectorActive && (index.allRecordsHaveH1 === false || index.allRecordsHaveSomeContent === false);
+        return index.isConnectorActive && index.nbHits > 0 && (index.recordsMissingLvl0 > 10 / 100 * index.nbHits);
     });
 
     var reports = [];
@@ -399,7 +397,7 @@ aggregateCrawlerInfo.then(function (indices) {
     sectionPrinter("Empty indices", emptyIndices, "danger");
     sectionPrinter("Anomaly in settings", anomalyInSettings, "danger");
     sectionPrinter("Indices without an associated config", indexButNoConfig, "warning");
-    sectionPrinter("Indices with bad records", badRecords, "danger");
+    //sectionPrinter("Indices with bad records", badRecords, "warning");
     sectionPrinter("Indices with weird results", potentialBadNumberOfRecords, "warning");
     sectionPrinter("Configs missing nb_hits", noSupposedNbHits, "warning");
     sectionPrinter("Configs missing email", configButNoEmail, "warning");
