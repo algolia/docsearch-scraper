@@ -84,6 +84,7 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
 
                 if (data !== undefined) {
                     resultItem.supposedNbHits = data.nb_hits || undefined;
+                    resultItem.ignoreNbHitsIssue = data.ignore_nb_hits_issue || undefined;
                 }
                 return resultItem;
             });
@@ -315,6 +316,10 @@ aggregateCrawlerInfo.then(function (indices) {
 
 
     var potentialBadNumberOfRecords = indices.filter(function (index) {
+        if (index.ignoreNbHitsIssue === true) {
+            return false;
+        }
+
         if (index.isConnectorActive === false) {
             return false;
         }
