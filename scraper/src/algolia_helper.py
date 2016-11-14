@@ -43,4 +43,3 @@ class AlgoliaHelper:
                 'crawling_issue': True
             }
         })
-#19545
