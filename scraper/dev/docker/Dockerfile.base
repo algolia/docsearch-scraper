@@ -13,9 +13,10 @@ RUN chgrp -R seleuser /home/seleuser
 RUN apt-get -y update
 RUN apt-get install -y -q software-properties-common wget
 RUN add-apt-repository -y ppa:chris-lea/node.js
-RUN add-apt-repository -y ppa:webupd8team/java
+RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
-  oracle-java8-installer \
+  openjdk-8-jdk \
+  openjdk-8-jre \
   nodejs \
   x11vnc \
   xvfb \
