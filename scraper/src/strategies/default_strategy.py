@@ -22,7 +22,7 @@ class DefaultStrategy(AbstractStrategy):
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6']
         self.global_content = {}
         self.page_rank = {}
-        Camelizer.synonyms = []
+        Camelizer.synonyms = {}
 
     def get_records_from_response(self, response):
         """

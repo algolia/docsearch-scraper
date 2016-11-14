@@ -26,12 +26,12 @@ class Camelizer:
                 from_s = ''.join(parts)
                 to_s = " ".join(parts)
 
-                Camelizer.synonyms.append({
+                Camelizer.synonyms[from_s] = {
                     'objectID': from_s,
                     'type': 'oneWaySynonym',
                     'input': from_s,
                     'synonyms': [to_s]
-                })
+                }
 
                 parts = parts[1:]
 
