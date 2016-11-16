@@ -65,7 +65,7 @@ class AbstractStrategy(object):
         selectors_key = self.get_selectors_set_key(url)
 
         if selectors_key not in self.config.selectors:
-            raise Exception('No set of selectors found for: ' + url)
+            return self.config.selectors['default']
 
         return self.config.selectors[selectors_key]
 
