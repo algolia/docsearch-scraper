@@ -1,8 +1,8 @@
 # DocSearch scraper
 
-This is the repository for the scraper for the [DocSearch project](https://community.algolia.com/docsearch/). You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation. 
+This is the repository for the scraper for the [DocSearch project](https://community.algolia.com/docsearch/). You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation.
 
-DocSearch is in fact 3 different projects.
+DocSearch is composed by 3 different projects:
 * The front-end of DocSearch: https://github.com/algolia/docsearch
 * The scraper which browses & indexes web pages: https://github.com/algolia/docsearch-scraper
 * The configurations for the scraper: https://github.com/algolia/docsearch-configs
@@ -18,29 +18,41 @@ This project is a collection of submodules, each one in its own directory:
 
 ### Install Docsearch
 
-- Install python
+The DocSearch scraper is based on [Scrapy](https://scrapy.org), a famous python-based web scraper. Because it might need some JavaScript to render the pages it crawls, the scraper is also depending on [selenium](http://www.seleniumhq.org).
+
+To ease the setup process, a Docker container is provided to help you run the scraper.
+
+#### Environment
+
+- Install `python` & `pip`
   - `brew install python # will install pip`
   - `apt-get install python`
-  - Or any other way 
+  - Or any other way
 - `git clone git@github.com:algolia/documentation-scraper.git`
 - `cd documentation-scraper`
 - `pip install --user -r requirements.txt`
+
+#### With docker
+
+- Build the underlying Docker image: `./docsearch docker:build`
+
+#### Without docker
+
 - Download geckodriver from https://github.com/mozilla/geckodriver/releases, extract it
-- rename the `geckodriver` executable to `wires` and make it accessible in the path
-- Depending on what you want to do you might also need to install **docker**, especially to run tests.
+- rename the `geckodriver` executable to `wires` and make it accessible in the `$PATH`
 
-### Set up DocSearch
+### Configure DocSearch
 
-Create a file named `.env` file at the root of the project:
+You need to create an [Algolia account](https://www.algolia.com/users/sign_up) to get the `APPLICATION_ID` and (admin) `API_KEY` credentials the scraper will use to create the underlying indices.
+
+Create a file named `.env` file at the root of the project containing the following keys:
 
 ```
 APPLICATION_ID=
 API_KEY=
 ```
 
-To have the APPLICATION_ID and API_KEY, you need to create an [Algolia account](https://www.algolia.com/users/sign_up).
-
-**You should be able to do everything** with the docsearch CLI tool:
+And run the CLI to see the available commands:
 
 ```sh
 $ ./docsearch
@@ -53,56 +65,58 @@ Options:
   --help    Display help message
 
 Available commands:
-  test                  Run tests
-  playground            Launch the playground
-  run                   Run a config
- config
-  config:bootstrap      Boostrap a docsearch config
-  config:docker-run     Run a config using docker
+ bootstrap              Boostrap a docsearch config
+ run                    Run a config
+ playground             Launch the playground
  docker
-  docker:build-scraper  Build scraper images (dev, prod, test)
+  docker:build          Build the scraper images (dev, prod, test)
+  docker:run            Run a config using docker
+ test                   Run tests
 ```
 
 ### Use DocSearch
 
 #### Create a config
 
-To use DocSearch the first thing you need is to create the config for the crawler.
-For more details about configs, check out https://github.com/algolia/docsearch-configs,
-you'll have a list of options you can use and a lot of live and working examples.
+To use DocSearch, the first thing you need is to create a crawler config. For more details about configs, check out [https://github.com/algolia/docsearch-configs](https://github.com/algolia/docsearch-configs), you'll have a list of options you can use and a lot of live and working examples.
 
 #### Crawl the website
 
-Without docker:
+**With docker:**
+
+```sh
+$ ./docsearch docker:run /path/to/your/config
+```
+
+**Without docker:**
 
 ```sh
 $ ./docsearch run /path/to/your/config
 ```
 
-With docker:
+#### Try it with our playground
+
+You can open the included **Playground** to test your DocSearch index.
 
 ```sh
-$ ./docsearch docker:build-scraper #Build the docker file
-$ ./docsearch config:docker-run /path/to/your/config #run the docker container
+$ ./docsearch playground
 ```
 
-#### Check that everything went well
+Enter your credentials and the index name mentioned in the crawler config file, and try the search!
 
-Open `./playground/index.html` in your browser, enter your credentials, your index name, and type some queries to make sure everything is ok.
+#### Integrate DocSearch to your website
 
-#### Use docsearch frontend
-
-Just add this snippet to your documentation:
+To add the DocSearch dropdown menu to your website, add the following snippet to your website:
 
 ```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
 <script type="text/javascript" src="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
 <script>
   var search = docsearch({
-    apiKey: '<API_KEY>',
+    apiKey: '<API_KEY>', // use a SEARCH-ONLY api key here
     indexName: '<INDEX_NAME>',
     inputSelector: '<YOUR_INPUT_DOM_SELECTOR>',
-    debug: false
+    debug: false // set to `true` if you want to inspect the dropdown menu's CSS
   });
 </script>
 ```

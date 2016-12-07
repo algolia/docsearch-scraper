@@ -5,7 +5,7 @@ from .abstract_command import AbstractCommand
 
 class RunConfigDocker(AbstractCommand):
     def get_name(self):
-        return 'config:docker-run'
+        return 'docker:run'
 
     def get_description(self):
         return 'Run a config using docker'

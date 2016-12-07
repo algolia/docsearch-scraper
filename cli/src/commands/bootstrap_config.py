@@ -4,7 +4,7 @@ from .abstract_command import AbstractCommand
 
 class BootstrapConfig(AbstractCommand):
     def get_name(self):
-        return 'config:bootstrap'
+        return 'bootstrap'
 
     def get_description(self):
         return 'Boostrap a docsearch config'
