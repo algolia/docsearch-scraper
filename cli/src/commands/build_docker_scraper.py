@@ -3,7 +3,7 @@ from .abstract_build_docker import AbstractBuildDocker
 
 class BuildDockerScraper(AbstractBuildDocker):
     def get_name(self):
-        return 'docker:build-scraper'
+        return 'docker:build'
 
     def get_description(self):
         return 'Build scraper images (dev, prod, test)'
