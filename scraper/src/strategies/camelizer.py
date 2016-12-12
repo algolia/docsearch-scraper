@@ -38,17 +38,22 @@ class Camelizer:
         return s
 
     @staticmethod
-    def uncamelize_string(string):
+    def uncamelize_string(string, strip_chars):
         if string is None:
             return string
 
-        return ' '.join([Camelizer._uncamelize_word(word) for word in string.split()])
+        clean_string = string
+
+        if '.' not in strip_chars:
+            clean_string = string.replace('.', ' ')
+
+        return ' '.join([Camelizer._uncamelize_word(word) for word in clean_string.split()])
 
     @staticmethod
-    def uncamelize_hierarchy(hierarchy):
+    def uncamelize_hierarchy(hierarchy, strip_chars):
         uncamelized_hierarchy = hierarchy.copy()
 
         for level in uncamelized_hierarchy:
-            uncamelized_hierarchy[level] = Camelizer.uncamelize_string(uncamelized_hierarchy[level])
+            uncamelized_hierarchy[level] = Camelizer.uncamelize_string(uncamelized_hierarchy[level], strip_chars)
 
         return uncamelized_hierarchy

@@ -120,11 +120,11 @@ class DefaultStrategy(AbstractStrategy):
             }
 
             # Uncamelize everything
-            record['content'] = Camelizer.uncamelize_string(record['content'])
+            record['content'] = Camelizer.uncamelize_string(record['content'], self.config.strip_chars)
             record['hierarchy_camel'] = record['hierarchy']
             record['hierarchy_radio_camel'] = record['hierarchy_radio']
-            record['hierarchy'] = Camelizer.uncamelize_hierarchy(record['hierarchy'])
-            record['hierarchy_radio'] = Camelizer.uncamelize_hierarchy(record['hierarchy_radio'])
+            record['hierarchy'] = Camelizer.uncamelize_hierarchy(record['hierarchy'],  self.config.strip_chars)
+            record['hierarchy_radio'] = Camelizer.uncamelize_hierarchy(record['hierarchy_radio'], self.config.strip_chars)
 
             if current_page_url is not None:
                 # Add variables to the record
