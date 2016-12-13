@@ -38,6 +38,7 @@ class AlgoliaSettings:
             ],
             'attributesToHighlight': [
                 'hierarchy',
+                'hierarchy_camel',
                 'content'
             ],
             'attributesToSnippet': [
