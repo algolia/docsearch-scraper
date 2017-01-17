@@ -1,4 +1,6 @@
 from .abstract_strategy import AbstractStrategy
+from six import string_types
+from copy import deepcopy
 
 class Camelizer:
     def __init__(self):
@@ -17,8 +19,8 @@ class Camelizer:
         if s != word:
             s = s.strip()
             for tag in AbstractStrategy.keep_tags:
-                s = s.replace("<" + tag + ">", "")
-                s = s.replace("</" + tag + ">", "")
+                s = s.replace("<" + tag + ">", "<" + tag + "> ")
+                s = s.replace("</" + tag + ">", " </" + tag + ">")
 
             parts = s.split(u"\u2063")
 
@@ -51,9 +53,14 @@ class Camelizer:
 
     @staticmethod
     def uncamelize_hierarchy(hierarchy, strip_chars):
-        uncamelized_hierarchy = hierarchy.copy()
+        uncamelized_hierarchy = deepcopy(hierarchy)
 
         for level in uncamelized_hierarchy:
-            uncamelized_hierarchy[level] = Camelizer.uncamelize_string(uncamelized_hierarchy[level], strip_chars)
+            if uncamelized_hierarchy[level] is not None:
+                if isinstance(uncamelized_hierarchy[level], string_types):
+                    uncamelized_hierarchy[level] = Camelizer.uncamelize_string(uncamelized_hierarchy[level], strip_chars)
+                else:
+                    for key in uncamelized_hierarchy[level]:
+                        uncamelized_hierarchy[level][key] = Camelizer.uncamelize_string(uncamelized_hierarchy[level][key], strip_chars)
 
         return uncamelized_hierarchy

@@ -3,6 +3,7 @@ Default Strategy
 """
 
 import re
+import json
 
 from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
@@ -107,7 +108,6 @@ class DefaultStrategy(AbstractStrategy):
                 'content': content,
                 'hierarchy': hierarchy,
                 'hierarchy_radio': Hierarchy.get_hierarchy_radio(hierarchy, current_level, levels),
-                'hierarchy_complete': Hierarchy.get_hierarchy_complete(hierarchy, levels),
                 'type': current_level,
                 'tags': UrlsParser.get_tags(current_page_url, self.config.start_urls),
                 'weight': {
@@ -118,6 +118,14 @@ class DefaultStrategy(AbstractStrategy):
                 'url': current_page_url,
                 'url_without_variables': current_page_url
             }
+
+            # get meta data
+            for meta_node in self.select('//meta'):
+                name = meta_node.get('name')
+                content = meta_node.get('content')
+                if name and name.startswith('docsearch:') and content:
+                    name = name.replace('docsearch:', '')
+                    record[name] = json.loads(content)
 
             # Uncamelize everything
             record['content'] = Camelizer.uncamelize_string(record['content'], self.config.strip_chars)
@@ -132,15 +140,25 @@ class DefaultStrategy(AbstractStrategy):
                     record['url_without_variables'] = url_without_variables
                     record[attr] = value
 
-            record['url'] = self._get_url_with_anchor(record['url'], record['anchor'])
-            record['url_without_variables'] = self._get_url_with_anchor(record['url_without_variables'], record['anchor'])
-            record['no_variables'] = record['url'] == record['url_without_variables']
+                record['url'] = self._get_url_with_anchor(record['url'], record['anchor'])
+                record['url_without_variables'] = self._get_url_with_anchor(record['url_without_variables'], record['anchor'])
+                record['no_variables'] = record['url'] == record['url_without_variables']
 
             records.append(record)
 
         return records
 
     def _get_text_content_for_level(self, node, current_level, selectors):
+        if 'attributes' in selectors[current_level]:
+            attributes = {}
+            for attribute_name in selectors[current_level]['attributes'].keys():
+                matching_nodes = node.xpath(selectors[current_level]['attributes'][attribute_name]['selector'])
+                attributes[attribute_name] = self.get_text_from_nodes(
+                    matching_nodes,
+                    self.get_strip_chars(attribute_name, selectors[current_level]['attributes'])
+                )
+            return attributes
+
         if current_level in self.global_content:
             return self.global_content[current_level]
 

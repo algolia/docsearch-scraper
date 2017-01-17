@@ -81,7 +81,6 @@ class AlgoliaSettings:
                 'crawling_issue': False
             }
         }
-
         # apply custom updates
         if config.custom_settings is not None:
             settings.update(config.custom_settings)
