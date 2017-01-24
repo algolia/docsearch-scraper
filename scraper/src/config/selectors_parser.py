@@ -49,6 +49,9 @@ class SelectorsParser(object):
             selectors_set[key]['strip_chars'] = selectors_set[key]['strip_chars'] if 'strip_chars' in selectors_set[
                 key] else None
 
+            if 'attributes' in selectors_set[key]:
+                selectors_set[key]['attributes'] = SelectorsParser._parse_selectors_set(selectors_set[key]['attributes'])
+
         return selectors_set
 
     def parse(self, config_selectors):
