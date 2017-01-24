@@ -68,7 +68,7 @@ class AlgoliaSettings:
                 'exact',
                 'custom'
             ],
-            'highlightPreTag': '<span role="presentation" class="algolia-docsearch-suggestion--highlight">',
+            'highlightPreTag': '<span class="algolia-docsearch-suggestion--highlight">',
             'highlightPostTag': '</span>',
             'minWordSizefor1Typo': 3,
             'minWordSizefor2Typos': 7,
