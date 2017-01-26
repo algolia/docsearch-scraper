@@ -28,7 +28,7 @@ To ease the setup process, a Docker container is provided to help you run the sc
   - `brew install python # will install pip`
   - `apt-get install python`
   - Or any other way
-- `git clone git@github.com:algolia/documentation-scraper.git`
+- `git clone git@github.com:algolia/docsearch-scraper.git`
 - `cd documentation-scraper`
 - `pip install --user -r requirements.txt`
 
