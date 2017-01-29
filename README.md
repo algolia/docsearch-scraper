@@ -29,7 +29,7 @@ To ease the setup process, a Docker container is provided to help you run the sc
   - `apt-get install python`
   - Or any other way
 - `git clone git@github.com:algolia/docsearch-scraper.git`
-- `cd documentation-scraper`
+- `cd docsearch-scraper`
 - `pip install --user -r requirements.txt`
 
 #### With docker
