@@ -10,7 +10,7 @@ class Camelizer:
     def _uncamelize_word(word):
         s = ""
         for i in range(0, len(word)):
-            if i > 0 and word[i].isupper() and \
+            if i > 1 and word[i].isupper() and \
                     not word[i - 1].isupper() and word[i - 1].isalnum() is True:
                 s += u"\u2063"
 
