@@ -18,7 +18,9 @@ class BrowserHandler:
         driver = None
 
         if BrowserHandler.conf_need_browser(config_original_content, js_render):
-            driver = webdriver.Firefox()
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference('network.http.accept-encoding.secure', 'gzip, deflate')
+            driver = webdriver.Firefox(profile)
             driver.implicitly_wait(1)
             CustomMiddleware.driver = driver
             JsExecutor.driver = driver
