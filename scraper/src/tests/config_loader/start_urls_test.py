@@ -70,7 +70,7 @@ class TestStartUrls:
 
     def test_start_urls_should_be_generated_when_there_is_automatic_tagging(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         # When

@@ -14,7 +14,7 @@ class TestOpenSeleniumBrowser:
 
     def test_browser_needed_when_js_render_true(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
         # When
         c = config({
@@ -27,7 +27,7 @@ class TestOpenSeleniumBrowser:
 
     def test_browser_needed_when_config_contains_automatic_tag(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         # When
