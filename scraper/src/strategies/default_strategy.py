@@ -110,6 +110,7 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy_radio': Hierarchy.get_hierarchy_radio(hierarchy, current_level, levels),
                 'type': current_level,
                 'tags': UrlsParser.get_tags(current_page_url, self.config.start_urls),
+                "extra_attributes": UrlsParser.get_extra_attributes(current_page_url, self.config.start_urls),
                 'weight': {
                     'page_rank': UrlsParser.get_page_rank(current_page_url, self.config.start_urls),
                     'level': self.get_level_weight(current_level),
@@ -140,6 +141,7 @@ class DefaultStrategy(AbstractStrategy):
                     record['url_without_variables'] = url_without_variables
                     record[attr] = value
 
+                record['url_without_anchor'] = record['url']
                 record['url'] = self._get_url_with_anchor(record['url'], record['anchor'])
                 record['url_without_variables'] = self._get_url_with_anchor(record['url_without_variables'], record['anchor'])
                 record['no_variables'] = record['url'] == record['url_without_variables']

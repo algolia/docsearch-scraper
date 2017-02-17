@@ -142,6 +142,14 @@ class UrlsParser(object):
                     return int(start_url['page_rank'])
         return 0
 
+    @staticmethod
+    def get_extra_attributes(current_page_url, start_urls):
+        if current_page_url is not None:
+            for start_url in start_urls:
+                if start_url['compiled_url'].match(current_page_url):
+                    if 'extra_attributes' in start_url:
+                        return start_url['extra_attributes']
+        return {}
 
     @staticmethod
     def get_url_variables(current_page_url, start_urls):

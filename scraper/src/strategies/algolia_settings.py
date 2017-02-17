@@ -44,7 +44,7 @@ class AlgoliaSettings:
             'attributesToSnippet': [
                 'content:10'
             ],
-            'attributesForFaceting': ['tags', 'no_variables'] + config.get_extra_facets(),
+            'attributesForFaceting': ['tags', 'no_variables', 'extra_attributes'] + config.get_extra_facets(),
             'distinct': True,
             'attributeForDistinct': 'url',
             'customRanking': [
