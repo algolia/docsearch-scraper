@@ -73,7 +73,7 @@ class AlgoliaSettings:
             'minWordSizefor1Typo': 3,
             'minWordSizefor2Typos': 7,
             'allowTyposOnNumericTokens': False,
-            'minProximity': 2,
+            'minProximity': 1,
             'ignorePlurals': True,
             'advancedSyntax': True,
             'removeWordsIfNoResults': 'allOptional',
