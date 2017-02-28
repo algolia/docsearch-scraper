@@ -3,6 +3,7 @@ var fs = require('fs');
 var Slack = require('node-slackr');
 
 var request = require('request');
+var promiseThrottle = require('promise-throttle');
 
 var config = process.env.CONFIG;
 
@@ -15,6 +16,7 @@ config = JSON.parse(config);
 
 var appId = config.appId;
 var apiKey = config.apiKey;
+var monitoringApiKey = config.monitoringApiKey;
 var slackHook = config.slackHook;
 
 var schedulerUsername = config.schedulerUsername;
@@ -80,7 +82,7 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
             return a.name.localeCompare(b.name);
         }).map(function (item) {
             return readFile('configs/' + item.name + ".json").then(function (data) {
-                resultItem = { name: item.name, config: data, noConfig: (data === undefined) }
+                resultItem = { name: item.name, config: data, noConfig: (data === undefined) };
 
                 if (data !== undefined) {
                     resultItem.supposedNbHits = data.nb_hits || undefined;
@@ -96,9 +98,48 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
     });
 });
 
+var aggregateMonitoringData = new Promise(function (resolve, reject) {
+    aggregateConfigs.then(function (indices) {
+        var throttle = new promiseThrottle({
+                requestsPerSecond: 5,           // up to 1 request per second
+                promiseImplementation: Promise  // the Promise library you are using
+        });
+
+        indices = indices.map(function (elt, i) {
+            var url = 'https://status.algolia.com/1/usage/search_operations/period/month/' + elt.name;
+
+            return throttle.add(function () {
+                return new Promise(function (resolve, reject) {
+                    request({ url: url, headers: {'X-Algolia-API-Key': monitoringApiKey, 'X-Algolia-Application-Id': appId} }, function (error, response, body) {
+                        var nb = 0;
+
+                        if (body) {
+                            body = JSON.parse(body);
+
+                            if (body.multi_queries_operations) {
+                                body.multi_queries_operations.forEach(function (t) {
+                                    nb += t.v;
+                                });
+                            }
+
+                            elt.searchLastMonth = nb;
+                        }
+
+                        resolve(elt);
+                    });
+                });
+            });
+        });
+
+        return Promise.all(indices).then(function (indices) {
+            resolve(indices);
+        });
+    });
+});
+
 
 var aggregateWithBrowse = new Promise(function (resolve, reject) {
-    aggregateConfigs.then(function (indices) {
+    aggregateMonitoringData.then(function (indices) {
         indices = indices.map(function (elt, i) {
             return new Promise(function (resolve, reject) {
                 var index = client.initIndex(elt.name);
@@ -274,9 +315,16 @@ var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
 });
 
 aggregateCrawlerInfo.then(function (indices) {
+
     var emptyIndices = indices.filter(function (index) {
         return index.isConnectorActive && index.nbHits === 0;
     });
+
+    var notUsedIndices = indices.filter(function (index) {
+        return index.searchLastMonth !== undefined && index.searchLastMonth <= 0;
+    });
+
+    console.log(notUsedIndices);
 
     var indexButNoConfig = indices.filter(function (index) {
         return index.noConfig === true;
@@ -323,7 +371,7 @@ aggregateCrawlerInfo.then(function (indices) {
         if (index.isConnectorActive === false) {
             return false;
         }
-        /** Already caught be empty index **/
+        // Already caught be empty index
         if (index.nbHits === 0) {
             return false;
         }
@@ -332,12 +380,12 @@ aggregateCrawlerInfo.then(function (indices) {
             return true;
         }
 
-        /** Increase of 100% **/
+        // Increase of 100%
         if (index.nbHits > 2 * index.supposedNbHits) {
             return true;
         }
 
-        /** Decrease of 20% **/
+        // Decrease of 20%
         if (index.supposedNbHits - index.nbHits > 20 / 100 * index.supposedNbHits) {
             return true;
         }
@@ -413,6 +461,7 @@ aggregateCrawlerInfo.then(function (indices) {
 
     if (now.getHours() == 10) {
         sectionPrinter("Disabled connectors", nonActiveConnectors, "warning");
+        sectionPrinter("Not used indices", notUsedIndices, "warning");
 
         if (reports.length == 0) {
 
@@ -443,19 +492,21 @@ aggregateCrawlerInfo.then(function (indices) {
         });
     });
 
-    var payload = {
-        "text": "",
-        "channel": "#notif-docsearch",
-        "username": "docsearch-doctor",
-        "icon_emoji": ":chart_with_upwards_trend:",
-        "attachments": reports
+    if (reports.length > 0) {
+        var payload = {
+            "text": "",
+            "channel": "#notif-docsearch",
+            "username": "docsearch-doctor",
+            "icon_emoji": ":chart_with_upwards_trend:",
+            "attachments": reports
+        };
+
+        slack = new Slack(slackHook);
+
+        slack.notify(payload, function (err, result) {
+            console.log(err, result);
+        });
     }
-
-    slack = new Slack(slackHook);
-
-    slack.notify(payload, function (err, result) {
-        console.log(err, result);
-    });
 
     badIndices.forEach(function (connectorId) {
         var url = "https://" + websiteUsername + ":" + websitePassword + "@www.algolia.com/api/1/docsearch/" + connectorId + "/reindex";

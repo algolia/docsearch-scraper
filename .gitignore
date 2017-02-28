@@ -8,6 +8,8 @@ src/strategies/__pycache__/
 *.pyc
 .env
 
+*yarn.lock
+
 # IDE Files
 .idea/
 *.iml
