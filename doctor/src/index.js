@@ -324,8 +324,6 @@ aggregateCrawlerInfo.then(function (indices) {
         return index.searchLastMonth !== undefined && index.searchLastMonth <= 0;
     });
 
-    console.log(notUsedIndices);
-
     var indexButNoConfig = indices.filter(function (index) {
         return index.noConfig === true;
     });
