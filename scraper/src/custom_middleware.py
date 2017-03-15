@@ -56,6 +56,9 @@ class CustomMiddleware(object):
             url_without_params = o.scheme + "://" + o.netloc + o.path
             response = response.replace(url=url_without_params)
 
+        if response.url == request.url + '#':
+            response = response.replace(url=request.url)
+
         for rule in spider._rules:
             if not spider.strict_redirect:
                 if rule.link_extractor._link_allowed(response):
