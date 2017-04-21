@@ -44,6 +44,11 @@ class AlgoliaSettings:
             'attributesToSnippet': [
                 'content:10'
             ],
+            'camelCaseAttributes': [
+                'hierarchy',
+                'hierarchy_radio',
+                'content'
+            ],
             'attributesForFaceting': ['tags', 'no_variables', 'extra_attributes'] + config.get_extra_facets(),
             'distinct': True,
             'attributeForDistinct': 'url',
