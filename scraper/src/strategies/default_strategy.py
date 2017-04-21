@@ -9,7 +9,6 @@ from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
 from .hierarchy import Hierarchy
 from ..config.urls_parser import UrlsParser
-from .camelizer import Camelizer
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -23,7 +22,6 @@ class DefaultStrategy(AbstractStrategy):
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6']
         self.global_content = {}
         self.page_rank = {}
-        Camelizer.synonyms = {}
 
     def get_records_from_response(self, response):
         """
@@ -120,6 +118,10 @@ class DefaultStrategy(AbstractStrategy):
                 'url_without_variables': current_page_url
             }
 
+            record['hierarchy_camel'] = record['hierarchy'],
+            record['hierarchy_radio_camel'] = record['hierarchy_radio']
+            record['content_camel'] = record['content']
+
             # get meta data
             for meta_node in self.select('//meta'):
                 name = meta_node.get('name')
@@ -127,13 +129,6 @@ class DefaultStrategy(AbstractStrategy):
                 if name and name.startswith('docsearch:') and content:
                     name = name.replace('docsearch:', '')
                     record[name] = json.loads(content)
-
-            # Uncamelize everything
-            record['content'] = Camelizer.uncamelize_string(record['content'], self.config.strip_chars)
-            record['hierarchy_camel'] = record['hierarchy']
-            record['hierarchy_radio_camel'] = record['hierarchy_radio']
-            record['hierarchy'] = Camelizer.uncamelize_hierarchy(record['hierarchy'],  self.config.strip_chars)
-            record['hierarchy_radio'] = Camelizer.uncamelize_hierarchy(record['hierarchy_radio'], self.config.strip_chars)
 
             if current_page_url is not None:
                 # Add variables to the record
