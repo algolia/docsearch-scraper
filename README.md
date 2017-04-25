@@ -145,3 +145,18 @@ To do this you need to override them when running the cli tool:
 ```
 APPLICATION_ID= API_KEY= ./docsearch deploy:configs
 ```
+
+## Run the tests
+
+### With docker
+
+```sh
+$ ./docsearch test
+```
+
+### Without docker
+
+```sh
+$ pip install pytest 
+$ API_KEY='test' APPLICATION_ID='test' python -m pytest
+```
