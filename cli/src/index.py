@@ -26,6 +26,8 @@ from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.get_logs import GetLogs
+from .commands.disable_connector import DisableConnector
+from .commands.enable_connector import EnableConnector
 
 if not path.isfile(env_file):
     print("")
@@ -94,6 +96,8 @@ if CREDENTIALS:
 if ADMIN:
     cmds.append(GenerateEmail())
     cmds.append(ReindexConnector())
+    cmds.append(EnableConnector())
+    cmds.append(DisableConnector())
     cmds.append(DeployConfigs())
     cmds.append(DeployDockerScraperImages())
     cmds.append(DeployDockerDoctorImages())

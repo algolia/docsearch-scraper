@@ -24,6 +24,18 @@ def get_facets(config):
 
     return None
 
+def remove_crawling_issue(config):
+    app_id = os.environ['APPLICATION_ID_PROD'] if 'APPLICATION_ID_PROD' in os.environ else ''
+    api_key = os.environ['API_KEY_PROD'] if 'API_KEY_PROD' in os.environ else ''
+
+    client = algoliasearch.Client(app_id, api_key)
+    index = client.init_index(config)
+
+    index.set_settings({
+        'userData': {
+            'crawling_issue': False
+        }
+    })
 
 def update_docsearch_key(config, key):
     index = algolia_client.init_index(config)
