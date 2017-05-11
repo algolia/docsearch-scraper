@@ -113,7 +113,6 @@ To add the DocSearch dropdown menu to your website, add the following snippet to
 <script type="text/javascript" src="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
 <script>
   var search = docsearch({
-    appId: '<APP_ID>', // your APP ID, if you have run the scraper yourself
     apiKey: '<API_KEY>', // use a SEARCH-ONLY api key here
     indexName: '<INDEX_NAME>',
     inputSelector: '<YOUR_INPUT_DOM_SELECTOR>',
@@ -123,6 +122,19 @@ To add the DocSearch dropdown menu to your website, add the following snippet to
 ```
 
 And you are good to go!
+
+#### Specify appId
+
+If you are running the scraper on your own, you will need to tell the widget about your Algolia application ID via the `appId` parameter.
+
+```javascript
+  var search = docsearch({
+    appId: '<APP_ID>', // the application ID containing your DocSearch data
+    ... // other parameters as above
+  });
+```
+
+If Algolia is handling the crawling of your site, you do not need to specify `appId`.
 
 ### Admin task
 
