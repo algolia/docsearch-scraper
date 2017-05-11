@@ -113,6 +113,7 @@ To add the DocSearch dropdown menu to your website, add the following snippet to
 <script type="text/javascript" src="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
 <script>
   var search = docsearch({
+    appId: '<APP_ID>', // your APP ID, if you have run the scraper yourself
     apiKey: '<API_KEY>', // use a SEARCH-ONLY api key here
     indexName: '<INDEX_NAME>',
     inputSelector: '<YOUR_INPUT_DOM_SELECTOR>',
