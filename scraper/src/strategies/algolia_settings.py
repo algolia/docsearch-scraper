@@ -76,6 +76,7 @@ class AlgoliaSettings:
             'minProximity': 1,
             'ignorePlurals': True,
             'advancedSyntax': True,
+            'attributeCriteriaComputedByMinProximity': True,
             'removeWordsIfNoResults': 'allOptional',
             'userData': {
                 'crawling_issue': False
