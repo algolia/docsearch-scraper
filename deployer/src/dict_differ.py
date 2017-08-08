@@ -23,4 +23,11 @@ class DictDiffer(object):
                         changed_attributes[config] = []
                     changed_attributes[config].append(o)
 
+            for o in self.past_dict[config]:
+                if o not in self.current_dict[config] and 'docker' not in o:
+                    keys.add(config)
+                    if config not in changed_attributes:
+                        changed_attributes[config] = []
+                    changed_attributes[config].append(o)
+
         return keys, changed_attributes
