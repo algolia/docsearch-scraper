@@ -36,11 +36,6 @@ To ease the setup process, a Docker container is provided to help you run the sc
 
 - Build the underlying Docker image: `./docsearch docker:build`
 
-#### Without docker
-
-- Download geckodriver from https://github.com/mozilla/geckodriver/releases, extract it
-- rename the `geckodriver` executable to `wires` and make it accessible in the `$PATH`
-
 ### Configure DocSearch
 
 You need to create an [Algolia account](https://www.algolia.com/users/sign_up) to get the `APPLICATION_ID` and (admin) `API_KEY` credentials the scraper will use to create the underlying indices.
