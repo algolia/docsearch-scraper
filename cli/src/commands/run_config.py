@@ -1,4 +1,3 @@
-from scraper.src.index import run_config
 from .abstract_command import AbstractCommand
 
 
@@ -16,5 +15,7 @@ class RunConfig(AbstractCommand):
         return [{"name": "config", "description": "path to the config to run"}]
 
     def run(self, args):
+        from scraper.src.index import run_config
+
         self.check_not_docsearch_app_id('run a config manually')
         return run_config(args[0])

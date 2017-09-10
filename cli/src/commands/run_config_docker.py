@@ -1,5 +1,3 @@
-from os import getcwd, environ
-
 from .abstract_command import AbstractCommand
 
 
@@ -17,6 +15,8 @@ class RunConfigDocker(AbstractCommand):
         return [{"name": "config", "description": "path to the config to run"}]
 
     def run(self, args):
+        from os import getcwd, environ
+
         self.check_not_docsearch_app_id('run a config manually')
 
         self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev"])

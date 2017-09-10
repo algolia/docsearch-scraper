@@ -1,6 +1,5 @@
 from .abstract_build_docker import AbstractBuildDocker
-from os import getcwd
-from ..helpers import print_error
+
 
 class RunTests(AbstractBuildDocker):
     def get_name(self):
@@ -10,6 +9,8 @@ class RunTests(AbstractBuildDocker):
         return 'Run tests'
 
     def run(self, args):
+        from os import getcwd
+
         py3 = self.get_option('python3', args)
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev", python3=py3)
         if code != 0:

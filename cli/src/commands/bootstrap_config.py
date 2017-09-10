@@ -1,4 +1,3 @@
-from deployer.src.config_creator import create_config
 from .abstract_command import AbstractCommand
 
 
@@ -10,4 +9,5 @@ class BootstrapConfig(AbstractCommand):
         return 'Boostrap a docsearch config'
 
     def run(self, args):
+        from deployer.src.config_creator import create_config
         return create_config()

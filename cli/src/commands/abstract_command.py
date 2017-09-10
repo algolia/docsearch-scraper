@@ -1,6 +1,4 @@
-from subprocess import Popen
 from os import environ
-
 
 class AbstractCommand(object):
     def run(self, args):
@@ -52,6 +50,7 @@ class AbstractCommand(object):
         merge_env = environ.copy()
         merge_env.update(env)
 
+        from subprocess import Popen
         p = Popen(arguments, env=merge_env)
         try:
             p.wait()

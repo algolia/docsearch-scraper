@@ -1,8 +1,3 @@
-import json
-from os import environ
-
-from deployer.src.helpers import make_custom_get_request
-from deployer.src.fetchers import get_configs_from_website
 from .abstract_command import AbstractCommand
 
 
@@ -20,6 +15,11 @@ class GetLogs(AbstractCommand):
         return [{"name": "name", "description": "name of the connector to reindex"}]
 
     def run(self, args):
+        import json
+        from os import environ
+        from deployer.src.helpers import make_custom_get_request
+        from deployer.src.fetchers import get_configs_from_website
+
         configs, inverted, crawlers_id = get_configs_from_website()
 
         connector_name = args[0]
