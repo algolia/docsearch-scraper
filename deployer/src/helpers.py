@@ -1,9 +1,4 @@
-import requests
-import json
 import os
-from slacker import Slacker
-
-from builtins import input
 
 username = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
 password = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
@@ -14,6 +9,8 @@ base_url = 'https://www.algolia.com/api/1/docsearch'
 
 
 def confirm(message="Confirm"):
+    from builtins import input
+
     prompt = message + ' [y/n]:\n'
 
     while True:
@@ -28,15 +25,22 @@ def confirm(message="Confirm"):
 
 
 def get_user_value(message):
+    from builtins import input
+
     prompt = message
     return input(prompt)
 
 
 def make_custom_get_request(url):
+    import requests
+
     return requests.get(url)
 
 
 def make_request(endpoint, type=None, configuration=None):
+    import requests
+    import json
+
     url = base_url + endpoint
 
     success_codes = [200, 201, 204]
@@ -73,6 +77,8 @@ def make_request(endpoint, type=None, configuration=None):
 def send_slack_notif(reports):
     if slack_hook == '':
         print('NO SLACK_HOOK')
+
+    from slacker import Slacker
 
     slack = Slacker(None, slack_hook)
 

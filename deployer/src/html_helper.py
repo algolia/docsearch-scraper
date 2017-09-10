@@ -1,18 +1,15 @@
-from lxml import html
-from selenium import webdriver
-import time
-from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
-from scrapy.http import HtmlResponse
-import random
-from collections import Counter
-
 def get_dom_from_content(content):
+    from lxml import html
+
     page = html.fromstring(content)
 
     return page
 
 
 def get_content_from_url(url):
+    from selenium import webdriver
+    import time
+
     profile = webdriver.FirefoxProfile()
     profile.set_preference('network.http.accept-encoding.secure', 'gzip, deflate')
 
@@ -151,6 +148,9 @@ def get_main_selector_for_url(url):
 
 
 def get_links(url, body):
+    from scrapy.http import HtmlResponse
+    from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
+
     start_url = url
     if '.html' in start_url:
         start_url = start_url.rsplit('/', 1)[0]
@@ -174,6 +174,9 @@ def get_links(url, body):
 
 def get_main_selector(url):
     return "FIXME"
+    import random
+    from collections import Counter
+
     content = get_content_from_url(url)
 
     links = [link.url for link in get_links(url, content) if link.url != url and link.url + '/' != url]
