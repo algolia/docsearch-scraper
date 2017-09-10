@@ -1,7 +1,3 @@
-from deployer.src.helpers import make_request
-from deployer.src.fetchers import get_configs_from_website
-from deployer.src.helpers import send_slack_notif
-
 from .abstract_command import AbstractCommand
 
 
@@ -19,6 +15,10 @@ class ReindexConnector(AbstractCommand):
         return [{"name": "name", "description": "name of the connector to reindex"}]
 
     def run(self, args):
+        from deployer.src.helpers import make_request
+        from deployer.src.fetchers import get_configs_from_website
+        from deployer.src.helpers import send_slack_notif
+
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
         make_request('/' + str(inverted[connector_name]) + '/reindex', 'POST')

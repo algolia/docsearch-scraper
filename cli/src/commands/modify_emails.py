@@ -1,12 +1,11 @@
-import os
 from os import path
-import subprocess as sp
 
-from deployer.src.emails import add, delete
 from .abstract_command import AbstractCommand
 
 
 def _ensure_configs_private():
+    import os
+
     # Check the presence of configs-private or clone it.
     p = '/tmp/docsearch_deploy/scraper/deployer'
     try:
@@ -16,6 +15,8 @@ def _ensure_configs_private():
     old_dir = os.getcwd()
     os.chdir(p)
     if not path.isdir('private'):
+        import subprocess as sp
+
         sp.call(['git', 'clone', '--depth', '1', '--branch', 'master',
                  'git@github.com:algolia/docsearch-configs-private.git',
                  'private'])
@@ -34,6 +35,8 @@ class UpdateEmails(AbstractCommand):
         return [{'name': 'configs...', 'description': 'name of the docsearch you want to update contact emails'}]
 
     def run(self, args):
+        from deployer.src.emails import add
+
         p = _ensure_configs_private()
         for config in args:
             add(config, path.join(p, 'private'))
@@ -50,6 +53,8 @@ class DeleteEmails(AbstractCommand):
         return [{'name': 'configs...', 'description': 'name of the docsearch you want to delete contact emails'}]
 
     def run(self, args):
+        from deployer.src.emails import delete
+
         p = _ensure_configs_private()
         for config in args:
             delete(config,  path.join(p, 'private'))

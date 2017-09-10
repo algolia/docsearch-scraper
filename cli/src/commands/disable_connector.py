@@ -1,11 +1,5 @@
 from .abstract_command import AbstractCommand
 
-from deployer.src.helpers import make_request
-from deployer.src.fetchers import get_configs_from_website
-from deployer.src.helpers import send_slack_notif
-
-from deployer.src.algolia_helper import remove_crawling_issue
-
 
 class DisableConnector(AbstractCommand):
     def get_name(self):
@@ -18,6 +12,11 @@ class DisableConnector(AbstractCommand):
         return [{"name": "name", "description": "name of the connector you want to disable"}]
 
     def run(self, args):
+        from deployer.src.helpers import make_request
+        from deployer.src.fetchers import get_configs_from_website
+        from deployer.src.helpers import send_slack_notif
+        from deployer.src.algolia_helper import remove_crawling_issue
+
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
 

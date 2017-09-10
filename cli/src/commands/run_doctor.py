@@ -1,6 +1,4 @@
 from .abstract_command import AbstractCommand
-from os import environ
-from .build_docker_doctor import BuildDockerDoctor
 
 class RunDoctor(AbstractCommand):
     def get_name(self):
@@ -10,6 +8,9 @@ class RunDoctor(AbstractCommand):
         return 'Run the doctor'
 
     def run(self, args):
+        from os import environ
+        from .build_docker_doctor import BuildDockerDoctor
+
         self.check_docsearch_app_id('run the doctor')
         BuildDockerDoctor().run([])
 
