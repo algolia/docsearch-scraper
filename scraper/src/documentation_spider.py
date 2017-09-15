@@ -150,6 +150,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     def parse_from_start_url(self, response):
         if self.is_rules_compliant(response):
             self.add_records(response, from_sitemap=False)
+
         else:
             print("\033[94m> Ignored: from start url\033[0m " + response.url)
 
