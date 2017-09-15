@@ -41,7 +41,7 @@ class ConfigLoader(object):
     scrap_start_urls = True
     selectors = None
     selectors_exclude = []
-    start_urls = None
+    start_urls = []
     stop_urls = []
     stop_content = []
     strategy = 'default'
@@ -57,6 +57,10 @@ class ConfigLoader(object):
     config_original_content = None
 
     driver = None
+
+    sitemap_urls = []
+    sitemap_urls_regexs = []
+    force_sitemap_urls_crawling = False
 
     def __init__(self, config):
         data = self._load_config(config)
