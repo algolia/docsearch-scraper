@@ -1,3 +1,4 @@
+import six
 
 class ConfigValidator(object):
     config = None
@@ -11,11 +12,11 @@ class ConfigValidator(object):
             raise ValueError('index_name is not defined')
 
         # Start_urls is mandatory
-        if not self.config.start_urls:
-            raise ValueError('start_urls is not defined')
+        if not self.config.start_urls and not self.config.sitemap_urls:
+            raise ValueError('start_urls is not defined, nor sitemap urls')
 
         # Start urls must be an array
-        if not isinstance(self.config.start_urls, list):
+        if self.config.start_urls and not isinstance(self.config.start_urls, list):
             raise Exception('start_urls should be list')
 
         # Stop urls must be an array
@@ -34,6 +35,11 @@ class ConfigValidator(object):
 
         if self.config.sitemap_urls_regexs and not self.config.sitemap_urls:
             raise Exception('You gave an regex to parse sitemap but you didn\'t provide a sitemap url')
+
+        if self.config.sitemap_urls_regexs and not self.config.sitemap_urls:
+            for regex in self.config.sitemap_urls_regex:
+                if not isinstance(regex, six.string_types):
+                  raise Exception('You gave an bad regex: '+ regex)
 
         if self.config.force_sitemap_urls_crawling and not self.config.sitemap_urls:
             raise Exception('You want to force the sitemap crawling but you didn\'t provide a sitemap url')

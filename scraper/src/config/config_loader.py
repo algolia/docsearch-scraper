@@ -41,7 +41,7 @@ class ConfigLoader(object):
     scrap_start_urls = True
     selectors = None
     selectors_exclude = []
-    start_urls = None
+    start_urls = []
     stop_urls = []
     stop_content = []
     strategy = 'default'

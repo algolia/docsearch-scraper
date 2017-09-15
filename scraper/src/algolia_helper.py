@@ -15,14 +15,16 @@ class AlgoliaHelper:
         self.algolia_client.delete_index(self.index_name_tmp)
         self.algolia_index_tmp.set_settings(settings)
 
-    def add_records(self, records, url):
+    def add_records(self, records, url, from_sitemap):
         """Add new records to the temporary index"""
         record_count = len(records)
 
         for i in range(0, record_count, 50):
             self.algolia_index_tmp.add_objects(records[i:i + 50])
 
-        print("\033[94m> DocSearch: \033[0m" + url + " (\033[93m" + str(record_count) + " records\033[0m)")
+        color="96" if from_sitemap else "94"
+
+        print("\033["+color+"m> DocSearch: \033[0m" + url + " (\033[93m" + str(record_count) + " records\033[0m)")
 
     def add_synonyms(self, synonyms):
         synonyms_list = []
