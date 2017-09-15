@@ -19,7 +19,6 @@ class CustomMiddleware(object):
         self.driver = CustomMiddleware.driver
 
     def process_request(self, request, spider):
-
         if not spider.js_render:
             return None
 
@@ -58,24 +57,5 @@ class CustomMiddleware(object):
 
         if response.url == request.url + '#':
             response = response.replace(url=request.url)
-
-        for rule in spider._rules:
-            if not spider.strict_redirect:
-                if rule.link_extractor._link_allowed(response):
-                    continue
-
-                if rule.link_extractor._link_allowed(request):
-                    response.replace(url=request.url)
-                    continue
-            else:
-                if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(request):
-                    continue
-
-            if request.url in spider.start_urls and spider.scrap_start_urls is False:
-                continue
-
-            if not (spider.scrap_start_urls and response.url in spider.start_urls):
-                print("\033[94m> Ignored:\033[0m " + response.url)
-                raise IgnoreRequest()
 
         return response

@@ -58,6 +58,10 @@ class ConfigLoader(object):
 
     driver = None
 
+    sitemap_urls = []
+    sitemap_urls_regexs = []
+    force_sitemap_urls_crawling = False
+
     def __init__(self, config):
         data = self._load_config(config)
 
