@@ -39,7 +39,7 @@ class ConfigValidator(object):
         if self.config.sitemap_urls_regexs and not self.config.sitemap_urls:
             for regex in self.config.sitemap_urls_regex:
                 if not isinstance(regex, six.string_types):
-                  raise Exception('You gave an bad regex: '+ regex)
+                  raise Exception('You gave an bad regex: '+ regex+' must be a string')
 
         if self.config.force_sitemap_urls_crawling and not self.config.sitemap_urls:
             raise Exception('You want to force the sitemap crawling but you didn\'t provide a sitemap url')
