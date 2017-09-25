@@ -43,3 +43,7 @@ class ConfigValidator(object):
 
         if self.config.force_sitemap_urls_crawling and not self.config.sitemap_urls:
             raise Exception('You want to force the sitemap crawling but you didn\'t provide a sitemap url')
+
+        if not self.config.scrape_start_urls and not self.config.scrap_start_urls:
+            raise Exception('Please use only the new variable name: scrape_start_urls')
+

@@ -83,6 +83,8 @@ class ConfigLoader(object):
         if not self.js_render:
             self.driver = BrowserHandler.destroy(self.driver)
 
+        # BC new correct naming
+        self.scrape_start_urls = self.scrap_start_urls if not self.scrap_start_urls else self.scrape_start_urls
     def _load_config(self, config):
         if os.path.isfile(config):
             self.config_file = config
