@@ -39,6 +39,7 @@ class ConfigLoader(object):
     min_indexed_level = 0
     remove_get_params = False
     scrap_start_urls = True
+    scrape_start_urls = True
     selectors = None
     selectors_exclude = []
     start_urls = []

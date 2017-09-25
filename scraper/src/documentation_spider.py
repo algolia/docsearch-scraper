@@ -40,7 +40,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.strategy = strategy
         self.js_render = config.js_render
         self.js_wait = config.js_wait
-        self.scrap_start_urls = config.scrap_start_urls
+        self.scrape_start_urls = config.scrap_start_urls if config.scrap_start_urls else config_scrape_start_urls
         self.remove_get_params = config.remove_get_params
 
         self.strict_redirect = config.strict_redirect
@@ -87,7 +87,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # We crawl the start point in order to ensure we didn't miss anything
         for url in self.start_urls:
-            if self.scrap_start_urls:
+            if self.scrape_start_urls:
                 yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
             else:
                 yield Request(url, dont_filter=False)
@@ -135,10 +135,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                     if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
                         continue
 
-                if response.request.url in self.start_urls and self.scrap_start_urls is False:
+                if response.request.url in self.start_urls and self.scrape_start_urls is False:
                     continue
 
-                if not (self.scrap_start_urls and response.url in self.start_urls):
+                if not (self.scrape_start_urls and response.url in self.start_urls):
                     return False
         return True
 
