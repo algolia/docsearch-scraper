@@ -70,7 +70,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.strategy = strategy
         self.js_render = config.js_render
         self.js_wait = config.js_wait
-        self.scrape_start_urls = config.scrap_start_urls if config.scrap_start_urls else config_scrape_start_urls
+        self.scrape_start_urls = config.scrape_start_urls
         self.remove_get_params = config.remove_get_params
         self.strict_redirect = config.strict_redirect
 
@@ -146,6 +146,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         else:
             self.add_records(response, from_sitemap=True)
             # We don't return self.parse(response) in order to avoid crawling those web page
+
 
     def parse_from_start_url(self, response):
         if self.is_rules_compliant(response):
