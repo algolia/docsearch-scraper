@@ -40,7 +40,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.strategy = strategy
         self.js_render = config.js_render
         self.js_wait = config.js_wait
-        self.scrap_start_urls = config.scrap_start_urls
+        self.scrape_start_urls = config.scrape_start_urls
         self.remove_get_params = config.remove_get_params
 
         self.strict_redirect = config.strict_redirect
@@ -64,10 +64,15 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
             self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else self.start_urls
             sitemap_rules = []
-            for regex in self.sitemap_urls_regexs:
-                sitemap_rules.append((regex, 'parse_from_sitemap'))
-            self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
 
+            if self.sitemap_urls_regexs:
+                for regex in self.sitemap_urls_regexs:
+                    sitemap_rules.append((regex, 'parse_from_sitemap'))
+            else: # None start url nor regex: default, we parse all
+                print "None start url nor regex: default, we scrap all"
+                sitemap_rules=[('.*','parse_from_sitemap')]
+
+            self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
         # END _init_ part from SitemapSpider
 
@@ -76,19 +81,20 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     def start_requests(self):
 
         # We crawl according to the sitemap
-        for i in self.start_requests_sitemap():
-            yield i
+        if self.sitemap_urls:
+            for request in self.start_requests_sitemap():
+                yield request
 
         # We crawl the start point in order to ensure we didn't miss anything
         for url in self.start_urls:
-            if self.scrap_start_urls:
+            if self.scrape_start_urls:
                 yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
             else:
                 yield Request(url, dont_filter=False)
 
-    def add_records(self, response):
+    def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
-        self.algolia_helper.add_records(records, response.url)
+        self.algolia_helper.add_records(records, response.url, from_sitemap)
 
         DocumentationSpider.NB_INDEXED += len(records)
 
@@ -103,13 +109,12 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
             print("\033[94m> Ignored from sitemap:\033[0m " + response.url)
         else:
-            self.add_records(response)
-
-        return self.parse(response)
+            self.add_records(response, from_sitemap=True)
+        # We don't return self.parse(response) in order to avoid crawling those web page
 
     def parse_from_start_url(self, response):
         if self.is_rules_compliant(response):
-            self.add_records(response)
+            self.add_records(response, from_sitemap=False)
         else:
             print("\033[94m> Ignored: from start url\033[0m " + response.url)
 
@@ -117,24 +122,23 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
     def is_rules_compliant(self, response):
         # Even if the link extract were compliant, we may have been redirected. Hence we check a new time
-        if not (response.url.endswith('/sitemap.xml')):
-            for rule in self._rules:
-                if not self.strict_redirect:
-                    if rule.link_extractor._link_allowed(response):
-                        continue
-
-                    if rule.link_extractor._link_allowed(response.request):
-                        response.replace(url=response.request.url)
-                        continue
-                else:
-                    if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
-                        continue
-
-                if response.request.url in self.start_urls and self.scrap_start_urls is False:
+        for rule in self._rules:
+            if not self.strict_redirect:
+                if rule.link_extractor._link_allowed(response):
                     continue
 
-                if not (self.scrap_start_urls and response.url in self.start_urls):
-                    return False
+                if rule.link_extractor._link_allowed(response.request):
+                    response.replace(url=response.request.url)
+                    continue
+            else:
+                if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
+                    continue
+
+            if response.request.url in self.start_urls and self.scrape_start_urls is False:
+                continue
+
+            if not (self.scrape_start_urls and response.url in self.start_urls):
+                return False
         return True
 
     # Init method of a SiteMapSpider @Scrapy
