@@ -158,6 +158,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         return self.parse(response)
 
     def is_rules_compliant(self, response):
+
         # Even if the link extract were compliant, we may have been redirected. Hence we check a new time
 
         # Redirection redirect on a start url
