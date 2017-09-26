@@ -121,7 +121,18 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         return self.parse(response)
 
     def is_rules_compliant(self, response):
+
+        # print response.url
+        # print response.url.decode("utf-8") in self.start_urls
+        # print response.url == self.start_urls[3]
+        # print self.start_urls
+
         # Even if the link extract were compliant, we may have been redirected. Hence we check a new time
+
+        # Redirection redirect on a start url
+        if not self.scrape_start_urls and (response.url in self.start_urls or response.request.url in self.start_urls):
+            return False
+
         for rule in self._rules:
             if not self.strict_redirect:
                 if rule.link_extractor._link_allowed(response):
@@ -134,11 +145,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
                     continue
 
-            if response.request.url in self.start_urls and self.scrape_start_urls is False:
-                continue
+            return False
 
-            if not (self.scrape_start_urls and response.url in self.start_urls):
-                return False
         return True
 
     # Init method of a SiteMapSpider @Scrapy
