@@ -9,6 +9,7 @@ from scrapy.http import Request
 from scrapy.spiders import SitemapSpider
 from scrapy.spiders.sitemap import regex, iterloc
 import six
+import re
 
 # End of import for the sitemap behavior
 
@@ -17,7 +18,6 @@ try:
     from urllib import unquote_plus
 except ImportError:
     from urllib.parse import urlparse, unquote_plus
-
 
 class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
@@ -46,8 +46,13 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.strict_redirect = config.strict_redirect
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
+        print re.sub(r"(https?)(.*)", r"https?\2", self.start_urls[0])
+        scheme_regex=r"(https?)(.*)"
+        allow_no_scheme=map(lambda url:url if not re.match(scheme_regex, url) else re.sub(scheme_regex, r"https?\2", url), self.start_urls)
+        print "allow_no_scheme"
+        print allow_no_scheme
         link_extractor = LxmlLinkExtractor(
-            allow=self.start_urls,
+            allow=allow_no_scheme,
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
@@ -144,7 +149,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             else:
                 if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
                     continue
-
+            print "False"
+            print rule.link_extractor._link_allowed(response)
+            print rule.link_extractor._link_allowed(response.request)
             return False
 
         return True
