@@ -19,6 +19,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, unquote_plus
 
+
 class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
     DocumentationSpider
@@ -27,6 +28,12 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     strategy = None
     js_render = False
     js_wait = 0
+
+
+    @staticmethod
+    def remove_scheme_url(url):
+        scheme_regex = r"(https?)(.*)"
+        return url if not re.match(scheme_regex, url) else re.sub(scheme_regex, r"https?\2", url)
 
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
@@ -46,14 +53,14 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.strict_redirect = config.strict_redirect
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
-        print re.sub(r"(https?)(.*)", r"https?\2", self.start_urls[0])
-        scheme_regex=r"(https?)(.*)"
-        allow_no_scheme=map(lambda url:url if not re.match(scheme_regex, url) else re.sub(scheme_regex, r"https?\2", url), self.start_urls)
-        print "allow_no_scheme"
-        print allow_no_scheme
+
+        # Get rid of scheme consideration http is equivalent to https
+        allow_no_scheme=map(DocumentationSpider.remove_scheme_url,self.start_urls)
+        deny_no_scheme = map(DocumentationSpider.remove_scheme_url,self.stop_urls)
+
         link_extractor = LxmlLinkExtractor(
             allow=allow_no_scheme,
-            deny=self.stop_urls,
+            deny=deny_no_scheme,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
             canonicalize=(not config.js_render or not config.use_anchors)

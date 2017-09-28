@@ -1,9 +1,15 @@
-from scrapy.dupefilters import *
-from scrapy.utils.request import *
+from scrapy.dupefilters import RFPDupeFilter
+import logging
+from scrapy.utils.job import job_dir
+from w3lib.url import canonicalize_url
+from scrapy.utils.python import to_bytes
+import weakref
+import hashlib
 import re
 
 _fingerprint_cache = weakref.WeakKeyDictionary()
 class CustomDupeFilter(RFPDupeFilter):
+
     def request_fingerprint(self, request):
         return self.custom_request_fingerprint(request)
 
@@ -26,9 +32,14 @@ class CustomDupeFilter(RFPDupeFilter):
         the fingeprint. If you want to include specific headers use the
         include_headers argument, which is a list of Request headers to include.
         """
-        scheme_regex=r'(https?)(.*)'
-        canonical_with_no_scheme_url=re.sub(scheme_regex, r"https?\2", canonicalize_url(request.url))
+        # Overriden given that some URL can have a wrong encoding (when it is comes from selenium driver) changes: encode.('utf-8) & in order to be no scheme compliant
 
+        # If use_anchors, anchors in URL matters since each anchor define a different webpage and content (special js_rendering)
+        url_for_finger_print=canonicalize_url(request.url) if not self.use_anchors else request.url
+
+        #no scheme compliant
+        scheme_regex=r'(https?)(.*)'
+        url_with_no_scheme=re.sub(scheme_regex, r"https?\2", url_for_finger_print.encode('utf-8'))
 
         if include_headers:
             include_headers = tuple(to_bytes(h.lower())
@@ -36,9 +47,9 @@ class CustomDupeFilter(RFPDupeFilter):
         cache = _fingerprint_cache.setdefault(request, {})
         if include_headers not in cache:
             fp = hashlib.sha1()
-            fp.update(to_bytes(request.method))
-            fp.update(to_bytes(canonical_with_no_scheme_url))
-            fp.update(request.body or b'')
+            fp.update(to_bytes(request.method.encode('utf-8')))
+            fp.update(to_bytes(url_with_no_scheme))
+            fp.update(request.body or b''.encode('utf-8'))
             if include_headers:
                 for hdr in include_headers:
                     if hdr in request.headers:
@@ -46,8 +57,26 @@ class CustomDupeFilter(RFPDupeFilter):
                         for v in request.headers.getlist(hdr):
                             fp.update(v)
             cache[include_headers] = fp.hexdigest()
-        # print cache[include_headers]
-        # print type(canonicalize_url(request.url))
-        # print re.sub(scheme_regex, r"https?\2", canonicalize_url(request.url))
-        # print request.body
         return cache[include_headers]
+
+    def __init__(self, path=None, debug=False, use_anchors=False):
+        self.file = None
+        self.fingerprints = set()
+        self.logdupes = True
+        self.debug = debug
+        self.logger = logging.getLogger(__name__)
+        if path:
+            self.file = open(os.path.join(path, 'requests.seen'), 'a+')
+            self.file.seek(0)
+            self.fingerprints.update(x.rstrip() for x in self.file)
+
+        # Spread config bool
+        self.use_anchors = use_anchors
+
+
+    # Overriden method in order to add the use_anchors attribute
+    @classmethod
+    def from_settings(cls, settings):
+        debug = settings.getbool('DUPEFILTER_DEBUG')
+        use_anchors = settings.getbool('DUPEFILTER_USE_ANCHORS')
+        return cls(job_dir(settings), debug, use_anchors)
