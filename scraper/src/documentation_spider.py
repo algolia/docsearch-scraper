@@ -28,12 +28,18 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     strategy = None
     js_render = False
     js_wait = 0
-
+    #TODO Test start metacharacter
+    scheme_regex = r"^(https?)(.*)"
+    http_s_regex = r"^(http)(s?)(.*)"
 
     @staticmethod
-    def remove_scheme_url(url):
-        scheme_regex = r"(https?)(.*)"
-        return url if not re.match(scheme_regex, url) else re.sub(scheme_regex, r"https?\2", url)
+    def to_any_scheme(url):
+        return url if not re.match(DocumentationSpider.scheme_regex, url) else re.sub(DocumentationSpider.scheme_regex, r"https?\2", url)
+
+    @staticmethod
+    def to_each_scheme(url):
+        #TODO capture each scheme separetely and return an array with each forced
+        return [re.sub(DocumentationSpider.http_s_regex, r"http\3", url),re.sub(DocumentationSpider.http_s_regex, r"https\3", url)]
 
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
@@ -41,6 +47,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
+        #TODO make stop_urls scheme agnostic => enhance to_any_scheme => remove deny_no_scheme (try position when no match)
         self.stop_urls = config.stop_urls
 
         self.algolia_helper = algolia_helper
@@ -55,11 +62,11 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         super(DocumentationSpider, self).__init__(*args, **kwargs)
 
         # Get rid of scheme consideration http is equivalent to https
-        allow_no_scheme=map(DocumentationSpider.remove_scheme_url,self.start_urls)
-        deny_no_scheme = map(DocumentationSpider.remove_scheme_url,self.stop_urls)
+        start_urls_any_scheme=map(DocumentationSpider.to_any_scheme,self.start_urls)
+        deny_no_scheme = map(DocumentationSpider.to_any_scheme,self.stop_urls)
 
         link_extractor = LxmlLinkExtractor(
-            allow=allow_no_scheme,
+            allow=start_urls_any_scheme,
             deny=deny_no_scheme,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
@@ -74,7 +81,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # We son't want to check anything if we don't even have a sitemap URL
         if config.sitemap_urls:
             # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
-            self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else self.start_urls
+            self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
             sitemap_rules = []
 
             if self.sitemap_urls_regexs:
