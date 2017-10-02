@@ -28,29 +28,28 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     strategy = None
     js_render = False
     js_wait = 0
-    #TODO Test start metacharacter
     match_capture_any_scheme = r"^(https?)(.*)"
-    backreference_any_scheme=r"https?\2"
-    every_schemes=["http","https"]
-
+    backreference_any_scheme = r"^https?\2(.*)$"
+    every_schemes = ["http", "https"]
 
     @staticmethod
     def to_any_scheme(url):
-        return url if not re.match(DocumentationSpider.match_capture_any_scheme, url) else re.sub(DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
+        """Return an regex that represent the URL and is scheme agnostic """
+        return url if not re.match(DocumentationSpider.match_capture_any_scheme, url) else re.sub(
+            DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
 
     @staticmethod
     def to_each_scheme(url):
         """Return a list with the translation to this url into each scheme. The first one will be the original one if it has a scheme"""
-        url_with_each_scheme=[]
-        url=url.encode('utf8')
+        url_with_each_scheme = []
+        url = url.encode('utf8')
         for scheme in DocumentationSpider.every_schemes:
-            url_with_scheme=re.sub(DocumentationSpider.match_capture_any_scheme, scheme+"\\2", url)
-            if re.match("^"+scheme+'.*',url):
-                url_with_each_scheme=[url_with_scheme]+url_with_each_scheme
+            url_with_scheme = re.sub(DocumentationSpider.match_capture_any_scheme, scheme + "\\2", url)
+            if re.match("^" + scheme + '.*', url):
+                url_with_each_scheme = [url_with_scheme] + url_with_each_scheme
             else:
-                url_with_each_scheme =url_with_each_scheme+ [url_with_scheme]
+                url_with_each_scheme = url_with_each_scheme + [url_with_scheme]
         return url_with_each_scheme
-
 
     @staticmethod
     def list_to_each_scheme(urls):
@@ -64,9 +63,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
-        #TODO make stop_urls scheme agnostic => enhance to_any_scheme => remove deny_no_scheme (try position when no match)
-        self.stop_urls = config.stop_urls
-
+        # TODO make stop_urls scheme agnostic => enhance to_any_scheme => remove deny_no_scheme (try position when no match)
+        # We need to ensure that the stop urls are scheme agnostic if it represents URL
+        self.stop_urls = map(DocumentationSpider.to_any_scheme, config.stop_urls)
         self.algolia_helper = algolia_helper
         self.strategy = strategy
         self.js_render = config.js_render
@@ -79,12 +78,14 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         super(DocumentationSpider, self).__init__(*args, **kwargs)
 
         # Get rid of scheme consideration http is equivalent to https
-        start_urls_any_scheme=map(DocumentationSpider.to_any_scheme,self.start_urls)
-        deny_no_scheme = map(DocumentationSpider.to_any_scheme,self.stop_urls)
-
+        # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
+        self.start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
+        start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
+        print "start_urls_any_scheme"
+        print start_urls_any_scheme
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
-            deny=deny_no_scheme,
+            deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
             canonicalize=(not config.js_render or not config.use_anchors)
@@ -100,13 +101,12 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
             self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
             sitemap_rules = []
-
             if self.sitemap_urls_regexs:
                 for regex in self.sitemap_urls_regexs:
                     sitemap_rules.append((regex, 'parse_from_sitemap'))
-            else: # None start url nor regex: default, we parse all
+            else:  # None start url nor regex: default, we parse all
                 print "None start url nor regex: default, we scrap all"
-                sitemap_rules=[('.*','parse_from_sitemap')]
+                sitemap_rules = [('.*', 'parse_from_sitemap')]
 
             self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
@@ -121,17 +121,18 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             for request in self.start_requests_sitemap():
                 yield request
 
-        # We crawl the start point in order to ensure we didn't miss anything
+        # We crawl the start URL in order to ensure we didn't miss anything (Even if we used the sitemap)
         for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.start_urls)):
-            if position%len(DocumentationSpider.every_schemes)==0:
-            # Original url from the configuration
+            if position % len(DocumentationSpider.every_schemes) == 0:
+                # Original URL from the configuration
                 if self.scrape_start_urls:
                     yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
                 else:
                     yield Request(url, dont_filter=False)
             else:
-            # To avoid_url in wrong scheem
-             yield Request(url, dont_filter=True)
+                # In case the provided scheme isn't available, we try it with the other scheme (Bad config provided)
+                # The dupefilter must not filter it since each scheme URL from one url have the same fingerprint (fingerprint  are scheme agnostic)
+                yield Request(url, dont_filter=True)
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
@@ -139,24 +140,23 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         DocumentationSpider.NB_INDEXED += len(records)
 
-
     # Start request by sitemap
     def start_requests_sitemap(self):
         print "> Browse sitemap"
-        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.sitemap_url)):
-            if position%len(DocumentationSpider.every_schemes)==0:
+        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.sitemap_urls)):
+            if position % len(DocumentationSpider.every_schemes) == 0:
                 # Original url from the configuration
-                  yield Request(url, self._parse_sitemap)
+                yield Request(url, self._parse_sitemap)
             else:
-                # To avoid_url in wrong scheem
-                yield Request(url, self._parse_sitemap,dont_filter=True)
+                # In case the provided scheme isn't available, we try it with the other scheme (Bad config provided)
+                yield Request(url, self._parse_sitemap, dont_filter=True)
 
     def parse_from_sitemap(self, response):
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
             print("\033[94m> Ignored from sitemap:\033[0m " + response.url)
         else:
             self.add_records(response, from_sitemap=True)
-        # We don't return self.parse(response) in order to avoid crawling those web page
+            # We don't return self.parse(response) in order to avoid crawling those web page
 
     def parse_from_start_url(self, response):
         if self.is_rules_compliant(response):
@@ -167,11 +167,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         return self.parse(response)
 
     def is_rules_compliant(self, response):
-
-        # print response.url
-        # print response.url.decode("utf-8") in self.start_urls
-        # print response.url == self.start_urls[3]
-        # print self.start_urls
 
         # Even if the link extract were compliant, we may have been redirected. Hence we check a new time
 
@@ -190,9 +185,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             else:
                 if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
                     continue
-            print "False"
-            print rule.link_extractor._link_allowed(response)
-            print rule.link_extractor._link_allowed(response.request)
             return False
 
         return True
