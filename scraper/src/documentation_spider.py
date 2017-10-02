@@ -123,11 +123,15 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # We crawl the start point in order to ensure we didn't miss anything
         for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.start_urls)):
-            # If we want to scrap the start url and that the url is the original one, we scraped it
-            if self.scrape_start_urls and (position%len(DocumentationSpider.every_schemes))==0:
-                yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
+            if position%len(DocumentationSpider.every_schemes)==0:
+            # Original url from the configuration
+                if self.scrape_start_urls:
+                    yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
+                else:
+                    yield Request(url, dont_filter=False)
             else:
-                yield Request(url, dont_filter=False)
+            # To avoid_url in wrong scheem
+             yield Request(url, dont_filter=True)
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
@@ -139,8 +143,13 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     # Start request by sitemap
     def start_requests_sitemap(self):
         print "> Browse sitemap"
-        for url in DocumentationSpider.list_to_each_scheme(self.sitemap_url):
-            yield Request(url, self._parse_sitemap)
+        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.sitemap_url)):
+            if position%len(DocumentationSpider.every_schemes)==0:
+                # Original url from the configuration
+                  yield Request(url, self._parse_sitemap)
+            else:
+                # To avoid_url in wrong scheem
+                yield Request(url, self._parse_sitemap,dont_filter=True)
 
     def parse_from_sitemap(self, response):
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
