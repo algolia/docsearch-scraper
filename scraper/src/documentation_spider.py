@@ -29,17 +29,34 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     js_render = False
     js_wait = 0
     #TODO Test start metacharacter
-    scheme_regex = r"^(https?)(.*)"
-    http_s_regex = r"^(http)(s?)(.*)"
+    match_capture_any_scheme = r"^(https?)(.*)"
+    backreference_any_scheme=r"https?\2"
+    every_schemes=["http","https"]
+
 
     @staticmethod
     def to_any_scheme(url):
-        return url if not re.match(DocumentationSpider.scheme_regex, url) else re.sub(DocumentationSpider.scheme_regex, r"https?\2", url)
+        return url if not re.match(DocumentationSpider.match_capture_any_scheme, url) else re.sub(DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
 
     @staticmethod
     def to_each_scheme(url):
-        #TODO capture each scheme separetely and return an array with each forced
-        return [re.sub(DocumentationSpider.http_s_regex, r"http\3", url),re.sub(DocumentationSpider.http_s_regex, r"https\3", url)]
+        """Return a list with the translation to this url into each scheme. The first one will be the original one if it has a scheme"""
+        url_with_each_scheme=[]
+        url=url.encode('utf8')
+        for scheme in DocumentationSpider.every_schemes:
+            url_with_scheme=re.sub(DocumentationSpider.match_capture_any_scheme, scheme+"\\2", url)
+            if re.match("^"+scheme+'.*',url):
+                url_with_each_scheme=[url_with_scheme]+url_with_each_scheme
+            else:
+                url_with_each_scheme =url_with_each_scheme+ [url_with_scheme]
+        return url_with_each_scheme
+
+
+    @staticmethod
+    def list_to_each_scheme(urls):
+        """ Return a flatten list containing each URL into each different schemes. Considering the different URL related to the same one, the first one will be the one with the scheme given as input"""
+        # Performance purpose https://stackoverflow.com/questions/406121/flattening-a-shallow-list-in-python
+        return [scheme_url for url in urls for scheme_url in DocumentationSpider.to_each_scheme(url)]
 
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
@@ -105,8 +122,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 yield request
 
         # We crawl the start point in order to ensure we didn't miss anything
-        for url in self.start_urls:
-            if self.scrape_start_urls:
+        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.start_urls)):
+            # If we want to scrap the start url and that the url is the original one, we scraped it
+            if self.scrape_start_urls and (position%len(DocumentationSpider.every_schemes))==0:
                 yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
             else:
                 yield Request(url, dont_filter=False)
@@ -121,7 +139,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     # Start request by sitemap
     def start_requests_sitemap(self):
         print "> Browse sitemap"
-        for url in self.sitemap_urls:
+        for url in DocumentationSpider.list_to_each_scheme(self.sitemap_url):
             yield Request(url, self._parse_sitemap)
 
     def parse_from_sitemap(self, response):

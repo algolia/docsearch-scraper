@@ -38,8 +38,8 @@ class CustomDupeFilter(RFPDupeFilter):
         url_for_finger_print=canonicalize_url(request.url) if not self.use_anchors else request.url
 
         #no scheme compliant
-        scheme_regex=r'(https?)(.*)'
-        url_with_no_scheme=re.sub(scheme_regex, r"https?\2", url_for_finger_print.encode('utf-8'))
+        match_capture_any_scheme=r'(https?)(.*)'
+        url_with_no_scheme=re.sub(match_capture_any_scheme, r"https?\2", url_for_finger_print.encode('utf-8'))
 
         if include_headers:
             include_headers = tuple(to_bytes(h.lower())
