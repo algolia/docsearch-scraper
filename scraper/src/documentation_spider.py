@@ -63,8 +63,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
-        # TODO make stop_urls scheme agnostic => enhance to_any_scheme => remove deny_no_scheme (try position when no match)
-        # We need to ensure that the stop urls are scheme agnostic if it represents URL
+        # We need to ensure that the stop urls are scheme agnostic too if it represents URL
         self.stop_urls = map(DocumentationSpider.to_any_scheme, config.stop_urls)
         self.algolia_helper = algolia_helper
         self.strategy = strategy
@@ -81,8 +80,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
         self.start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
         start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
-        print "start_urls_any_scheme"
-        print start_urls_any_scheme
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
             deny=self.stop_urls,
@@ -104,8 +101,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             if self.sitemap_urls_regexs:
                 for regex in self.sitemap_urls_regexs:
                     sitemap_rules.append((regex, 'parse_from_sitemap'))
-            else:  # None start url nor regex: default, we parse all
-                print "None start url nor regex: default, we scrap all"
+            else:  # Neither start url nor regex: default, we parse all
+                print "Neither start url nor regex: default, we scrap all"
                 sitemap_rules = [('.*', 'parse_from_sitemap')]
 
             self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
