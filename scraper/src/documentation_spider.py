@@ -109,8 +109,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
             yield Request(url, callback=self._parse_sitemap,
-                          meta={"alternative_links": DocumentationSpider.to_other_scheme(url),
-                                "dont_redirect": True},
+                          meta={
+                              "alternative_links": DocumentationSpider.to_other_scheme(url),
+                              "dont_redirect": True
+                          },
                           errback=self.errback_alternative_link)
         # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
 
@@ -119,8 +121,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             yield Request(url,
                           callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
                           # If we wan't to crawl (default behavior) without scraping, we still need to let the Crawlingspider acknowledge the content by parsing it with the built-in method
-                          meta={"alternative_links": DocumentationSpider.to_other_scheme(url),
-                                "dont_redirect": True},
+                          meta={
+                              "alternative_links": DocumentationSpider.to_other_scheme(url),
+                              "dont_redirect": True
+                          },
                           errback=self.errback_alternative_link)
 
     def add_records(self, response, from_sitemap):
@@ -173,14 +177,14 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         if failure.check(HttpError):
             # these exceptions come from HttpError spider middleware
-            previous_meta = failure.request.meta
+            meta = failure.request.meta
 
-            if (len(previous_meta["alternative_links"]) > 0):
-                alternative_link = previous_meta["alternative_links"].pop(0)
+            if (len(meta["alternative_links"]) > 0):
+                alternative_link = meta["alternative_links"].pop(0)
                 self.logger.error('Alternative link: %s', alternative_link)
-                yield failure.request.replace(url=alternative_link, meta=previous_meta, dont_filter=True)
-                #
-        # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
+                yield failure.request.replace(url=alternative_link, meta=meta, dont_filter=True)
+
+                # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
 
     def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
         """Init method of a SiteMapSpider @Scrapy"""
