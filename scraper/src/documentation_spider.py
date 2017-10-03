@@ -13,6 +13,8 @@ import re
 
 # End of import for the sitemap behavior
 
+from scrapy.spidermiddlewares.httperror import HttpError
+
 try:
     from urlparse import urlparse
     from urllib import unquote_plus
@@ -30,6 +32,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     js_wait = 0
     match_capture_any_scheme = r"^(https?)(.*)"
     backreference_any_scheme = r"^https?\2(.*)$"
+    # Could be any url prefix such as http://www or http://
     every_schemes = ["http", "https"]
 
     @staticmethod
@@ -39,23 +42,15 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
 
     @staticmethod
-    def to_each_scheme(url):
-        """Return a list with the translation to this url into each scheme. The first one will be the original one if it has a scheme"""
-        url_with_each_scheme = []
+    def to_other_scheme(url):
+        """Return a list with the translation to this url into each other scheme."""
+        other_scheme_urls = []
         url = url.encode('utf8')
         for scheme in DocumentationSpider.every_schemes:
-            url_with_scheme = re.sub(DocumentationSpider.match_capture_any_scheme, scheme + "\\2", url)
-            if re.match("^" + scheme + '.*', url):
-                url_with_each_scheme = [url_with_scheme] + url_with_each_scheme
-            else:
-                url_with_each_scheme = url_with_each_scheme + [url_with_scheme]
-        return url_with_each_scheme
+            if not re.match("^" + scheme + '.*', url):
+                other_scheme_urls.append(re.sub(DocumentationSpider.match_capture_any_scheme, scheme + "\\2", url))
 
-    @staticmethod
-    def list_to_each_scheme(urls):
-        """ Return a flatten list containing each URL into each different schemes. Considering the different URL related to the same one, the first one will be the one with the scheme given as input"""
-        # Performance purpose https://stackoverflow.com/questions/406121/flattening-a-shallow-list-in-python
-        return [scheme_url for url in urls for scheme_url in DocumentationSpider.to_each_scheme(url)]
+        return other_scheme_urls
 
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
@@ -71,14 +66,12 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.js_wait = config.js_wait
         self.scrape_start_urls = config.scrape_start_urls
         self.remove_get_params = config.remove_get_params
-
         self.strict_redirect = config.strict_redirect
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
 
-        # Get rid of scheme consideration http is equivalent to https
+        # Get rid of scheme consideration
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
-        self.start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
         start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
@@ -114,39 +107,27 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     def start_requests(self):
 
         # We crawl according to the sitemap
-        if self.sitemap_urls:
-            for request in self.start_requests_sitemap():
-                yield request
+        for url in self.sitemap_urls:
+            yield Request(url, callback=self._parse_sitemap,
+                          meta={"alternative_links": DocumentationSpider.to_other_scheme(url),
+                                "dont_redirect": True},
+                          errback=self.errback_alternative_link)
+        # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
 
         # We crawl the start URL in order to ensure we didn't miss anything (Even if we used the sitemap)
-        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.start_urls)):
-            if position % len(DocumentationSpider.every_schemes) == 0:
-                # Original URL from the configuration
-                if self.scrape_start_urls:
-                    yield Request(url, dont_filter=False, callback=self.parse_from_start_url)
-                else:
-                    yield Request(url, dont_filter=False)
-            else:
-                # In case the provided scheme isn't available, we try it with the other scheme (Bad config provided)
-                # The dupefilter must not filter it since each scheme URL from one url have the same fingerprint (fingerprint  are scheme agnostic)
-                yield Request(url, dont_filter=True)
+        for url in self.start_urls:
+            yield Request(url,
+                          callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
+                          # If we wan't to crawl (default behavior) without scraping, we still need to let the Crawlingspider acknowledge the content by parsing it with the built-in method
+                          meta={"alternative_links": DocumentationSpider.to_other_scheme(url),
+                                "dont_redirect": True},
+                          errback=self.errback_alternative_link)
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
         self.algolia_helper.add_records(records, response.url, from_sitemap)
 
         DocumentationSpider.NB_INDEXED += len(records)
-
-    # Start request by sitemap
-    def start_requests_sitemap(self):
-        print "> Browse sitemap"
-        for position, url in enumerate(DocumentationSpider.list_to_each_scheme(self.sitemap_urls)):
-            if position % len(DocumentationSpider.every_schemes) == 0:
-                # Original url from the configuration
-                yield Request(url, self._parse_sitemap)
-            else:
-                # In case the provided scheme isn't available, we try it with the other scheme (Bad config provided)
-                yield Request(url, self._parse_sitemap, dont_filter=True)
 
     def parse_from_sitemap(self, response):
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
@@ -186,9 +167,23 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         return True
 
-    # Init method of a SiteMapSpider @Scrapy
+    def errback_alternative_link(self, failure):
+        """This error callback will launch the same request with the alternative_links if there are some left"""
+        self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+
+        if failure.check(HttpError):
+            # these exceptions come from HttpError spider middleware
+            previous_meta = failure.request.meta
+
+            if (len(previous_meta["alternative_links"]) > 0):
+                alternative_link = previous_meta["alternative_links"].pop(0)
+                self.logger.error('Alternative link: %s', alternative_link)
+                yield failure.request.replace(url=alternative_link, meta=previous_meta, dont_filter=True)
+                #
+        # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
+
     def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
-        # print "__init_sitemap_"
+        """Init method of a SiteMapSpider @Scrapy"""
         self.sitemap_urls = sitemap_urls
         self.sitemap_rules = custom_sitemap_rules
         self._cbs = []

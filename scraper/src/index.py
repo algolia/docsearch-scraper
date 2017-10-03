@@ -49,16 +49,12 @@ def run_config(config):
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
         'LOG_LEVEL': 'ERROR',
-        # 'LOG_LEVEL': 'DEBUG',
         'USER_AGENT': config.user_agent,
         'DOWNLOADER_MIDDLEWARES': {DOWNLOADER_MIDDLEWARES_PATH: 900},
         # Need to be > 600 to be after the redirectMiddleware
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY,
-        # 'SCHEDULER_DEBUG':True,
-        # 'LOG_FILE' : 'scrapy.log',
-        # 'DUPEFILTER_DEBUG': True,
         'DUPEFILTER_USE_ANCHORS':config.use_anchors,
-        # Use our custom dupefilter in order to don't consider the scheme (http|https)
+        # Use our custom dupefilter in order to be scheme agnostic regarding link provided
         'DUPEFILTER_CLASS':"scraper.src.custom_dupefilter.CustomDupeFilter"
     })
 
