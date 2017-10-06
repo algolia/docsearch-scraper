@@ -30,7 +30,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     strategy = None
     js_render = False
     js_wait = 0
-    match_capture_any_scheme = r"^(https?)(.*)"
+    match_capture_any_scheme = re.compile(r"^(https?)(.*)")
     backreference_any_scheme = r"^https?\2(.*)$"
     # Could be any url prefix such as http://www or http://
     every_schemes = ["http", "https"]
@@ -46,12 +46,19 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         """Return a list with the translation to this url into each other scheme."""
         other_scheme_urls = []
         url = url.encode('utf8')
+        match = DocumentationSpider.match_capture_any_scheme.match(url)
+        assert match
+        if not (match and match.group(1) and match.group(2)):
+            raise ValueError("Must have a match and split the url into the scheme and the rest. url: "+url)
+
+        previous_scheme=match.group(1)
+        url_with_no_scheme=match.group(2)
+
         for scheme in DocumentationSpider.every_schemes:
-            if not re.match("^" + scheme + '.*', url):
-                other_scheme_urls.append(re.sub(DocumentationSpider.match_capture_any_scheme, scheme + "\\2", url))
-
+            if scheme!=previous_scheme:
+                other_scheme_urls.append(scheme+url_with_no_scheme)
+        print other_scheme_urls
         return other_scheme_urls
-
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
         # Scrapy config
@@ -120,7 +127,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         for url in self.start_urls:
             yield Request(url,
                           callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
-                          # If we wan't to crawl (default behavior) without scraping, we still need to let the Crawlingspider acknowledge the content by parsing it with the built-in method
+                          # If we wan't to crawl (default behavior) without scraping, we still need to let the
+                          # crawling spider acknowledge the content by parsing it with the built-in method
                           meta={
                               "alternative_links": DocumentationSpider.to_other_scheme(url),
                               "dont_redirect": True
@@ -179,7 +187,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             # these exceptions come from HttpError spider middleware
             meta = failure.request.meta
 
-            if (len(meta["alternative_links"]) > 0):
+            if len(meta["alternative_links"]) > 0:
                 alternative_link = meta["alternative_links"].pop(0)
                 self.logger.error('Alternative link: %s', alternative_link)
                 yield failure.request.replace(url=alternative_link, meta=meta, dont_filter=True)
