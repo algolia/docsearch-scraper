@@ -51,6 +51,8 @@ class ConfigLoader(object):
     use_anchors = False
     user_agent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36\
                   (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
+    only_content_level = False
+    query_rules = []
 
     # data storage, starting here attribute are not config params
     config_file = None
@@ -85,6 +87,7 @@ class ConfigLoader(object):
 
         # BC new correct naming
         self.scrape_start_urls = self.scrap_start_urls if not self.scrap_start_urls else self.scrape_start_urls
+
     def _load_config(self, config):
         if os.path.isfile(config):
             self.config_file = config
