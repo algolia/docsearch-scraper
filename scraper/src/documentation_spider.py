@@ -37,7 +37,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
     @staticmethod
     def to_any_scheme(url):
-        """Return an regex that represent the URL and is scheme agnostic """
+        """Return a regex that represent the URL and match any scheme from it"""
         return url if not re.match(DocumentationSpider.match_capture_any_scheme, url) else re.sub(
             DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
 
@@ -57,7 +57,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         for scheme in DocumentationSpider.every_schemes:
             if scheme!=previous_scheme:
                 other_scheme_urls.append(scheme+url_with_no_scheme)
-        print other_scheme_urls
         return other_scheme_urls
     def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
