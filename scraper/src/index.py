@@ -41,10 +41,12 @@ def run_config(config):
 
     DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'
     DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
+    DUPEFILTER_CLASS_PATH = 'scraper.src.custom_dupefilter.CustomDupeFilter'
 
     if __name__ == '__main__':
         DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_middleware.CustomMiddleware'
         DOWNLOADER_CLIENTCONTEXTFACTORY = 'src.scrapy_patch.CustomContextFactory'
+        DUPEFILTER_CLASS_PATH = 'src.custom_dupefilter.CustomDupeFilter'
 
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
@@ -53,9 +55,9 @@ def run_config(config):
         'DOWNLOADER_MIDDLEWARES': {DOWNLOADER_MIDDLEWARES_PATH: 900},
         # Need to be > 600 to be after the redirectMiddleware
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY,
-        'DUPEFILTER_USE_ANCHORS':config.use_anchors,
+        'DUPEFILTER_USE_ANCHORS': config.use_anchors,
         # Use our custom dupefilter in order to be scheme agnostic regarding link provided
-        'DUPEFILTER_CLASS':"scraper.src.custom_dupefilter.CustomDupeFilter"
+        'DUPEFILTER_CLASS': DUPEFILTER_CLASS_PATH
     })
 
     process.crawl(
