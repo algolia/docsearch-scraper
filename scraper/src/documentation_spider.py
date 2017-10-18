@@ -134,8 +134,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 # If we wan't to crawl (default behavior) without scraping, we still need to let the
                 # crawling spider acknowledge the content by parsing it with the built-in method
                 meta={
-                    "alternative_links": DocumentationSpider.to_other_scheme(start_url['url']),
-                    "dont_redirect": True
+                    "alternative_links": DocumentationSpider.to_other_scheme(start_url['url'])
                 },
                 errback=self.errback_alternative_link
             )
