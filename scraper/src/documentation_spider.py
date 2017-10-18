@@ -58,11 +58,12 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             if scheme!=previous_scheme:
                 other_scheme_urls.append(scheme+url_with_no_scheme)
         return other_scheme_urls
-    def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
 
+    def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
         # Scrapy config
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
+        self.start_urls_full = config.start_urls
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
         # We need to ensure that the stop urls are scheme agnostic too if it represents URL
         self.stop_urls = map(DocumentationSpider.to_any_scheme, config.stop_urls)
@@ -96,6 +97,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         if config.sitemap_urls:
             # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
             self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
+
             sitemap_rules = []
             if self.sitemap_urls_regexs:
                 for regex in self.sitemap_urls_regexs:
@@ -111,28 +113,32 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         super(DocumentationSpider, self)._compile_rules()
 
     def start_requests(self):
-
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
-            yield Request(url, callback=self._parse_sitemap,
-                          meta={
-                              "alternative_links": DocumentationSpider.to_other_scheme(url),
-                              "dont_redirect": True
-                          },
-                          errback=self.errback_alternative_link)
-        # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
+            yield Request(
+                url,
+                callback=self._parse_sitemap,
+                meta={
+                    "alternative_links": DocumentationSpider.to_other_scheme(url),
+                    "dont_redirect": True
+                },
+                errback=self.errback_alternative_link
+            )
+            # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
 
         # We crawl the start URL in order to ensure we didn't miss anything (Even if we used the sitemap)
-        for url in self.start_urls:
-            yield Request(url,
-                          callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
-                          # If we wan't to crawl (default behavior) without scraping, we still need to let the
-                          # crawling spider acknowledge the content by parsing it with the built-in method
-                          meta={
-                              "alternative_links": DocumentationSpider.to_other_scheme(url),
-                              "dont_redirect": True
-                          },
-                          errback=self.errback_alternative_link)
+        for start_url in self.start_urls_full:
+            yield Request(
+                start_url['url'],
+                callback=self.parse_from_start_url if self.scrape_start_urls and start_url['scrape'] else self.parse,
+                # If we wan't to crawl (default behavior) without scraping, we still need to let the
+                # crawling spider acknowledge the content by parsing it with the built-in method
+                meta={
+                    "alternative_links": DocumentationSpider.to_other_scheme(start_url['url']),
+                    "dont_redirect": True
+                },
+                errback=self.errback_alternative_link
+            )
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)

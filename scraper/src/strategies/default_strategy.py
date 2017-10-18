@@ -90,6 +90,9 @@ class DefaultStrategy(AbstractStrategy):
                     anchors['lvl' + str(index)] = None
                 previous_hierarchy = hierarchy
 
+                if self.config.only_content_level:
+                    continue
+
             if current_level_int < self.get_min_indexed_level_for_url(current_page_url):
                 continue
 

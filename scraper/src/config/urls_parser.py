@@ -22,6 +22,9 @@ class UrlsParser(object):
 
             start_url['compiled_url'] = re.compile(start_url['url'])
 
+            if "scrape" not in start_url:
+                start_url['scrape'] = True
+
             if "page_rank" not in start_url:
                 start_url['page_rank'] = 0
 

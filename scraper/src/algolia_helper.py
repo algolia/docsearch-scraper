@@ -6,7 +6,7 @@ from builtins import range
 
 class AlgoliaHelper:
     """AlgoliaHelper"""
-    def __init__(self, app_id, api_key, index_name, settings):
+    def __init__(self, app_id, api_key, index_name, settings, query_rules):
         self.algolia_client = algoliasearch.Client(app_id, api_key)
         self.index_name = index_name
         self.index_name_tmp = index_name + '_tmp'
@@ -14,6 +14,9 @@ class AlgoliaHelper:
         self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
         self.algolia_client.delete_index(self.index_name_tmp)
         self.algolia_index_tmp.set_settings(settings)
+
+        if len(query_rules) > 0:
+            self.algolia_index_tmp.batch_rules(query_rules, True, True)
 
     def add_records(self, records, url, from_sitemap):
         """Add new records to the temporary index"""

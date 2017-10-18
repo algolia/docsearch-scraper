@@ -36,7 +36,8 @@ def run_config(config):
         config.app_id,
         config.api_key,
         config.index_name,
-        AlgoliaSettings.get(config, strategy.levels)
+        AlgoliaSettings.get(config, strategy.levels),
+        config.query_rules
     )
 
     DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'
