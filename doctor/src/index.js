@@ -60,22 +60,9 @@ var readFile = function (path) {
     });
 };
 
-var fileSize = function (path) {
-    return new Promise(function (resolve, reject) {
-        fs.stat(path, function(err, stats) {
-            var size = undefined;
-
-            if (!err) {
-                size = stats.size;
-            }
-
-            resolve(size);
-        });
-    });
-};
-
 var aggregateConfigs = new Promise(function (resolve, reject) {
     client.listIndexes().then(function (content) {
+        console.log("fetch configs");
         var indices = content.items.filter(function (item) {
             return item.name.indexOf('_tmp') === -1;
         }).sort(function (a, b) {
@@ -100,6 +87,7 @@ var aggregateConfigs = new Promise(function (resolve, reject) {
 
 var aggregateMonitoringData = new Promise(function (resolve, reject) {
     aggregateConfigs.then(function (indices) {
+        console.log("fetch monitoring data");
         var throttle = new promiseThrottle({
                 requestsPerSecond: 5,           // up to 1 request per second
                 promiseImplementation: Promise  // the Promise library you are using
@@ -140,6 +128,7 @@ var aggregateMonitoringData = new Promise(function (resolve, reject) {
 
 var aggregateWithBrowse = new Promise(function (resolve, reject) {
     aggregateMonitoringData.then(function (indices) {
+        console.log("browsing configs");
         indices = indices.map(function (elt, i) {
             return new Promise(function (resolve, reject) {
                 var index = client.initIndex(elt.name);
@@ -178,6 +167,7 @@ var aggregateWithBrowse = new Promise(function (resolve, reject) {
 
 var aggregateWithSettings = new Promise(function (resolve, reject) {
     aggregateWithBrowse.then(function (indices) {
+        console.log("fetching settings");
         indices = indices.map(function (elt, i) {
             return new Promise(function (resolve, reject) {
                 var index = client.initIndex(elt.name);
@@ -210,10 +200,13 @@ var aggregateWithSettings = new Promise(function (resolve, reject) {
 
 var aggregateWithEmails = new Promise(function (resolve, reject) {
     aggregateWithSettings.then(function (indices) {
+        console.log("fetch private infos");
         indices = indices.map(function (elt, i) {
-            var privatePath = 'configs_private/infos/'+ elt.name + '.txt';
-            return fileSize(privatePath).then(function (size) {
-                elt.noEmail = !elt.noConfig && (size === undefined || size === 0);
+            var privatePath = 'configs_private/infos/'+ elt.name + '.json';
+
+            return readFile(privatePath).then(function (data) {
+                elt.noEmail = (data === undefined || Array.isArray(data.emails) === false || data.emails.length <= 0);
+
                 return elt;
             });
         });
@@ -226,6 +219,7 @@ var aggregateWithEmails = new Promise(function (resolve, reject) {
 
 var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
     aggregateWithEmails.then(function (indices) {
+        console.log("fetch crawler infos");
         var url = "https://" + schedulerUsername + ":" + schedulerPassword + "@crawlers.algolia.com/1/crawlers";
 
         request({ url : url }, function (error, response, body) {
@@ -286,6 +280,7 @@ var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
     var url = "https://" + websiteUsername + ":" + websitePassword + "@www.algolia.com/api/1/docsearch";
 
     aggregateWithDuplicateCrawlers.then(function (indices) {
+        console.log("fetch connectors");
         request({ url : url }, function (error, response, body) {
             var connectors = JSON.parse(body).connectors;
 
@@ -315,7 +310,7 @@ var aggregateCrawlerInfo = new Promise(function (resolve, reject) {
 });
 
 aggregateCrawlerInfo.then(function (indices) {
-
+    console.log("compute results");
     var emptyIndices = indices.filter(function (index) {
         return index.isConnectorActive && index.nbHits === 0;
     });
@@ -480,6 +475,7 @@ aggregateCrawlerInfo.then(function (indices) {
         return report.color !== 'good';
     });
 
+
     var badIndices = [];
 
     badReports.forEach(function (report) {
@@ -499,7 +495,7 @@ aggregateCrawlerInfo.then(function (indices) {
             "attachments": reports
         };
 
-        slack = new Slack(slackHook);
+        var slack = new Slack(slackHook);
 
         slack.notify(payload, function (err, result) {
             console.log(err, result);
