@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "$CONFIG" | jq ".deployKey" -r > ~/id_rsa.github
+echo -e "$CONFIG" | jq ".deployKey" -r > ~/id_rsa.github
 mkdir ~/.ssh
 cat << EOF > ~/.ssh/config
 host github.com
@@ -15,6 +15,6 @@ cd /root/checker
 git clone https://github.com/algolia/docsearch-configs.git configs_public
 git clone git@github.com:algolia/docsearch-configs-private.git configs_private
 mkdir configs
-mv configs_public/configs/*.json configs/
-mv configs_private/configs/*.json configs/
+find configs_public/configs -name "*.json" -exec mv {} configs \;
+find configs_private/configs -name "*.json" -exec mv {} configs \;
 node index.js

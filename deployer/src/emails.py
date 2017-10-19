@@ -1,6 +1,8 @@
 import os
 import os.path as path
 import subprocess as sp
+from collections import OrderedDict
+import json
 
 from builtins import input
 from . import helpers
@@ -47,15 +49,18 @@ def _prompt_command(emails):
 
 
 def _retrieve(config_name, config_dir):
-    txt = path.join(config_dir, 'infos', config_name + '.txt')
-    if path.isfile(txt):
-        with open(txt, 'r') as f:
-            return [l.strip() for l in f.readlines()]
+    file_path = path.join(config_dir, 'infos', config_name + '.json')
+
+    if path.isfile(file_path):
+        with open(file_path, 'r') as f:
+            obj = json.loads(f.read())
+            return obj['emails']
+
     return []
 
 
 def _commit_push(config_name, action, config_dir):
-    txt = path.join('infos', config_name + '.txt')
+    txt = path.join('infos', config_name + '.json')
     commit_message = 'deploy: {} emails for {}'.format(action, config_name)
 
     old_dir = os.getcwd()
@@ -70,9 +75,22 @@ def _commit_push(config_name, action, config_dir):
 
 
 def _write(emails, config_name, config_dir):
-    txt = path.join(config_dir, 'infos', config_name + '.txt')
-    with open(txt, 'w') as f:
-        f.write('\n'.join(emails))
+    file_path = path.join(config_dir, 'infos', config_name + '.json')
+
+    obj = OrderedDict((
+        ('name', config_name),
+        ('url', ''),
+        ('emails', emails),
+        ('categories', [])
+    ))
+
+    if path.isfile(file_path):
+        with open(file_path, 'r') as f:
+            obj = json.loads(f.read(), object_pairs_hook=OrderedDict)
+            obj['emails'] = emails
+
+    with open(file_path, 'w') as f:
+        f.write(json.dumps(obj, separators=(',', ': '), indent=2))
 
 
 def _prompt_emails(config_name, config_dir):
@@ -102,7 +120,7 @@ def delete(config_name, config_dir=None):
         basedir = path.dirname(__file__)
         config_dir = path.join(basedir, '..', 'private')
 
-    txt = path.join(config_dir, 'infos', config_name + '.txt')
-    if path.isfile(txt) and helpers.confirm('Delete emails for {}'.format(config_name)):
-        os.remove(txt)
+    file_path = path.join(config_dir, 'infos', config_name + '.json')
+    if path.isfile(file_path) and helpers.confirm('Delete emails for {}'.format(config_name)):
+        os.remove(file_path)
         _commit_push(config_name, 'Delete', config_dir)

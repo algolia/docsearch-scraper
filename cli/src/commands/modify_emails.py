@@ -36,10 +36,13 @@ class UpdateEmails(AbstractCommand):
 
     def run(self, args):
         from deployer.src.emails import add
+        import subprocess as sp
 
+        sp.call(['rm', '-rf', '/tmp/docsearch_deploy'])
         p = _ensure_configs_private()
         for config in args:
             add(config, path.join(p, 'private'))
+
 
 
 class DeleteEmails(AbstractCommand):
@@ -54,7 +57,10 @@ class DeleteEmails(AbstractCommand):
 
     def run(self, args):
         from deployer.src.emails import delete
+        import subprocess as sp
 
+        sp.call(['rm', '-rf', '/tmp/docsearch_deploy'])
         p = _ensure_configs_private()
         for config in args:
             delete(config,  path.join(p, 'private'))
+
