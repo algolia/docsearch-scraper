@@ -223,7 +223,7 @@ var aggregateWithDuplicateCrawlers = new Promise(function (resolve, reject) {
         var url = "https://" + schedulerUsername + ":" + schedulerPassword + "@crawlers.algolia.com/1/crawlers";
 
         request({ url : url }, function (error, response, body) {
-            crawlers = JSON.parse(body).crawlers;
+            var crawlers = JSON.parse(body).crawlers;
 
             var mapping = {};
 
