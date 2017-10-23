@@ -15,7 +15,7 @@ class CustomDupeFilter(RFPDupeFilter):
 
     def custom_request_fingerprint(self, request, include_headers=None, remove_scheme=None):
         """
-        Overriden given that some URL can have a wrong encoding (when it is comes from selenium driver) changes: encode.('utf-8) & in order to be no scheme compliant
+        Overridden given that some URL can have a wrong encoding (when it is comes from selenium driver) changes: encode.('utf-8) & in order to be no scheme compliant
         """
         #
 
@@ -26,20 +26,14 @@ class CustomDupeFilter(RFPDupeFilter):
         # no scheme compliant
         if remove_scheme:
             match_capture_any_scheme = r'(https?)(.*)'
-            url_with_no_scheme = re.sub(match_capture_any_scheme, r"\2", url_for_finger_print)
-            url_for_hash = url_with_no_scheme
-        print "url for hash"
-        print remove_scheme
-        print url_for_hash
-
+            url_for_hash = re.sub(match_capture_any_scheme, r"\2", url_for_hash)
 
         if include_headers:
             include_headers = tuple(to_bytes(h.lower())
                                     for h in sorted(include_headers))
         cache = _fingerprint_cache.setdefault(request, {})
-        print "cache"
-        print cache
-        if include_headers not in cache:
+
+        if include_headers not in cache or not remove_scheme:
             fp = hashlib.sha1()
             fp.update(to_bytes(request.method.encode('utf-8')))
             fp.update(to_bytes(url_for_hash))
@@ -59,7 +53,7 @@ class CustomDupeFilter(RFPDupeFilter):
         self.use_anchors = use_anchors
         self.fingerprints_redirected = set()
 
-    # Overriden method in order to add the use_anchors attribute
+    # Overridden method in order to add the use_anchors attribute
     @classmethod
     def from_settings(cls, settings):
         debug = settings.getbool('DUPEFILTER_DEBUG')
@@ -67,26 +61,26 @@ class CustomDupeFilter(RFPDupeFilter):
         return cls(job_dir(settings), debug, use_anchors)
 
     def request_seen(self, request):
+        """
+        Overridden given that we have to handle the redirection case : avoid loop in redirection by keeping a dedicated track of it
+        """
 
         fp = self.request_fingerprint(request, remove_scheme=True)
         #URL from a redirection
         isRedirected=request.meta.get('redirect_times') and request.meta.get('redirect_times') > 0
 
         if isRedirected:
-            print "REDIRECTED"
-            print request.url
-            fp_scheme_agnostic = self.request_fingerprint(request, remove_scheme=False)
-            print fp_scheme_agnostic
-            if fp_scheme_agnostic in self.fingerprints_redirected:
+            fp_with_scheme = self.request_fingerprint(request, remove_scheme=False)
+
+            if fp_with_scheme in self.fingerprints_redirected:
                 return True
-            self.fingerprints_redirected.add(fp_scheme_agnostic)
+            self.fingerprints_redirected.add(fp_with_scheme)
             #We don't want a direct hyperlink to duplicate the indexes, we keep track of it
             if fp not in self.fingerprints:
                 self.register_fingerprint(fp)
         else:
             if fp in self.fingerprints:
                 return True
-            print fp
             self.register_fingerprint(fp)
 
     def register_fingerprint(self, fp):
