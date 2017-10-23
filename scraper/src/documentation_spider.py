@@ -89,7 +89,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         )
 
         DocumentationSpider.rules = [
-            Rule(link_extractor, callback=self.parse_from_start_url, follow=True),
+            Rule(link_extractor, callback=self.parse_from_start_url, follow=True, process_request="spread_errback"),
         ]
 
         # START _init_ part from SitemapSpider
@@ -109,36 +109,29 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
         # END _init_ part from SitemapSpider
-
         super(DocumentationSpider, self)._compile_rules()
 
     def start_requests(self):
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
-            yield Request(
-                url,
-                callback=self._parse_sitemap,
-                meta={
-                    "alternative_links": DocumentationSpider.to_other_scheme(url),
-                    "dont_redirect": True
-                },
-                errback=self.errback_alternative_link
-            )
-            # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
+
+            yield Request(url, callback=self._parse_sitemap,
+                          meta={
+                              "alternative_links": DocumentationSpider.to_other_scheme(url)
+                          },
+                          errback=self.errback_alternative_link)
+        # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
 
         # We crawl the start URL in order to ensure we didn't miss anything (Even if we used the sitemap)
-        for start_url in self.start_urls_full:
-            yield Request(
-                start_url['url'],
-                callback=self.parse_from_start_url if self.scrape_start_urls and start_url['scrape'] else self.parse,
-                # If we wan't to crawl (default behavior) without scraping, we still need to let the
-                # crawling spider acknowledge the content by parsing it with the built-in method
-                meta={
-                    "alternative_links": DocumentationSpider.to_other_scheme(start_url['url']),
-                    "dont_redirect": True
-                },
-                errback=self.errback_alternative_link
-            )
+        for url in self.start_urls:
+            yield Request(url,
+                          callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
+                          # If we wan't to crawl (default behavior) without scraping, we still need to let the
+                          # crawling spider acknowledge the content by parsing it with the built-in method
+                          meta={
+                              "alternative_links": DocumentationSpider.to_other_scheme(url)
+                          },
+                          errback=self.errback_alternative_link)
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
@@ -200,6 +193,11 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 yield failure.request.replace(url=alternative_link, meta=meta, dont_filter=True)
 
                 # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
+    def spread_errback(self, request):
+        request.meta["alternative_links"] = DocumentationSpider.to_other_scheme(request.url)
+        return request.replace(errback=self.errback_alternative_link,
+                               meta=request.meta
+                               )
 
     def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
         """Init method of a SiteMapSpider @Scrapy"""
