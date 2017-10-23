@@ -89,7 +89,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         )
 
         DocumentationSpider.rules = [
-            Rule(link_extractor, callback=self.parse_from_start_url, follow=True),
+            Rule(link_extractor, callback=self.parse_from_start_url, follow=True, process_request="spread_errback"),
         ]
 
         # START _init_ part from SitemapSpider
@@ -109,7 +109,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
         # END _init_ part from SitemapSpider
-
         super(DocumentationSpider, self)._compile_rules()
 
     def start_requests(self):
@@ -200,6 +199,15 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 yield failure.request.replace(url=alternative_link, meta=meta, dont_filter=True)
 
                 # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
+    def spread_errback(self, request):
+        return request.replace(errback=self.errback_alternative_link,
+                               meta=merge_dicts(
+                                   request.meta,
+                                   {
+                                       "alternative_links": DocumentationSpider.to_other_scheme(request.url),
+                                       # "dont_redirect": False
+                                   }
+                               ))
 
     def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
         """Init method of a SiteMapSpider @Scrapy"""
@@ -211,3 +219,13 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 c = getattr(self, c)
             self._cbs.append((regex(r), c))
         self._follow = [regex(x) for x in self.sitemap_follow]
+
+def merge_dicts(*dict_args):
+    """
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+    """
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
