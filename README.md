@@ -104,8 +104,8 @@ Enter your credentials and the index name mentioned in the crawler config file, 
 To add the DocSearch dropdown menu to your website, add the following snippet to your website:
 
 ```html
-<link rel="stylesheet" href="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
-<script type="text/javascript" src="//cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
 <script>
   var search = docsearch({
     apiKey: '<API_KEY>', // use a SEARCH-ONLY api key here
