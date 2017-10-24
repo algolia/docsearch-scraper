@@ -89,6 +89,8 @@ def run_config(config):
 
     print("")
 
+
 if __name__ == '__main__':
     from os import environ
+
     run_config(environ['CONFIG'])
