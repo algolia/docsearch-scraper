@@ -17,13 +17,12 @@ class CustomDupeFilter(RFPDupeFilter):
         """
         Overridden given that some URL can have a wrong encoding (when it is comes from selenium driver) changes: encode.('utf-8) & in order to be no scheme compliant
         """
-        #
 
         # If use_anchors, anchors in URL matters since each anchor define a different webpage and content (special js_rendering)
         url_for_finger_print = canonicalize_url(request.url) if not self.use_anchors else request.url
         url_for_hash = url_for_finger_print.encode('utf-8')
 
-        # no scheme compliant
+        # scheme agnosticism
         if remove_scheme:
             match_capture_any_scheme = r'(https?)(.*)'
             url_for_hash = re.sub(match_capture_any_scheme, r"\2", url_for_hash)
@@ -34,6 +33,7 @@ class CustomDupeFilter(RFPDupeFilter):
         cache = _fingerprint_cache.setdefault(request, {})
 
         if include_headers not in cache or not remove_scheme:
+            # Since it is called from the same function, wee need to ensure we compute the fingerprint which take into account the scheme. Avoid caching
             fp = hashlib.sha1()
             fp.update(to_bytes(request.method.encode('utf-8')))
             fp.update(to_bytes(url_for_hash))
@@ -51,7 +51,7 @@ class CustomDupeFilter(RFPDupeFilter):
         super(CustomDupeFilter, self).__init__(path=path, debug=debug)
         # Spread config bool
         self.use_anchors = use_anchors
-        self.fingerprints_redirected = set()
+        self.fingerprints_redirected = set()  # This set will not be scheme agnostic
 
     # Overridden method in order to add the use_anchors attribute
     @classmethod
@@ -62,12 +62,14 @@ class CustomDupeFilter(RFPDupeFilter):
 
     def request_seen(self, request):
         """
-        Overridden given that we have to handle the redirection case : avoid loop in redirection by keeping a dedicated track of it
+        Overridden given that we have to handle the redirection case :
+        -redirection could be into the same page with another scheme => need the fingerprint to take into account the scheme
+        -avoid loop in redirection by keeping a dedicated track of it
         """
 
         fp = self.request_fingerprint(request, remove_scheme=True)
-        #URL from a redirection
-        isRedirected=request.meta.get('redirect_times') and request.meta.get('redirect_times') > 0
+        # Request from a redirection which is followed byt he RedirectionMiddleware
+        isRedirected = request.meta.get('redirect_times') and request.meta.get('redirect_times') > 0
 
         if isRedirected:
             fp_with_scheme = self.request_fingerprint(request, remove_scheme=False)
@@ -75,7 +77,7 @@ class CustomDupeFilter(RFPDupeFilter):
             if fp_with_scheme in self.fingerprints_redirected:
                 return True
             self.fingerprints_redirected.add(fp_with_scheme)
-            #We don't want a direct hyperlink to duplicate the indexes, we keep track of it
+            # We don't want go back onto the visited web page, especially when it isn't from a redirection
             if fp not in self.fingerprints:
                 self.register_fingerprint(fp)
         else:
