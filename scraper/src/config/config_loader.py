@@ -46,7 +46,7 @@ class ConfigLoader(object):
     stop_urls = []
     stop_content = []
     strategy = 'default'
-    strict_redirect = False
+    strict_redirect = True
     strip_chars = u".,;:§¶"
     use_anchors = False
     user_agent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36\
