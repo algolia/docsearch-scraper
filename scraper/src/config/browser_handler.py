@@ -1,7 +1,7 @@
 import re
 from selenium import webdriver
 
-from ..custom_middleware import CustomMiddleware
+from ..custom_downloader_middleware import CustomDownloaderMiddleware
 from ..js_executor import JsExecutor
 
 
@@ -23,7 +23,7 @@ class BrowserHandler:
             profile.set_preference('network.http.spdy.enabled.http2', False)
             driver = webdriver.Firefox(profile)
             driver.implicitly_wait(1)
-            CustomMiddleware.driver = driver
+            CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
 
         return driver

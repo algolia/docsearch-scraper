@@ -1,5 +1,5 @@
 """
-CustomMiddleware
+CustomDownloaderMiddleware
 """
 
 import time
@@ -13,10 +13,10 @@ try:
 except ImportError:
     from urllib.parse import urlparse, unquote_plus
 
-class CustomMiddleware(object):
+class CustomDownloaderMiddleware(object):
     def __init__(self):
         self.seen = {}
-        self.driver = CustomMiddleware.driver
+        self.driver = CustomDownloaderMiddleware.driver
 
     def process_request(self, request, spider):
         if not spider.js_render:

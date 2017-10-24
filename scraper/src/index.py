@@ -8,7 +8,7 @@ from .algolia_helper import AlgoliaHelper
 from .config.config_loader import ConfigLoader
 from .documentation_spider import DocumentationSpider
 from .strategies.default_strategy import DefaultStrategy
-from .custom_middleware import CustomMiddleware
+from .custom_downloader_middleware import CustomDownloaderMiddleware
 from .config.browser_handler import BrowserHandler
 from .strategies.algolia_settings import AlgoliaSettings
 
@@ -24,7 +24,7 @@ except ImportError:
 
 def run_config(config):
     config = ConfigLoader(config)
-    CustomMiddleware.driver = config.driver
+    CustomDownloaderMiddleware.driver = config.driver
     DocumentationSpider.NB_INDEXED = 0
 
     if config.use_anchors:
@@ -40,12 +40,12 @@ def run_config(config):
         config.query_rules
     )
 
-    DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_middleware.CustomMiddleware'
+    DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_downloader_middleware.CustomDownloaderMiddleware'
     DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
     DUPEFILTER_CLASS_PATH = 'scraper.src.custom_dupefilter.CustomDupeFilter'
 
     if __name__ == '__main__':
-        DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_middleware.CustomMiddleware'
+        DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_downloader_middleware.CustomDownloaderMiddleware'
         DOWNLOADER_CLIENTCONTEXTFACTORY = 'src.scrapy_patch.CustomContextFactory'
         DUPEFILTER_CLASS_PATH = 'src.custom_dupefilter.CustomDupeFilter'
 
