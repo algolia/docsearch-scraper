@@ -51,7 +51,7 @@ class CustomDupeFilter(RFPDupeFilter):
         super(CustomDupeFilter, self).__init__(path=path, debug=debug)
         # Spread config bool
         self.use_anchors = use_anchors
-        self.fingerprints_redirected = set()  # This set will not be scheme agnostic
+        self.fingerprints_with_scheme = set()  # This set will not be scheme agnostic
 
     # Overridden method in order to add the use_anchors attribute
     @classmethod
@@ -68,15 +68,15 @@ class CustomDupeFilter(RFPDupeFilter):
         """
 
         fp = self.request_fingerprint(request, remove_scheme=True)
+        fp_with_scheme = self.request_fingerprint(request, remove_scheme=False)
         # Request from a redirection which is followed byt he RedirectionMiddleware
         isRedirected = request.meta.get('redirect_times') and request.meta.get('redirect_times') > 0
+        isFallback = request.meta.get("alternative_fallback")
 
-        if isRedirected:
-            fp_with_scheme = self.request_fingerprint(request, remove_scheme=False)
-
-            if fp_with_scheme in self.fingerprints_redirected:
+        if isRedirected or isFallback:
+            if fp_with_scheme in self.fingerprints_with_scheme:
                 return True
-            self.fingerprints_redirected.add(fp_with_scheme)
+            self.fingerprints_with_scheme.add(fp_with_scheme)
             # We don't want go back onto the visited web page, especially when it isn't from a redirection
             if fp not in self.fingerprints:
                 self.register_fingerprint(fp)
@@ -84,6 +84,7 @@ class CustomDupeFilter(RFPDupeFilter):
             if fp in self.fingerprints:
                 return True
             self.register_fingerprint(fp)
+            self.fingerprints_with_scheme.add(fp_with_scheme)
 
     def register_fingerprint(self, fp):
         self.fingerprints.add(fp)

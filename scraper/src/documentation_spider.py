@@ -187,14 +187,14 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         if failure.check(HttpError):
             # these exceptions come from HttpError spider middleware
             meta = failure.request.meta
+            meta["alternative_fallback"] = True
 
             if len(meta["alternative_links"]) > 0:
                 alternative_link = meta["alternative_links"].pop(0)
                 self.logger.error('Alternative link: %s', alternative_link)
                 yield failure.request.replace(
                     url=alternative_link,
-                    meta=meta,
-                    dont_filter=True
+                    meta=meta
                 )
 
                 # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
