@@ -2,6 +2,7 @@ import sys
 import os
 import itertools
 import algoliasearch
+import json
 
 from .dict_differ import DictDiffer
 from . import fetchers
@@ -64,14 +65,16 @@ if len(changed) > 0:
 print("")
 
 if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
+
     if helpers.confirm() is True:
         reports = []
+
         if len(added) > 0:
             print("")
             for config in added:
                 key = algolia_helper.add_docsearch_key(config)
                 print(config + ' (' + key + ')')
-                helpers.make_request('/', 'POST', ref_configs[config])
+                helpers.make_request('/', 'POST', {'configuration': json.dumps(ref_configs[config], separators=(',', ': '))})
             reports.append({
                 'title': 'Added connectors',
                 'text': added_log
@@ -92,7 +95,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
                 print(message)
 
-                helpers.make_request('/' + config_id, 'PUT', ref_configs[config])
+                helpers.make_request('/' + config_id, 'PUT', {'configuration': json.dumps(ref_configs[config], separators=(',', ': '))})
                 helpers.make_request('/' + config_id + '/reindex', 'POST')
             reports.append({
                 'title': 'Updated connectors',
@@ -117,6 +120,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
     if len(added) > 0 or len(changed) > 0:
         print("")
+
         if helpers.confirm('Do you want to get email templates for added and updated configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
             for config in added:
                 print(snippeter.get_email_for_config(config))
@@ -124,6 +128,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
                 print(snippeter.get_email_for_config(config))
 
         for app in itertools.chain(added, changed):
+
             if helpers.confirm('\nDo you want to add emails for {}?'.format(app)):
                 emails.add(app)
 

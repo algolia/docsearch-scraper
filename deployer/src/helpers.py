@@ -1,7 +1,7 @@
 import os
 
-username = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
-password = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
+USERNAME = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
+PASSWORD = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
 
 slack_hook = os.environ['SLACK_HOOK'] if 'SLACK_HOOK' in os.environ else ''
 
@@ -15,11 +15,14 @@ def confirm(message="Confirm"):
 
     while True:
         ans = input(prompt)
+
         if ans not in ['y', 'Y', 'n', 'N']:
             print('please enter y or n.')
             continue
+
         if ans == 'y' or ans == 'Y':
             return True
+        
         if ans == 'n' or ans == 'N':
             return False
 
@@ -37,33 +40,38 @@ def make_custom_get_request(url):
     return requests.get(url)
 
 
-def make_request(endpoint, type=None, configuration=None):
+def make_request(endpoint, type=None, data=None, username=None, password=None):
     import requests
-    import json
 
-    url = base_url + endpoint
+    url = base_url + endpoint if "://" not in endpoint else endpoint
 
     success_codes = [200, 201, 204]
 
+    username = username if username else USERNAME
+    password = password if password else PASSWORD
+
+    if data and not isinstance( data, dict ):
+        raise ValueError(data + " must be a dict ")
+
     if type == 'POST':
-        r = requests.post(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+        r = requests.post(url, auth=(username, password), data=data)
 
         if r.status_code / 100 != 2:
-            print("ISSUE for POST request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': ')))
+            print("ISSUE for POST request : " + url + " with params: " + data)
         return r
 
     if type == 'DELETE':
         r = requests.delete(url, auth=(username, password))
 
         if r.status_code not in success_codes:
-            print("ISSUE for DELETE request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': ')))
+            print("ISSUE for DELETE request : " + url + " with params: " + data)
         return r
 
     if type == 'PUT':
-        r = requests.put(url, auth=(username, password), data={'configuration': json.dumps(configuration, separators=(',', ': '))})
+        r = requests.put(url, auth=(username, password), data=data)
         print(r.status_code)
         if r.status_code / 100 != 2:
-            print("ISSUE for PUT request : " + url + " with params: " + json.dumps(configuration, separators=(',', ': ')))
+            print("ISSUE for PUT request : " + url + " with params: " + data)
         return r
 
     r = requests.get(url, auth=(username, password))
@@ -75,8 +83,9 @@ def make_request(endpoint, type=None, configuration=None):
 
 
 def send_slack_notif(reports):
+
     if slack_hook == '':
-        print('NO SLACK_HOOK')
+        raise ValueError("NO SLACK_HOOK")
 
     from slacker import Slacker
 
@@ -89,3 +98,11 @@ def send_slack_notif(reports):
         "icon_emoji": ":rocket:",
         "attachments": reports
     })
+
+def getHelpScoutAPIKey():
+    hs_api_key = os.environ.get('HELP_SCOUT_API_KEY')
+
+    if not hs_api_key:
+        raise ValueError("None HELP_SCOUT_API_KEY from environment variables")
+
+    return hs_api_key
