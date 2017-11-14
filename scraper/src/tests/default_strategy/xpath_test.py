@@ -74,7 +74,7 @@ class TestGetRecordsFromDomWithXpath:
         # Then
 
         # First record has the global H1
-        assert len(actual) == 4
+        assert len(actual) == 3
         assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo Foo'
         assert actual[0]['hierarchy']['lvl1'] is None
@@ -124,7 +124,7 @@ class TestGetRecordsFromDomWithXpath:
         # Then
 
         # First record has the global H1
-        assert len(actual) == 4
+        assert len(actual) == 3
         assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
         assert actual[0]['hierarchy']['lvl1'] is None

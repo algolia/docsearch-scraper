@@ -134,6 +134,9 @@ class AbstractStrategy(object):
     def get_text_from_nodes(elements, strip_chars=None):
         """Return the text content of a set of DOM nodes"""
 
+        if not isinstance(elements, list):
+            return elements
+
         if len(elements) == 0:
             return None
 
