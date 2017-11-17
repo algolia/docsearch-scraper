@@ -104,6 +104,9 @@ class DefaultStrategy(AbstractStrategy):
             # We only save content for the 'text' matches
             content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level, selectors))
 
+            if (content is None or content == "") and current_level == 'content':
+                continue
+
             hierarchy, content = self._handle_default_values(hierarchy, content, selectors, self.levels)
 
             # noinspection PyDictCreation
@@ -114,7 +117,6 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy_radio': Hierarchy.get_hierarchy_radio(hierarchy, current_level, levels),
                 'type': current_level,
                 'tags': UrlsParser.get_tags(current_page_url, self.config.start_urls),
-                "extra_attributes": UrlsParser.get_extra_attributes(current_page_url, self.config.start_urls),
                 'weight': {
                     'page_rank': UrlsParser.get_page_rank(current_page_url, self.config.start_urls),
                     'level': self.get_level_weight(current_level),
@@ -123,6 +125,11 @@ class DefaultStrategy(AbstractStrategy):
                 'url': current_page_url,
                 'url_without_variables': current_page_url
             }
+
+            extra_attributes = UrlsParser.get_extra_attributes(current_page_url, self.config.start_urls)
+
+            for key in extra_attributes.keys():
+                record[key] = extra_attributes[key]
 
             record['hierarchy_camel'] = record['hierarchy'],
             record['hierarchy_radio_camel'] = record['hierarchy_radio']
