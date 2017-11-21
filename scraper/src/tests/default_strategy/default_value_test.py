@@ -137,12 +137,12 @@ class TestGetRecordsFromDomWithDefaultValue:
         # Then
 
         # First record has the global H1
-        assert len(actual) == 4
-        assert actual[0]['type'] == 'lvl0'
+        assert len(actual) == 3
+        assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Foo'
         assert actual[0]['hierarchy']['lvl1'] is None
         assert actual[0]['hierarchy']['lvl2'] is None
-        assert actual[0]['content'] is None
+        assert actual[0]['content'] == 'text'
 
     def test_default_value_empty(self):
         # Given
@@ -207,7 +207,7 @@ class TestGetRecordsFromDomWithDefaultValue:
         # Then
 
         # First record has the global H1
-        assert len(actual) == 4
+        assert len(actual) == 3
         assert actual[0]['type'] == 'content'
         assert actual[0]['hierarchy']['lvl0'] == 'Documentation'
         assert actual[0]['hierarchy']['lvl1'] is None

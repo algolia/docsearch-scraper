@@ -45,6 +45,13 @@ class DefaultStrategy(AbstractStrategy):
 
         return hierarchy
 
+    def _update_record_with_global_content(self, record, levels):
+        for level in levels:
+            if 'lvl' not in level and level not in ['content', 'text']:
+                record[level] = self.global_content[level]
+
+        return record
+
     def get_records_from_dom(self, current_page_url=None):
 
         if self.dom is None:
@@ -60,6 +67,7 @@ class DefaultStrategy(AbstractStrategy):
         # But we also keep a list of all matches for each individual level
         nodes_per_level = self._get_nodes_per_level(selectors, levels)
         nodes = self._get_all_matching_nodes(levels, selectors)
+        self._get_nodes_per_global_level(selectors, levels)
 
         # We keep the current hierarchy and anchor state between loops
         previous_hierarchy = self._generate_empty_hierarchy()
@@ -69,11 +77,6 @@ class DefaultStrategy(AbstractStrategy):
 
         for position, node in enumerate(nodes):
             current_level = self._get_level_of_node(node, nodes_per_level, levels)
-
-            # If the current node is part of a global level it's possible
-            # that it doesn't match because we take only one node for global selectors
-            if current_level is None:
-                continue
 
             # We copy the previous hierarchy, We override the current level, And set all levels after it to None
             hierarchy = previous_hierarchy.copy()
@@ -101,7 +104,10 @@ class DefaultStrategy(AbstractStrategy):
             # We only save content for the 'text' matches
             content = None if current_level != 'content' else self.get_text(node, self.get_strip_chars(current_level, selectors))
 
-            hierarchy, content = self._handle_default_values(hierarchy, content, selectors)
+            if (content is None or content == "") and current_level == 'content':
+                continue
+
+            hierarchy, content = self._handle_default_values(hierarchy, content, selectors, self.levels)
 
             # noinspection PyDictCreation
             record = {
@@ -111,7 +117,6 @@ class DefaultStrategy(AbstractStrategy):
                 'hierarchy_radio': Hierarchy.get_hierarchy_radio(hierarchy, current_level, levels),
                 'type': current_level,
                 'tags': UrlsParser.get_tags(current_page_url, self.config.start_urls),
-                "extra_attributes": UrlsParser.get_extra_attributes(current_page_url, self.config.start_urls),
                 'weight': {
                     'page_rank': UrlsParser.get_page_rank(current_page_url, self.config.start_urls),
                     'level': self.get_level_weight(current_level),
@@ -121,9 +126,16 @@ class DefaultStrategy(AbstractStrategy):
                 'url_without_variables': current_page_url
             }
 
+            extra_attributes = UrlsParser.get_extra_attributes(current_page_url, self.config.start_urls)
+
+            for key in extra_attributes.keys():
+                record[key] = extra_attributes[key]
+
             record['hierarchy_camel'] = record['hierarchy'],
             record['hierarchy_radio_camel'] = record['hierarchy_radio']
             record['content_camel'] = record['content']
+
+            self._update_record_with_global_content(record, selectors)
 
             # get meta data
             for meta_node in self.select('//meta'):
@@ -190,23 +202,35 @@ class DefaultStrategy(AbstractStrategy):
     @staticmethod
     def _get_level_of_node(node, nodes_per_level, levels):
         for level in levels:
-            if node in nodes_per_level[level]:
-                return level
+            if level in nodes_per_level: # if it's global we won't have it
+                if node in nodes_per_level[level]:
+                    return level
 
         return None
 
     @staticmethod
-    def _handle_default_values(hierarchy, content, selectors):
+    def _handle_default_values(hierarchy, content, selectors, levels):
         # Handle default values
         for level in selectors:
-            if level != 'content':
+            if level in levels:
                 if hierarchy[level] is None and selectors[level]['default_value'] is not None:
                     hierarchy[level] = selectors[level]['default_value']
-            else:
+            elif level == 'content':
                 if content is None and selectors[level]['default_value'] is not None:
                     content = selectors['content']['default_value']
 
         return hierarchy, content
+
+    def _get_nodes_per_global_level(self, selectors, levels):
+        for level in selectors.keys():
+            level_selector = selectors[level]
+            if level not in levels or level_selector['global']:
+                matching_dom_nodes = self.select(level_selector['selector'])
+                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes,
+                                                                      self.get_strip_chars(level, selectors))
+
+                if self.global_content[level] is None and level_selector['default_value'] is not None:
+                    self.global_content[level] = level_selector['default_value']
 
     def _get_nodes_per_level(self, selectors, levels):
         nodes_per_level = {}
@@ -217,10 +241,6 @@ class DefaultStrategy(AbstractStrategy):
 
             if not level_selector['global']:
                 nodes_per_level[level] = matching_dom_nodes
-            else:
-                self.global_content[level] = self.get_text_from_nodes(matching_dom_nodes, self.get_strip_chars(level, selectors))
-                # We only want 1 record
-                nodes_per_level[level] = [matching_dom_nodes[0]] if len(matching_dom_nodes) > 0 else []
 
         return nodes_per_level
 
@@ -233,7 +253,7 @@ class DefaultStrategy(AbstractStrategy):
         for level in levels:
             level_selector = selectors[level]
 
-            if len(level_selector['selector']) > 0:
+            if len(level_selector['selector']) > 0 and not level_selector['global']:
                 selector_all.append(level_selector['selector'])
 
         return selector_all

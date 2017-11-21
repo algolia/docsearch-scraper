@@ -132,7 +132,14 @@ class AbstractStrategy(object):
 
     @staticmethod
     def get_text_from_nodes(elements, strip_chars=None):
-        """Return the text content of a set of DOM nodes"""
+        """
+        Return the text content of a set of DOM nodes.
+        elements can contain either an array of nodes or a custom data return from xpath
+        (Example: integer in the case of a count)
+        """
+
+        if not isinstance(elements, list):
+            return elements
 
         if len(elements) == 0:
             return None
