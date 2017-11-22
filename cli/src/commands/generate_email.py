@@ -19,6 +19,5 @@ class GenerateEmail(AbstractCommand):
 
         email_content = get_email_for_config(args[0])
         print(email_content)
-        pyperclip.copy(email_content.replace("\n==============================\n", ''))
         print("Config copied to clipboard [OK]")
         print('')

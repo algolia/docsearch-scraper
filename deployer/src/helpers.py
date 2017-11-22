@@ -40,7 +40,7 @@ def make_custom_get_request(url):
     return requests.get(url)
 
 
-def make_request(endpoint, type=None, data=None, username=None, password=None):
+def make_request(endpoint, type=None, data=None, username=None, password=None, json_request=False):
     import requests
 
     url = base_url + endpoint if "://" not in endpoint else endpoint
@@ -54,24 +54,29 @@ def make_request(endpoint, type=None, data=None, username=None, password=None):
         raise ValueError(data + " must be a dict ")
 
     if type == 'POST':
-        r = requests.post(url, auth=(username, password), data=data)
+        if json_request:
+            r = requests.post(url, auth=(username, password), json=data)
+        else:
+            r = requests.post(url, auth=(username, password), data=data)
+
 
         if r.status_code / 100 != 2:
-            print("ISSUE for POST request : " + url + " with params: " + data)
+            print("ISSUE for POST request : " + url + " with params: " + str(data))
+            print (r.text)
         return r
 
     if type == 'DELETE':
         r = requests.delete(url, auth=(username, password))
 
         if r.status_code not in success_codes:
-            print("ISSUE for DELETE request : " + url + " with params: " + data)
+            print("ISSUE for DELETE request : " + url + " with params: " + str(data))
         return r
 
     if type == 'PUT':
         r = requests.put(url, auth=(username, password), data=data)
         print(r.status_code)
         if r.status_code / 100 != 2:
-            print("ISSUE for PUT request : " + url + " with params: " + data)
+            print("ISSUE for PUT request : " + url + " with params: " + str(data))
         return r
 
     r = requests.get(url, auth=(username, password))
@@ -98,11 +103,3 @@ def send_slack_notif(reports):
         "icon_emoji": ":rocket:",
         "attachments": reports
     })
-
-def getHelpScoutAPIKey():
-    hs_api_key = os.environ.get('HELP_SCOUT_API_KEY')
-
-    if not hs_api_key:
-        raise ValueError("None HELP_SCOUT_API_KEY from environment variables")
-
-    return hs_api_key
