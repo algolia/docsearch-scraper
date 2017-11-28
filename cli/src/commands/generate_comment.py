@@ -17,7 +17,7 @@ class GenerateComment(AbstractCommand):
 
         self.check_docsearch_app_id('generate a comment')
 
-        comment_content = get_email_for_config(args[0], markdown=true)
+        comment_content = get_email_for_config(args[0], markdown=True)
         print(comment_content)
         pyperclip.copy(comment_content.replace("\n==============================\n", ''))
         print("Config copied to clipboard [OK]")
