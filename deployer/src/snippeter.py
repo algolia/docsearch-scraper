@@ -14,7 +14,7 @@ def _is_automatically_updated(config, attribute):
     return False
 
 
-def get_email_for_config(config):
+def get_email_for_config(config, markdown=false):
     base_template = """\n==============================\nHi there,
 
 Congratulations, your search is now ready!
@@ -22,7 +22,7 @@ I've successfully configured the underlying crawler and it will now run every 24
 
 You're now a few steps away from having it working on your website:
 - Copy the following CSS/JS snippets and add them to your page
-
+{{MARKDOWN_CODE_START}}
 <!-- at the end of the HEAD -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
 <!-- at the end of the BODY -->
@@ -34,7 +34,7 @@ You're now a few steps away from having it working on your website:
   debug: false // Set debug to true if you want to inspect the dropdown
 });
 </script>
-
+{{MARKDOWN_CODE_END}}
 - Add a search input if you don't have any yet, and update the inputSelector value in the code snippet to a CSS selector that targets your input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
 - You can also check your configuration in the github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json). Feel free to open pull requests!
@@ -87,10 +87,14 @@ Have a nice day :)\n==============================\n"""
 
     api_key = algolia_helper.get_docsearch_key(config)
     api_key = "### REPLACE ME ####" if api_key == 'Not found' else api_key
+    markdown_start = "" if markdown == false else '```html'
+    markdown_end = "" if markdown == false else '```'
 
     template = base_template.replace('{{API_KEY}}', api_key)\
                             .replace('{{INDEX_NAME}}', config)\
                             .replace('{{FACETS}}', facet_template)\
                             .replace('{{ALGOLIA_OPTIONS}}', algolia_options)
+                            .replace('{{MARKDOWN_CODE_START}}', markdown_start)
+                            .replace('{{MARKDOWN_CODE_END}}', markdown_end)
 
     return template
