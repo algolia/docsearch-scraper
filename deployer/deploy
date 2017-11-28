@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT_ROOT=$PWD
+
 cd /tmp
 mkdir docsearch_deploy
 cd docsearch_deploy
@@ -7,7 +7,7 @@ cd docsearch_deploy
 if [ $# -eq 0 ]; then
     git clone --depth 1 --branch master git@github.com:algolia/documentation-scraper.git scraper
 else
-    cp -r $PROJECT_ROOT . && mv docsearch-scraper scraper
+    cp -r /Users/maxiloc/www/docsearch-scraper . && mv docsearch-scraper scraper
 fi
 
 cd /tmp/docsearch_deploy/scraper/deployer/

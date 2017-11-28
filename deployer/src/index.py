@@ -20,7 +20,7 @@ if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE
 print("\033[0m")
 print("")
 print("=======================")
-print("=  Deploy hjfgj  =")
+print("=  Deploy connectors  =")
 print("=======================")
 print("")
 
@@ -39,21 +39,21 @@ removed_log = ""
 
 if len(added) > 0:
     print("")
-    print("Will be \033[1;32madded\033[0m :")
+    print("Will be added :")
     for config in added:
         added_log += " - " + config + "\n"
     print(added_log)
 
 if len(removed) > 0:
     print("")
-    print("Will be \033[1;31mdelete\033[0m :")
+    print("Will be delete :")
     for config in removed:
         removed_log += " - " + config + "\n"
     print(removed_log)
 
 if len(changed) > 0:
     print("")
-    print("Will be \033[1;33mupdated\033[0m :")
+    print("Will be updated :")
     for config in changed:
         log = " - " + config + ' (' + ', '.join(changed_attributes[config]) + ')'
         cli_log = log
@@ -121,13 +121,9 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
     if len(added) > 0 or len(changed) > 0:
         print("")
 
-        if helpers.confirm('Do you want to send or get email templates for added configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
-
+        if helpers.confirm('Do you want to get email templates for added and updated configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
             for config in added:
                 print(snippeter.get_email_for_config(config))
-                if "conversation_id" in ref_configs[config]:
-                    print "YOU CAN GO"
-                    print ref_configs[config][conversation_id]
             for config in changed:
                 print(snippeter.get_email_for_config(config))
 
