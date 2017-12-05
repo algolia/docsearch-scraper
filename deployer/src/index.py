@@ -10,6 +10,7 @@ from . import algolia_helper
 from . import helpers
 from . import snippeter
 from . import emails
+from helpdesk_helper import add_note
 
 if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print("")
@@ -39,21 +40,21 @@ removed_log = ""
 
 if len(added) > 0:
     print("")
-    print("Will be added :")
+    print("Will be \033[1;32madded\033[0m :")
     for config in added:
         added_log += " - " + config + "\n"
     print(added_log)
 
 if len(removed) > 0:
     print("")
-    print("Will be delete :")
+    print("Will be \033[1;31mdeleted\033[0m :")
     for config in removed:
         removed_log += " - " + config + "\n"
     print(removed_log)
 
 if len(changed) > 0:
     print("")
-    print("Will be updated :")
+    print("Will be \033[1;33mupdated\033[0m :")
     for config in changed:
         log = " - " + config + ' (' + ', '.join(changed_attributes[config]) + ')'
         cli_log = log
@@ -121,10 +122,17 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
     if len(added) > 0 or len(changed) > 0:
         print("")
 
-        if helpers.confirm('Do you want to get email templates for added and updated configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
+        if helpers.confirm('Do you want to send or get email templates for added configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
+
             for config in added:
+                print '================================'
                 print(snippeter.get_email_for_config(config))
+                if "conversation_id" in ref_configs[config]:
+                    print ref_configs[config]["conversation_id"][0]
+                    add_note(ref_configs[config]["conversation_id"][0], snippeter.get_email_for_config(config))
+
             for config in changed:
+                print '================================'
                 print(snippeter.get_email_for_config(config))
 
         for app in itertools.chain(added, changed):
@@ -136,4 +144,3 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
         emails.delete(app)
 else:
     print("Nothing to do")
-

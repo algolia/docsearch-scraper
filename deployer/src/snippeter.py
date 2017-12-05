@@ -15,7 +15,7 @@ def _is_automatically_updated(config, attribute):
 
 
 def get_email_for_config(config):
-    base_template = """\n==============================\nHi there,
+    base_template = """Hi there,
 
 Congratulations, your search is now ready!
 I've successfully configured the underlying crawler and it will now run every 24h.
@@ -42,7 +42,7 @@ You're now a few steps away from having it working on your website:
 Feel free to get back to us if you have any issues or questions regarding the integration.
 We'd also be happy to get your feedback and thoughts about DocSearch - so we can continue to improve it.
 
-Have a nice day :)\n==============================\n"""
+Have a nice day :)"""
 
     base_facet_template = """\n- Replace ${{CAPITALISE_NAME}} with the {{NAME}} you want to search on.
    The list of possible {{NAME}} {{UPDATED}}.
