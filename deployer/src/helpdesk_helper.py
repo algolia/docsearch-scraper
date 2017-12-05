@@ -61,9 +61,11 @@ def get_start_url_from_conversation(conversation):
 def add_note(cuid, body):
 
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
+
     hs_api_key=get_helpscout_APIKey()
+
+    # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body=body.replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>')
-    print body
 
     response=helpers.make_request(conversation_endpoint,
                         json_request=True,
