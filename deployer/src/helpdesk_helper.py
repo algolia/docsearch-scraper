@@ -32,7 +32,9 @@ def get_conversation(cuid):
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
     hs_api_key=get_helpscout_APIKey()
 
-    response_json = json.loads(helpers.make_request(conversation_endpoint, username=hs_api_key, password="X"))
+    response_json = json.loads(helpers.make_request(conversation_endpoint,
+                                                    username = hs_api_key,
+                                                    password = "X"))
     conversation = response_json.get('item')
 
     if not conversation:
@@ -41,6 +43,9 @@ def get_conversation(cuid):
     return conversation
 
 def get_start_url_from_conversation(conversation):
+
+    if not conversation or not conversation.get('threads')[-1]:
+        raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
 
     # The message to extract is the first from the thread and it was sent by a customer
     first_thread = conversation.get('threads')[-1]
@@ -57,6 +62,36 @@ def get_start_url_from_conversation(conversation):
 
     return url_from_conversation
 
+def get_emails_from_conversation(conversation):
+
+    emails=[]
+
+    if not conversation or not conversation.get('threads')[-1]:
+        raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
+
+    # Extract customer
+    customer = conversation.get('customer')
+    customers_mail = customer.get('email')
+    first_thread = conversation.get('threads')[-1]
+    was_sent_by_customer = first_thread.get('createdByCustomer')
+
+    if not was_sent_by_customer:
+        raise ValueError("First thread from the conversation thread wasn't sent by customer")
+
+    emails.append(customers_mail)
+
+    cc=conversation.get('cc')
+    if cc:
+        emails=emails+cc
+
+    bcc=conversation.get('bcc')
+    if bcc:
+        emails=emails+bcc
+
+    print "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:])) if len(emails)>1 else ""
+
+    return emails
+
 
 def add_note(cuid, body):
 
@@ -70,7 +105,7 @@ def add_note(cuid, body):
     response=helpers.make_request(conversation_endpoint,
                         json_request=True,
                          data={ "createdBy":
-                                    { "id": "218687", "type": "user" },
+                                    { "id": "75881", "type": "user" },
                                 "type": "note",
                                 "body": body },
                          username=hs_api_key,
@@ -78,7 +113,6 @@ def add_note(cuid, body):
                          type='POST')
 
     return response
-
 
 def RepresentsInt(s):
     try:
