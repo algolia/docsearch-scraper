@@ -3,7 +3,7 @@ import re
 import json
 from . import helpers
 
-def get_helpscout_APIKey():
+def get_helpscout_api_key():
     hs_api_key = os.environ.get('HELP_SCOUT_API_KEY')
 
     if not hs_api_key:
@@ -30,7 +30,7 @@ def get_conversation_ID_from_url(hs_url):
 def get_conversation(cuid):
 
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
-    hs_api_key=get_helpscout_APIKey()
+    hs_api_key=get_helpscout_api_key()
 
     response_json = json.loads(helpers.make_request(conversation_endpoint,
                                                     username = hs_api_key,
@@ -97,7 +97,7 @@ def add_note(cuid, body):
 
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
 
-    hs_api_key=get_helpscout_APIKey()
+    hs_api_key=get_helpscout_api_key()
 
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body=body.replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>')

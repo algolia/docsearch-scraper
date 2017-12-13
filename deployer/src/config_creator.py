@@ -4,7 +4,7 @@ import pyperclip
 from . import helpers
 from .html_helper import get_main_selector
 import json
-from .helpdesk_helper import get_conversation, get_conversation_ID_from_url, get_start_url_from_conversation, is_helpdesk_url, get_helpscout_APIKey
+from . import helpdesk_helper
 
 def create_config():
     config = OrderedDict((
@@ -24,11 +24,11 @@ def create_config():
     u = helpers.get_user_value("start url: ")
     urls = [u]
 
-    if  is_helpdesk_url(u):
-        cuid = get_conversation_ID_from_url(u)
+    if  helpdesk_helper.is_helpdesk_url(u):
+        cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
-        conversation = get_conversation(cuid)
-        url_from_conversation = get_start_url_from_conversation(conversation)
+        conversation = helpdesk_helper.get_conversation(cuid)
+        url_from_conversation = helpdesk_helper.get_start_url_from_conversation(conversation)
 
         config["conversation_id"] = [cuid]
 
