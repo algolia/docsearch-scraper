@@ -15,7 +15,7 @@ except ImportError:
 
 class CustomDownloaderMiddleware(object):
     def __init__(self):
-        self.seen = {}
+        self.seen = {} #TODO could be removed
         self.driver = CustomDownloaderMiddleware.driver
 
     def process_request(self, request, spider):
@@ -28,6 +28,7 @@ class CustomDownloaderMiddleware(object):
             request = request.replace(url=url_without_params)
 
         if request.url in self.seen:
+            print("SEEN " + request.url)
             return None
 
         self.seen[request.url] = True

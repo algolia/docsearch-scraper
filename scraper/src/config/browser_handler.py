@@ -1,8 +1,12 @@
 import re
-from selenium import webdriver
 
 from ..custom_downloader_middleware import CustomDownloaderMiddleware
 from ..js_executor import JsExecutor
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+
 
 
 class BrowserHandler:
@@ -21,7 +25,12 @@ class BrowserHandler:
             profile = webdriver.FirefoxProfile()
             profile.set_preference('network.http.accept-encoding.secure', 'gzip, deflate')
             profile.set_preference('network.http.spdy.enabled.http2', False)
-            driver = webdriver.Firefox(profile)
+            options = Options()
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')  # Last I checked this was necessary.
+            driver = webdriver.Chrome("/Users/sylvain.pace/Downloads/chromedriver", chrome_options=options)
+            print "/Users/sylvain.pace/Downloads/chromedriver"
+            # driver = webdriver.Firefox(profile)
             driver.implicitly_wait(1)
             CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
