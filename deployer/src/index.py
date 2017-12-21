@@ -125,7 +125,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
         if helpers.confirm('Do you want to get & save as a note the email templates for added configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
 
             for config in added:
-                print '================================'
+                print '\n================================\n'
 
                 print(snippeter.get_email_for_config(config))
                 emails_from_conv = None
@@ -141,7 +141,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
                                emails_to_add = emails_from_conv)
 
             for config in changed:
-                print '================================'
+                print '\n================================\n'
                 print(snippeter.get_email_for_config(config))
                 if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
                     emails.add(config)

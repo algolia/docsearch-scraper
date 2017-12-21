@@ -15,7 +15,7 @@ except ImportError:
 
 class CustomDownloaderMiddleware(object):
     def __init__(self):
-        self.seen = {}
+        self.seen = {} #TODO could be removed
         self.driver = CustomDownloaderMiddleware.driver
 
     def process_request(self, request, spider):
