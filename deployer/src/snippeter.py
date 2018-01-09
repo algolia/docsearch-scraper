@@ -14,7 +14,7 @@ def _is_automatically_updated(config, attribute):
     return False
 
 
-def get_email_for_config(config):
+def get_email_for_config(config, markdown=False):
     base_template = """\n==============================\nHi there,
 
 Congratulations, your search is now ready!
@@ -87,10 +87,15 @@ Have a nice day :)\n==============================\n"""
 
     api_key = algolia_helper.get_docsearch_key(config)
     api_key = "### REPLACE ME ####" if api_key == 'Not found' else api_key
+    markdown_start = "" if markdown == False else '```html'
+    markdown_end = "" if markdown == False else '```'
+
 
     template = base_template.replace('{{API_KEY}}', api_key)\
                             .replace('{{INDEX_NAME}}', config)\
                             .replace('{{FACETS}}', facet_template)\
-                            .replace('{{ALGOLIA_OPTIONS}}', algolia_options)
+                            .replace('{{ALGOLIA_OPTIONS}}', algolia_options)\
+                            .replace('{{MARKDOWN_CODE_START}}', markdown_start)\
+                            .replace('{{MARKDOWN_CODE_END}}', markdown_end)
 
     return template

@@ -25,6 +25,7 @@ from .commands.run_config_docker import RunConfigDocker
 from .commands.run_doctor import RunDoctor
 from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
+from .commands.generate_comment import GenerateComment
 from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.get_logs import GetLogs
 from .commands.disable_connector import DisableConnector
@@ -96,6 +97,7 @@ if CREDENTIALS:
 
 if ADMIN:
     cmds.append(GenerateEmail())
+    cmds.append(GenerateComment())
     cmds.append(ReindexConnector())
     cmds.append(EnableConnector())
     cmds.append(DisableConnector())
