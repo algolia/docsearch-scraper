@@ -21,6 +21,7 @@ class BrowserHandler:
             profile = webdriver.FirefoxProfile()
             profile.set_preference('network.http.accept-encoding.secure', 'gzip, deflate')
             profile.set_preference('network.http.spdy.enabled.http2', False)
+            profile.set_preference('permissions.default.image', 2)
             driver = webdriver.Firefox(profile)
             driver.implicitly_wait(1)
             CustomDownloaderMiddleware.driver = driver
