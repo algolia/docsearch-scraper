@@ -10,7 +10,6 @@ from . import algolia_helper
 from . import helpers
 from . import snippeter
 from . import emails
-
 from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation, get_conversation_url_from_cuid
 
 if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:

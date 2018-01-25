@@ -38,9 +38,8 @@ def remove_crawling_issue(config):
     })
 
 def update_docsearch_key(config, key):
-    index = algolia_client.init_index(config)
 
-    index.update_user_key(key, {
+    algolia_client.update_api_key()(key, {
         'indices': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
@@ -48,20 +47,20 @@ def update_docsearch_key(config, key):
 
 
 def get_docsearch_key(config):
-    index = algolia_client.init_index(config)
     k = 'Not found'
     # find a key
-    for key in index.list_user_keys()['keys']:
-        if 'description' in key and 'docsearch frontend' in key['description']:
+    for key in algolia_client.list_api_keys()['keys']:
+        if 'description' in key and 'docsearch frontend ' + config == key['description'] and key["acl"]==["search"]:
             k = key['value']
-
     return k
 
 
 def add_docsearch_key(config):
-    index = algolia_client.init_index(config)
 
-    response = index.add_user_key({
+    if not isinstance(config, unicode) or '*' in config:
+        raise ValueError("index name : {} is not safe".format(config))
+
+    response = algolia_client.add_api_key({
         'indices': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
@@ -71,11 +70,8 @@ def add_docsearch_key(config):
 
 
 def delete_docsearch_key(config):
-    index = algolia_client.init_index(config)
-
-    for key in index.list_user_keys()['keys']:
-        if 'description' in key and 'docsearch frontend' in key['description']:
-            index.delete_user_key(key['value'])
+    key_to_delete = get_docsearch_key(config)
+    algolia_client.delete_api_key(key_to_delete)
 
 
 def delete_docsearch_index(config):
