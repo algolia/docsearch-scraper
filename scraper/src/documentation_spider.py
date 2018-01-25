@@ -182,7 +182,11 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         This error callback will launch the same request with the alternative_links if there are some left
         Only for start_urls and sitemap_urls
         """
-        self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+        if hasattr(failure.value, 'response'):
+            self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+        else:
+            self.logger.error('Failure without response %s', failure.value)
+
 
         if failure.check(HttpError):
             # these exceptions come from HttpError spider middleware

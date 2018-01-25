@@ -105,13 +105,18 @@ def _prompt_emails(config_name, config_dir):
     return emails
 
 
-def add(config_name, config_dir=None):
+def add(config_name, config_dir=None, emails_to_add=None):
     if config_dir is None:
         basedir = path.dirname(__file__)
         config_dir = path.join(basedir, '../../deployer/private')
 
-    emails = _prompt_emails(config_name, config_dir)
-    _write(emails, config_name, config_dir)
+    if emails_to_add and len(emails_to_add) > 0:
+        _write(emails_to_add, config_name, config_dir)
+
+    else:
+        emails = _prompt_emails(config_name, config_dir)
+        _write(emails, config_name, config_dir)
+
     _commit_push(config_name, 'Update', config_dir)
 
 
