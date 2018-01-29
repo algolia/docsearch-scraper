@@ -122,7 +122,6 @@ def get_conversation_url_from_cuid(cuid):
 
     return "https://secure.helpscout.net/conversation/"+cuid
 
-
 def RepresentsInt(s):
     try:
         int(s)
