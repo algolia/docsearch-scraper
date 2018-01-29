@@ -88,7 +88,8 @@ def get_emails_from_conversation(conversation):
     if bcc:
         emails=emails+bcc
 
-    print "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:])) if len(emails)>1 else ""
+    if len(emails) > 1:
+       print "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:]))
 
     return emails
 
@@ -113,6 +114,13 @@ def add_note(cuid, body):
                          type='POST')
 
     return response
+
+def get_conversation_url_from_cuid(cuid):
+
+    if not cuid :
+        raise ValueError("Wrong input conversation ID")
+
+    return "https://secure.helpscout.net/conversation/"+cuid
 
 def RepresentsInt(s):
     try:

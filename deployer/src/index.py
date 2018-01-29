@@ -10,7 +10,7 @@ from . import algolia_helper
 from . import helpers
 from . import snippeter
 from . import emails
-from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation
+from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation, get_conversation_url_from_cuid
 
 if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print("")
@@ -127,18 +127,19 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
             for config in added:
                 print '\n================================\n'
 
-                print(snippeter.get_email_for_config(config))
-                emails_from_conv = None
-
                 if "conversation_id" in ref_configs[config]:
                     cuid=ref_configs[config]["conversation_id"][0]
                     add_note(cuid, snippeter.get_email_for_config(config))
                     conversation = get_conversation(cuid)
                     emails_from_conv = get_emails_from_conversation(conversation)
-
-                if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
                     emails.add(config,
                                emails_to_add = emails_from_conv)
+                    print('Email address fetched and stored, conversation updated and available at {}?\n'.format(get_conversation_url_from_cuid(cuid)))
+
+                else:
+                    print(snippeter.get_email_for_config(config))
+                    if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
+                        emails.add(config)
 
             for config in changed:
                 print '\n================================\n'
