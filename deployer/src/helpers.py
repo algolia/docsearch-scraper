@@ -55,9 +55,13 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
 
     if type == 'POST':
         if json_request:
-            r = requests.post(url, auth=(username, password), json=data)
+            r = requests.post(url,
+                              auth=(username, password),
+                              json=data)
         else:
-            r = requests.post(url, auth=(username, password), data=data)
+            r = requests.post(url,
+                              auth=(username, password),
+                              data=data)
 
 
         if r.status_code / 100 != 2:
@@ -66,23 +70,36 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
         return r
 
     if type == 'DELETE':
-        r = requests.delete(url, auth=(username, password))
+        r = requests.delete(url,
+                            auth=(username, password))
 
         if r.status_code not in success_codes:
             print("ISSUE for DELETE request : " + url + " with params: " + str(data))
         return r
 
     if type == 'PUT':
-        r = requests.put(url, auth=(username, password), data=data)
+        r = requests.put(url,
+                         auth=(username, password),
+                         data=data)
         print(r.status_code)
         if r.status_code / 100 != 2:
             print("ISSUE for PUT request : " + url + " with params: " + str(data))
         return r
 
-    r = requests.get(url, auth=(username, password))
+    if data != None:
+        r = requests.get(url,
+                         auth=(username, password),
+                         params=data)
+    else:
+        r = requests.get(url,
+                         auth=(username, password))
+
 
     if r.status_code / 100 != 2:
-        print("ISSUE for GET request : " + url + " with params: None")
+        print("ISSUE for GET request : " + url + " with params:"+ data)
+
+    if json_request:
+        r.json()
 
     return r.text
 

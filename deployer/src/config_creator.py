@@ -2,7 +2,6 @@ from collections import OrderedDict
 import tldextract
 import pyperclip
 from . import helpers
-from .html_helper import get_main_selector
 import json
 from . import helpdesk_helper
 

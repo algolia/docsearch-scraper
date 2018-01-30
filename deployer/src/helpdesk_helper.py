@@ -2,6 +2,8 @@ import os
 import re
 import json
 from . import helpers
+from ratelimit import rate_limited
+
 
 def get_helpscout_api_key():
     hs_api_key = os.environ.get('HELP_SCOUT_API_KEY')
@@ -125,6 +127,27 @@ def get_conversation_url_from_cuid(cuid):
 def is_docusaurus_conversation(conversation):
 
     return "docusaurus" in conversation.get("tags")
+
+@rate_limited(200,60)
+def search(query, page=1, pageSize=50, sortField="modifiedAt", sortOrder="asc"):
+
+    search_endpoint = "https://api.helpscout.net/v1/search/conversations.json"
+    hs_api_key = get_helpscout_api_key()
+
+    response_json = json.loads(helpers.make_request(search_endpoint,
+                                                    username = hs_api_key,
+                                                    password = "X",
+                                                    data = {
+                                                        "query" : query,
+                                                        "page" : page,
+                                                        "pageSize" : pageSize,
+                                                        "sortField" : sortField,
+                                                        "sortOrder" : sortOrder
+                                                    },
+                                                    json_request=True)
+                               )
+
+    return response_json
 
 def RepresentsInt(s):
     try:
