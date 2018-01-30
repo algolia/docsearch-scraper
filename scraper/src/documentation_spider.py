@@ -138,6 +138,11 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         DocumentationSpider.NB_INDEXED += len(records)
 
+        # Arbitrary limit
+        if not DocumentationSpider.NB_HITS_MAX and DocumentationSpider.NB_INDEXED > DocumentationSpider.NB_HITS_MAX:
+            raise ValueError("Too much hits handled by DocSearch")
+
+
     def parse_from_sitemap(self, response):
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
             print("\033[94m> Ignored from sitemap:\033[0m " + response.url)
