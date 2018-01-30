@@ -9,7 +9,6 @@ click==6.7
 constantly==15.1.0
 cryptography==2.0.3
 cssselect==1.0.1
-dotenv==0.0.5
 enum34==1.1.6
 future==0.16.0
 hyperlink==17.3.1
