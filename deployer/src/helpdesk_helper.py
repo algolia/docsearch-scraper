@@ -122,6 +122,10 @@ def get_conversation_url_from_cuid(cuid):
 
     return "https://secure.helpscout.net/conversation/"+cuid
 
+def is_docusaurus_conversation(conversation):
+
+    return "docusaurus" in conversation.get("tags")
+
 def RepresentsInt(s):
     try:
         int(s)
