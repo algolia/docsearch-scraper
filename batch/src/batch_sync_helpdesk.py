@@ -23,7 +23,6 @@ def batch_sync_helpdesk(args):
     unfound_conf = []
 
     for position, conf in enumerate(configs_to_process):
-
         docsearch_key = algolia_helper.get_docsearch_key(conf["index_name"]).__str__()
         search_results = helpdesk_helper.search("body:{} AND mailbox:\"Algolia DocSearch\"".format(docsearch_key))
         if search_results.get("count") == 1:
@@ -59,7 +58,7 @@ def pick_configs(filter_conf):
         for f in os.listdir(base_dir):
             path = base_dir + '/' + f
 
-            if 'json' not in path:
+            if 'atla' not in path:
                 continue
 
             if os.path.isfile(path):
@@ -89,7 +88,7 @@ def process_when_success(search_results, conf):
 
 
 def update_conf_with_cuid(conf, cuid):
-    conf["conversation_id"] = [cuid]
+    conf["conversation_id"] = [cuid.__str__()]
 
     conf = OrderedDict(sorted(conf.items(),
                               key=key_sort)
@@ -97,8 +96,7 @@ def update_conf_with_cuid(conf, cuid):
 
     return json.dumps(conf,
                       separators=(',', ': '),
-                      indent=2,
-                      ensure_ascii=False)
+                      indent=2)
 
 
 def key_sort(attr):
