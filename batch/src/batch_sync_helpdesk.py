@@ -24,27 +24,25 @@ def batch_sync_helpdesk(args):
 
     for position, conf in enumerate(configs_to_process):
 
-        if position < 5:
-            docsearch_key = algolia_helper.get_docsearch_key(conf["index_name"]).__str__()
-            search_results = helpdesk_helper.search("body:{} AND mailbox:\"Algolia DocSearch\"".format(docsearch_key))
+        docsearch_key = algolia_helper.get_docsearch_key(conf["index_name"]).__str__()
+        search_results = helpdesk_helper.search("body:{} AND mailbox:\"Algolia DocSearch\"".format(docsearch_key))
+        if search_results.get("count") == 1:
 
-            if search_results.get("count") == 1:
+            process_and_write_conf(search_results, conf, process_when_success)
 
+        elif search_results.get("count") == 0:
+
+            search_results = helpdesk_helper.search(
+                "body:{} AND mailbox:\"Algolia DocSearch\"".format(conf["index_name"]))
+
+            if search_results.get("count") == 0:
+                unfound_conf.append(conf["index_name"])
+            elif search_results.get("count") == 1:
                 process_and_write_conf(search_results, conf, process_when_success)
-
-            elif search_results.get("count") == 0:
-
-                search_results = helpdesk_helper.search(
-                    "body:{} AND mailbox:\"Algolia DocSearch\"".format(conf["index_name"]))
-
-                if search_results.get("count") == 0:
-                    unfound_conf.append(conf["index_name"])
-                elif search_results.get("count") == 1:
-                    process_and_write_conf(search_results, conf, process_when_success)
-                else:
-                    process_and_write_conf(search_results, conf, process_when_many_results)
             else:
                 process_and_write_conf(search_results, conf, process_when_many_results)
+        else:
+            process_and_write_conf(search_results, conf, process_when_many_results)
 
     if len(unfound_conf):
         for conf in unfound_conf:
@@ -59,7 +57,7 @@ def pick_configs(filter_conf):
     for dir in ['public/configs']:
         base_dir = base_dir + '/../../configs/' + dir
         for f in os.listdir(base_dir):
-            path = dir + '/' + f
+            path = base_dir + '/' + f
 
             if 'json' not in path:
                 continue
@@ -92,8 +90,6 @@ def process_when_success(search_results, conf):
 
 def update_conf_with_cuid(conf, cuid):
     conf["conversation_id"] = [cuid]
-    # for item in conf.items():
-    #     print item
 
     conf = OrderedDict(sorted(conf.items(),
                               key=key_sort)
