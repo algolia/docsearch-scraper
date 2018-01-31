@@ -58,7 +58,7 @@ def pick_configs(filter_conf):
         for f in os.listdir(base_dir):
             path = base_dir + '/' + f
 
-            if 'atla' not in path:
+            if 'json' not in path:
                 continue
 
             if os.path.isfile(path):
