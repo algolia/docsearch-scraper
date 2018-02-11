@@ -107,6 +107,8 @@ class ConfigLoader(object):
         # Parse Env
         self.app_id = os.environ['APPLICATION_ID']
         self.api_key = os.environ['API_KEY']
+        if 'NB_HITS_MAX' in os.environ.keys():
+           self.nb_hits_max = os.environ['NB_HITS_MAX']
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)

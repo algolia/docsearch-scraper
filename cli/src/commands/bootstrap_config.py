@@ -10,4 +10,6 @@ class BootstrapConfig(AbstractCommand):
 
     def run(self, args):
         from deployer.src.config_creator import create_config
+        if len(args) > 0 and "http" in args[0]:
+            return create_config(args[0])
         return create_config()

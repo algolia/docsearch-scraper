@@ -23,7 +23,6 @@ def get_configs_from_repos():
                     txt = f.read()
                 config = json.loads(txt, object_pairs_hook=OrderedDict)
                 configs[config['index_name']] = config
-
     print(str(len(configs)) + " docs in public and private repo")
 
     return configs

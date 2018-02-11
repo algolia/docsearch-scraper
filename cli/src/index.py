@@ -29,6 +29,7 @@ from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.get_logs import GetLogs
 from .commands.disable_connector import DisableConnector
 from .commands.enable_connector import EnableConnector
+from .commands.batch_sync_helpdesk import BatchSyncHelpdesk
 
 if not path.isfile(env_file):
     print("")
@@ -107,6 +108,7 @@ if ADMIN:
     cmds.append(UpdateEmails())
     cmds.append(DeleteEmails())
     cmds.append(GetLogs())
+    cmds.append(BatchSyncHelpdesk())
 
 
 def print_usage(no_ansi=False):

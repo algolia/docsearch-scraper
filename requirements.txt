@@ -27,6 +27,7 @@ pyOpenSSL==17.3.0
 pyperclip==1.5.27
 python-dotenv==0.7.1
 queuelib==1.4.2
+ratelimit==1.4.1
 requests==2.18.4
 requests-file==1.4.2
 Scrapy==1.4.0
@@ -36,5 +37,6 @@ six==1.11.0
 slacker==0.9.60
 tldextract==2.1.0
 Twisted==17.5.0
+urllib3==1.22
 w3lib==1.18.0
 zope.interface==4.4.2
