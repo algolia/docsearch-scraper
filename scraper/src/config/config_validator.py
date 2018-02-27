@@ -47,3 +47,6 @@ class ConfigValidator(object):
         if not self.config.scrape_start_urls and not self.config.scrap_start_urls:
             raise Exception('Please use only the new variable name: scrape_start_urls')
 
+        if self.config.nb_hits_max and not isinstance(self.config.nb_hits_max, int):
+            raise Exception('nb_hits_max should be integer')
+
