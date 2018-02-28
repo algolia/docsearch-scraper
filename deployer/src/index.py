@@ -134,7 +134,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
                     emails_from_conv = get_emails_from_conversation(conversation)
                     emails.add(config,
                                emails_to_add = emails_from_conv)
-                    print('Email address fetched and stored, conversation updated and available at {}?\n'.format(get_conversation_url_from_cuid(cuid)))
+                    print('Email address fetched and stored, conversation updated and available at {}\n'.format(get_conversation_url_from_cuid(cuid)))
 
                 else:
                     print(snippeter.get_email_for_config(config))

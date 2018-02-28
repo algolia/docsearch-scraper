@@ -26,7 +26,6 @@ def run_config(config):
     config = ConfigLoader(config)
     CustomDownloaderMiddleware.driver = config.driver
     DocumentationSpider.NB_INDEXED = 0
-    DocumentationSpider.NB_HITS_MAX = config.nb_hits_max
 
     if config.use_anchors:
         from . import scrapy_patch

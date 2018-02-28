@@ -65,6 +65,8 @@ class ConfigLoader(object):
     sitemap_urls_regexs = []
     force_sitemap_urls_crawling = False
 
+    nb_hits_max = 6000000
+
     def __init__(self, config):
         data = self._load_config(config)
 
@@ -107,8 +109,6 @@ class ConfigLoader(object):
         # Parse Env
         self.app_id = os.environ['APPLICATION_ID']
         self.api_key = os.environ['API_KEY']
-        if 'NB_HITS_MAX' in os.environ.keys():
-           self.nb_hits_max = os.environ['NB_HITS_MAX']
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)

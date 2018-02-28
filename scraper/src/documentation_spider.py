@@ -21,6 +21,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, unquote_plus
 
+from scrapy.exceptions import CloseSpider
 
 class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
@@ -34,6 +35,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     backreference_any_scheme = r"^https?\2(.*)$"
     # Could be any url prefix such as http://www or http://
     every_schemes = ["http", "https"]
+    reason_to_stop = None
 
     @staticmethod
     def to_any_scheme(url):
@@ -74,6 +76,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.scrape_start_urls = config.scrape_start_urls
         self.remove_get_params = config.remove_get_params
         self.strict_redirect = config.strict_redirect
+        self.nb_hits_max = config.nb_hits_max
 
         super(DocumentationSpider, self).__init__(*args, **kwargs)
 
@@ -139,11 +142,15 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         DocumentationSpider.NB_INDEXED += len(records)
 
         # Arbitrary limit
-        if not DocumentationSpider.NB_HITS_MAX and DocumentationSpider.NB_INDEXED > DocumentationSpider.NB_HITS_MAX:
-            raise ValueError("Too much hits handled by DocSearch")
-
+        if  self.nb_hits_max > 0 and DocumentationSpider.NB_INDEXED > self.nb_hits_max:
+            DocumentationSpider.NB_INDEXED = 0
+            self.reason_to_stop = "Too much hits, DocSearch only handle {} (.env)".format(int(DocumentationSpider.NB_HITS_MAX))
+            raise ValueError(self.reason_to_stop)
 
     def parse_from_sitemap(self, response):
+        if self.reason_to_stop is not None:
+            raise CloseSpider(reason=self.reason_to_stop)
+
         if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
             print("\033[94m> Ignored from sitemap:\033[0m " + response.url)
         else:
@@ -151,6 +158,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             # We don't return self.parse(response) in order to avoid crawling those web page
 
     def parse_from_start_url(self, response):
+        if self.reason_to_stop is not None:
+            raise CloseSpider(reason=self.reason_to_stop)
+
         if self.is_rules_compliant(response):
             self.add_records(response, from_sitemap=False)
 

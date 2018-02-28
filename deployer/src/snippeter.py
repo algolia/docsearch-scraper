@@ -75,7 +75,7 @@ Have a nice day :)"""
             keys.sort()
 
             if len(keys) > 0:
-                updated = "is automatically fetched from your website" if _is_automatically_updated(configs[config], name) else "is hardcode in the config"
+                updated = "is automatically fetched from your website" if _is_automatically_updated(configs[config], name) else "is hardcoded in the config"
                 facet_template += base_facet_template.replace('{{NAME}}', name)\
                                                  .replace('{{CAPITALISE_NAME}}', name.upper())\
                                                  .replace("{{UPDATED}}", updated)\
