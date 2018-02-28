@@ -6,7 +6,7 @@ class BootstrapConfig(AbstractCommand):
         return 'bootstrap'
 
     def get_description(self):
-        return 'Boostrap a docsearch config'
+        return 'Bootstrap a DocSearch config'
 
     def run(self, args):
         from deployer.src.config_creator import create_config
