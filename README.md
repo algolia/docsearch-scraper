@@ -1,24 +1,25 @@
 # DocSearch scraper
 
-This is the repository for the scraper for the [DocSearch project](https://community.algolia.com/docsearch/). You can run it on your own, or [ask us](https://community.algolia.com/docsearch/) to crawl your documentation.
+This is the repository for the scraper for the [DocSearch project][1]. You can run it on your own, or [submit a request][1] to crawl your documentation.
 
 DocSearch is composed by 3 different projects:
-* The front-end of DocSearch: https://github.com/algolia/docsearch
-* The scraper which browses & indexes web pages: https://github.com/algolia/docsearch-scraper
-* The configurations for the scraper: https://github.com/algolia/docsearch-configs
+* The [front-end of DocSearch][2].
+* The [scraper which browses & indexes web pages][3].
+* The [configurations for the scraper][4].
 
 This project is a collection of submodules, each one in its own directory:
 * cli: A command line tool to manage DocSearch. Run `./docsearch` and follow the steps
 * deployer: Tool used by Algolia to deploy the configuration in our mesos infrastructure
-* doctor: A monitoring/repair tool to check if the indices built by the scraper are in good shape
 * playground: An HTML page to easily test DocSearch indices
 * scraper: The core of the scraper. It reads the configuration file, fetches the web pages and indexes them in Algolia.
 
+**Update** You can check [the DocSearch dedicated documentation website][5]
+
 ## Getting started
 
-### Install Docsearch
+### Install DocSearch
 
-The DocSearch scraper is based on [Scrapy](https://scrapy.org), a famous python-based web scraper. Because it might need some JavaScript to render the pages it crawls, the scraper is also depending on [selenium](http://www.seleniumhq.org).
+The DocSearch scraper is based on [Scrapy][6], a famous python-based web scraper. Because it might need some JavaScript to render the pages it crawls, the scraper is also depending on [selenium][7].
 
 To ease the setup process, a Docker container is provided to help you run the scraper.
 
@@ -38,7 +39,7 @@ To ease the setup process, a Docker container is provided to help you run the sc
 
 ### Configure DocSearch
 
-You need to create an [Algolia account](https://www.algolia.com/users/sign_up) to get the `APPLICATION_ID` and (admin) `API_KEY` credentials the scraper will use to create the underlying indices.
+You need to create an [Algolia account][8] to get the `APPLICATION_ID` and an *admin* `API_KEY` credentials the scraper will use to create the underlying indices.
 
 Create a file named `.env` file at the root of the project containing the following keys:
 
@@ -51,7 +52,7 @@ And run the CLI to see the available commands:
 
 ```sh
 $ ./docsearch
-Docsearch CLI
+DocSearch CLI
 
 Usage:
   ./docsearch command [options] [arguments]
@@ -60,7 +61,7 @@ Options:
   --help    Display help message
 
 Available commands:
- bootstrap              Boostrap a docsearch config
+ bootstrap              Bootstrap a docsearch config
  run                    Run a config
  playground             Launch the playground
  docker
@@ -73,7 +74,7 @@ Available commands:
 
 #### Create a config
 
-To use DocSearch, the first thing you need is to create a crawler config. For more details about configs, check out [https://github.com/algolia/docsearch-configs](https://github.com/algolia/docsearch-configs), you'll have a list of options you can use and a lot of live and working examples.
+To use DocSearch, the first thing you need is to create a crawler config. For more details about configs, check out [the dedicated configurations repo][4], you'll have a list of options you can use and a lot of live and working examples.
 
 #### Crawl the website
 
@@ -168,3 +169,16 @@ $ ./docsearch test
 $ pip install pytest 
 $ API_KEY='test' APPLICATION_ID='test' python -m pytest
 ```
+
+<!-- START links -->
+
+[1]: https://community.algolia.com/docsearch/
+[2]: https://github.com/algolia/docsearch
+[3]: https://github.com/algolia/docsearch-scraper
+[4]: https://github.com/algolia/docsearch-configs
+[5]: https://community.algolia.com/docsearch/documentation/docsearch/introduction/
+[6]: https://scrapy.org
+[7]: http://www.seleniumhq.org
+[8]: https://www.algolia.com/users/sign_up
+
+<!-- END links -->
