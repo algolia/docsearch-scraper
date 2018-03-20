@@ -1,16 +1,8 @@
 import sys
 import os
-import itertools
-import algoliasearch
-import json
 
-from .dict_differ import DictDiffer
-from . import fetchers
-from . import algolia_helper
 from . import helpers
-from . import snippeter
-from . import emails
-from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation, get_conversation_url_from_cuid
+from .config_manager import ConfigManager
 
 if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or 'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
     print("")
@@ -25,14 +17,60 @@ print("=  Deploy connectors  =")
 print("=======================")
 print("")
 
-ref_configs = fetchers.get_configs_from_repos()
-actual_configs, inverted_actual_configs, crawler_ids = fetchers.get_configs_from_website()
+config_manager = ConfigManager()
 
-differ = DictDiffer(ref_configs, actual_configs)
+config_name = None
+if len(sys.argv) > 1:
+    config_name = sys.argv[1]
+    from subprocess import Popen
+    from os import environ, path
 
-added = differ.added()
-removed = differ.removed()
-changed, changed_attributes = differ.changed()
+    config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
+
+    if not path.isdir(config_folder):
+        print("Folder: " + config_folder + " does not exist")
+        exit()
+
+    commands = [
+        ['git', 'add', config_name + '.json'],
+        ['git', 'commit', '-m', 'update ' + config_name + '.json'],
+        ['git', 'stash'],
+        ['git', 'pull', '-r', 'origin', 'master'],
+        ['git', 'push', 'origin', 'master'],
+        ['git', 'stash', 'pop']
+    ]
+
+    for command in commands:
+        p = Popen(command, cwd=config_folder, env=environ)
+
+        try:
+            p.wait()
+        except KeyboardInterrupt:
+            p.kill()
+            p.wait()
+            p.returncode = 1
+
+added = config_manager.get_added()
+changed, changed_attributes = config_manager.get_changed()
+removed = config_manager.get_removed()
+
+if config_name is not None:
+    if config_name in added:
+        changed = []
+        removed = []
+        added = [config_name]
+    elif config_name in changed:
+        changed = [config_name]
+        removed = []
+        added = []
+    elif config_name in removed:
+        changed = []
+        removed = [config_name]
+        added = []
+    else:
+        changed = []
+        removed = []
+        added = []
 
 added_log = ""
 updated_log = ""
@@ -66,38 +104,20 @@ if len(changed) > 0:
 print("")
 
 if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
-
-    if helpers.confirm() is True:
+    if config_name is not None or helpers.confirm() is True:
         reports = []
 
         if len(added) > 0:
             print("")
-            for config in added:
-                key = algolia_helper.add_docsearch_key(config)
-                print(config + ' (' + key + ')')
-                helpers.make_request('/', 'POST', {'configuration': json.dumps(ref_configs[config], separators=(',', ': '))})
-            reports.append({
-                'title': 'Added connectors',
-                'text': added_log
-            })
+            for config_name in added:
+                config_manager.add_config(config_name)
+            reports.append({ 'title': 'Added connectors', 'text': added_log })
 
         if len(changed) > 0:
             print("")
 
-            for config in changed:
-                config_id = str(inverted_actual_configs[config])
-                message = config
-
-                try:
-                    key = algolia_helper.get_docsearch_key(config)
-                    message = message + ' (' + key + ')'
-                except algoliasearch.helpers.AlgoliaException:
-                    pass
-
-                print(message)
-
-                helpers.make_request('/' + config_id, 'PUT', {'configuration': json.dumps(ref_configs[config], separators=(',', ': '))})
-                helpers.make_request('/' + config_id + '/reindex', 'POST')
+            for config_name in changed:
+                config_manager.update_config(config_name)
             reports.append({
                 'title': 'Updated connectors',
                 'text': updated_log
@@ -105,13 +125,7 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
         if len(removed) > 0:
             for config in removed:
-                config_id = str(inverted_actual_configs[config])
-
-                helpers.make_request('/' + config_id, 'DELETE')
-
-                algolia_helper.delete_docsearch_key(config)
-                algolia_helper.delete_docsearch_index(config)
-                algolia_helper.delete_docsearch_index(config + '_tmp')
+                config_manager.remove_config(config_name)
 
             reports.append({
                 'title': 'Removed connectors',
@@ -119,35 +133,5 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
             })
         helpers.send_slack_notif(reports)
 
-    if len(added) > 0 or len(changed) > 0:
-        print("")
-
-        if helpers.confirm('Do you want to get & save as a note the email templates for added configs (you\'ll need to wait the index creation before pressing enter for it to be correct)'):
-
-            for config in added:
-                print '\n================================\n'
-
-                if "conversation_id" in ref_configs[config]:
-                    cuid=ref_configs[config]["conversation_id"][0]
-                    add_note(cuid, snippeter.get_email_for_config(config))
-                    conversation = get_conversation(cuid)
-                    emails_from_conv = get_emails_from_conversation(conversation)
-                    emails.add(config,
-                               emails_to_add = emails_from_conv)
-                    print('Email address fetched and stored, conversation updated and available at {}\n'.format(get_conversation_url_from_cuid(cuid)))
-
-                else:
-                    print(snippeter.get_email_for_config(config))
-                    if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
-                        emails.add(config)
-
-            for config in changed:
-                print '\n================================\n'
-                print(snippeter.get_email_for_config(config))
-                if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
-                    emails.add(config)
-
-    for app in removed:
-        emails.delete(app)
 else:
     print("Nothing to do")

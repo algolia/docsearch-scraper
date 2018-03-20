@@ -1,20 +1,14 @@
 #!/bin/bash
+
 PROJECT_ROOT=$PWD
 cd /tmp
-mkdir docsearch_deploy
-cd docsearch_deploy
 
-if [ $# -eq 0 ]; then
-    git clone --depth 1 --branch master git@github.com:algolia/documentation-scraper.git scraper
-else
-    cp -r $PROJECT_ROOT . && mv docsearch-scraper scraper
-fi
+git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs.git docsearch-configs
+git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs-private.git docsearch-configs-private
 
-cd /tmp/docsearch_deploy/scraper/deployer/
-git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs.git public
-git clone --depth 1 --branch master git@github.com:algolia/docsearch-configs-private.git private
+cd $PROJECT_ROOT
 
-cd /tmp/docsearch_deploy/scraper
-python -m deployer.src.index
+python -m deployer.src.index $@
 
-rm -rf /tmp/docsearch_deploy
+rm -rf /tmp/docsearch-configs
+rm -rf /tmp/docsearch-configs-private
