@@ -1,12 +1,10 @@
 from collections import OrderedDict
 import tldextract
-import pyperclip
 from . import helpers
-import json
 from . import helpdesk_helper
 
-def to_docusaurus_config(config):
 
+def to_docusaurus_config(config):
     config["selectors"]["lvl0"]=OrderedDict((
             ("selector", "//*[contains(@class,'navGroupActive')]//a[contains(@class,'navItemActive')]/preceding::h3[1]"),
             ("type", "xpath"),
@@ -37,12 +35,12 @@ def create_config( u = None):
         )))
     ))
 
-    if u == None :
+    if u is None:
         u = helpers.get_user_value("start url: ")
 
     urls = [u]
 
-    if  helpdesk_helper.is_helpdesk_url(u):
+    if helpdesk_helper.is_helpdesk_url(u):
         cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
         conversation = helpdesk_helper.get_conversation(cuid)
@@ -80,13 +78,11 @@ def create_config( u = None):
     else:
         config['start_urls'] = urls
 
-    dump = json.dumps(config, separators=(',', ': '), indent=2)
-    pyperclip.copy(dump)
+    user_index_name = helpers.get_user_value(
+        "index_name is " + "\033[1;33m" + config['index_name'] + "\033[0m" + ' [enter to confirm]: ')
 
-    print("")
-    print("=============")
-    print(dump)
-    print("=============")
-    print("")
-    print("Config copied to clipboard [OK]")
-    print("")
+    if user_index_name != "":
+        config['index_name'] = user_index_name
+        print("index_name is now " + "\033[1;33m" + config['index_name'] + "\033[0m")
+
+    return config
