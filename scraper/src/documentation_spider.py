@@ -198,7 +198,11 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         Only for start_urls and sitemap_urls
         """
         if hasattr(failure.value, 'response'):
-            self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+            if hasattr(failure.value.response,'status'):
+                self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+            else:
+                self.logger.error('Failure : %s', failure.value)
+
         else:
             self.logger.error('Failure without response %s', failure.value)
 
