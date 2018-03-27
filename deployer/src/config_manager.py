@@ -30,13 +30,15 @@ class ConfigManager:
         return self.differ.changed()
 
     def add_config(self, config_name):
+
         key = algolia_helper.add_docsearch_key(config_name)
+
         print(config_name + ' (' + key + ')')
-        helpers.make_request('/', 'POST', {'configuration': json.dumps(config_name, separators=(',', ': '))})
+        config = self.ref_configs[config_name]
+
+        helpers.make_request('/', 'POST', {'configuration': json.dumps(config, separators=(',', ': '))})
 
         print '\n================================\n'
-
-        config = self.ref_configs[config_name]
 
         if "conversation_id" in config:
             cuid = config["conversation_id"][0]
@@ -48,9 +50,9 @@ class ConfigManager:
                 get_conversation_url_from_cuid(cuid)))
 
         else:
-            print(snippeter.get_email_for_config(config))
-            if helpers.confirm('\nDo you want to add emails for {}?'.format(config)):
-                emails.add(config)
+            print(snippeter.get_email_for_config(config_name))
+            if helpers.confirm('\nDo you want to add emails for {}?'.format(config_name)):
+                emails.add(config_name)
 
     def update_config(self, config_name):
         config_id = str(self.inverted_actual_configs[config_name])

@@ -107,8 +107,7 @@ def _prompt_emails(config_name, config_dir):
 
 def add(config_name, config_dir=None, emails_to_add=None):
     if config_dir is None:
-        basedir = path.dirname(__file__)
-        config_dir = path.join(basedir, '../../deployer/private')
+        config_dir = "/tmp/docsearch-configs-private"
 
     if emails_to_add and len(emails_to_add) > 0:
         _write(emails_to_add, config_name, config_dir)
@@ -122,8 +121,7 @@ def add(config_name, config_dir=None, emails_to_add=None):
 
 def delete(config_name, config_dir=None):
     if config_dir is None:
-        basedir = path.dirname(__file__)
-        config_dir = path.join(basedir, '..', 'private')
+        config_dir = "/tmp/docsearch-configs-private"
 
     file_path = path.join(config_dir, 'infos', config_name + '.json')
     if path.isfile(file_path) and helpers.confirm('Delete emails for {}'.format(config_name)):
