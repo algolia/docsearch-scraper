@@ -15,9 +15,9 @@ class GenerateEmail(AbstractCommand):
         import pyperclip
         from deployer.src.snippeter import get_email_for_config
 
-        self.check_docsearch_app_id('generate an email')
-
         email_content = get_email_for_config(args[0])
+        pyperclip.copy(email_content)
+
         print(email_content)
         print("Config copied to clipboard [OK]")
         print('')

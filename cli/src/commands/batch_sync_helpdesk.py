@@ -14,5 +14,4 @@ class BatchSyncHelpdesk(AbstractCommand):
     def run(self, args):
         from batch.src.batch_sync_helpdesk import batch_sync_helpdesk
 
-        # self.check_not_docsearch_app_id('run a config manually')
         return batch_sync_helpdesk(args)

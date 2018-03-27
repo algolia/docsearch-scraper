@@ -8,10 +8,7 @@ from . import helpers
 def get_configs_from_repos():
     configs = {}
 
-    base_dir = os.path.dirname(__file__)
-
-    for dir in ['public/configs', 'private/configs']:
-        dir = base_dir + '/../../deployer/' + dir
+    for dir in ['/tmp/docsearch-configs/configs', '/tmp/docsearch-configs-private/configs']:
         for f in os.listdir(dir):
             path = dir + '/' + f
 

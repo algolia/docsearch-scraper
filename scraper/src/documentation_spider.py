@@ -144,7 +144,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # Arbitrary limit
         if  self.nb_hits_max > 0 and DocumentationSpider.NB_INDEXED > self.nb_hits_max:
             DocumentationSpider.NB_INDEXED = 0
-            self.reason_to_stop = "Too much hits, DocSearch only handle {} (.env)".format(int(DocumentationSpider.NB_HITS_MAX))
+            self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(int(self.nb_hits_max))
             raise ValueError(self.reason_to_stop)
 
     def parse_from_sitemap(self, response):
