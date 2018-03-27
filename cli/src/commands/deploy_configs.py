@@ -3,17 +3,13 @@ from .abstract_command import AbstractCommand
 
 class DeployConfigs(AbstractCommand):
     def get_name(self):
-        return 'deploy:configs'
+        return 'deploy'
 
     def get_description(self):
         return 'Deploy configs'
 
     def run(self, args):
-        self.check_docsearch_app_id('deploy configs')
-
         command = ['./deployer/deploy']
-
-        if len(args) > 0 and args[0] == '--debug':
-            command.append('--debug')
+        command = command + args
 
         return self.exec_shell_command(command)

@@ -4,7 +4,11 @@ from algoliasearch import algoliasearch
 app_id = os.environ['APPLICATION_ID'] if 'APPLICATION_ID' in os.environ else ''
 api_key = os.environ['API_KEY'] if 'API_KEY' in os.environ else ''
 
+app_id_prod = os.environ['APPLICATION_ID_PROD'] if 'APPLICATION_ID_PROD' in os.environ else ''
+api_key_prod = os.environ['API_KEY_PROD'] if 'API_KEY_PROD' in os.environ else ''
+
 algolia_client = algoliasearch.Client(app_id, api_key)
+algolia_client_prod = algoliasearch.Client(app_id_prod, api_key_prod)
 
 
 def get_facets(config):
@@ -37,9 +41,9 @@ def remove_crawling_issue(config):
         }
     })
 
-def update_docsearch_key(config, key):
 
-    algolia_client.update_api_key()(key, {
+def update_docsearch_key(config, key):
+    algolia_client_prod.update_api_key()(key, {
         'indices': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
@@ -49,18 +53,17 @@ def update_docsearch_key(config, key):
 def get_docsearch_key(config):
     k = 'Not found'
     # find a key
-    for key in algolia_client.list_api_keys()['keys']:
+    for key in algolia_client_prod.list_api_keys()['keys']:
         if 'description' in key and 'docsearch frontend ' + config == key['description'] and key["acl"]==["search"]:
             k = key['value']
     return k
 
 
 def add_docsearch_key(config):
-
     if not isinstance(config, unicode) or '*' in config:
         raise ValueError("index name : {} is not safe".format(config))
 
-    response = algolia_client.add_api_key({
+    response = algolia_client_prod.add_api_key({
         'indices': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
@@ -71,8 +74,8 @@ def add_docsearch_key(config):
 
 def delete_docsearch_key(config):
     key_to_delete = get_docsearch_key(config)
-    algolia_client.delete_api_key(key_to_delete)
+    algolia_client_prod.delete_api_key(key_to_delete)
 
 
 def delete_docsearch_index(config):
-    algolia_client.delete_index(config)
+    algolia_client_prod.delete_index(config)
