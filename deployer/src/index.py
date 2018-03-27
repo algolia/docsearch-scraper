@@ -22,7 +22,7 @@ config_manager = ConfigManager()
 config_name = None
 if len(sys.argv) > 1:
     config_name = sys.argv[1]
-    from subprocess import Popen
+    from subprocess import check_output
     from os import environ, path
 
     config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
@@ -31,24 +31,19 @@ if len(sys.argv) > 1:
         print("Folder: " + config_folder + " does not exist")
         exit()
 
-    commands = [
-        ['git', 'add', config_name + '.json'],
-        ['git', 'commit', '-m', 'update ' + config_name + '.json'],
-        ['git', 'stash'],
-        ['git', 'pull', '-r', 'origin', 'master'],
-        ['git', 'push', 'origin', 'master'],
-        ['git', 'stash', 'pop']
-    ]
+    check_output(['git', 'add', config_name + '.json'], cwd=config_folder)
+    check_output(['git', 'commit', '-m', 'update ' + config_name], cwd=config_folder)
 
-    for command in commands:
-        p = Popen(command, cwd=config_folder, env=environ)
+    output = check_output(['git', 'stash', 'list'], cwd=config_folder)
+    initialNbStash = len(output.split('\n'))
+    check_output(['git', 'stash'], cwd=config_folder)
+    output2 = check_output(['git', 'stash', 'list'], cwd=config_folder)
+    finalNbStash = len(output2.split('\n'))
 
-        try:
-            p.wait()
-        except KeyboardInterrupt:
-            p.kill()
-            p.wait()
-            p.returncode = 1
+    check_output(['git', 'pull', '-r', 'origin', 'master'], cwd=config_folder)
+    check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
+    if finalNbStash != initialNbStash:
+        check_output(['git', 'stash', 'pop'], cwd=config_folder)
 
 added = config_manager.get_added()
 changed, changed_attributes = config_manager.get_changed()
