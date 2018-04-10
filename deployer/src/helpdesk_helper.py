@@ -15,7 +15,8 @@ def get_helpscout_api_key():
 
 
 def is_helpdesk_url(u):
-    return 'secure.helpscout.net/conversation'in u
+    return 'secure.helpscout.net/conversation' in u
+
 
 def get_conversation_ID_from_url(hs_url):
     capture_conversation_uid = re.compile('.+/conversation/(\d+)/.*')
@@ -29,14 +30,14 @@ def get_conversation_ID_from_url(hs_url):
 
     return cuid
 
-def get_conversation(cuid):
 
+def get_conversation(cuid):
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
-    hs_api_key=get_helpscout_api_key()
+    hs_api_key = get_helpscout_api_key()
 
     response_json = json.loads(helpers.make_request(conversation_endpoint,
-                                                    username = hs_api_key,
-                                                    password = "X"))
+                                                    username=hs_api_key,
+                                                    password="X"))
     conversation = response_json.get('item')
 
     if not conversation:
@@ -44,8 +45,8 @@ def get_conversation(cuid):
 
     return conversation
 
-def get_start_url_from_conversation(conversation):
 
+def get_start_url_from_conversation(conversation):
     if not conversation or not conversation.get('threads')[-1]:
         raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
 
@@ -60,13 +61,14 @@ def get_start_url_from_conversation(conversation):
     if not was_sent_by_customer:
         raise ValueError("First thread from the conversation thread wasn't sent by customer")
 
-    print "URL fetched is \033[1;36m" + url_from_conversation + "\033[0m sent by \033[1;33m" + first_thread.get("customer").get("email") + "\033[0m"
+    print "URL fetched is \033[1;36m" + url_from_conversation + "\033[0m sent by \033[1;33m" + first_thread.get(
+        "customer").get("email") + "\033[0m"
 
     return url_from_conversation
 
-def get_emails_from_conversation(conversation):
 
-    emails=[]
+def get_emails_from_conversation(conversation):
+    emails = []
 
     if not conversation or not conversation.get('threads')[-1]:
         raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
@@ -82,72 +84,80 @@ def get_emails_from_conversation(conversation):
 
     emails.append(customers_mail)
 
-    cc=conversation.get('cc')
+    cc = conversation.get('cc')
     if cc:
-        emails=emails+cc
+        emails = emails + cc
 
-    bcc=conversation.get('bcc')
+    bcc = conversation.get('bcc')
     if bcc:
-        emails=emails+bcc
+        emails = emails + bcc
 
     if len(emails) > 1:
-       print "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:]))
+        print "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:]))
 
     return emails
 
 
 def add_note(cuid, body):
-
     conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
 
-    hs_api_key=get_helpscout_api_key()
+    hs_api_key = get_helpscout_api_key()
 
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = body.replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>').replace('  ', '&emsp;')
 
-    response=helpers.make_request(conversation_endpoint,
-                        json_request=True,
-                         data={ "createdBy":
-                                    { "id": "75881", "type": "user" },
-                                "type": "note",
-                                "body": body },
-                         username=hs_api_key,
-                         password="X",
-                         type='POST')
+    response = helpers.make_request(conversation_endpoint,
+                                    json_request=True,
+                                    data={"createdBy": {"id": "75881", "type": "user"},
+                                          "type": "note",
+                                          "body": body
+                                          },
+                                    username=hs_api_key,
+                                    password="X",
+                                    type='POST')
 
     return response
 
-def get_conversation_url_from_cuid(cuid):
 
-    if not cuid :
+def get_conversation_url_from_cuid(cuid):
+    if not cuid:
         raise ValueError("Wrong input conversation ID")
 
-    return "https://secure.helpscout.net/conversation/"+cuid
+    return "https://secure.helpscout.net/conversation/" + cuid
+
 
 def is_docusaurus_conversation(conversation):
-
     return "docusaurus" in conversation.get("tags")
 
-@rate_limited(200,60)
-def search(query, page=1, pageSize=50, sortField="modifiedAt", sortOrder="asc"):
 
+def is_gitbook_conversation(conversation):
+    return "gitbook" in conversation.get("tags")
+
+
+def is_pkgdown_conversation(conversation):
+    return "pkgdown" in conversation.get("tags")
+
+
+@rate_limited(200, 60)
+def search(query, page=1, pageSize=50, sortField="modifiedAt", sortOrder="asc"):
     search_endpoint = "https://api.helpscout.net/v1/search/conversations.json"
     hs_api_key = get_helpscout_api_key()
 
     response_json = json.loads(helpers.make_request(search_endpoint,
-                                                    username = hs_api_key,
-                                                    password = "X",
-                                                    data = {
-                                                        "query" : query,
-                                                        "page" : page,
-                                                        "pageSize" : pageSize,
-                                                        "sortField" : sortField,
-                                                        "sortOrder" : sortOrder
+                                                    username=hs_api_key,
+                                                    password="X",
+                                                    data={
+                                                        "query": query,
+                                                        "page": page,
+                                                        "pageSize": pageSize,
+                                                        "sortField": sortField,
+                                                        "sortOrder": sortOrder
                                                     },
                                                     json_request=True)
                                )
 
     return response_json
+
 
 def RepresentsInt(s):
     try:
@@ -155,4 +165,3 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
-
