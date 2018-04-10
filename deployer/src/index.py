@@ -17,11 +17,9 @@ print("=  Deploy connectors  =")
 print("=======================")
 print("")
 
-config_manager = ConfigManager()
-
 config_name = None
 if len(sys.argv) > 1:
-    config_name = sys.argv[1]
+    config_name = unicode(sys.argv[1])
     from subprocess import check_output
     from os import environ, path
 
@@ -44,6 +42,10 @@ if len(sys.argv) > 1:
     check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
     if finalNbStash != initialNbStash:
         check_output(['git', 'stash', 'pop'], cwd=config_folder)
+
+    print check_output(['git', 'pull', '-r', 'origin', 'master'], cwd="/tmp/docsearch-configs")
+
+config_manager = ConfigManager()
 
 added = config_manager.get_added()
 changed, changed_attributes = config_manager.get_changed()
@@ -104,23 +106,23 @@ if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
 
         if len(added) > 0:
             print("")
-            for config_name in added:
-                config_manager.add_config(config_name)
+            for current_config_name in added:
+                config_manager.add_config(current_config_name)
             reports.append({ 'title': 'Added connectors', 'text': added_log })
 
         if len(changed) > 0:
             print("")
 
-            for config_name in changed:
-                config_manager.update_config(config_name)
+            for current_config_name in changed:
+                config_manager.update_config(current_config_name)
             reports.append({
                 'title': 'Updated connectors',
                 'text': updated_log
             })
 
         if len(removed) > 0:
-            for config in removed:
-                config_manager.remove_config(config_name)
+            for current_config_name in removed:
+                config_manager.remove_config(current_config_name)
 
             reports.append({
                 'title': 'Removed connectors',
