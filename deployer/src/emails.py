@@ -67,6 +67,8 @@ def _commit_push(config_name, action, config_dir):
     os.chdir(config_dir)
 
     with open(os.devnull, 'w') as dev_null:
+
+        sp.call(['git', 'pull', '-r', 'origin', 'master'], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'push'], stdout=dev_null, stderr=sp.STDOUT)
@@ -105,10 +107,7 @@ def _prompt_emails(config_name, config_dir):
     return emails
 
 
-def add(config_name, config_dir=None, emails_to_add=None):
-    if config_dir is None:
-        config_dir = "/tmp/docsearch-configs-private"
-
+def add(config_name, config_dir, emails_to_add=None):
     if emails_to_add and len(emails_to_add) > 0:
         _write(emails_to_add, config_name, config_dir)
 
@@ -119,10 +118,7 @@ def add(config_name, config_dir=None, emails_to_add=None):
     _commit_push(config_name, 'Update', config_dir)
 
 
-def delete(config_name, config_dir=None):
-    if config_dir is None:
-        config_dir = "/tmp/docsearch-configs-private"
-
+def delete(config_name, config_dir):
     file_path = path.join(config_dir, 'infos', config_name + '.json')
     if path.isfile(file_path) and helpers.confirm('Delete emails for {}'.format(config_name)):
         os.remove(file_path)

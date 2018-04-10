@@ -23,6 +23,7 @@ class BootstrapConfig(AbstractCommand):
         if config_folder is None:
             self.print_config(config)
         else:
+            config_folder += '/configs'
             if not path.isdir(config_folder):
                 self.print_config(config)
                 print("Folder: " + config_folder + " does not exist")

@@ -1,14 +1,16 @@
 import os
 import json
 from collections import OrderedDict
-
+from os import environ
 from . import helpers
 
 
 def get_configs_from_repos():
     configs = {}
+    public_dir = environ.get('PUBLIC_CONFIG_FOLDER')
+    private_dir = environ.get('PRIVATE_CONFIG_FOLDER')
 
-    for dir in ['/tmp/docsearch-configs/configs', '/tmp/docsearch-configs-private/configs']:
+    for dir in [public_dir + '/configs', private_dir + '/configs']:
         for f in os.listdir(dir):
             path = dir + '/' + f
 

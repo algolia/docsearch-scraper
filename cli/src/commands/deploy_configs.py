@@ -9,7 +9,10 @@ class DeployConfigs(AbstractCommand):
         return 'Deploy configs'
 
     def run(self, args):
-        command = ['./deployer/deploy']
-        command = command + args
+        if len(args) <= 0:
+            from deployer.src.index import deploy
+            deploy()
+        else:
+            from deployer.src.index import deploy_config
+            deploy_config(unicode(args[0]))
 
-        return self.exec_shell_command(command)
