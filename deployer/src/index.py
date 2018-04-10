@@ -27,11 +27,6 @@ def deploy_config(config_name):
     print_init()
 
     config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
-
-    if config_folder is None:
-        print('PUBLIC_CONFIG_FOLDER must be defined in the environment')
-        exit()
-
     config_folder += '/configs'
 
     if not path.isdir(config_folder):
@@ -41,10 +36,9 @@ def deploy_config(config_name):
     # Not using the config manager to avoid it stashing the config that we want to push
     check_output(['git', 'add', config_name + '.json'], cwd=config_folder)
     check_output(['git', 'commit', '-m', 'update ' + config_name], cwd=config_folder)
+    check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
     config_manager = ConfigManager().instance
-
-    check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
     added = config_manager.get_added()
     changed, changed_attributes = config_manager.get_changed()
@@ -116,7 +110,7 @@ def deploy_configs(added, changed, removed, changed_attributes, force_deploy=Fal
                 print("")
                 for current_config_name in added:
                     config_manager.add_config(current_config_name)
-                reports.append({'title': 'Added connectors', 'text': added_log})
+                reports.append({ 'title': 'Added connectors', 'text': added_log })
 
             if len(changed) > 0:
                 print("")

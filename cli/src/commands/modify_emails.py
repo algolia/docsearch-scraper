@@ -42,6 +42,7 @@ class UpdateEmails(AbstractCommand):
             add(config, environ.get('PRIVATE_CONFIG_FOLDER'))
 
 
+
 class DeleteEmails(AbstractCommand):
     def get_name(self):
         return 'emails:delete'
@@ -57,4 +58,5 @@ class DeleteEmails(AbstractCommand):
         from os import environ
 
         for config in args:
-            delete(config, environ.get('PRIVATE_CONFIG_FOLDER'))
+            delete(config,  environ.get('PRIVATE_CONFIG_FOLDER'))
+
