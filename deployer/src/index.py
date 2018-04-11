@@ -27,6 +27,11 @@ def deploy_config(config_name):
     print_init()
 
     config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
+
+    if config_folder is None:
+        print('PUBLIC_CONFIG_FOLDER must be defined in the environment')
+        exit()
+
     config_folder += '/configs'
 
     if not path.isdir(config_folder):
