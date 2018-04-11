@@ -36,9 +36,10 @@ def deploy_config(config_name):
     # Not using the config manager to avoid it stashing the config that we want to push
     check_output(['git', 'add', config_name + '.json'], cwd=config_folder)
     check_output(['git', 'commit', '-m', 'update ' + config_name], cwd=config_folder)
-    check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
     config_manager = ConfigManager().instance
+
+    check_output(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
     added = config_manager.get_added()
     changed, changed_attributes = config_manager.get_changed()
