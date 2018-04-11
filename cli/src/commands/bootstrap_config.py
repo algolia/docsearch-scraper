@@ -20,6 +20,9 @@ class BootstrapConfig(AbstractCommand):
         config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
 
         if config_folder is None:
+            print('PUBLIC_CONFIG_FOLDER must be defined in environment')
+
+        if config_folder is None:
             self.print_config(config)
         else:
             config_folder += '/configs'

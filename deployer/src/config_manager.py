@@ -24,6 +24,11 @@ class ConfigManager:
         def __init__(self):
             self.public_dir = environ.get('PUBLIC_CONFIG_FOLDER')
             self.private_dir = environ.get('PRIVATE_CONFIG_FOLDER')
+
+            if self.public_dir is None or self.private_dir is None:
+                print('PUBLIC_CONFIG_FOLDER and PRIVATE_CONFIG_FOLDER must be defined in the environment')
+                exit()
+
             self.initial_public_nb_stash = None
             self.final_nb_public_stash = None
             self.initial_private_nb_stash = None
