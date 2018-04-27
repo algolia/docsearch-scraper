@@ -6,7 +6,7 @@ class InviteRemoveUser(AbstractCommand):
         return 'invite:remove_user'
 
     def get_description(self):
-        return 'Rescind email\'s invitation for an index'
+        return 'Uninvite an email for an index'
 
     def get_usage(self):
         return super(InviteRemoveUser, self).get_usage() + " config email"
@@ -14,7 +14,7 @@ class InviteRemoveUser(AbstractCommand):
     def get_options(self):
         return [
             {"name": "config", "description": "name of the config"},
-            {"name": "email", "description": "email to add"}
+            {"name": "config", "description": "email to add"}
         ]
 
     def run(self, args):
