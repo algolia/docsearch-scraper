@@ -114,10 +114,11 @@ def _prompt_emails(config_name, config_dir):
 def add(config_name, config_dir, emails_to_add=None):
     if emails_to_add and len(emails_to_add) > 0:
         new_file = _write(emails_to_add, config_name, config_dir)
-
+        add_emails(config_name, emails_to_add)
     else:
         emails = _prompt_emails(config_name, config_dir)
         new_file = _write(emails, config_name, config_dir)
+        add_emails(config_name, emails)
 
     if new_file:
         _commit_push(config_name, 'Add', config_dir)
@@ -125,8 +126,24 @@ def add(config_name, config_dir, emails_to_add=None):
         _commit_push(config_name, 'Update', config_dir)
 
 
+def add_emails(config_name, emails):
+    from deployer.src.algolia_internal_api import add_user_to_index
+
+    for email in emails:
+        add_user_to_index(config_name, email)
+
+
+def delete_emails(config_name, emails):
+    from deployer.src.algolia_internal_api import remove_user_from_index
+
+    for email in emails:
+        remove_user_from_index(config_name, email)
+
+
 def delete(config_name, config_dir):
     file_path = path.join(config_dir, 'infos', config_name + '.json')
-    if path.isfile(file_path) and helpers.confirm('Delete emails for {}'.format(config_name)):
+    if path.isfile(file_path):
+        emails = _retrieve(config_name, config_dir)
+        delete_emails(config_name, emails)
         os.remove(file_path)
         _commit_push(config_name, 'Delete', config_dir)
