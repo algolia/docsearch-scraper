@@ -14,7 +14,7 @@ class InviteRemoveUser(AbstractCommand):
     def get_options(self):
         return [
             {"name": "config", "description": "name of the config"},
-            {"name": "config", "description": "email to add"}
+            {"name": "email", "description": "email to add"}
         ]
 
     def run(self, args):
