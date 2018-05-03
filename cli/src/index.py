@@ -13,6 +13,7 @@ from .helpers import print_error
 from .helpers import print_command_help
 
 from .commands.bootstrap_config import BootstrapConfig
+from .commands.check_config import CheckConfig
 from .commands.playground_config import PlaygroundConfig
 from .commands.build_docker_scraper import BuildDockerScraper
 from .commands.run_tests import RunTests
@@ -83,6 +84,7 @@ if 'WEBSITE_PASSWORD' not in environ or len(environ['WEBSITE_PASSWORD']) == 0:
 
 cmds = []
 
+cmds.append(CheckConfig())
 cmds.append(BootstrapConfig())
 cmds.append(BuildDockerScraper())
 cmds.append(RunTests())

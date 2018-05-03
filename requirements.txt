@@ -2,6 +2,7 @@ algoliasearch==1.13.0
 asn1crypto==0.22.0
 attrs==17.2.0
 Automat==0.6.0
+cerberus==1.2
 certifi==2017.7.27.1
 cffi==1.11.0
 chardet==3.0.4

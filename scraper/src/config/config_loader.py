@@ -7,9 +7,11 @@ from collections import OrderedDict
 import json
 import os
 import copy
+import pprint
+from cerberus import Validator
 
 
-from .config_validator import ConfigValidator
+from .config_schema import CONFIG_SCHEMA
 from .nb_hits_updater import NbHitsUpdater
 from .urls_parser import UrlsParser
 from .selectors_parser import SelectorsParser
@@ -70,15 +72,15 @@ class ConfigLoader(object):
     def __init__(self, config):
         data = self._load_config(config)
 
+        # Validate
+        self._validate_config(data)
+
         # Fill self from config
         for key, value in data.items():
             setattr(self, key, value)
 
         # Start browser if needed
         self.driver = BrowserHandler.init(self.config_original_content, self.js_render)
-
-        # Validate
-        ConfigValidator(self).validate()
 
         # Modify
         self._parse()
@@ -89,6 +91,14 @@ class ConfigLoader(object):
 
         # BC new correct naming
         self.scrape_start_urls = self.scrap_start_urls if not self.scrap_start_urls else self.scrape_start_urls
+
+    @staticmethod
+    def _validate_config(data):
+        config_validator = Validator(CONFIG_SCHEMA)
+        is_config_valid = config_validator.validate(data)
+
+        if not is_config_valid:
+            raise ValueError(pprint.pformat(config_validator.errors))
 
     def _load_config(self, config):
         if os.path.isfile(config):
