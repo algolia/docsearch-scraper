@@ -22,7 +22,6 @@ def to_docusaurus_config(config):
 
 
 def to_gitbook_config(config):
-
     config["selectors"]["lvl0"] = ".markdown-section h1"
     config["selectors"]["lvl1"] = ".markdown-section h2"
     config["selectors"]["lvl2"] = ".markdown-section h3"
@@ -34,16 +33,15 @@ def to_gitbook_config(config):
 
 
 def to_pkgdown_config(config, urls=None):
-
     start_url = None
 
     if urls:
         start_url = urls[0]
 
     config["selectors"]["lvl0"] = OrderedDict((
-            ("selector", ".contents h1"),
-            ("default_value", "Documentation")
-        ))
+        ("selector", ".contents h1"),
+        ("default_value", "Documentation")
+    ))
     config["selectors"]["lvl1"] = ".contents h2"
     config["selectors"]["lvl2"] = ".contents h3, .contents th"
     config["selectors"]["lvl3"] = ".contents h4"
@@ -54,6 +52,25 @@ def to_pkgdown_config(config, urls=None):
     config["custom_settings"] = {"separatorsToIndex": "_"}
     # config["stop_urls"] = [start_url + "index.html", "LICENSE-text.html"]
     config["sitemap_urls"] = [start_url + "sitemap.xml"]
+    return config
+
+
+def to_vuepress_config(config):
+    config["selectors"]["lvl0"] = OrderedDict((
+        ("selector", "p.sidebar-heading.open"),
+        ("global", True),
+        ("default_value", "Documentation")
+    ))
+    config["selectors"]["lvl1"] = ".content h1"
+    config["selectors"]["lvl2"] = ".content h2"
+    config["selectors"]["lvl3"] = ".content h3"
+    config["selectors"]["lvl4"] = ".content h4"
+    config["selectors"]["lvl5"] = ".content h5"
+    config["selectors"]["text"] = ".content p, .content li"
+
+    config["scrap_start_urls"] = False
+    config["strip_chars"] = " .,;:#"
+
     return config
 
 
@@ -91,6 +108,8 @@ def create_config(u=None):
             config = to_gitbook_config(config)
         elif helpdesk_helper.is_pkgdown_conversation(conversation):
             config = to_pkgdown_config(config, urls)
+        elif helpdesk_helper.is_vuepress_conversation(conversation):
+            config = to_vuepress_config(config, urls)
 
         config["conversation_id"] = [cuid]
 
@@ -98,7 +117,8 @@ def create_config(u=None):
         urls.append(u.rsplit('/', 1)[0])
 
     # Use subdomain for github website https://<subdomain>.github.io/
-    config['index_name'] = tldextract.extract(u).subdomain if tldextract.extract(u).domain == 'github' else tldextract.extract(u).domain
+    config['index_name'] = tldextract.extract(u).subdomain if tldextract.extract(
+        u).domain == 'github' else tldextract.extract(u).domain
 
     if helpers.confirm("Does the start_urls require variables ?"):
         config['start_urls'] = [{
