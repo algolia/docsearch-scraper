@@ -11,6 +11,7 @@ from .dict_differ import DictDiffer
 from . import fetchers
 
 from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation, get_conversation_url_from_cuid
+from deployer.src.algolia_internal_api import add_user_to_index
 
 
 class ConfigManager:
@@ -83,7 +84,6 @@ class ConfigManager:
             return self.differ.changed()
 
         def add_config(self, config_name):
-
             key = algolia_helper.add_docsearch_key(config_name)
 
             print(config_name + ' (' + key + ')')
@@ -95,10 +95,19 @@ class ConfigManager:
 
             if "conversation_id" in config:
                 cuid = config["conversation_id"][0]
-                add_note(cuid, snippeter.get_email_for_config(config_name))
+
+                # Add email(s) to the private config
                 conversation = get_conversation(cuid)
                 emails_from_conv = get_emails_from_conversation(conversation)
                 emails.add(config_name, self.private_dir, emails_to_add=emails_from_conv)
+
+                # Grant access to Analytics
+                user_email = emails_from_conv[0]
+                analytics_status = add_user_to_index(config_name, user_email)
+                note_content = snippeter.get_email_for_config(config_name, analytics_status)
+
+                add_note(cuid, note_content)
+
                 print('Email address fetched and stored, conversation updated and available at {}\n'.format(
                     get_conversation_url_from_cuid(cuid)))
 
