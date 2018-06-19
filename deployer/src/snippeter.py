@@ -14,7 +14,7 @@ def _is_automatically_updated(config, attribute):
     return False
 
 
-def get_email_for_config(config):
+def get_email_for_config(config, analytics_status):
     base_template = """Hi there,
 
 Congratulations, your search is now ready!
@@ -40,6 +40,7 @@ You're now a few steps away from having it working on your website:
 - Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet to a CSS selector that targets your search input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
 - You can also check your configuration in our github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
+{{ANALYTICS}}
 
 Please open a pull request if want to leverage your configuration!
 
@@ -54,6 +55,13 @@ Have a nice day :)"""
    So as of today you have: {{VALUES}}\n"""
 
     base_example_template = "\n  For example if you want to refine the search to {{EXAMPLE_PHRASE}} just specify: 'facetFilters': [{{EXAMPLE_CODE}}]\n"
+
+    # Let the user know how they can access their Analytics
+    analytics_details = ''
+    if analytics_status == True:
+        analytics_details = '- You can see the Analytics of your implementation by selecting the DOCSEARCH application in your Algolia dashboard';
+    if isinstance(analytics_status, basestring):
+        analytics_details = '- You can get access to the full Analytics of your implementation by creating an account, following <a href="' + analytics_status +'">this link</a>'
 
     facets = algolia_helper.get_facets(config)
 
@@ -96,6 +104,7 @@ Have a nice day :)"""
     template = base_template.replace('{{API_KEY}}', api_key)\
                             .replace('{{INDEX_NAME}}', config)\
                             .replace('{{FACETS}}', facet_template)\
-                            .replace('{{ALGOLIA_OPTIONS}}', algolia_options)
+                            .replace('{{ALGOLIA_OPTIONS}}', algolia_options)\
+                            .replace('{{ANALYTICS}}', analytics_details)
 
     return template
