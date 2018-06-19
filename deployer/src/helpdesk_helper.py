@@ -104,7 +104,7 @@ def add_note(cuid, body):
     hs_api_key = get_helpscout_api_key()
 
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
-    body = body.replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>').replace('  ', '&emsp;')
+    body = body.replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>')
 
     response = helpers.make_request(conversation_endpoint,
                                     json_request=True,

@@ -67,6 +67,8 @@ def _commit_push(config_name, action, config_dir):
     os.chdir(config_dir)
 
     with open(os.devnull, 'w') as dev_null:
+
+        sp.call(['git', 'pull', '-r', 'origin', 'master'], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'push'], stdout=dev_null, stderr=sp.STDOUT)
@@ -76,6 +78,7 @@ def _commit_push(config_name, action, config_dir):
 
 def _write(emails, config_name, config_dir):
     file_path = path.join(config_dir, 'infos', config_name + '.json')
+    new_file = True
 
     obj = OrderedDict((
         ('name', config_name),
@@ -85,12 +88,15 @@ def _write(emails, config_name, config_dir):
     ))
 
     if path.isfile(file_path):
+        new_file = False
         with open(file_path, 'r') as f:
             obj = json.loads(f.read(), object_pairs_hook=OrderedDict)
             obj['emails'] = emails
 
     with open(file_path, 'w') as f:
         f.write(json.dumps(obj, separators=(',', ': '), indent=2))
+
+    return new_file
 
 
 def _prompt_emails(config_name, config_dir):
@@ -105,25 +111,39 @@ def _prompt_emails(config_name, config_dir):
     return emails
 
 
-def add(config_name, config_dir=None, emails_to_add=None):
-    if config_dir is None:
-        config_dir = "/tmp/docsearch-configs-private"
-
+def add(config_name, config_dir, emails_to_add=None):
     if emails_to_add and len(emails_to_add) > 0:
-        _write(emails_to_add, config_name, config_dir)
-
+        new_file = _write(emails_to_add, config_name, config_dir)
+        add_emails(config_name, emails_to_add)
     else:
         emails = _prompt_emails(config_name, config_dir)
-        _write(emails, config_name, config_dir)
+        new_file = _write(emails, config_name, config_dir)
+        add_emails(config_name, emails)
 
-    _commit_push(config_name, 'Update', config_dir)
+    if new_file:
+        _commit_push(config_name, 'Add', config_dir)
+    else:
+        _commit_push(config_name, 'Update', config_dir)
 
 
-def delete(config_name, config_dir=None):
-    if config_dir is None:
-        config_dir = "/tmp/docsearch-configs-private"
+def add_emails(config_name, emails):
+    from deployer.src.algolia_internal_api import add_user_to_index
 
+    for email in emails:
+        add_user_to_index(config_name, email)
+
+
+def delete_emails(config_name, emails):
+    from deployer.src.algolia_internal_api import remove_user_from_index
+
+    for email in emails:
+        remove_user_from_index(config_name, email)
+
+
+def delete(config_name, config_dir):
     file_path = path.join(config_dir, 'infos', config_name + '.json')
-    if path.isfile(file_path) and helpers.confirm('Delete emails for {}'.format(config_name)):
+    if path.isfile(file_path):
+        emails = _retrieve(config_name, config_dir)
+        delete_emails(config_name, emails)
         os.remove(file_path)
         _commit_push(config_name, 'Delete', config_dir)
