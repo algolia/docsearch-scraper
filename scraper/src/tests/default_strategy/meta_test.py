@@ -3,6 +3,7 @@
 import lxml.html
 from .abstract import get_strategy
 
+
 class TestMeta:
     def test_meta_number(self):
         # Given
@@ -107,7 +108,120 @@ class TestMeta:
 
         # First record has the global H1
         assert len(actual) == 4
-        assert actual[0]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go", "csharp"]
-        assert actual[1]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go", "csharp"]
-        assert actual[2]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go", "csharp"]
-        assert actual[3]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go", "csharp"]
+        assert actual[0]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+                                      "csharp"]
+        assert actual[1]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+                                      "csharp"]
+        assert actual[2]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+                                      "csharp"]
+        assert actual[3]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+                                      "csharp"]
+
+    def test_meta_version(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': "h1",
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:version" content='1.2.3'
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[0]['version'] == "1.2.3"
+        assert actual[1]['version'] == "1.2.3"
+        assert actual[2]['version'] == "1.2.3"
+        assert actual[3]['version'] == "1.2.3"
+
+    def test_meta_version(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': "h1",
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:version" content='1.2.3'
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[0]['version'] == "1.2.3"
+        assert actual[1]['version'] == "1.2.3"
+        assert actual[2]['version'] == "1.2.3"
+        assert actual[3]['version'] == "1.2.3"
+
+
+    def test_meta_escaped_string(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': "h1",
+                'lvl1': 'h2',
+                'lvl2': 'h3',
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:string" content='"ok"'
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 4
+        assert actual[0]['string'] == "ok"
+        assert actual[1]['string'] == "ok"
+        assert actual[2]['string'] == "ok"
+        assert actual[3]['string'] == "ok"

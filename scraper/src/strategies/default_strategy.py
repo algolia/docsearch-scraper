@@ -9,6 +9,7 @@ from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
 from .hierarchy import Hierarchy
 from ..config.urls_parser import UrlsParser
+from ..helpers import is_number,to_json
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -143,7 +144,11 @@ class DefaultStrategy(AbstractStrategy):
                 content = meta_node.get('content')
                 if name and name.startswith('docsearch:') and content:
                     name = name.replace('docsearch:', '')
-                    record[name] = json.loads(content)
+                    jsonized = to_json(content)
+                    if jsonized:
+                        record[name] = jsonized
+                    else:
+                        record[name] = content
 
             if current_page_url is not None:
                 # Add variables to the record
