@@ -37,6 +37,6 @@ def is_number(s):
 def to_json(my_json):
     try:
         jsonized = json.loads(my_json)
-    except ValueError, e:
+    except ValueError:
         return None
     return jsonized
