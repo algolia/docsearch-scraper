@@ -57,7 +57,7 @@ def to_pkgdown_config(config, urls=None):
 
 def to_vuepress_config(config):
     config["selectors"]["lvl0"] = OrderedDict((
-        ("selector", "p.sidebar-heading.open"),
+        ("selector", "ul.sidebar-links > li p.open"),
         ("global", True),
         ("default_value", "Documentation")
     ))
