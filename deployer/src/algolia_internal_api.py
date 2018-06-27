@@ -24,7 +24,7 @@ def get_headers():
 
 def get_application_rights():
     app_id = environ.get('APPLICATION_ID_PROD')
-    endpoint = get_endpoint('/applications/' + app_id)#, '?fields=application_rights')
+    endpoint = get_endpoint('/applications/' + app_id)  # , '?fields=application_rights')
 
     r = requests.get(endpoint, headers=get_headers())
 
@@ -45,7 +45,6 @@ def get_indices_for_right(right):
     if right is not None:
         return right['indices']
     return []
-
 
 
 def add_user_to_index(index_name, user_email):
@@ -73,7 +72,7 @@ def add_user_to_index(index_name, user_email):
 
     payload = {
         'application_right': {
-            'application_id': 13240,  # website internal docsearch app id
+            'application_id': 13240,  # website internal DocSearch app id
             'user_email': user_email,
             'indices': indices,
             'analytics': True
@@ -81,8 +80,7 @@ def add_user_to_index(index_name, user_email):
     }
     headers = get_headers();
 
-
-    # User has already access to some other indicies
+    # User has already access to some other indices
     if right:
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
@@ -92,14 +90,15 @@ def add_user_to_index(index_name, user_email):
     endpoint = get_endpoint('/application_rights/')
     response = requests.post(endpoint, json=payload, headers=headers)
     data = response.json()
-    invitation_url = data['user']['invitation_url']
+    invitation_url = data['user']['invitation_url'] if data['user']['invitation_url'] else None
 
     # User does not have an Algolia account, they must follow this invitation url
     if invitation_url:
         return invitation_url
-    
+
     # User has an Algolia account, they have been added to the index
     return True
+
 
 def remove_user_from_index(config, email):
     right = get_right_for_email(email)
@@ -119,4 +118,3 @@ def remove_user_from_index(config, email):
         }, headers=get_headers())
     else:
         requests.delete(get_endpoint('/application_rights/' + str(right['id'])), headers=get_headers())
-

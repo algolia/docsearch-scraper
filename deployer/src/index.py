@@ -116,7 +116,7 @@ def deploy_configs(added, changed, removed, changed_attributes, force_deploy=Fal
                 print("")
                 for current_config_name in added:
                     config_manager.add_config(current_config_name)
-                reports.append({ 'title': 'Added connectors', 'text': added_log })
+                reports.append({'title': 'Added connectors', 'text': added_log})
 
             if len(changed) > 0:
                 print("")
