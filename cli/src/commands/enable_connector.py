@@ -1,5 +1,6 @@
 from .abstract_command import AbstractCommand
 
+
 class EnableConnector(AbstractCommand):
     def get_name(self):
         return 'connector:enable'
@@ -24,4 +25,3 @@ class EnableConnector(AbstractCommand):
             'title': 'Enable connectors',
             'text': '- ' + connector_name
         }])
-
