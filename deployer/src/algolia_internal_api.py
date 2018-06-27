@@ -40,6 +40,9 @@ def get_right_for_email(email):
         if right['user']['email'] == email:
             return right
 
+    print email + " has no rights on the app"
+    return None
+
 
 def get_indices_for_right(right):
     if right is not None:
@@ -85,12 +88,13 @@ def add_user_to_index(index_name, user_email):
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
         return True
-
     # Adding user for the first time
     endpoint = get_endpoint('/application_rights/')
+
     response = requests.post(endpoint, json=payload, headers=headers)
+    print response.request
     data = response.json()
-    invitation_url = data['user']['invitation_url'] if data['user']['invitation_url'] else None
+    invitation_url = data['user']['invitation_url'] if hasattr(data, 'user') and hasattr(data['user'], 'invitation_url') else None
 
     # User does not have an Algolia account, they must follow this invitation url
     if invitation_url:
