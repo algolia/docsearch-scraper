@@ -69,6 +69,7 @@ def add_user_to_index(index_name, user_email):
 
     # User is already added to this index
     if index_name in indices:
+        print user_email + " has already access to " + index_name;
         return None;
 
     indices.append(index_name)
@@ -87,18 +88,24 @@ def add_user_to_index(index_name, user_email):
     if right:
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
+        print user_email + " has already access to other indices, analytics granted";
         return True
     # Adding user for the first time
     endpoint = get_endpoint('/application_rights/')
 
     response = requests.post(endpoint, json=payload, headers=headers)
-    print response.request
     data = response.json()
-    invitation_url = data['user']['invitation_url'] if hasattr(data, 'user') and hasattr(data['user'], 'invitation_url') else None
 
     # User does not have an Algolia account, they must follow this invitation url
-    if invitation_url:
+    if 'user' in data and 'invitation_url' in data['user']:
+        invitation_url = data['user']['invitation_url']
+        if invitation_url is not None:
+            print "Link to create the account for " + user_email + " is " + invitation_url
+        else:
+            print user_email + " has been granted access to " + index_name
         return invitation_url
+
+    print user_email + " has been granted access to " + index_name + " please check it"
 
     # User has an Algolia account, they have been added to the index
     return True
@@ -106,6 +113,9 @@ def add_user_to_index(index_name, user_email):
 
 def remove_user_from_index(config, email):
     right = get_right_for_email(email)
+    if right is None:
+        return None
+
     indices = get_indices_for_right(right)
 
     if config in indices:
