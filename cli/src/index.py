@@ -6,7 +6,6 @@ from builtins import input
 env_file = getcwd() + '/.env'
 load_dotenv(env_file)
 
-
 from .helpers import get_color
 from .helpers import printer
 from .helpers import print_error
@@ -82,7 +81,6 @@ if 'WEBSITE_USERNAME' not in environ or len(environ['WEBSITE_USERNAME']) == 0:
 if 'WEBSITE_PASSWORD' not in environ or len(environ['WEBSITE_PASSWORD']) == 0:
     ADMIN = False
 
-
 cmds = []
 
 cmds.append(BootstrapConfig())
@@ -150,7 +148,8 @@ def print_usage(no_ansi=False):
             if no_ansi:
                 printer("  " + cmd.get_name() + (' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
             else:
-                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(), no_ansi)
+                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(),
+                        no_ansi)
 
 
 def find_command(name, cmds):

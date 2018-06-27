@@ -15,4 +15,3 @@ class DeployConfigs(AbstractCommand):
         else:
             from deployer.src.index import deploy_config
             deploy_config(unicode(args[0]))
-
