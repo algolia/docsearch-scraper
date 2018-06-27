@@ -67,7 +67,6 @@ def _commit_push(config_name, action, config_dir):
     os.chdir(config_dir)
 
     with open(os.devnull, 'w') as dev_null:
-
         sp.call(['git', 'pull', '-r', 'origin', 'master'], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
         sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
