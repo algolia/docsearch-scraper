@@ -150,6 +150,9 @@ class DefaultStrategy(AbstractStrategy):
                     else:
                         record[name] = content
 
+                    if name == "version":
+                        record[name]=str(record[name])
+
             if current_page_url is not None:
                 # Add variables to the record
                 for attr, value, url_without_variables in UrlsParser.get_url_variables(current_page_url, self.config.start_urls):

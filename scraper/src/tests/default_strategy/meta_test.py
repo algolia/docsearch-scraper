@@ -189,6 +189,38 @@ class TestMeta:
         assert actual[2]['version'] == "1.2.3"
         assert actual[3]['version'] == "1.2.3"
 
+    def test_meta_numbered_version(self):
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                'lvl0': "h1",
+                'content': 'p'
+            }
+        })
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:version" content='1.0'
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+
+        # First record has the global H1
+        assert len(actual) == 2
+        assert actual[0]['version'] == "1.0"
+        assert actual[1]['version'] != 1
+
 
     def test_meta_escaped_string(self):
         # Given
