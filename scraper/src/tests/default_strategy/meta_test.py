@@ -200,7 +200,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
-                <meta name="docsearch:version" content='1.2'
+                <meta name="docsearch:version" content='1.0'
             </header>
             <body>
                 <h1>Foo</h1>
@@ -218,8 +218,8 @@ class TestMeta:
 
         # First record has the global H1
         assert len(actual) == 2
-        assert actual[0]['version'] == "1.2"
-        assert actual[1]['version'] != 1.2
+        assert actual[0]['version'] == "1.0"
+        assert actual[1]['version'] != 1
 
 
     def test_meta_escaped_string(self):
