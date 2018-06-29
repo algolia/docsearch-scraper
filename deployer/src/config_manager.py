@@ -96,15 +96,12 @@ class ConfigManager:
             if "conversation_id" in config:
                 cuid = config["conversation_id"][0]
 
-                # Add email(s) to the private config
+                # Add email(s) to the private config & Grant access to Analytics
                 conversation = get_conversation(cuid)
                 emails_from_conv = get_emails_from_conversation(conversation)
-                emails.add(config_name, self.private_dir, emails_to_add=emails_from_conv)
+                analytics_statuses=emails.add(config_name, self.private_dir, emails_to_add=emails_from_conv)
 
-                # Grant access to Analytics
-                user_email = emails_from_conv[0]
-                analytics_status = add_user_to_index(config_name, user_email)
-                note_content = snippeter.get_email_for_config(config_name, analytics_status)
+                note_content = snippeter.get_email_for_config(config_name, analytics_statuses)
 
                 add_note(cuid, note_content)
 
@@ -112,9 +109,10 @@ class ConfigManager:
                     get_conversation_url_from_cuid(cuid)))
 
             else:
-                print(snippeter.get_email_for_config(config_name))
                 if helpers.confirm('\nDo you want to add emails for {}?'.format(config_name)):
-                    emails.add(config_name, self.private_dir)
+                    analytics_statuses =emails.add(config_name, self.private_dir)
+                    note_content = snippeter.get_email_for_config(config_name, analytics_statuses)
+                    print(snippeter.get_email_for_config(note_content))
 
         def update_config(self, config_name):
             config_id = str(self.inverted_actual_configs[config_name])

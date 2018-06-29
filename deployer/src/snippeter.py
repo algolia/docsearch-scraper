@@ -14,7 +14,7 @@ def _is_automatically_updated(config, attribute):
     return False
 
 
-def get_email_for_config(config, analytics_status=None):
+def get_email_for_config(config, analytics_statuses=None):
     base_template = """Hi there,
 
 Congratulations, your search is now ready!
@@ -58,11 +58,17 @@ Have a nice day :)"""
 
     # Let the user know how they can access their Analytics
     analytics_details = ''
-    if isinstance(analytics_status, basestring):
-        analytics_details = '- You can get access to the full algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status
-    else:
-        analytics_details = '- You can see the full algolia analytics for your DocSearch index by selecting the application DOCSEARCH from your algolia dashboard';
-
+    print "analytics_statuses"
+    print analytics_statuses
+    if isinstance(analytics_statuses, dict):
+        for email, analytics_status in analytics_statuses.iteritems():
+            print email
+            print analytics_status
+            print type(analytics_status)
+            if isinstance(analytics_status, basestring):
+                analytics_details += '- ' + email + ' can get access to the full algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
+            else:
+                analytics_details += '- ' + email + ' can see the full algolia analytics for your DocSearch index by selecting the application DOCSEARCH from the algolia dashboard (account already created)\n';
 
     facets = algolia_helper.get_facets(config)
 

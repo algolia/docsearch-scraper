@@ -5,7 +5,7 @@ from collections import OrderedDict
 import json
 
 from builtins import input
-from . import helpers
+from deployer.src.algolia_internal_api import add_user_to_index
 
 
 def _prompt_command(emails):
@@ -111,25 +111,45 @@ def _prompt_emails(config_name, config_dir):
 
 
 def add(config_name, config_dir, emails_to_add=None):
+    """Add email to the config. It also grant the analytics to the emails
+
+        Args:
+            config_name: The name of the index
+            config_dir: The path to the configuration directory
+            (optional) emails_to_add=Arrays of emails to add. If none, an interactive shell will ask for them
+
+        Returns:
+            A dict of results regarding the granting operation for every email {email : email's status}
+                Status:
+                    - True if the user was successfully added
+                    - None if the user was already given access to this index
+                    - {url} a string pointing to an invitation link if the user does not
+                    yet have an Algolia account
+        """
+
+    analytics_stastuses={}
     if emails_to_add and len(emails_to_add) > 0:
         new_file = _write(emails_to_add, config_name, config_dir)
-        add_emails(config_name, emails_to_add)
+        for email in emails_to_add:
+            analytics_stastuses[email]=add_user_to_index(config_name, email)
     else:
         emails = _prompt_emails(config_name, config_dir)
         new_file = _write(emails, config_name, config_dir)
-        add_emails(config_name, emails)
+        for email in emails:
+            analytics_stastuses[email]=add_user_to_index(config_name, email)
 
     if new_file:
         _commit_push(config_name, 'Add', config_dir)
     else:
         _commit_push(config_name, 'Update', config_dir)
 
+    return analytics_stastuses
 
-def add_emails(config_name, emails):
-    from deployer.src.algolia_internal_api import add_user_to_index
 
-    for email in emails:
-        add_user_to_index(config_name, email)
+# def add_emails(config_name, emails):
+#
+#     for email in emails:
+#         add_user_to_index(config_name, email)
 
 
 def delete_emails(config_name, emails):
