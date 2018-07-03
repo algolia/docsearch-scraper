@@ -99,6 +99,7 @@ def _write(emails, config_name, config_dir):
 
 
 def _prompt_emails(config_name, config_dir):
+    print "If you \033[94mremove emails, please use ./docsearch invite:remove_user\033\033[0m"
     emails = _retrieve(config_name, config_dir)
 
     while True:
@@ -111,25 +112,32 @@ def _prompt_emails(config_name, config_dir):
 
 
 def add(config_name, config_dir, emails_to_add=None):
+    analytics_statuses = {}
     if emails_to_add and len(emails_to_add) > 0:
         new_file = _write(emails_to_add, config_name, config_dir)
-        add_emails(config_name, emails_to_add)
+        analytics_statuses = add_emails(config_name, emails_to_add)
     else:
         emails = _prompt_emails(config_name, config_dir)
         new_file = _write(emails, config_name, config_dir)
-        add_emails(config_name, emails)
+        analytics_statuses = add_emails(config_name, emails)
 
     if new_file:
         _commit_push(config_name, 'Add', config_dir)
     else:
         _commit_push(config_name, 'Update', config_dir)
 
+    return analytics_statuses
+
 
 def add_emails(config_name, emails):
+    analytics_statuses = {}
+
     from deployer.src.algolia_internal_api import add_user_to_index
 
     for email in emails:
-        add_user_to_index(config_name, email)
+        analytics_statuses[email] = add_user_to_index(config_name, email)
+
+    return analytics_statuses
 
 
 def delete_emails(config_name, emails):
