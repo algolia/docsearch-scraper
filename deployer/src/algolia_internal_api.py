@@ -2,6 +2,8 @@ import requests
 from os import environ
 from base64 import b64encode
 
+APPLICATION_ID_PROD_INTERNAL = 13240;  # website internal DocSearch app id
+
 
 def get_endpoint(endpoint, params=''):
     base_endpoint = environ.get('BASE_INTERNAL_ENDPOINT')
@@ -76,7 +78,7 @@ def add_user_to_index(index_name, user_email):
 
     payload = {
         'application_right': {
-            'application_id': 13240,  # website internal DocSearch app id
+            'application_id': APPLICATION_ID_PROD_INTERNAL,
             'user_email': user_email,
             'indices': indices,
             'analytics': True
@@ -121,7 +123,7 @@ def remove_user_from_index(config, email):
     if len(indices) > 0:
         requests.patch(get_endpoint('/application_rights/' + str(right['id'])), json={
             'application_right': {
-                'application_id': 13240,  # website internal docsearch app id
+                'application_id': APPLICATION_ID_PROD_INTERNAL,
                 'user_email': email,
                 'indices': indices,
                 'analytics': True
