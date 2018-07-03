@@ -98,13 +98,16 @@ def add_user_to_index(index_name, user_email):
     response = requests.post(endpoint, json=payload, headers=headers)
     data = response.json()
 
-    # User does not have an Algolia account, they must follow this invitation url
     if 'user' in data and 'invitation_url' in data['user']:
         invitation_url = data['user']['invitation_url']
-        print "Link to create the account for " + user_email + " is " + invitation_url
+
+        if invitation_url is not None:
+            print "Link to create an account for " + user_email + " is " + invitation_url
+        else:
+            print user_email + " is already registered (without any right), analytics granted to " + index_name;
         return invitation_url
 
-    print user_email + " is already registered, analytics granted to DOCSEARCH app and index: " + index_name;
+    print user_email + " is already registered, analytics granted to DOCSEARCH app and index: " + index_name + " please double check it";
 
     # User has an Algolia account, they have been added to the index
     return True
