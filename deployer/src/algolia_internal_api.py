@@ -88,7 +88,7 @@ def add_user_to_index(index_name, user_email):
     if right:
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
-        print user_email + " has already access to other indices, analytics granted";
+        print user_email + " is already registered on algolia dashboard (has right to other indices), analytics granted to " + index_name;
         return True
     # Adding user for the first time
     endpoint = get_endpoint('/application_rights/')
@@ -102,10 +102,10 @@ def add_user_to_index(index_name, user_email):
         if invitation_url is not None:
             print "Link to create the account for " + user_email + " is " + invitation_url
         else:
-            print user_email + " has been granted access to " + index_name
+            print user_email + " is already registered (without any right), analytics granted to " + index_name;
         return invitation_url
 
-    print user_email + " has been granted access to " + index_name + " please check it"
+    print user_email + " has been granted access to " + index_name + ", please double check"
 
     # User has an Algolia account, they have been added to the index
     return True
