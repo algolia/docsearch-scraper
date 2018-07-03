@@ -61,9 +61,9 @@ Have a nice day :)"""
     if isinstance(analytics_statuses, dict):
         for email, analytics_status in analytics_statuses.iteritems():
             if isinstance(analytics_status, basestring):
-                analytics_details += '- ' + email + ' can get access to the full algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
+                analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
-                analytics_details += '- ' + email + ' can see the full algolia analytics for your DocSearch index by selecting the application DOCSEARCH from the algolia dashboard (account already created)\n';
+                analytics_details += '- ' + email + ' can see the full Algolia analytics for your DocSearch index by selecting the application DOCSEARCH from the Algolia dashboard (account already created)\n';
 
 
     facets = algolia_helper.get_facets(config)
