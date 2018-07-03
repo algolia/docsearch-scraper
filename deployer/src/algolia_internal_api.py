@@ -1,7 +1,7 @@
 import requests
 from os import environ
 from base64 import b64encode
-import inspect
+
 
 def get_endpoint(endpoint, params=''):
     base_endpoint = environ.get('BASE_INTERNAL_ENDPOINT')
@@ -64,10 +64,6 @@ def add_user_to_index(index_name, user_email):
           yet have an Algolia account
     """
 
-    curframe = inspect.currentframe()
-    calframe = inspect.getouterframes(curframe, 2)
-    print 'caller name:', calframe[1][3]
-
     right = get_right_for_email(user_email)
     indices = get_indices_for_right(right)
 
@@ -88,11 +84,11 @@ def add_user_to_index(index_name, user_email):
     }
     headers = get_headers();
 
-    # User has already access to some other indices, he must be already registered
+    # User has already access to some other indices
     if right:
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
-        print user_email + " is already registered on algolia dashboard (has right to other indices), analytics granted to " + index_name;
+        print user_email + " has already access to other indices, analytics granted";
         return True
     # Adding user for the first time
     endpoint = get_endpoint('/application_rights/')
@@ -106,10 +102,10 @@ def add_user_to_index(index_name, user_email):
         if invitation_url is not None:
             print "Link to create the account for " + user_email + " is " + invitation_url
         else:
-            print user_email + " is already registered (without any right), analytics granted to " + index_name;
+            print user_email + " has been granted access to " + index_name
         return invitation_url
 
-    print user_email + " has been granted access to " + index_name + ", please double check it"
+    print user_email + " has been granted access to " + index_name + " please check it"
 
     # User has an Algolia account, they have been added to the index
     return True
