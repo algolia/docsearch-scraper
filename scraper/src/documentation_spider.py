@@ -224,6 +224,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
     def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
         """Init method of a SiteMapSpider @Scrapy"""
+        self.sitemap_alternate_links = True
         self.sitemap_urls = sitemap_urls
         self.sitemap_rules = custom_sitemap_rules
         self._cbs = []
