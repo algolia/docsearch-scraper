@@ -61,6 +61,7 @@ class ConfigLoader(object):
 
     driver = None
 
+    sitemap_alternate_links = False
     sitemap_urls = []
     sitemap_urls_regexs = []
     force_sitemap_urls_crawling = False
