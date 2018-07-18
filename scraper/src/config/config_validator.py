@@ -33,6 +33,9 @@ class ConfigValidator(object):
         if self.config.use_anchors and not isinstance(self.config.use_anchors, bool):
             raise Exception('use_anchors should be boolean')
 
+        if self.config.sitemap_alternate_links and not isinstance(self.config.sitemap_alternate_links, bool):
+            raise Exception('sitemap_alternate_links should be boolean')
+
         if self.config.sitemap_urls_regexs and not self.config.sitemap_urls:
             raise Exception('You gave an regex to parse sitemap but you didn\'t provide a sitemap url')
 
