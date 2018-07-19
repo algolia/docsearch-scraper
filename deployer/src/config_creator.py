@@ -1,12 +1,26 @@
 from collections import OrderedDict
 import tldextract
+import re
 from . import helpers
 from . import helpdesk_helper
 
 
-def to_docusaurus_config(config):
+def extract_root_from_input(input_string):
+    # We cant parse the url since user might have not enter a proper link
+    domain = re.match(".+?([^\/]\/(?!\/))", input_string)  # extracting substring before the first isolated / (not //)
+    return domain.group() if domain else input_string
+
+
+def to_docusaurus_config(config, urls=None):
+    if urls:
+        config["sitemap_urls"] = [extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_alternate_links"] = True
+        config["custom_settings"] = {"attributesForFaceting": ["language",
+                                                               "version"]
+                                     }
+
     config["selectors"]["lvl0"] = OrderedDict((
-        ("selector", "//*[contains(@class,'navGroupActive')]//a[contains(@class,'navItemActive')]/preceding::h3[1]"),
+        ("selector", "//*[contains(@class,'navGroups')]//*[contains(@class,'navListItemActive')]/preceding::h3[1]"),
         ("type", "xpath"),
         ("global", True),
         ("default_value", "Documentation")
@@ -33,10 +47,8 @@ def to_gitbook_config(config):
 
 
 def to_pkgdown_config(config, urls=None):
-    start_url = None
-
     if urls:
-        start_url = urls[0]
+        config["sitemap_urls"] = [extract_root_from_input(urls[0]) + "sitemap.xml"]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector", ".contents h1"),
@@ -48,10 +60,8 @@ def to_pkgdown_config(config, urls=None):
     config["selectors"]["lvl4"] = ".contents h5"
     config["selectors"]["text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
     config["selectors_exclude"] = [".dont-index"]
-    config["sitemap_urls"] = [start_url + "sitemap.xml"]
     config["custom_settings"] = {"separatorsToIndex": "_"}
     # config["stop_urls"] = [start_url + "index.html", "LICENSE-text.html"]
-    config["sitemap_urls"] = [start_url + "sitemap.xml"]
     return config
 
 
@@ -103,7 +113,7 @@ def create_config(u=None):
         u = url_from_conversation
 
         if helpdesk_helper.is_docusaurus_conversation(conversation):
-            config = to_docusaurus_config(config)
+            config = to_docusaurus_config(config, urls)
         elif helpdesk_helper.is_gitbook_conversation(conversation):
             config = to_gitbook_config(config)
         elif helpdesk_helper.is_pkgdown_conversation(conversation):
