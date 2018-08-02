@@ -104,7 +104,7 @@ def add_user_to_index(index_name, user_email):
         if invitation_url is not None:
             print "Link to create an account for " + user_email + " is " + invitation_url
         else:
-            print user_email + " is already registered (without any right), analytics granted to " + index_name;
+            print user_email + " is already registered (without any right), analytics granted to the DocSearch index" + index_name;
         return invitation_url
 
     print user_email + " is already registered, analytics granted to DOCSEARCH app and index: " + index_name + " please double check it";

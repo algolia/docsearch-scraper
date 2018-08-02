@@ -63,7 +63,7 @@ Have a nice day :)"""
             if isinstance(analytics_status, basestring):
                 analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
-                analytics_details += '- ' + email + ' can see the full Algolia analytics for your DocSearch index by selecting the application DOCSEARCH from the Algolia dashboard (account already created)\n';
+                analytics_details += '- ' + email + ' has already an Algolia acount. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)';
 
 
     facets = algolia_helper.get_facets(config)

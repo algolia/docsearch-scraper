@@ -6,7 +6,7 @@ class InviteRemoveUser(AbstractCommand):
         return 'invite:remove_user'
 
     def get_description(self):
-        return 'Uninvite email\'s invitation for an index'
+        return 'Uninvite to an DocSearch index an email'
 
     def get_usage(self):
         return super(InviteRemoveUser, self).get_usage() + " config email"
