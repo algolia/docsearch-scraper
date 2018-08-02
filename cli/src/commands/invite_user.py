@@ -6,7 +6,7 @@ class InviteUser(AbstractCommand):
         return 'invite:user'
 
     def get_description(self):
-        return 'Invite an email for an index'
+        return 'Invite to an DocSearch index an email'
 
     def get_usage(self):
         return super(InviteUser, self).get_usage() + " config email"
