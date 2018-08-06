@@ -113,24 +113,26 @@ def add_user_to_index(index_name, user_email):
     return True
 
 
-def remove_user_from_index(config, email):
-    right = get_right_for_email(email)
+def remove_user_from_index(index_name, user_email):
+    right = get_right_for_email(user_email)
     if right is None:
         return None
 
     indices = get_indices_for_right(right)
 
-    if config in indices:
-        indices.remove(config)
+    if index_name in indices:
+        indices.remove(index_name)
 
     if len(indices) > 0:
         requests.patch(get_endpoint('/application_rights/' + str(right['id'])), json={
             'application_right': {
                 'application_id': APPLICATION_ID_PROD_INTERNAL,
-                'user_email': email,
+                'user_email': user_email,
                 'indices': indices,
                 'analytics': True
             }
         }, headers=get_headers())
     else:
         requests.delete(get_endpoint('/application_rights/' + str(right['id'])), headers=get_headers())
+
+    print user_email + " uninvite from " + index_name
