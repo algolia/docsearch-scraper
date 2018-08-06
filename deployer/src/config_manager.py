@@ -12,6 +12,8 @@ from . import fetchers
 
 from helpdesk_helper import add_note, get_conversation, get_emails_from_conversation, get_conversation_url_from_cuid
 
+from deployer.src.algolia_internal_api import remove_user_from_index
+
 
 class ConfigManager:
     instance = None
@@ -144,5 +146,12 @@ class ConfigManager:
             algolia_helper.delete_docsearch_key(config_name)
             algolia_helper.delete_docsearch_index(config_name)
             algolia_helper.delete_docsearch_index(config_name + '_tmp')
+            analytics_keys = algolia_helper.list_index_analytics_key(config_name)
+            for key in analytics_keys:
+                description = key['description'].split()
+                email = description[4]
+                print email
+                if email is not None:
+                    remove_user_from_index(config_name, email)
 
             emails.delete(config_name, self.private_dir)
