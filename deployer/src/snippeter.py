@@ -41,7 +41,6 @@ You're now a few steps away from having it working on your website:
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
 - You can also check your configuration in our github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
 {{ANALYTICS}}
-
 Please open a pull request if want to leverage your configuration!
 
 Feel free to get back to us if you have any issues or questions regarding the integration.
@@ -63,7 +62,7 @@ Have a nice day :)"""
             if isinstance(analytics_status, basestring):
                 analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
-                analytics_details += '- ' + email + ' has already an Algolia acount. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)';
+                analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
 
 
     facets = algolia_helper.get_facets(config)
