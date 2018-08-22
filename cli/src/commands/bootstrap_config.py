@@ -39,7 +39,7 @@ class BootstrapConfig(AbstractCommand):
             file.write(self.config_to_s(config))
             file.close()
 
-            print file_path + " has been created"
+            print(file_path + " has been created")
 
     def config_to_s(self, config):
         import json
