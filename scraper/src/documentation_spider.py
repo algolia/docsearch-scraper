@@ -7,7 +7,7 @@ from scrapy.http import Request
 
 # Import for the sitemap behavior
 from scrapy.spiders import SitemapSpider
-from scrapy.spiders.sitemap import regex, iterloc
+from scrapy.spiders.sitemap import regex
 import six
 import re
 
@@ -78,7 +78,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.remove_get_params = config.remove_get_params
         self.strict_redirect = config.strict_redirect
         self.nb_hits_max = config.nb_hits_max
-
         super(DocumentationSpider, self).__init__(*args, **kwargs)
 
         # Get rid of scheme consideration
@@ -110,8 +109,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 print("Neither start url nor regex: default, we scrap all")
                 sitemap_rules = [('.*', 'parse_from_sitemap')]
 
-            self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
+            self.__init_sitemap_(config.sitemap_urls, sitemap_rules, config.sitemap_alternate_links)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
+
         # END _init_ part from SitemapSpider
         super(DocumentationSpider, self)._compile_rules()
 
@@ -222,8 +222,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
                 # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
 
-    def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules):
+    def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules, sitemap_alternate_links):
         """Init method of a SiteMapSpider @Scrapy"""
+        self.sitemap_alternate_links = sitemap_alternate_links
         self.sitemap_urls = sitemap_urls
         self.sitemap_rules = custom_sitemap_rules
         self._cbs = []
