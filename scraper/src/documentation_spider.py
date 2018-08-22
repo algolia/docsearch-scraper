@@ -23,6 +23,7 @@ except ImportError:
 
 from scrapy.exceptions import CloseSpider
 
+
 class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
     DocumentationSpider
@@ -106,7 +107,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 for regex in self.sitemap_urls_regexs:
                     sitemap_rules.append((regex, 'parse_from_sitemap'))
             else:  # Neither start url nor regex: default, we parse all
-                print "Neither start url nor regex: default, we scrap all"
+                print("Neither start url nor regex: default, we scrap all")
                 sitemap_rules = [('.*', 'parse_from_sitemap')]
 
             self.__init_sitemap_(config.sitemap_urls, sitemap_rules)
@@ -142,7 +143,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         DocumentationSpider.NB_INDEXED += len(records)
 
         # Arbitrary limit
-        if  self.nb_hits_max > 0 and DocumentationSpider.NB_INDEXED > self.nb_hits_max:
+        if self.nb_hits_max > 0 and DocumentationSpider.NB_INDEXED > self.nb_hits_max:
             DocumentationSpider.NB_INDEXED = 0
             self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(int(self.nb_hits_max))
             raise ValueError(self.reason_to_stop)
@@ -198,14 +199,13 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         Only for start_urls and sitemap_urls
         """
         if hasattr(failure.value, 'response'):
-            if hasattr(failure.value.response,'status'):
+            if hasattr(failure.value.response, 'status'):
                 self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
             else:
                 self.logger.error('Failure : %s', failure.value)
 
         else:
             self.logger.error('Failure without response %s', failure.value)
-
 
         if failure.check(HttpError):
             # these exceptions come from HttpError spider middleware
