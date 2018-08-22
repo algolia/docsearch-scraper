@@ -99,7 +99,7 @@ def _write(emails, config_name, config_dir):
 
 
 def _prompt_emails(config_name, config_dir):
-    print "If you \033[94mremove emails, please use ./docsearch invite:remove_user\033\033[0m"
+    print("If you \033[94mremove emails, please use ./docsearch invite:remove_user\033\033[0m")
     emails = _retrieve(config_name, config_dir)
 
     while True:

@@ -81,21 +81,21 @@ def deploy_configs(added, changed, removed, changed_attributes, force_deploy=Fal
     updated_log = ""
     removed_log = ""
 
-    if len(added) > 0:
+    if len(added):
         print("")
         print("Will be \033[1;32madded\033[0m :")
         for config in added:
             added_log += " - " + config + "\n"
         print(added_log)
 
-    if len(removed) > 0:
+    if len(removed):
         print("")
         print("Will be \033[1;31mdeleted\033[0m :")
         for config in removed:
             removed_log += " - " + config + "\n"
         print(removed_log)
 
-    if len(changed) > 0:
+    if len(changed):
         print("")
         print("Will be \033[1;33mupdated\033[0m :")
         for config in changed:
@@ -108,17 +108,17 @@ def deploy_configs(added, changed, removed, changed_attributes, force_deploy=Fal
 
     print("")
 
-    if len(added) > 0 or len(removed) > 0 or len(changed) > 0:
+    if len(added) or len(removed) > 0 or len(changed):
         if force_deploy or helpers.confirm() is True:
             reports = []
 
-            if len(added) > 0:
+            if len(added):
                 print("")
                 for current_config_name in added:
                     config_manager.add_config(current_config_name)
                 reports.append({'title': 'Added connectors', 'text': added_log})
 
-            if len(changed) > 0:
+            if len(changed):
                 print("")
 
                 for current_config_name in changed:
@@ -128,7 +128,7 @@ def deploy_configs(added, changed, removed, changed_attributes, force_deploy=Fal
                     'text': updated_log
                 })
 
-            if len(removed) > 0:
+            if len(removed):
                 for current_config_name in removed:
                     config_manager.remove_config(current_config_name)
 

@@ -45,7 +45,7 @@ def batch_sync_helpdesk(args):
 
     if len(unfound_conf):
         for conf in unfound_conf:
-            print conf
+            print(conf)
 
 
 def pick_configs(filter_conf):
@@ -133,8 +133,7 @@ def key_sort(attr):
 
 
 def process_when_many_results(search_results, conf):
-    print ""
-    print conf["index_name"]
+    print("\n" + conf["index_name"])
     for conv in search_results.get("items"):
         print helpdesk_helper.get_conversation_url_from_cuid(conv.get("id").__str__())
 

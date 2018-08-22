@@ -58,12 +58,11 @@ Have a nice day :)"""
     # Let the user know how they can access their Analytics
     analytics_details = ''
     if isinstance(analytics_statuses, dict):
-        for email, analytics_status in analytics_statuses.iteritems():
+        for email, analytics_status in list(analytics_statuses.items()):
             if isinstance(analytics_status, basestring):
                 analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
                 analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
-
 
     facets = algolia_helper.get_facets(config)
 
@@ -78,7 +77,7 @@ Have a nice day :)"""
         example_code = []
         example_options = []
 
-        for name, values in facets.iteritems():
+        for name, values in list(facets.items()):
             if name == "no_variables":
                 continue
             keys = values.keys()
