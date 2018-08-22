@@ -30,7 +30,7 @@ queuelib==1.4.2
 ratelimit==1.4.1
 requests==2.18.4
 requests-file==1.4.2
-Scrapy==1.4.0
+Scrapy==1.5.0
 selenium==2.53.6
 service-identity==17.0.0
 six==1.11.0
