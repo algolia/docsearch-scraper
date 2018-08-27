@@ -2,7 +2,7 @@ import requests
 from os import environ
 from base64 import b64encode
 
-APPLICATION_ID_PROD_INTERNAL = 13240;  # website internal DocSearch app id
+APPLICATION_ID_PROD_INTERNAL = environ.get('APPLICATION_ID_PROD_INTERNAL', None);  # website internal DocSearch app id
 
 
 def get_endpoint(endpoint, params=''):
@@ -91,7 +91,7 @@ def add_user_to_index(index_name, user_email):
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
         print (
-        user_email + " is already registered on algolia dashboard (has right to other DOCSEARCH indices), analytics granted to " + index_name)
+            user_email + " is already registered on algolia dashboard (has right to other DOCSEARCH indices), analytics granted to " + index_name)
         return True
     # Adding user for the first time
     endpoint = get_endpoint('/application_rights/')
@@ -106,11 +106,11 @@ def add_user_to_index(index_name, user_email):
             print("Link to create an account for " + user_email + " is " + invitation_url)
         else:
             print(
-            user_email + " is already registered (without any right), analytics granted to the DocSearch index " + index_name)
+                user_email + " is already registered (without any right), analytics granted to the DocSearch index " + index_name)
         return invitation_url
 
     print(
-    user_email + " is already registered, analytics granted to DOCSEARCH app and index: " + index_name + " please double check it")
+        user_email + " is already registered, analytics granted to DOCSEARCH app and index: " + index_name + " please double check it")
 
     # User has an Algolia account, they have been added to the index
     return True

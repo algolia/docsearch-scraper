@@ -1,11 +1,12 @@
 import os
 from algoliasearch import algoliasearch
 
-app_id = os.environ['APPLICATION_ID'] if 'APPLICATION_ID' in os.environ else ''
-api_key = os.environ['API_KEY'] if 'API_KEY' in os.environ else ''
+app_id = os.environ.get('APPLICATION_ID', '')
 
-app_id_prod = os.environ['APPLICATION_ID_PROD'] if 'APPLICATION_ID_PROD' in os.environ else ''
-api_key_prod = os.environ['API_KEY_PROD'] if 'API_KEY_PROD' in os.environ else ''
+api_key = os.environ.get('API_KEY', '')
+
+app_id_prod = os.environ.get('APPLICATION_ID_PROD', '')
+api_key_prod = os.environ.get('API_KEY_PROD', '')
 
 algolia_client = algoliasearch.Client(app_id, api_key)
 algolia_client_prod = algoliasearch.Client(app_id_prod, api_key_prod)
@@ -30,8 +31,8 @@ def get_facets(config):
 
 
 def remove_crawling_issue(config):
-    app_id = os.environ['APPLICATION_ID_PROD'] if 'APPLICATION_ID_PROD' in os.environ else ''
-    api_key = os.environ['API_KEY_PROD'] if 'API_KEY_PROD' in os.environ else ''
+    app_id = os.environ.get('APPLICATION_ID_PROD', '')
+    api_key = os.environ.get('API_KEY_PROD', '')
 
     client = algoliasearch.Client(app_id, api_key)
     index = client.init_index(config)
