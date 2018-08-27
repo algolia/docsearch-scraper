@@ -71,7 +71,8 @@ def to_vuepress_config(config):
         ("global", True),
         ("default_value", "Documentation")
     ))
-
+    config["custom_settings"] = {"attributesForFaceting": ["lang"]
+                                 }
     config["selectors"]["lvl1"] = ".content h1"
     config["selectors"]["lvl2"] = ".content h2"
     config["selectors"]["lvl3"] = ".content h3"
@@ -85,7 +86,6 @@ def to_vuepress_config(config):
         ("default_value", "Documentation")
     ))
 
-    config["custom_settings"]["attributesForFaceting"] = ["lang"]
 
     config["scrap_start_urls"] = False
     config["strip_chars"] = " .,;:#"
