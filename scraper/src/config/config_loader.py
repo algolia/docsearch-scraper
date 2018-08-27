@@ -8,7 +8,6 @@ import json
 import os
 import copy
 
-
 from .config_validator import ConfigValidator
 from .nb_hits_updater import NbHitsUpdater
 from .urls_parser import UrlsParser
@@ -108,8 +107,8 @@ class ConfigLoader(object):
 
     def _parse(self):
         # Parse Env
-        self.app_id = os.environ['APPLICATION_ID']
-        self.api_key = os.environ['API_KEY']
+        self.app_id = os.environ.get('APPLICATION_ID', None)
+        self.api_key = os.environ.get('API_KEY', None)
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)

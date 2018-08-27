@@ -1,11 +1,14 @@
 import os
 
-USERNAME = os.environ['WEBSITE_USERNAME'] if 'WEBSITE_USERNAME' in os.environ else ''
-PASSWORD = os.environ['WEBSITE_PASSWORD'] if 'WEBSITE_PASSWORD' in os.environ else ''
+USERNAME = os.environ.get('WEBSITE_USERNAME', '')
+PASSWORD = os.environ.get('WEBSITE_PASSWORD', '')
 
-slack_hook = os.environ['SLACK_HOOK'] if 'SLACK_HOOK' in os.environ else ''
 
-base_url = 'https://www.algolia.com/api/1/docsearch'
+api_key_prod = os.environ.get('API_KEY_PROD', '')
+
+slack_hook = os.environ.get('SLACK_HOOK', '')
+
+base_url = os.environ.get('ALGOLIA_DOCSEARCH_API', None)
 
 
 def confirm(message="Confirm"):
