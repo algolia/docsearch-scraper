@@ -14,7 +14,7 @@ def _is_automatically_updated(config, attribute):
     return False
 
 
-def get_email_for_config(config):
+def get_email_for_config(config, analytics_statuses=None):
     base_template = """Hi there,
 
 Congratulations, your search is now ready!
@@ -40,7 +40,7 @@ You're now a few steps away from having it working on your website:
 - Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet to a CSS selector that targets your search input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
 - You can also check your configuration in our github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
-
+{{ANALYTICS}}
 Please open a pull request if want to leverage your configuration!
 
 Feel free to get back to us if you have any issues or questions regarding the integration.
@@ -55,6 +55,15 @@ Have a nice day :)"""
 
     base_example_template = "\n  For example if you want to refine the search to {{EXAMPLE_PHRASE}} just specify: 'facetFilters': [{{EXAMPLE_CODE}}]\n"
 
+    # Let the user know how they can access their Analytics
+    analytics_details = ''
+    if isinstance(analytics_statuses, dict):
+        for email, analytics_status in list(analytics_statuses.items()):
+            if isinstance(analytics_status, basestring):
+                analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
+            else:
+                analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
+
     facets = algolia_helper.get_facets(config)
 
     facet_template = ""
@@ -68,18 +77,19 @@ Have a nice day :)"""
         example_code = []
         example_options = []
 
-        for name, values in facets.iteritems():
+        for name, values in list(facets.items()):
             if name == "no_variables":
                 continue
             keys = values.keys()
             keys.sort()
 
             if len(keys) > 0:
-                updated = "is automatically fetched from your website" if _is_automatically_updated(configs[config], name) else "is hardcoded in the config"
-                facet_template += base_facet_template.replace('{{NAME}}', name)\
-                                                 .replace('{{CAPITALISE_NAME}}', name.upper())\
-                                                 .replace("{{UPDATED}}", updated)\
-                                                 .replace("{{VALUES}}", ', '.join(keys))
+                updated = "is automatically fetched from your website" if _is_automatically_updated(configs[config],
+                                                                                                    name) else "is hardcoded in the config"
+                facet_template += base_facet_template.replace('{{NAME}}', name) \
+                    .replace('{{CAPITALISE_NAME}}', name.upper()) \
+                    .replace("{{UPDATED}}", updated) \
+                    .replace("{{VALUES}}", ', '.join(keys))
 
                 example_phrase.append('the ' + name + ' "' + keys[0] + '"')
                 example_code.append("\"" + name + ":" + keys[0] + "\"")
@@ -87,15 +97,16 @@ Have a nice day :)"""
 
         if len(example_options) > 0:
             algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (', '.join(example_options)) + "] }"
-            facet_template += base_example_template.replace('{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase))\
-                                                   .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
+            facet_template += base_example_template.replace('{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase)) \
+                .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
 
     api_key = algolia_helper.get_docsearch_key(config)
     api_key = "### REPLACE ME ####" if api_key == 'Not found' else api_key
 
-    template = base_template.replace('{{API_KEY}}', api_key)\
-                            .replace('{{INDEX_NAME}}', config)\
-                            .replace('{{FACETS}}', facet_template)\
-                            .replace('{{ALGOLIA_OPTIONS}}', algolia_options)
+    template = base_template.replace('{{API_KEY}}', api_key) \
+        .replace('{{INDEX_NAME}}', config) \
+        .replace('{{FACETS}}', facet_template) \
+        .replace('{{ALGOLIA_OPTIONS}}', algolia_options) \
+        .replace('{{ANALYTICS}}', analytics_details)
 
     return template

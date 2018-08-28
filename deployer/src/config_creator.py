@@ -71,12 +71,21 @@ def to_vuepress_config(config):
         ("global", True),
         ("default_value", "Documentation")
     ))
+    config["custom_settings"] = {"attributesForFaceting": ["lang"]
+                                 }
     config["selectors"]["lvl1"] = ".content h1"
     config["selectors"]["lvl2"] = ".content h2"
     config["selectors"]["lvl3"] = ".content h3"
     config["selectors"]["lvl4"] = ".content h4"
     config["selectors"]["lvl5"] = ".content h5"
     config["selectors"]["text"] = ".content p, .content li"
+    config["selectors"]["lang"] = OrderedDict((
+        ("selector", "/html/@lang"),
+        ("type", "xpath"),
+        ("global", True),
+        ("default_value", "Documentation")
+    ))
+
 
     config["scrap_start_urls"] = False
     config["strip_chars"] = " .,;:#"

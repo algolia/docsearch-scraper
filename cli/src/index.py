@@ -6,7 +6,6 @@ from builtins import input
 env_file = getcwd() + '/.env'
 load_dotenv(env_file)
 
-
 from .helpers import get_color
 from .helpers import printer
 from .helpers import print_error
@@ -27,6 +26,8 @@ from .commands.get_logs import GetLogs
 from .commands.disable_connector import DisableConnector
 from .commands.enable_connector import EnableConnector
 from .commands.batch_sync_helpdesk import BatchSyncHelpdesk
+from .commands.invite_user import InviteUser
+from .commands.invite_removeuser import InviteRemoveUser
 
 if not path.isfile(env_file):
     print("")
@@ -80,7 +81,6 @@ if 'WEBSITE_USERNAME' not in environ or len(environ['WEBSITE_USERNAME']) == 0:
 if 'WEBSITE_PASSWORD' not in environ or len(environ['WEBSITE_PASSWORD']) == 0:
     ADMIN = False
 
-
 cmds = []
 
 cmds.append(BootstrapConfig())
@@ -103,6 +103,8 @@ if ADMIN:
     cmds.append(DeleteEmails())
     cmds.append(GetLogs())
     cmds.append(BatchSyncHelpdesk())
+    cmds.append(InviteUser())
+    cmds.append(InviteRemoveUser())
 
 
 def print_usage(no_ansi=False):
@@ -146,7 +148,8 @@ def print_usage(no_ansi=False):
             if no_ansi:
                 printer("  " + cmd.get_name() + (' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
             else:
-                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(), no_ansi)
+                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(),
+                        no_ansi)
 
 
 def find_command(name, cmds):
