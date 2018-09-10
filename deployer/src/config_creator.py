@@ -67,7 +67,7 @@ def to_pkgdown_config(config, urls=None):
 
 def to_vuepress_config(config):
     config["selectors"]["lvl0"] = OrderedDict((
-        ("selector", "ul.sidebar-links > li p.open"),
+        ("selector", "p.sidebar-heading.open"),
         ("global", True),
         ("default_value", "Documentation")
     ))
@@ -82,9 +82,9 @@ def to_vuepress_config(config):
     config["selectors"]["lang"] = OrderedDict((
         ("selector", "/html/@lang"),
         ("type", "xpath"),
-        ("global", True)
+        ("global", True),
+        ("default_value", "en-US")
     ))
-
 
     config["scrap_start_urls"] = False
     config["strip_chars"] = " .,;:#"
