@@ -18,7 +18,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
-                <meta name="docsearch:extra" content='12'
+                <meta name="docsearch:extra" content='12'>
             </header>
             <body>
                 <h1>Foo</h1>
@@ -34,7 +34,6 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
         assert len(actual) == 4
         assert actual[0]['extra'] == 12
         assert actual[1]['extra'] == 12
@@ -54,7 +53,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
            <html>
                <header>
-                   <meta name="docsearch:extra" value='["ruby","rails","python","php","symfony","javascript","java","scala","go","csharp"]'
+                   <meta name="docsearch:extra" value='["ruby","rails","python","php","symfony","javascript","java","scala","go","csharp"]'>
                </header>
                <body>
                    <h1>Foo</h1>
@@ -70,7 +69,6 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
         assert len(actual) == 4
         assert 'extra' not in actual[0]
         assert 'extra' not in actual[1]
@@ -90,7 +88,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
            <html>
                <header>
-                   <meta name="docsearch:extra" content='["ruby","rails","python","php","symfony","javascript","java","scala","go","csharp"]'
+                   <meta name="docsearch:extra" content='["ruby","rails","python","php","symfony","javascript","java","scala","go","csharp"]'>
                </header>
                <body>
                    <h1>Foo</h1>
@@ -106,7 +104,6 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
         assert len(actual) == 4
         assert actual[0]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
                                       "csharp"]
@@ -130,7 +127,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
-                <meta name="docsearch:version" content='1.2.3'
+                <meta name="docsearch:version" content='1.2.3'>
             </header>
             <body>
                 <h1>Foo</h1>
@@ -146,27 +143,24 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
         assert len(actual) == 4
         assert actual[0]['version'] == "1.2.3"
         assert actual[1]['version'] == "1.2.3"
         assert actual[2]['version'] == "1.2.3"
         assert actual[3]['version'] == "1.2.3"
 
-    def test_meta_version(self):
+    def test_meta_numbered_version(self):
         # Given
         strategy = get_strategy({
             'selectors': {
                 'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
                 'content': 'p'
             }
         })
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
-                <meta name="docsearch:version" content='1.2.3'
+                <meta name="docsearch:version" content='1.0'>
             </header>
             <body>
                 <h1>Foo</h1>
@@ -182,13 +176,9 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
-        assert len(actual) == 4
-        assert actual[0]['version'] == "1.2.3"
-        assert actual[1]['version'] == "1.2.3"
-        assert actual[2]['version'] == "1.2.3"
-        assert actual[3]['version'] == "1.2.3"
-
+        assert len(actual) == 2
+        assert actual[0]['version'] == "1.0"
+        assert actual[1]['version'] != 1
 
     def test_meta_escaped_string(self):
         # Given
@@ -203,7 +193,7 @@ class TestMeta:
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
-                <meta name="docsearch:string" content='"ok"'
+                <meta name="docsearch:string" content='"ok"'>
             </header>
             <body>
                 <h1>Foo</h1>
@@ -219,7 +209,6 @@ class TestMeta:
 
         # Then
 
-        # First record has the global H1
         assert len(actual) == 4
         assert actual[0]['string'] == "ok"
         assert actual[1]['string'] == "ok"
