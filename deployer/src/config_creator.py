@@ -83,9 +83,8 @@ def to_vuepress_config(config):
         ("selector", "/html/@lang"),
         ("type", "xpath"),
         ("global", True),
-        ("default_value", "Documentation")
+        ("default_value", "en-US")
     ))
-
 
     config["scrap_start_urls"] = False
     config["strip_chars"] = " .,;:#"
