@@ -26,7 +26,10 @@ def get_headers():
 
 def get_application_rights():
     app_id = environ.get('APPLICATION_ID_PROD')
-    endpoint = get_endpoint('/applications/' + app_id)  # , '?fields=application_rights')
+    endpoint = get_endpoint(
+        '/applications/' + app_id,
+        params='?deleted=false'
+    )  # , '?fields=application_rights')
 
     r = requests.get(endpoint, headers=get_headers())
 
