@@ -82,7 +82,8 @@ def to_pkgdown_config(config, urls=None):
     config["selectors"]["text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
     config["selectors_exclude"] = [".dont-index"]
     config["custom_settings"] = {"separatorsToIndex": "_"}
-    # config["stop_urls"] = [start_url + "index.html", "LICENSE-text.html"]
+    config["scrap_start_urls"] = False
+    config["stop_urls"] = ["LICENSE-text.html"]
     return config
 
 
