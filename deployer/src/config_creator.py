@@ -8,21 +8,20 @@ from urlparse import urlparse
 
 def extract_root_from_input(input_string):
     # We cant parse the url since user might have not enter a proper link
-    domain = re.match(".+?([^\/]\/(?!\/))", input_string)  # extracting substring before the first isolated / (not //)
 
+    if input_string.endswith('/'):  # We assume that the string is already the proper root
+        return input_string
+
+    domain = re.match(".+?([^\/]\/(?!\/))", input_string)  # extracting substring before the first isolated / (not //)
     try:
         url_parsed = urlparse(input_string);
         # Removing unused parameters
         url_parsed._replace(params='', query='', fragment='')
         path_splited = url_parsed.path.split('/')
-        path_length = len(path_splited)
 
         # Path is redirecting to a page
-        if ('html' in path_splited[path_length - 1]):
+        if ('html' in path_splited[-1]):
             url_parsed = url_parsed._replace(path='/'.join(path_splited[: -1]))
-        # Path note ending by  /
-        elif (path_splited[path_length - 1]):
-            url_parsed = url_parsed._replace(path='/'.join(path_splited) + '/')
         # We are fine
         else:
             pass
