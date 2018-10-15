@@ -5,7 +5,6 @@ CustomDownloaderMiddleware
 import time
 
 from scrapy.http import Request, HtmlResponse
-from scrapy.exceptions import IgnoreRequest
 
 try:
     from urlparse import urlparse

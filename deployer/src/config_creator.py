@@ -3,12 +3,32 @@ import tldextract
 import re
 from . import helpers
 from . import helpdesk_helper
+from urlparse import urlparse
 
 
 def extract_root_from_input(input_string):
     # We cant parse the url since user might have not enter a proper link
+
+    if input_string.endswith('/'):  # We assume that the string is already the proper root
+        return input_string
+
     domain = re.match(".+?([^\/]\/(?!\/))", input_string)  # extracting substring before the first isolated / (not //)
-    return domain.group() if domain else input_string
+    try:
+        url_parsed = urlparse(input_string);
+        # Removing unused parameters
+        url_parsed._replace(params='', query='', fragment='')
+        path_splited = url_parsed.path.split('/')
+
+        # Path is redirecting to a page
+        if ('html' in path_splited[-1]):
+            url_parsed = url_parsed._replace(path='/'.join(path_splited[: -1]))
+        # We are fine
+        else:
+            pass
+
+        return url_parsed.geturl()
+    except ValueError:
+        return domain.group() if domain else input_string
 
 
 def to_docusaurus_config(config, urls=None):
@@ -61,7 +81,8 @@ def to_pkgdown_config(config, urls=None):
     config["selectors"]["text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
     config["selectors_exclude"] = [".dont-index"]
     config["custom_settings"] = {"separatorsToIndex": "_"}
-    # config["stop_urls"] = [start_url + "index.html", "LICENSE-text.html"]
+    config["scrap_start_urls"] = False
+    config["stop_urls"] = ["LICENSE-text.html"]
     return config
 
 
