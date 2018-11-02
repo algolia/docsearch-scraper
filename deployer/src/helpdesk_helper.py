@@ -142,6 +142,9 @@ def is_pkgdown_conversation(conversation):
 def is_vuepress_conversation(conversation):
     return "vuepress" in conversation.get("tags")
 
+def is_larecipe_conversation(conversation):
+    return "larecipe" in conversation.get("tags")
+
 
 @rate_limited(200, 60)
 def search(query, page=1, pageSize=50, sortField="modifiedAt", sortOrder="asc"):
