@@ -24,7 +24,6 @@ DocSearch is made of 3 repositories:
   from your documentation. The code is open-source and you can run it from
   a Docker image
 
-
 [1]: https://community.algolia.com/docsearch/
 [2]: https://community.algolia.com/docsearch/run-your-own.html
 [3]: https://github.com/algolia/docsearch

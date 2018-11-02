@@ -1,6 +1,5 @@
 Hello you,
 
-
 ## Install the scrapper without Docker
 
 We do recommend the use of [pipenv][1] to install the whole python environment
@@ -9,7 +8,6 @@ We do recommend the use of [pipenv][1] to install the whole python environment
 - `pipenv --python 2.7 install`
 
 You should be ready to go.
-
 
 ## Run the tests
 
@@ -47,12 +45,14 @@ DEPLOY_KEY=
 Ping the @docsearch team to get access to those credentials.
 
 ## Ready to deploy
+
 Clone the configurations repo in your docsearch-scraper directory. Command to run from the scraper root:
+
 ```bash
 git clone git@github.com:algolia/docsearch-configs.git configs/public
 ```
-The CLI will then have more commands for you to run. 
+
+The CLI will then have more commands for you to run.
 
 [1]: https://github.com/pypa/pipenv
 [2]: https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv
-
