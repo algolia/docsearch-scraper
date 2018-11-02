@@ -9,10 +9,12 @@ from urlparse import urlparse
 def extract_root_from_input(input_string):
     # We cant parse the url since user might have not enter a proper link
 
-    if input_string.endswith('/'):  # We assume that the string is already the proper root
+    if input_string.endswith(
+            '/'):  # We assume that the string is already the proper root
         return input_string
 
-    domain = re.match(".+?([^\/]\/(?!\/))", input_string)  # extracting substring before the first isolated / (not //)
+    domain = re.match(".+?([^\/]\/(?!\/))",
+                      input_string)  # extracting substring before the first isolated / (not //)
     try:
         url_parsed = urlparse(input_string);
         # Removing unused parameters
@@ -33,14 +35,16 @@ def extract_root_from_input(input_string):
 
 def to_docusaurus_config(config, urls=None):
     if urls:
-        config["sitemap_urls"] = [extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_urls"] = [
+            extract_root_from_input(urls[0]) + "sitemap.xml"]
         config["sitemap_alternate_links"] = True
         config["custom_settings"] = {"attributesForFaceting": ["language",
                                                                "version"]
                                      }
 
     config["selectors"]["lvl0"] = OrderedDict((
-        ("selector", "//*[contains(@class,'navGroups')]//*[contains(@class,'navListItemActive')]/preceding::h3[1]"),
+        ("selector",
+         "//*[contains(@class,'navGroups')]//*[contains(@class,'navListItemActive')]/preceding::h3[1]"),
         ("type", "xpath"),
         ("global", True),
         ("default_value", "Documentation")
@@ -68,7 +72,8 @@ def to_gitbook_config(config):
 
 def to_pkgdown_config(config, urls=None):
     if urls:
-        config["sitemap_urls"] = [extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_urls"] = [
+            extract_root_from_input(urls[0]) + "sitemap.xml"]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector", ".contents h1"),
@@ -78,7 +83,8 @@ def to_pkgdown_config(config, urls=None):
     config["selectors"]["lvl2"] = ".contents h3, .contents th"
     config["selectors"]["lvl3"] = ".contents h4"
     config["selectors"]["lvl4"] = ".contents h5"
-    config["selectors"]["text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
+    config["selectors"][
+        "text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
     config["selectors_exclude"] = [".dont-index"]
     config["custom_settings"] = {"separatorsToIndex": "_"}
     config["scrap_start_urls"] = False
@@ -113,6 +119,28 @@ def to_vuepress_config(config):
     return config
 
 
+def to_larecipe_config(config, urls=None):
+    if urls:
+        config["sitemap_urls"] = [
+            extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["selectors"]["lvl0"] = OrderedDict((
+        ("selector",
+         "//div[contains(@class, 'sidebar')]//li/a[text()=//div[contains(@class, 'article')]//h1[1]/text()]"),
+        ("global", True),
+        ("type", "xpath"),
+        ("default_value", "Documentation")
+    ))
+
+    config["selectors"]["lvl1"] = "div.article h1"
+    config["selectors"]["lvl2"] = "div.article h2"
+    config["selectors"]["lvl3"] = "div.article h3"
+    config["selectors"]["lvl4"] = "div.article h4"
+    config["selectors"]["lvl5"] = "div.article h5"
+    config["selectors"]["text"] = "div.article p, div.article li"
+
+    return config
+
+
 def create_config(u=None):
     config = OrderedDict((
         ("index_name", ""),
@@ -137,7 +165,8 @@ def create_config(u=None):
         cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
         conversation = helpdesk_helper.get_conversation(cuid)
-        url_from_conversation = helpdesk_helper.get_start_url_from_conversation(conversation)
+        url_from_conversation = helpdesk_helper.get_start_url_from_conversation(
+            conversation)
         urls = [url_from_conversation]
         u = url_from_conversation
 
@@ -149,6 +178,8 @@ def create_config(u=None):
             config = to_pkgdown_config(config, urls)
         elif helpdesk_helper.is_vuepress_conversation(conversation):
             config = to_vuepress_config(config)
+        elif helpdesk_helper.is_larecipe_conversation(conversation):
+            config = to_larecipe_config(config, urls)
 
         config["conversation_id"] = [cuid]
 
@@ -156,32 +187,19 @@ def create_config(u=None):
         urls.append(u.rsplit('/', 1)[0])
 
     # Use subdomain for github website https://<subdomain>.github.io/
-    config['index_name'] = tldextract.extract(u).subdomain if tldextract.extract(
+    config['index_name'] = tldextract.extract(
+        u).subdomain if tldextract.extract(
         u).domain == 'github' else tldextract.extract(u).domain
 
-    if helpers.confirm("Does the start_urls require variables ?"):
-        config['start_urls'] = [{
-            "url": u + ('/' if u[-1] != '/' else '') + '(?P<static_variable>.*?)/(?P<dynamic_variable>.*?)/',
-            "variables": {
-                "static_variable": [
-                    "value1",
-                    "value2"
-                ],
-                "dynamic_variable": {
-                    "url": u,
-                    "js": "var versions = $('#selector option').map(function (i, elt) { return $(elt).html(); }).toArray(); return JSON.stringify(versions);"
-                }
-            }
-        }]
-
-    else:
-        config['start_urls'] = urls
+    config['start_urls'] = urls
 
     user_index_name = helpers.get_user_value(
-        "index_name is " + "\033[1;33m" + config['index_name'] + "\033[0m" + ' [enter to confirm]: ')
+        "index_name is " + "\033[1;33m" + config[
+            'index_name'] + "\033[0m" + ' [enter to confirm]: ')
 
     if user_index_name != "":
         config['index_name'] = user_index_name
-        print("index_name is now " + "\033[1;33m" + config['index_name'] + "\033[0m")
+        print("index_name is now " + "\033[1;33m" + config[
+            'index_name'] + "\033[0m")
 
     return config
