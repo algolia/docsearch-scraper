@@ -1,5 +1,16 @@
 Hello you,
 
+
+## Install the scrapper without Docker
+
+We do recommend the use of [pipenv][1] to install the whole python environment
+
+- [Install pipenv][2]
+- `pipenv --python 2.7 install`
+
+You should be ready to go.
+
+
 ## Run the tests
 
 To run the full test suite, run `./docsearch test`. Note that it requires that
@@ -42,4 +53,6 @@ git clone git@github.com:algolia/docsearch-configs.git configs/public
 ```
 The CLI will then have more commands for you to run. 
 
+[1]: https://github.com/pypa/pipenv
+[2]: https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv
 
