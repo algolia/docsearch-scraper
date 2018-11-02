@@ -38,7 +38,7 @@ You're now a few steps away from having it working on your website:
 </script>
 
 - Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet to a CSS selector that targets your search input field.{{FACETS}}
-- Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/documentation/)
+- Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/styling.html)
 - You can also check your configuration in our github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
 {{ANALYTICS}}
 Please open a pull request if want to leverage your configuration!
