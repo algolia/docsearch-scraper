@@ -152,6 +152,7 @@ def create_config(u=None):
             ("lvl2", "FIXME h3"),
             ("lvl3", "FIXME h4"),
             ("lvl4", "FIXME h5"),
+            ("lvl5", "FIXME h6"),
             ("text", "FIXME p, FIXME li")
         )))
     ))
