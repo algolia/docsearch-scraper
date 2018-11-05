@@ -9,12 +9,12 @@ from urlparse import urlparse
 def extract_root_from_input(input_string):
     # We cant parse the url since user might have not enter a proper link
 
-    if input_string.endswith(
-            '/'):  # We assume that the string is already the proper root
+    # We assume that the string is already the proper root
+    if input_string.endswith('/'):
         return input_string
-
+    # extracting substring before the first isolated / (not //)
     domain = re.match(".+?([^\/]\/(?!\/))",
-                      input_string)  # extracting substring before the first isolated / (not //)
+                      input_string)
     try:
         url_parsed = urlparse(input_string);
         # Removing unused parameters
