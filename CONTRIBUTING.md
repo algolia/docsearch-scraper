@@ -34,7 +34,7 @@ SLACK_HOOK=
 SCHEDULER_USERNAME=
 SCHEDULER_PASSWORD=
 MONITORING_API_KEY=
-PUBLIC_CONFIG_FOLDER=<path to your docsearch-scrapy directory> + /configs/public
+PUBLIC_CONFIG_FOLDER=<path to your docsearch-scraper directory> + /configs/public
 PRIVATE_CONFIG_FOLDER=
 
 BASE_INTERNAL_ENDPOINT=
