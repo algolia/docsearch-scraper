@@ -5,6 +5,10 @@ before_install:
 services:
   - docker
 install:
+  # We create a .env file to bypass the initial check done by ./docsearch. If
+  # the file is not here, it will ask questions to create the file. We don't
+  # need that in CI.
+  - touch .env
   - pip install pipenv
   - pipenv install
 script:
