@@ -5,8 +5,9 @@ Hello you,
 We do recommend the use of [pipenv][1] to install the whole python environment
 
 - [Install pipenv][2]
-- `pipenv --python 2.7 install`
+- `pipenv install`
 - `pipenv shell`
+
 
 You should be ready to go.
 
