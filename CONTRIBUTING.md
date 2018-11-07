@@ -1,5 +1,6 @@
 Hello you,
 
+## Install the scrapper without Docker
 
 We do recommend the use of [pipenv][1] to install the whole python environment
 
@@ -8,6 +9,7 @@ We do recommend the use of [pipenv][1] to install the whole python environment
 
 You should be ready to go.
 
+## Run the tests
 
 To run the full test suite, run `./docsearch test`. Note that it requires that
 you have a Docker image built already.
