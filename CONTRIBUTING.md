@@ -12,8 +12,7 @@ You should be ready to go.
 
 ## Run the tests
 
-To run the full test suite, run `./docsearch test`. Note that it requires that
-you have a Docker image built already.
+To run the full test suite, run `./docsearch test`.
 
 ## Special instructions for Algolia employees
 

@@ -1,42 +1,12 @@
-from .abstract_build_docker import AbstractBuildDocker
+from .abstract_command import AbstractCommand
 
 
-class RunTests(AbstractBuildDocker):
+class RunTests(AbstractCommand):
     def get_name(self):
-        return 'test'
+        return "test"
 
     def get_description(self):
-        return 'Run tests'
+        return "Run tests"
 
     def run(self, args):
-        from os import getcwd
-
-        py3 = self.get_option('python3', args)
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev", python3=py3)
-        if code != 0:
-            return code
-
-        self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev-test"])
-        self.exec_shell_command(["docker", "rm", "documentation-scrapper-dev-test"])
-
-        run_command = [
-            'docker',
-            'run',
-            '-e',
-            'APPLICATION_ID=""',
-            '-e',
-            'API_KEY=""',
-            '-e',
-            'CONFIG=""',
-            '-v',
-            getcwd() + '/scraper/src:/root/src',
-            '--name',
-            'documentation-scrapper-dev-test',
-            '-t',
-            'algolia/documentation-scrapper-dev',
-            '/root/test'
-        ]
-
-        print("")
-        print(" ".join(run_command))
-        return self.exec_shell_command(run_command)
+        return self.exec_shell_command(["pytest", "./scraper/src"])

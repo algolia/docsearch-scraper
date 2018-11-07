@@ -1,5 +1,4 @@
 # Dev version of the Dockerfile
-# - Includes test library
 # - Do not COPY ./src
 # - Do not define an ENTRYPOINT
 
@@ -9,11 +8,9 @@ ARG USE_PYTHON3=false
 
 # Install correct python version and dependencies
 RUN sh /root/setup_python.sh $USE_PYTHON3
-RUN . venv/bin/activate && pip install pytest
+RUN . venv/bin/activate 
 
 # Copy DocSearch files
 COPY scraper/dev/docker/bin/run /root/
 COPY scraper/dev/docker/bin/check_js_render.py /root/
-COPY scraper/dev/docker/bin/test /root/
-RUN chmod +x /root/test
 RUN chmod +x /root/run
