@@ -53,6 +53,7 @@ def to_docusaurus_config(config, urls=None):
     config["selectors"]["lvl2"] = ".post h2"
     config["selectors"]["lvl3"] = ".post h3"
     config["selectors"]["lvl4"] = ".post h4"
+    config["selectors"]["lvl5"] = ".post h5"
     config["selectors"]["text"] = ".post article p, .post article li"
     config["selectors_exclude"] = [".hash-link"]
 
@@ -65,6 +66,7 @@ def to_gitbook_config(config):
     config["selectors"]["lvl2"] = ".markdown-section h3"
     config["selectors"]["lvl3"] = ".markdown-section h4"
     config["selectors"]["lvl4"] = ".markdown-section h4"
+    config["selectors"]["lvl5"] = ".markdown-section h5"
     config["selectors"]["text"] = ".markdown-section p, .markdown-section li"
 
     return config
