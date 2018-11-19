@@ -9,9 +9,8 @@ place.
 
 ## Installation and Usage
 
-Please check the [dedicated documentation ][2] to see how you can install and
-run DocSearch yourself:
-[https://community.algolia.com/docsearch/run-your-own.HTML][2]
+Please check the [dedicated documentation][2] to see how you can install and
+run DocSearch yourself.
 
 ## Related projects
 
