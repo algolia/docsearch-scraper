@@ -6,7 +6,7 @@ class BuildDockerScraper(AbstractBuildDocker):
         return 'docker:build'
 
     def get_description(self):
-        return 'Build scraper images (dev, prod, test)'
+        return 'Build scraper images (dev, prod)'
 
     def run(self, args):
         py3 = self.get_option('python3', args)
