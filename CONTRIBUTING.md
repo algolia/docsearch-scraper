@@ -1,6 +1,6 @@
 Hello you,
 
-## Install and use the scrapper without Docker
+## Install and use the scraper without Docker
 
 We do recommend [pipenv][1] to install the whole python environment
 
