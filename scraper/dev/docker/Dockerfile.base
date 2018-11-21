@@ -11,9 +11,12 @@ RUN chown -R seleuser /home/seleuser
 RUN chgrp -R seleuser /home/seleuser
 
 RUN apt-get -y update
-RUN apt-get install -y -q software-properties-common wget
+RUN apt-get install -y -q software-properties-common
 RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN wget -qO- https://deb.nodesource.com/setup_4.x | sudo bash -
+RUN apt-get install curl gnupg -yq \
+    && curl -sL https://deb.nodesource.com/setup_8.x | bash \
+    && apt-get install nodejs -yq
+    
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
   openjdk-8-jdk \
   openjdk-8-jre \
