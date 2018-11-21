@@ -1,6 +1,8 @@
 FROM ubuntu:18.04
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
+WORKDIR /root
+
 # Install selenium
 ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
@@ -16,7 +18,7 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get install curl gnupg -yq \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash \
     && apt-get install nodejs -yq
-    
+
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
   openjdk-8-jdk \
   openjdk-8-jre \
@@ -32,6 +34,7 @@ RUN dpkg -i firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
 RUN npm install -g \
   selenium-standalone@3.0.2 \
   && selenium-standalone install
+
 
 # Install DocSearch dependencies
 RUN apt-get update -y && apt-get install -y \
