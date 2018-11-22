@@ -1,8 +1,6 @@
 #!/bin/bash
 
-. venv/bin/activate
-
-python /root/check_js_render.py
+pipenv run python /root/check_js_render.py
 
 if [ "$?" -eq 0 ]
 then
@@ -19,4 +17,4 @@ then
   done
 fi
 
-python -m src.index 2>&1
+pipenv run python src/index.py
