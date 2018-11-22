@@ -11,11 +11,11 @@ class BuildDockerScraper(AbstractBuildDocker):
     def run(self, args):
 
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.base",
-                                      "algolia/base-documentation-scraper")
+                                      "algolia/base-docsearch-scraper")
         if code != 0:
             return code
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
         if code != 0:
             return code
         return self.build_docker_file("scraper/dev/docker/Dockerfile",
-                                      "algolia/documentation-scraper")
+                                      "algolia/docsearch-scraper")

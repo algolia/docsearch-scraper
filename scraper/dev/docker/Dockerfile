@@ -1,4 +1,4 @@
-FROM algolia/base-documentation-scraper
+FROM algolia/base-docsearch-scraper
 MAINTAINER Algolia <documentationsearch@algolia.com>
 
 WORKDIR /root

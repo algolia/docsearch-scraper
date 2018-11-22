@@ -42,41 +42,34 @@ class RunConfigDocker(AbstractCommand):
         from_local_code = self.get_option('from_local_code', args)
 
         run_command = []
-        if not from_local_code:
-            run_command = [
-                'docker',
-                'run',
-                '--rm',
-                '-e',
-                'APPLICATION_ID=' + os.environ.get('APPLICATION_ID'),
-                '-e',
-                'API_KEY=' + os.environ.get('API_KEY'),
-                '-e',
-                "CONFIG=" + config,
-                '--name',
-                'documentation-scraper',
-                '-t',
-                'algolia/documentation-scraper',
-                '-i',
-                '/root/run'
-            ]
+        if from_local_code:
+            container_name = "docsearch-scraper-dev"
+            image_name = "algolia/docsearch-scraper-dev"
         else:
-            run_command = [
-                'docker',
-                'run',
-                '--rm',
-                '-e',
-                'APPLICATION_ID=' + os.environ.get('APPLICATION_ID'),
-                '-e',
-                'API_KEY=' + os.environ.get('API_KEY'),
-                '-e',
-                "CONFIG=" + config,
-                '-v',
-                os.getcwd() + '/scraper/src:/root/src',
-                '--name',
-                'documentation-scraper-dev',
-                '-t',
-                'algolia/documentation-scraper-dev',
-                '/root/run'
-            ]
+            container_name = "docsearch-scraper"
+            image_name = "algolia/docsearch-scraper"
+
+        run_command = [
+            "docker",
+            "run",
+            "--rm",
+            "-e",
+            "APPLICATION_ID=" + os.environ.get('APPLICATION_ID'),
+            "-e",
+            "API_KEY=" + os.environ.get('API_KEY'),
+            "-e",
+            "CONFIG=" + config,
+            "--name",
+            container_name,
+            "-t",
+            image_name,
+        ]
+
+        if from_local_code:
+            run_command.append("-v")
+            run_command.append(os.getcwd() + "/scraper/src:/root/src")
+        else:
+            run_command.append("-i")
+
+        run_command.append("/root/run")
         return self.exec_shell_command(run_command)
