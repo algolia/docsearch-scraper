@@ -22,8 +22,12 @@ class RunConfigDocker(AbstractCommand):
         self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev"])
         self.exec_shell_command(["docker", "rm", "documentation-scrapper-dev"])
 
-        f = open(args[0], 'r')
-        config = f.read()
+        if os.path.isfile(args[0]):
+            f = open(args[0], 'r')
+            config = f.read()
+        else:
+            raise ValueError(
+                "Config option: {} is not a path to a file".format(args[0]))
 
         run_command = [
             'docker',
