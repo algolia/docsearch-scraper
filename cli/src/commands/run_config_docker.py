@@ -1,7 +1,6 @@
 from .abstract_command import AbstractCommand
 import os
 
-
 class RunConfigDocker(AbstractCommand):
     def get_name(self):
         return 'docker:run'
@@ -29,7 +28,7 @@ class RunConfigDocker(AbstractCommand):
         run_command = [
             'docker',
             'run',
-            '--rm',
+            '--rm'
             '-e',
             'APPLICATION_ID=' + os.environ.get('APPLICATION_ID'),
             '-e',
@@ -39,9 +38,9 @@ class RunConfigDocker(AbstractCommand):
             '-v',
             os.getcwd() + '/scraper/src:/root/src',
             '--name',
-            'documentation-scrapper-dev',
+            'documentation-scraper-dev',
             '-t',
-            'algolia/documentation-scrapper-dev',
+            'algolia/documentation-scraper-dev',
             '/root/run'
         ]
 
