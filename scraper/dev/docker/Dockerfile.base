@@ -18,24 +18,36 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update -y && apt-get install -yq \
     curl \
     wget \
+    sudo -yq \
     gnupg -yq \
-    && curl -sL https://deb.nodesource.com/setup_8.x | bash \
-    && apt-get install nodejs -yq
-
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
-  openjdk-8-jdk \
-  openjdk-8-jre \
-  nodejs \
-  x11vnc \
+    && curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+RUN apt-get update -y && apt-get install -yq \
+    nodejs -yq
+RUN apt-get update -y && apt-get install -yq \
+  unzip \
   xvfb \
-  libasound2 \
-  libgtk2.0-0
+  libxi6 \
+  libgconf-2-4 \
+  default-jdk
 
-RUN wget -q https://demos-cdn.algolia.com/magento/archive/firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
-RUN dpkg -i firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
+RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update -y && apt-get install -yq \
+  google-chrome-stable \
+  unzip
+RUN wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+RUN unzip chromedriver_linux64.zip
+
+RUN mv chromedriver /usr/bin/chromedriver
+RUN chown root:root /usr/bin/chromedriver
+RUN chmod +x /usr/bin/chromedriver
+
+RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
+RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
+RUN unzip testng-6.8.7.jar.zip
 
 RUN npm install -g \
-  selenium-standalone@3.0.2 \
+  selenium-standalone@3.0.1 \
   && selenium-standalone install
 
 

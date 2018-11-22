@@ -9,4 +9,4 @@ COPY scraper/dev/docker/bin/check_js_render.py .
 COPY scraper/src ./src
 RUN chmod +x ./run
 
-ENTRYPOINT ["/root/run"]
+ENTRYPOINT ["pipenv", "run", "python", "-m", "src.index"]

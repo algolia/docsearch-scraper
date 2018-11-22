@@ -17,6 +17,7 @@ pipenv run python /root/check_js_render.py
 #  done
 #fi
 
-xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.13.0.jar
+DISPLAY=:1 xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.13.0.jar
+
 
 pipenv run python -m src.index
