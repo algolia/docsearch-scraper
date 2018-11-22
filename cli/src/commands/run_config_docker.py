@@ -53,23 +53,23 @@ class RunConfigDocker(AbstractCommand):
             "docker",
             "run",
             "--rm",
+            "-i",
             "-e",
             "APPLICATION_ID=" + os.environ.get('APPLICATION_ID'),
             "-e",
             "API_KEY=" + os.environ.get('API_KEY'),
             "-e",
             "CONFIG=" + config,
-            "--name",
-            container_name,
-            "-t",
-            image_name,
         ]
 
         if from_local_code:
             run_command.append("-v")
             run_command.append(os.getcwd() + "/scraper/src:/root/src")
-        else:
-            run_command.append("-i")
 
-        run_command.append("/root/run")
+        run_command = run_command + ["--name",
+                                     container_name,
+                                     "-t",
+                                     image_name,
+                                     "bash"]
+
         return self.exec_shell_command(run_command)

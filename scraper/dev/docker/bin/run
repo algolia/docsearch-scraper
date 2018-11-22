@@ -2,19 +2,21 @@
 
 pipenv run python /root/check_js_render.py
 
-if [ "$?" -eq 0 ]
-then
-  export DISPLAY=:99
-  Xvfb :99 -shmem -screen 0 1366x768x16 &
-  x11vnc -passwd secret -display :99 -N -forever &
+#if [ "$?" -eq 0 ]
+#then
+#  export DISPLAY=:99
+#  Xvfb :99 -shmem -screen 0 1366x768x16 &
+#  x11vnc -ncache -passwd secret -display :99 -N -forever &
+#
+#  # selenium must be started by a non-root user otherwise chrome can't start
+#  su - seleuser -c "selenium-standalone start &"
+#
+#  while ! nc -z localhost 4444; do
+#    sleep 1
+#    ((c++)) && ((c==10)) && echo "Selenimum has not started" && break
+#  done
+#fi
 
-  # selenium must be started by a non-root user otherwise chrome can't start
-  su - seleuser -c "selenium-standalone start &"
-
-  while ! nc -z localhost 4444; do
-    sleep 1
-    ((c++)) && ((c==10)) && echo "Selenimum has not started" && break
-  done
-fi
+xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.13.0.jar
 
 pipenv run python -m src.index
