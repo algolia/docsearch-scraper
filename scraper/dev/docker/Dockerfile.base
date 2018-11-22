@@ -12,10 +12,12 @@ RUN useradd -d /home/seleuser -m seleuser
 RUN chown -R seleuser /home/seleuser
 RUN chgrp -R seleuser /home/seleuser
 
-RUN apt-get -y update
-RUN apt-get install -y -q software-properties-common
+RUN apt-get update -y && apt-get install -yq \
+    software-properties-common
 RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN apt-get install curl gnupg -yq \
+RUN apt-get update -y && apt-get install -yq \
+    curl \
+    gnupg -yq \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash \
     && apt-get install nodejs -yq
 
@@ -37,7 +39,7 @@ RUN npm install -g \
 
 
 # Install DocSearch dependencies
-RUN apt-get update -y && apt-get install -y \
+RUN apt-get update -y && apt-get install -yq \
       curl        \
       fontconfig  \
       libffi-dev  \
