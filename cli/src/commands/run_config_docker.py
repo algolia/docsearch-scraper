@@ -28,7 +28,7 @@ class RunConfigDocker(AbstractCommand):
         run_command = [
             'docker',
             'run',
-            '--rm'
+            '--rm',
             '-e',
             'APPLICATION_ID=' + os.environ.get('APPLICATION_ID'),
             '-e',
