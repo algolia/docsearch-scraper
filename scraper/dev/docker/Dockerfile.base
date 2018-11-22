@@ -48,5 +48,4 @@ ENV PIPENV_HIDE_EMOJIS 1
 RUN apt-get update -y && apt-get install -yq \
     python-pip
 RUN pip install pipenv
-RUN pipenv install --system --deploy
-
+RUN pipenv install

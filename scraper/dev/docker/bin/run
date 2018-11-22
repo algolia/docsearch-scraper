@@ -17,4 +17,4 @@ then
   done
 fi
 
-pipenv run python -m src.index.py
+pipenv run python -m src.index
