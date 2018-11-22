@@ -19,9 +19,6 @@ class RunConfigDocker(AbstractCommand):
 
         self.check_not_docsearch_app_id('run a config manually')
 
-        self.exec_shell_command(["docker", "stop", "documentation-scrapper-dev"])
-        self.exec_shell_command(["docker", "rm", "documentation-scrapper-dev"])
-
         if os.path.isfile(args[0]):
             f = open(args[0], 'r')
             config = f.read()
@@ -32,6 +29,7 @@ class RunConfigDocker(AbstractCommand):
         run_command = [
             'docker',
             'run',
+            '--rm'
             '-e',
             'APPLICATION_ID=' + environ.get('APPLICATION_ID'),
             '-e',
