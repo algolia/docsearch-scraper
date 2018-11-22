@@ -2,7 +2,6 @@ from .abstract_command import AbstractCommand
 
 
 class AbstractBuildDocker(AbstractCommand):
-
     @staticmethod
     def build_docker_file(file, image="algolia/documentation-scraper-dev"):
         cmd = ["docker", "build", "-t", image, "-f", file, "."]
