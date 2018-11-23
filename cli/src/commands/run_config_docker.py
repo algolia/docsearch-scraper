@@ -41,7 +41,6 @@ class RunConfigDocker(AbstractCommand):
 
         from_local_code = self.get_option('from_local_code', args)
 
-        run_command = []
         if from_local_code:
             container_name = "docsearch-scraper-dev"
             image_name = "algolia/docsearch-scraper-dev"
