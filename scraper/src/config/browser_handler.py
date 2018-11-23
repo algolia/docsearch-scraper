@@ -1,4 +1,5 @@
 import re
+import os
 from selenium import webdriver
 
 from selenium.webdriver.chrome.options import Options
@@ -24,8 +25,14 @@ class BrowserHandler:
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--headless')
 
+            CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH',
+                                               "/usr/bin/chromedriver")
+            if not os.path.isfile(CHROMEDRIVER_PATH):
+                raise Exception(
+                    "Env CHROMEDRIVER_PATH='{}' is not a path to a file".format(
+                        CHROMEDRIVER_PATH))
             driver = webdriver.Chrome(
-                "/usr/bin/chromedriver",
+                CHROMEDRIVER_PATH,
                 chrome_options=chrome_options)
             CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
