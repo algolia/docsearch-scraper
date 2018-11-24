@@ -9,6 +9,7 @@ install:
   # the file is not here, it will ask questions to create the file. We don't
   # need that in CI.
   - touch .env
+  - sudo -s
   - LC_ALL=C
   - DEBIAN_FRONTEND=noninteractive
   - DEBCONF_NONINTERACTIVE_SEEN=true
