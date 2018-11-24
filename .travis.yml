@@ -12,9 +12,6 @@ install:
   - LC_ALL=C
   - DEBIAN_FRONTEND=noninteractive
   - DEBCONF_NONINTERACTIVE_SEEN=true
-  - useradd -d /home/seleuser -m seleuser
-  - chown -R seleuser /home/seleuser
-  - chgrp -R seleuser /home/seleuser
   - apt-get update -y && apt-get install -yq software-properties-common
   - add-apt-repository -y ppa:openjdk-r/ppa
   - apt-get update -y && apt-get install -yq curl wget sudo -yq gnupg -yq && curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
