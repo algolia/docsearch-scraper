@@ -9,9 +9,9 @@ install:
   # the file is not here, it will ask questions to create the file. We don't
   # need that in CI.
   - touch .env
-  - LC_ALL C
-  - DEBIAN_FRONTEND noninteractive
-  - DEBCONF_NONINTERACTIVE_SEEN true
+  - LC_ALL=C
+  - DEBIAN_FRONTEND=noninteractive
+  - DEBCONF_NONINTERACTIVE_SEEN=true
   - useradd -d /home/seleuser -m seleuser
   - chown -R seleuser /home/seleuser
   - chgrp -R seleuser /home/seleuser
