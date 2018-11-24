@@ -9,7 +9,6 @@ install:
   # the file is not here, it will ask questions to create the file. We don't
   # need that in CI.
   - touch .env
-  - sudo -s
   - LC_ALL=C
   - DEBIAN_FRONTEND=noninteractive
   - DEBCONF_NONINTERACTIVE_SEEN=true
@@ -19,21 +18,21 @@ install:
   - sudo apt-get update -y && sudo apt-get install -yq nodejs -yq
   - sudo apt-get update -y && sudo apt-get install -yq unzip xvfb libxi6 libgconf-2-4 default-jdk
 
-  - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
+  - sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
   - echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   - sudo apt-get update -y && sudo apt-get install -yq google-chrome-stable unzip
-  - wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
-  - unzip chromedriver_linux64.zip
+  - sudo wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+  - sudo unzip chromedriver_linux64.zip
 
-  - mv chromedriver /usr/bin/chromedriver
-  - chown root:root /usr/bin/chromedriver
-  - chmod +x /usr/bin/chromedriver
+  - sudo mv chromedriver /usr/bin/chromedriver
+  - sudo chown root:root /usr/bin/chromedriver
+  - sudo chmod +x /usr/bin/chromedriver
 
-  - wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
-  - wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
-  - unzip testng-6.8.7.jar.zip
+  - sudo wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
+  - sudo wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
+  - sudo unzip testng-6.8.7.jar.zip
 
-  - npm install -g selenium-standalone@3.0.1 && selenium-standalone install
+  - sudo npm install -g selenium-standalone@3.0.1 && selenium-standalone install
 
   - pip install pipenv
   - pipenv install
