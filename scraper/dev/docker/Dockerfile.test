@@ -1,0 +1,9 @@
+FROM algolia/base-docsearch-scraper
+MAINTAINER Algolia <documentationsearch@algolia.com>
+
+WORKDIR /root
+
+# Copy DocSearch files
+COPY . .
+
+ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]

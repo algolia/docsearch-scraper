@@ -9,35 +9,10 @@ install:
   # the file is not here, it will ask questions to create the file. We don't
   # need that in CI.
   - touch .env
-  - LC_ALL=C
-  - CHROME_DRIVER_VERSION=`sudo curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
-  - SELENIUM_STANDALONE_VERSION=3.4.0
-  - SELENIUM_SUBDIR=$(echo "$SELENIUM_STANDALONE_VERSION" | cut -d"." -f-2)
-  # Remove existing downloads and binaries so we can start from scratch.
-  - sudo apt-get remove google-chrome-stable
-  # Install dependencies.
-  - sudo apt-get update
-  - sudo apt-get install -y unzip openjdk-8-jre-headless xvfb libxi6 libgconf-2-4
-  # Install Chrome.
-  - sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
-  - sudo apt-get -y install google-chrome-stable
-  # Install ChromeDriver.
-  - sudo wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
-  - sudo unzip ~/chromedriver_linux64.zip -d ~/
-  - sudo rm ~/chromedriver_linux64.zip
-  - sudo mv -f ~/chromedriver /usr/bin/chromedriver
-  - sudo chown root:root /usr/bin/chromedriver
-  - sudo chmod a+x /usr/bin/chromedriver
-  # Install Selenium.
-  - sudo wget -N http://selenium-release.storage.googleapis.com/$SELENIUM_SUBDIR/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar -P ~/
-  - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/bin/selenium-server-standalone.jar
-  - sudo chown root:root /usr/bin/selenium-server-standalone.jar
-  - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
-  - sudo pip install pipenv
-  - sudo pipenv install
-  - sudo chromedriver --whitelisted-ips &
+  - pip install pipenv
+  - pipenv install
 script:
-  - sudo pipenv run ./docsearch test
+  - sudo pipenv run ./docsearch test true
 notifications:
   email: false
   slack:
