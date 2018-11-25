@@ -5,5 +5,4 @@ WORKDIR /root
 
 # Copy DocSearch files
 COPY . .
-
-ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]
+ENTRYPOINT ["sudo", "pipenv", "run", "./docsearch", "test"]
