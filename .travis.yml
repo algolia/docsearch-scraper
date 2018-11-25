@@ -10,30 +10,36 @@ install:
   # need that in CI.
   - touch .env
   - LC_ALL=C
-  - DEBIAN_FRONTEND=noninteractive
-  - DEBCONF_NONINTERACTIVE_SEEN=true
-  - sudo apt-get update -y && sudo apt-get install -yq software-properties-common
-  - sudo add-apt-repository -y ppa:openjdk-r/ppa
-  - sudo apt-get update -y && sudo apt-get install -yq curl wget sudo -yq gnupg -yq && curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
-  - sudo apt-get update -y && sudo apt-get install -yq nodejs -yq
-  - sudo apt-get update -y && sudo apt-get install -yq unzip xvfb libxi6 libgconf-2-4 default-jdk
-
-  - sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
-  - sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-  - sudo apt-get update -y && sudo apt-get install -yq google-chrome-stable unzip
-  - sudo wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
-  - sudo unzip chromedriver_linux64.zip
-
-  - sudo mv chromedriver /usr/bin/chromedriver
-  - sudo chown root:root /usr/bin/chromedriver
-  - sudo chmod +x /usr/bin/chromedriver
-
-  - sudo wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
-  - sudo wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
-  - sudo unzip testng-6.8.7.jar.zip
-
-  - sudo npm install -g selenium-standalone@3.0.1 && selenium-standalone install
-
+  - CHROME_DRIVER_VERSION=`sudo curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
+  - SELENIUM_STANDALONE_VERSION=3.4.0
+  - SELENIUM_SUBDIR=$(echo "$SELENIUM_STANDALONE_VERSION" | cut -d"." -f-2)
+  # Remove existing downloads and binaries so we can start from scratch.
+  - sudo apt-get remove google-chrome-stable
+  - sudo rm ~/selenium-server-standalone-*.jar
+  - sudo rm ~/chromedriver_linux64.zip
+  - sudo rm /usr/local/bin/chromedriver
+  - sudo rm /usr/local/bin/selenium-server-standalone.jar
+  # Install dependencies.
+  - sudo apt-get update
+  - sudo apt-get install -y unzip openjdk-8-jre-headless xvfb libxi6 libgconf-2-4
+  # Install Chrome.
+  - sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
+  - sudo echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+  - sudo apt-get -y update
+  - sudo apt-get -y install google-chrome-stable
+  # Install ChromeDriver.
+  - sudo wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
+  - sudo unzip ~/chromedriver_linux64.zip -d ~/
+  - sudo rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
+  - sudo chown root:root /usr/local/bin/chromedriver
+  - sudo chmod 0755 /usr/local/bin/chromedriver
+  # Install Selenium.
+  - sudo wget -N http://selenium-release.storage.googleapis.com/$SELENIUM_SUBDIR/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar -P ~/
+  - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/local/bin/selenium-server-standalone.jar
+  - sudo chown root:root /usr/local/bin/selenium-server-standalone.jar
+  - sudo chmod 0755 /usr/local/bin/selenium-server-standalone.jar
+  -
   - pip install pipenv
   - pipenv install
 script:
