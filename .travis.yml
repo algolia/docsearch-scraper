@@ -11,6 +11,7 @@ install:
   - touch .env
   - pip install pipenv
   - pipenv install
+  - pipenv run ./docsearch test true || echo "first test failed"
 script:
   - pipenv run ./docsearch test true
 notifications:
