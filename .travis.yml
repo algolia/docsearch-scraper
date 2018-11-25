@@ -35,7 +35,7 @@ install:
   - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
   - sudo pip install pipenv
   - sudo pipenv install
-  - chromedriver --whitelisted-ips="*"
+  - chromedriver --whitelisted-ips="localhost"
 script:
   - pipenv run ./docsearch test
 notifications:
