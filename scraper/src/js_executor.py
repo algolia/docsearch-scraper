@@ -7,7 +7,6 @@ class JsExecutor:
         self.driver = JsExecutor.driver
 
     def execute(self, url, js):
-        print(self.driver)
         self.driver.get(url)
         time.sleep(5)
 
