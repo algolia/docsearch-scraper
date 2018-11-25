@@ -18,6 +18,8 @@ install:
   - sudo unzip chromedriver_linux64.zip
 
   - sudo mv chromedriver /usr/bin/chromedriver
+  - sudo chown root:root /usr/bin/chromedriver
+  - sudo chmod +x /usr/bin/chromedriver
   - sudo ls -a /usr/bin
   - sudo sed -i '1s/^/127.0.0.1 localhost/' /etc/hosts
   - sudo cat /etc/hosts
