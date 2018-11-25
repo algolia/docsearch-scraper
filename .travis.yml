@@ -25,14 +25,14 @@ install:
   - sudo wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
   - sudo unzip ~/chromedriver_linux64.zip -d ~/
   - sudo rm ~/chromedriver_linux64.zip
-  - sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
-  - sudo chown root:root /usr/local/bin/chromedriver
-  - sudo chmod 0755 /usr/local/bin/chromedriver
+  - sudo mv -f ~/chromedriver /usr/bin/chromedriver
+  - sudo chown root:root /usr/bin/chromedriver
+  - sudo chmod 0755 /usr/bin/chromedriver
   # Install Selenium.
   - sudo wget -N http://selenium-release.storage.googleapis.com/$SELENIUM_SUBDIR/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar -P ~/
-  - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/local/bin/selenium-server-standalone.jar
-  - sudo chown root:root /usr/local/bin/selenium-server-standalone.jar
-  - sudo chmod 0755 /usr/local/bin/selenium-server-standalone.jar
+  - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/bin/selenium-server-standalone.jar
+  - sudo chown root:root /usr/bin/selenium-server-standalone.jar
+  - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
   -
   - pip install pipenv
   - pipenv install
