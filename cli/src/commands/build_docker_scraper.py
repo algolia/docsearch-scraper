@@ -22,15 +22,16 @@ class BuildDockerScraper(AbstractBuildDocker):
         return isinstance(args[1], str) and args[1].lower() == 'true'
 
     def run(self, args):
-
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.base",
-                                      "algolia/base-docsearch-scraper")
-
+        
         test = self.get_option('test', args)
 
         if test:
             return self.build_docker_file("scraper/dev/docker/Dockerfile.test",
                                           "algolia/docsearch-scraper-test")
+
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.base",
+                                      "algolia/base-docsearch-scraper")
+
         if code != 0:
             return code
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
