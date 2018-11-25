@@ -6,4 +6,4 @@ WORKDIR /root
 # Copy DocSearch files
 COPY . .
 
-ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]
+ENTRYPOINT ["pipenv", "run", "./docsearch", "test", "true"]
