@@ -14,6 +14,7 @@ install:
   - sudo pipenv run ./docsearch test true || echo "first test failed"
   - sudo pipenv run ./docsearch test true || echo "2nd test failed"
   - sudo pipenv run ./docsearch test true || echo "3rd test failed"
+  - sudo echo "127.0.0.1 localhost" >> /etc/hosts
   - sudo cat /etc/hosts
 script:
   - sudo pipenv run ./docsearch test true
