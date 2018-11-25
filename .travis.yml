@@ -27,7 +27,7 @@ install:
   - sudo rm ~/chromedriver_linux64.zip
   - sudo mv -f ~/chromedriver /usr/bin/chromedriver
   - sudo chown root:root /usr/bin/chromedriver
-  - chmod 0755 /usr/bin/chromedriver
+  - sudo chmod 0755 /usr/bin/chromedriver
   # Install Selenium.
   - sudo wget -N http://selenium-release.storage.googleapis.com/$SELENIUM_SUBDIR/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar -P ~/
   - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/bin/selenium-server-standalone.jar
@@ -35,7 +35,7 @@ install:
   - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
   - sudo pip install pipenv
   - sudo pipenv install
-  - ls /usr/bin/
+  - chromedriver --url-base=/wd/hub
 script:
   - sudo pipenv run ./docsearch test
 notifications:
