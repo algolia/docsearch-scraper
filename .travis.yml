@@ -19,7 +19,7 @@ install:
 
   - sudo mv chromedriver /usr/bin/chromedriver
   - sudo ls -a /usr/bin
-  - sudo sed -i '127\.0\.0\.1 localhost' /etc/hosts
+  - sudo sed -i '1s/^/127.0.0.1 localhost/' /etc/hosts
   - sudo cat /etc/hosts
 script:
   - sudo pipenv run ./docsearch test true
