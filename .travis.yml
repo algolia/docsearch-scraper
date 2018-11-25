@@ -33,8 +33,8 @@ install:
   - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/bin/selenium-server-standalone.jar
   - sudo chown root:root /usr/bin/selenium-server-standalone.jar
   - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
-  - pip install pipenv
-  - pipenv install
+  - sudo pip install pipenv
+  - sudo pipenv install
 script:
   - sudo pipenv run ./docsearch test
 notifications:
