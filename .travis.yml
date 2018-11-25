@@ -35,7 +35,7 @@ install:
   - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
   - sudo pip install pipenv
   - sudo pipenv install
-  - export PATH=$PATH:usr/bin/chromedriver
+  - DISPLAY=:1 xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.13.0.jar &
 script:
   - pipenv run ./docsearch test
 notifications:
