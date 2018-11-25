@@ -37,7 +37,7 @@ install:
   - sudo pipenv install
   - export PATH=$PATH:usr/bin/chromedriver
 script:
-  - sudo pipenv run ./docsearch test
+  - pipenv run ./docsearch test
 notifications:
   email: false
   slack:
