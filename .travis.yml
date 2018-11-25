@@ -33,7 +33,7 @@ install:
   - sudo mv -f ~/selenium-server-standalone-$SELENIUM_STANDALONE_VERSION.jar /usr/bin/selenium-server-standalone.jar
   - sudo chown root:root /usr/bin/selenium-server-standalone.jar
   - sudo chmod 0755 /usr/bin/selenium-server-standalone.jar
-  - DISPLAY=:1 xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.13.0.jar
+  - DISPLAY=:1 sudo xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar /usr/bin/selenium-server-standalone.jar
   - pip install pipenv
   - pipenv install
 script:
