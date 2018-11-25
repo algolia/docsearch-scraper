@@ -36,7 +36,7 @@ install:
   - pip install pipenv
   - pipenv install
 script:
-  - pipenv run ./docsearch test
+  - sudo pipenv run ./docsearch test
 notifications:
   email: false
   slack:
