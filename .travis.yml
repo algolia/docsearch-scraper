@@ -19,7 +19,7 @@ install:
   - sudo apt-get update -y && sudo apt-get install -yq unzip xvfb libxi6 libgconf-2-4 default-jdk
 
   - sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
-  - echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+  - sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   - sudo apt-get update -y && sudo apt-get install -yq google-chrome-stable unzip
   - sudo wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
   - sudo unzip chromedriver_linux64.zip
