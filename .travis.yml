@@ -12,6 +12,7 @@ install:
   - pip install pipenv
   - pipenv install
   - pipenv run ./docsearch test true || echo "first test failed"
+  - pipenv run ./docsearch test true || echo "2nd test failed"
 script:
   - pipenv run ./docsearch test true
 notifications:
