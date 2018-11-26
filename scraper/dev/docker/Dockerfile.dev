@@ -2,5 +2,6 @@
 # - Do not COPY ./src
 # - Do not define an ENTRYPOINT
 
-FROM algolia/base-docsearch-scraper
+FROM algolia/
+docsearch-scraper-base
 MAINTAINER Algolia <documentationsearch@algolia.com>
