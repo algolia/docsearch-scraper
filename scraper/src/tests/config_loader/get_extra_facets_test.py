@@ -12,7 +12,7 @@ class TestGetExtraFacets:
 
     def test_extra_facets_should_be_set_from_start_urls_variables(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.chrome", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         c = config({
@@ -32,7 +32,7 @@ class TestGetExtraFacets:
 
     def test_extra_facets_should_be_set_from_start_urls_variables_with_two_start_url(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.chrome", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         c = config({
@@ -58,7 +58,7 @@ class TestGetExtraFacets:
 
     def test_extra_facets_should_be_set_from_start_urls_variables_with_multiple_tags(self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.chrome", lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         c = config({
