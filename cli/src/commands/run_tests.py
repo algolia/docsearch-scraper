@@ -42,6 +42,6 @@ class RunTests(AbstractCommand):
 
         if docker == "no_browser":
             test_command.append("-k")
-            test_command.append("\"not _browser\"")
+            test_command.append("not _browser")
         print(test_command)
         return self.exec_shell_command(test_command)
