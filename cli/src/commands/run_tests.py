@@ -26,7 +26,7 @@ class RunTests(AbstractCommand):
 
     def run(self, args):
         docker = self.get_option('docker', args)
-        if docker is True:
+        if docker == True:
             self.exec_shell_command(["./docsearch", "docker:build", "true"])
             run_command = [
                 "docker",
@@ -43,5 +43,5 @@ class RunTests(AbstractCommand):
         if docker == "no_browser":
             test_command.append("-k")
             test_command.append("\"not _browser\"")
-
+        print(test_command)
         return self.exec_shell_command(test_command)
