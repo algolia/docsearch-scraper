@@ -19,13 +19,14 @@ class RunTests(AbstractCommand):
             return False
         if isinstance(args[1], bool):
             return args[1]
+        if args[1] is 'no_browser':
+            return "no_browser"
+
         return isinstance(args[1], str) and args[1].lower() == 'true'
 
     def run(self, args):
-
         docker = self.get_option('docker', args)
-
-        if docker:
+        if docker is True:
             self.exec_shell_command(["./docsearch", "docker:build", "true"])
             run_command = [
                 "docker",
@@ -37,5 +38,10 @@ class RunTests(AbstractCommand):
                 "-t",
                 "algolia/docsearch-scraper-test"]
             return self.exec_shell_command(run_command)
+        test_command = ["pytest", "./scraper/src"]
 
-        return self.exec_shell_command(["pytest", "./scraper/src"])
+        if docker == "no_browser":
+            test_command.append("-k")
+            test_command.append("\"not _browser\"")
+
+        return self.exec_shell_command(test_command)
