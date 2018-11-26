@@ -5,4 +5,4 @@ WORKDIR /root
 
 # Copy DocSearch files
 COPY . .
-RUN chromedriver --whitelisted &
+ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]
