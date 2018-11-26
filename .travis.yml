@@ -9,11 +9,8 @@ install:
   # the file is not here, it will ask questions to create the file. We don't
   # need that in CI.
   - touch .env
-  - sudo pip install pipenv
-  - sudo pipenv install
-  - sudo pipenv run ./docsearch test true || echo "first test failed"
-  - sudo pipenv run ./docsearch test true || echo "2nd test failed"
-  - sudo pipenv run ./docsearch test true || echo "3rd test failed"
+  - pip install pipenv
+  - pipenv install
 script:
   - pipenv run ./docsearch test true
 notifications:
