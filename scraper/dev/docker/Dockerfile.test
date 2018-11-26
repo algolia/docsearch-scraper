@@ -6,5 +6,3 @@ WORKDIR /root
 # Copy DocSearch files
 COPY . .
 RUN chromedriver --whitelisted &
-RUN ls /usr/bin/
-ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]
