@@ -23,7 +23,6 @@ install:
   - sudo ls -a /usr/bin
   - sudo sed -i '1s/^/127.0.0.1 localhost/' /etc/hosts
   - sudo cat /etc/hosts
-  - sudo PIPENV_HIDE_EMOJIS=1
 script:
   - sudo pipenv run ./docsearch test true
 notifications:
