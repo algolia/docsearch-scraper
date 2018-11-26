@@ -4,8 +4,3 @@
 
 FROM algolia/base-docsearch-scraper
 MAINTAINER Algolia <documentationsearch@algolia.com>
-
-# Copy DocSearch files
-COPY scraper/dev/docker/bin/run /root/
-COPY scraper/dev/docker/bin/check_js_render.py /root/
-RUN chmod +x /root/run
