@@ -24,7 +24,7 @@ install:
   - sudo sed -i '1s/^/127.0.0.1 localhost/' /etc/hosts
   - sudo cat /etc/hosts
 script:
-  - sudo pipenv run ./docsearch test true
+  - sudo PIPENV_HIDE_EMOJIS=1 pipenv run ./docsearch test true
 notifications:
   email: false
   slack:
