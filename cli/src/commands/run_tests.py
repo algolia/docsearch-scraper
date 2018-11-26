@@ -36,7 +36,7 @@ class RunTests(AbstractCommand):
                 "docsearch-scraper-test",
                 "-t",
                 "algolia/docsearch-scraper-test",
-                "/usr/bin/chromedriver --whitelisted &"]
+                "pipenv run ./docsearch test"]
             return self.exec_shell_command(run_command)
 
         return self.exec_shell_command(["pytest", "./scraper/src"])
