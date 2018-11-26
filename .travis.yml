@@ -10,6 +10,7 @@ install:
   # need that in CI.
   - touch .env
   - sudo pip install pipenv
+  - docker pull algolia/docsearch-scraper-test
   - sudo pipenv install
   - sudo pipenv run ./docsearch test true || echo "first test failed"
   - sudo pipenv run ./docsearch test true || echo "2nd test failed"
