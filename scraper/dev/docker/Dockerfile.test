@@ -5,4 +5,5 @@ WORKDIR /root
 
 # Copy DocSearch files
 COPY . .
+RUN touch .env
 ENTRYPOINT ["pipenv", "run", "./docsearch", "test"]

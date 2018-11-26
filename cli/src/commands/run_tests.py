@@ -35,8 +35,7 @@ class RunTests(AbstractCommand):
                 "--name",
                 "docsearch-scraper-test",
                 "-t",
-                "algolia/docsearch-scraper-test",
-                "pipenv run ./docsearch test"]
+                "algolia/docsearch-scraper-test"]
             return self.exec_shell_command(run_command)
 
         return self.exec_shell_command(["pytest", "./scraper/src"])
