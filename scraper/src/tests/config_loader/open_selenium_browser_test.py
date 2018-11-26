@@ -13,7 +13,7 @@ class TestOpenSeleniumBrowser:
         assert BrowserHandler.conf_need_browser(actual.config_original_content,
                                                 actual.js_render) is False
 
-    def test_browser_needed_when_js_render_true_browser(self, monkeypatch):
+    def test_browser_needed_when_js_render_true(self, monkeypatch):
         from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.chrome",
                             lambda x: MockedInit())
@@ -28,7 +28,7 @@ class TestOpenSeleniumBrowser:
         assert BrowserHandler.conf_need_browser(actual.config_original_content,
                                                 actual.js_render) is True
 
-    def test_browser_needed_when_config_contains_automatic_tag_browser(self,
+    def test_browser_needed_when_config_contains_automatic_tag(self,
                                                                        monkeypatch):
         from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.chrome",
