@@ -5,5 +5,5 @@ WORKDIR /root
 
 # Copy DocSearch files
 COPY . .
-RUN sudo PIPENV_HIDE_EMOJIS=1
-ENTRYPOINT ["sudo", "pipenv", "run", "./docsearch", "test"]
+RUN ls /usr/bin
+ENTRYPOINT [pipenv", "run", "./docsearch", "test"]
