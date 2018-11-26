@@ -21,7 +21,6 @@ class RunConfigDocker(AbstractCommand):
 
     @staticmethod
     def from_local_code_parse(args):
-        print(args)
         if len(args) < 2:
             return False
         if isinstance(args[1], bool):
