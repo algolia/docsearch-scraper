@@ -1,3 +1,4 @@
+# coding: utf-8
 from ...config.config_loader import ConfigLoader
 from .abstract import config
 
