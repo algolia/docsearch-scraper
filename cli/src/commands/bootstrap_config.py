@@ -48,8 +48,8 @@ class BootstrapConfig(AbstractCommand):
     def config_to_s(self, config):
         import json
         config = OrderedDict(sorted(config.items(),
-                                  key=key_sort)
-                           )
+                                    key=key_sort)
+                             )
 
         return json.dumps(config, separators=(',', ': '), indent=2)
 

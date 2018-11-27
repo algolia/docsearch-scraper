@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 import lxml.html
 from .abstract import get_strategy
 

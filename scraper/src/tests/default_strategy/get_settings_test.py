@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 from .abstract import get_strategy
 from ...strategies.algolia_settings import AlgoliaSettings
+
 
 class TestGetSettings:
     def test_get_settings(self):
@@ -20,19 +20,19 @@ class TestGetSettings:
 
         # Then
         expected_settings = [
-                'unordered(hierarchy_radio_camel.lvl0)',
-                'unordered(hierarchy_radio.lvl0)',
-                'unordered(hierarchy_radio_camel.lvl1)',
-                'unordered(hierarchy_radio.lvl1)',
-                'unordered(hierarchy_radio_camel.lvl2)',
-                'unordered(hierarchy_radio.lvl2)',
-                'unordered(hierarchy_camel.lvl0)',
-                'unordered(hierarchy.lvl0)',
-                'unordered(hierarchy_camel.lvl1)',
-                'unordered(hierarchy.lvl1)',
-                'unordered(hierarchy_camel.lvl2)',
-                'unordered(hierarchy.lvl2)',
-                'content'
+            'unordered(hierarchy_radio_camel.lvl0)',
+            'unordered(hierarchy_radio.lvl0)',
+            'unordered(hierarchy_radio_camel.lvl1)',
+            'unordered(hierarchy_radio.lvl1)',
+            'unordered(hierarchy_radio_camel.lvl2)',
+            'unordered(hierarchy_radio.lvl2)',
+            'unordered(hierarchy_camel.lvl0)',
+            'unordered(hierarchy.lvl0)',
+            'unordered(hierarchy_camel.lvl1)',
+            'unordered(hierarchy.lvl1)',
+            'unordered(hierarchy_camel.lvl2)',
+            'unordered(hierarchy.lvl2)',
+            'content'
         ]
 
         assert settings['attributesToIndex'] == expected_settings

@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 import lxml.html
 from .abstract import get_strategy
 from ...strategies.anchor import Anchor
+
 
 class TestGetAnchor:
     def test_name_on_heading(self):
@@ -16,7 +16,8 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = Anchor.get_anchor(element)
@@ -38,14 +39,14 @@ class TestGetAnchor:
         """)
 
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = Anchor.get_anchor(element)
 
         # Then
         assert actual == 'bar'
-
 
     def test_id_on_heading(self):
         # Given
@@ -58,7 +59,8 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = Anchor.get_anchor(element)
@@ -77,7 +79,8 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl1'
-        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = Anchor.get_anchor(element)
@@ -96,7 +99,8 @@ class TestGetAnchor:
         </body></html>
         """)
         level = 'lvl2'
-        element = strategy.select(strategy.config.selectors['default'][level]['selector'])[0]
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
 
         # When
         actual = Anchor.get_anchor(element)

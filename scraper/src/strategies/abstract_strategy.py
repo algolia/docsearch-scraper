@@ -24,7 +24,8 @@ class AbstractStrategy(object):
     @staticmethod
     def pprint(data):
         """Pretty print a JSON-like structure"""
-        print(json.dumps(data, indent=2, sort_keys=True, separators=(',', ': ')))
+        print(
+            json.dumps(data, indent=2, sort_keys=True, separators=(',', ': ')))
 
     @staticmethod
     def get_body(response):
@@ -144,8 +145,10 @@ class AbstractStrategy(object):
         if len(elements) == 0:
             return None
 
-        text = ' '.join([AbstractStrategy.get_text(element, strip_chars) for element in elements
-                         if AbstractStrategy.get_text(element, strip_chars) is not None])
+        text = ' '.join(
+            [AbstractStrategy.get_text(element, strip_chars) for element in
+             elements
+             if AbstractStrategy.get_text(element, strip_chars) is not None])
 
         if len(text) == 0:
             return None

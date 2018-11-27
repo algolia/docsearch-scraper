@@ -32,7 +32,8 @@ class UpdateEmails(AbstractCommand):
         return 'Add or update contact emails'
 
     def get_options(self):
-        return [{'name': 'configs...', 'description': 'name of the docsearch you want to update contact emails'}]
+        return [{'name': 'configs...',
+                 'description': 'name of the docsearch you want to update contact emails'}]
 
     def run(self, args):
         from deployer.src.emails import add
@@ -50,7 +51,8 @@ class DeleteEmails(AbstractCommand):
         return 'Delete contact emails'
 
     def get_options(self):
-        return [{'name': 'configs...', 'description': 'name of the docsearch you want to delete contact emails'}]
+        return [{'name': 'configs...',
+                 'description': 'name of the docsearch you want to delete contact emails'}]
 
     def run(self, args):
         from deployer.src.emails import delete

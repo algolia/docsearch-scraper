@@ -9,7 +9,8 @@ def _is_automatically_updated(config, attribute):
             if 'variables' in start_url:
                 for variable in start_url['variables']:
                     if (variable == attribute):
-                        if not isinstance(start_url['variables'][variable], list):
+                        if not isinstance(start_url['variables'][variable],
+                                          list):
                             return True
     return False
 
@@ -84,8 +85,9 @@ Have a nice day :)"""
             keys.sort()
 
             if len(keys) > 0:
-                updated = "is automatically fetched from your website" if _is_automatically_updated(configs[config],
-                                                                                                    name) else "is hardcoded in the config"
+                updated = "is automatically fetched from your website" if _is_automatically_updated(
+                    configs[config],
+                    name) else "is hardcoded in the config"
                 facet_template += base_facet_template.replace('{{NAME}}', name) \
                     .replace('{{CAPITALISE_NAME}}', name.upper()) \
                     .replace("{{UPDATED}}", updated) \
@@ -93,11 +95,14 @@ Have a nice day :)"""
 
                 example_phrase.append('the ' + name + ' "' + keys[0] + '"')
                 example_code.append("\"" + name + ":" + keys[0] + "\"")
-                example_options.append("\"" + name + ":$" + name.upper() + "\"")
+                example_options.append(
+                    "\"" + name + ":$" + name.upper() + "\"")
 
         if len(example_options) > 0:
-            algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (', '.join(example_options)) + "] }"
-            facet_template += base_example_template.replace('{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase)) \
+            algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (
+            ', '.join(example_options)) + "] }"
+            facet_template += base_example_template.replace(
+                '{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase)) \
                 .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
 
     api_key = algolia_helper.get_docsearch_key(config)

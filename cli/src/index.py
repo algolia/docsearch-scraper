@@ -41,23 +41,28 @@ if not path.isfile(env_file):
     ans = input("What is your Algolia API_KEY: ")
     f.write("API_KEY=" + ans + "\n")
 
-    ans = input("What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
+    ans = input(
+        "What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
     f.write("WEBSITE_USERNAME=" + ans + "\n")
 
-    ans = input("What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
+    ans = input(
+        "What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
     f.write("WEBSITE_PASSWORD=" + ans + "\n")
 
-    ans = input("What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
+    ans = input(
+        "What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
     f.write("SCHEDULER_USERNAME=" + ans + "\n")
 
-    ans = input("What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
+    ans = input(
+        "What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
     f.write("SCHEDULER_PASSWORD=" + ans + "\n")
 
     ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
     if ans != "":
         f.write("SLACK_HOOK=" + ans + "\n")
 
-        ans = input("What is your DEPLOY_KEY (Leave empty unless you have it): ")
+        ans = input(
+            "What is your DEPLOY_KEY (Leave empty unless you have it): ")
         f.write("DEPLOY_KEY=" + ans + "\n")
 
     f.close()
@@ -116,9 +121,11 @@ def print_usage(no_ansi=False):
     printer("Options:", 2, no_ansi)
 
     if no_ansi:
-        printer("  " + "--help" + (' ' * 4) + 'Display help message', 4, no_ansi)
+        printer("  " + "--help" + (' ' * 4) + 'Display help message', 4,
+                no_ansi)
     else:
-        printer("  " + get_color(1) + "--help" + get_color() + (' ' * 4) + 'Display help message', 4)
+        printer("  " + get_color(1) + "--help" + get_color() + (
+            ' ' * 4) + 'Display help message', 4)
 
     printer("", 4, no_ansi)
 
@@ -146,9 +153,11 @@ def print_usage(no_ansi=False):
         for cmd in groups[key]:
             nb_spaces = longest_cmd_name + 2 - len(cmd.get_name())
             if no_ansi:
-                printer("  " + cmd.get_name() + (' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
+                printer("  " + cmd.get_name() + (
+                    ' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
             else:
-                printer("  " + get_color(1) + cmd.get_name() + get_color() + (' ' * nb_spaces) + cmd.get_description(),
+                printer("  " + get_color(1) + cmd.get_name() + get_color() + (
+                    ' ' * nb_spaces) + cmd.get_description(),
                         no_ansi)
 
 

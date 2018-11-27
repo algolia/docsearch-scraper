@@ -3,9 +3,7 @@ import os.path as path
 import subprocess as sp
 from collections import OrderedDict
 import json
-
 from builtins import input
-from . import helpers
 
 
 def _prompt_command(emails):
@@ -67,9 +65,11 @@ def _commit_push(config_name, action, config_dir):
     os.chdir(config_dir)
 
     with open(os.devnull, 'w') as dev_null:
-        sp.call(['git', 'pull', '-r', 'origin', 'master'], stdout=dev_null, stderr=sp.STDOUT)
+        sp.call(['git', 'pull', '-r', 'origin', 'master'], stdout=dev_null,
+                stderr=sp.STDOUT)
         sp.call(['git', 'add', txt], stdout=dev_null, stderr=sp.STDOUT)
-        sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null, stderr=sp.STDOUT)
+        sp.call(['git', 'commit', '-m', commit_message], stdout=dev_null,
+                stderr=sp.STDOUT)
         sp.call(['git', 'push'], stdout=dev_null, stderr=sp.STDOUT)
 
     os.chdir(old_dir)
@@ -99,7 +99,8 @@ def _write(emails, config_name, config_dir):
 
 
 def _prompt_emails(config_name, config_dir):
-    print("If you \033[94mremove emails, please use ./docsearch invite:remove_user\033\033[0m")
+    print(
+        "If you \033[94mremove emails, please use ./docsearch invite:remove_user\033\033[0m")
     emails = _retrieve(config_name, config_dir)
 
     while True:

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 import lxml.html
 from .abstract import get_strategy
 
@@ -9,10 +8,10 @@ class TestPageRank:
         # Given
         strategy = get_strategy({
             'selectors': {
-             "lvl0": "h1",
-             "lvl1": "h2",
-             "lvl2": "h3",
-             "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 
@@ -36,10 +35,10 @@ class TestPageRank:
                 'page_rank': 1
             }],
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 
@@ -63,10 +62,10 @@ class TestPageRank:
                 'page_rank': 1
             }],
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 
@@ -90,10 +89,10 @@ class TestPageRank:
                 'page_rank': -1
             }],
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 

@@ -12,7 +12,8 @@ class GetLogs(AbstractCommand):
         return super(GetLogs, self).get_usage() + " config"
 
     def get_options(self):
-        return [{"name": "name", "description": "name of the connector to reindex"}]
+        return [{"name": "name",
+                 "description": "name of the connector to reindex"}]
 
     def run(self, args):
         import json
@@ -27,7 +28,8 @@ class GetLogs(AbstractCommand):
         scheduler_username = environ.get('SCHEDULER_USERNAME')
         scheduler_password = environ.get('SCHEDULER_PASSWORD')
 
-        url = "https://" + scheduler_username + ":" + scheduler_password + "@crawlers.algolia.com/1/crawlers/" + str(crawlers_id[connector_name]) + "/logs"
+        url = "https://" + scheduler_username + ":" + scheduler_password + "@crawlers.algolia.com/1/crawlers/" + str(
+            crawlers_id[connector_name]) + "/logs"
         r = make_custom_get_request(url)
 
         logs = json.loads(r.content)['logs']

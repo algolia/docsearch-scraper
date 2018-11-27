@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 from .abstract import get_strategy
 import lxml.html
 from scrapy.http import TextResponse
+
 
 class TestGetRecordsFromDom:
     def test_simple(self):
@@ -266,7 +266,8 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = strategy.get_records_from_dom('http://test.com/docs/api/methods')
+        actual = strategy.get_records_from_dom(
+            'http://test.com/docs/api/methods')
 
         # Then
         assert len(actual) == 4
@@ -312,7 +313,8 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = strategy.get_records_from_dom('http://test.com/docs/guides/tutorial1')
+        actual = strategy.get_records_from_dom(
+            'http://test.com/docs/guides/tutorial1')
 
         # Then
         assert len(actual) == 1
@@ -358,13 +360,13 @@ class TestGetRecordsFromDom:
         """)
 
         # When
-        actual = strategy.get_records_from_dom('http://test.com/docs/guides/tutorial1')
+        actual = strategy.get_records_from_dom(
+            'http://test.com/docs/guides/tutorial1')
 
         # Then
         assert len(actual) == 1
         assert actual[0]['type'] == 'lvl0'
         assert actual[0]['hierarchy']['lvl0'] == '<code>Foo</code>'
-
 
     def test_stop_content(self):
         # Given
@@ -390,7 +392,8 @@ class TestGetRecordsFromDom:
         </body></html>
         """
 
-        response = TextResponse('http://test.com/docs/guides', body=html, encoding='utf-8')
+        response = TextResponse('http://test.com/docs/guides', body=html,
+                                encoding='utf-8')
         # When
         actual = strategy.get_records_from_response(response)
 
@@ -419,7 +422,8 @@ class TestGetRecordsFromDom:
         </body></html>
         """)
 
-        strategy.dom = strategy.remove_from_dom(strategy.dom, strategy.config.selectors_exclude)
+        strategy.dom = strategy.remove_from_dom(strategy.dom,
+                                                strategy.config.selectors_exclude)
 
         # When
         actual = strategy.get_records_from_dom()
@@ -451,7 +455,8 @@ class TestGetRecordsFromDom:
         </body></html>
         """)
 
-        strategy.dom = strategy.remove_from_dom(strategy.dom, strategy.config.selectors_exclude)
+        strategy.dom = strategy.remove_from_dom(strategy.dom,
+                                                strategy.config.selectors_exclude)
 
         # When
         actual = strategy.get_records_from_dom()

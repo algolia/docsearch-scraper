@@ -2,7 +2,8 @@ import requests
 from os import environ
 from base64 import b64encode
 
-APPLICATION_ID_PROD_INTERNAL = environ.get('APPLICATION_ID_PROD_INTERNAL', None);  # website internal DocSearch app id
+APPLICATION_ID_PROD_INTERNAL = environ.get('APPLICATION_ID_PROD_INTERNAL',
+                                           None);  # website internal DocSearch app id
 
 
 def get_endpoint(endpoint, params=''):
@@ -16,7 +17,9 @@ def get_headers():
 
     app_id = environ.get('APPLICATION_ID_PROD')
     admin_api_key = environ.get('API_KEY_PROD')
-    auth_token = b64encode(app_id + ":" + admin_api_key).replace('=', '').replace("\n", '')
+    auth_token = b64encode(app_id + ":" + admin_api_key).replace('=',
+                                                                 '').replace(
+        "\n", '')
 
     return {
         'Authorization': 'Basic ' + token,
@@ -26,7 +29,8 @@ def get_headers():
 
 def get_application_rights():
     app_id = environ.get('APPLICATION_ID_PROD')
-    endpoint = get_endpoint('/applications/' + app_id)  # , '?fields=application_rights')
+    endpoint = get_endpoint(
+        '/applications/' + app_id)  # , '?fields=application_rights')
 
     r = requests.get(endpoint, headers=get_headers())
 
@@ -42,7 +46,7 @@ def get_right_for_email(email):
         if right['user']['email'] == email:
             return right
 
-    print (email + " has no rights on the app")
+    print(email + " has no rights on the app")
     return None
 
 
@@ -71,7 +75,7 @@ def add_user_to_index(index_name, user_email):
 
     # User is already added to this index
     if index_name in indices:
-        print (user_email + " has already access to " + index_name)
+        print(user_email + " has already access to " + index_name)
         return None;
 
     indices.append(index_name)
@@ -90,7 +94,7 @@ def add_user_to_index(index_name, user_email):
     if right:
         endpoint = get_endpoint('/application_rights/' + str(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
-        print (
+        print(
             user_email + " is already registered on algolia dashboard (has right to other DOCSEARCH indices), analytics granted to " + index_name)
         return True
     # Adding user for the first time
@@ -103,7 +107,8 @@ def add_user_to_index(index_name, user_email):
         invitation_url = data['user']['invitation_url']
 
         if invitation_url is not None:
-            print("Link to create an account for " + user_email + " is " + invitation_url)
+            print(
+                "Link to create an account for " + user_email + " is " + invitation_url)
         else:
             print(
                 user_email + " is already registered (without any right), analytics granted to the DocSearch index " + index_name)
@@ -127,15 +132,18 @@ def remove_user_from_index(index_name, user_email):
         indices.remove(index_name)
 
     if len(indices) > 0:
-        requests.patch(get_endpoint('/application_rights/' + str(right['id'])), json={
-            'application_right': {
-                'application_id': APPLICATION_ID_PROD_INTERNAL,
-                'user_email': user_email,
-                'indices': indices,
-                'analytics': True
-            }
-        }, headers=get_headers())
+        requests.patch(get_endpoint('/application_rights/' + str(right['id'])),
+                       json={
+                           'application_right': {
+                               'application_id': APPLICATION_ID_PROD_INTERNAL,
+                               'user_email': user_email,
+                               'indices': indices,
+                               'analytics': True
+                           }
+                       }, headers=get_headers())
     else:
-        requests.delete(get_endpoint('/application_rights/' + str(right['id'])), headers=get_headers())
+        requests.delete(
+            get_endpoint('/application_rights/' + str(right['id'])),
+            headers=get_headers())
 
     print(user_email + " uninvite from " + index_name)

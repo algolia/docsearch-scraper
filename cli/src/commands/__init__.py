@@ -1,5 +1,6 @@
 from builtins import input
 
+
 def confirm(message="Confirm"):
     prompt = message + ' [y/n]:\n'
 

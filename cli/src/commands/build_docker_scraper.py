@@ -22,7 +22,7 @@ class BuildDockerScraper(AbstractBuildDocker):
         return isinstance(args[1], str) and args[1].lower() == 'true'
 
     def run(self, args):
-        
+
         test = self.get_option('test', args)
 
         if test:

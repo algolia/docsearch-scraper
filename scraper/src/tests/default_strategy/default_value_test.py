@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 import lxml.html
 from .abstract import get_strategy
+
 
 class TestGetRecordsFromDomWithDefaultValue:
     def test_default_value(self):

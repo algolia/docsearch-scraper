@@ -9,7 +9,8 @@ class GenerateEmail(AbstractCommand):
         return 'Generate the email for a docsearch'
 
     def get_options(self):
-        return [{"name": "name", "description": "name of the docsearch you want to generate the email"}]
+        return [{"name": "name",
+                 "description": "name of the docsearch you want to generate the email"}]
 
     def run(self, args):
         import pyperclip

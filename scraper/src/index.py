@@ -1,5 +1,5 @@
 """
-documentationSearch scrapper main entry point
+DocSearch scraper main entry point
 """
 
 from scrapy.crawler import CrawlerProcess

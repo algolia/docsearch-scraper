@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
-import lxml.html
+# coding: utf-8
 from .abstract import get_strategy
 
-class TestGetLevelWeight:
 
+class TestGetLevelWeight:
     def test_level_weight(self):
         strategy = get_strategy()
         assert strategy.get_level_weight('lvl0') == 100
