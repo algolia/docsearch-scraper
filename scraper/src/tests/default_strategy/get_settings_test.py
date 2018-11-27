@@ -1,3 +1,4 @@
+# coding: utf-8
 from .abstract import get_strategy
 from ...strategies.algolia_settings import AlgoliaSettings
 
