@@ -5,10 +5,9 @@ current_branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 git checkout master || exit 1
 git pull origin master
 
-docker build -t algolia/base-documentation-scrapper -f scraper/dev/docker/Dockerfile.base .
-docker push algolia/base-documentation-scrapper:latest
+./docsearch docker:build
 
-docker build -t algolia/documentation-scrapper -f scraper/dev/docker/Dockerfile .
-docker push algolia/documentation-scrapper:latest
+docker push algolia/docsearch-scrapper-base:latest
+docker push algolia/docsearch-scrapper:latest
 
 git checkout $current_branch

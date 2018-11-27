@@ -30,7 +30,7 @@ class BuildDockerScraper(AbstractBuildDocker):
                                           "algolia/docsearch-scraper-test")
 
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.base",
-                                      "algolia/base-docsearch-scraper")
+                                      "algolia/docsearch-scraper-base")
 
         if code != 0:
             return code

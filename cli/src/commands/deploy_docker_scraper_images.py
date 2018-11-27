@@ -9,4 +9,5 @@ class DeployDockerScraperImages(AbstractCommand):
         return 'Deploy docker scraper images'
 
     def run(self, args):
-        return self.exec_shell_command(['./cli/scripts/publish_docker_scraper_images.sh'])
+        return self.exec_shell_command(
+            ['./cli/scripts/publish_docker_scraper_images.sh'])
