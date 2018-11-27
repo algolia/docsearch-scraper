@@ -1,5 +1,3 @@
-
-
 class AlgoliaSettings:
     def __init__(self):
         pass
@@ -12,20 +10,25 @@ class AlgoliaSettings:
         for level in levels:
             for selectors_key in config.selectors:
                 attr_to_index = 'unordered(hierarchy_radio.' + level + ')'
-                if level in config.selectors[selectors_key] and attr_to_index not in attributes_to_index:
-                    attributes_to_index.append('unordered(hierarchy_radio_camel.' + level + ')')
+                if level in config.selectors[
+                    selectors_key] and attr_to_index not in attributes_to_index:
+                    attributes_to_index.append(
+                        'unordered(hierarchy_radio_camel.' + level + ')')
                     attributes_to_index.append(attr_to_index)
 
         # Then in the whole title hierarchy
         for level in levels:
             for selectors_key in config.selectors:
                 attr_to_index = 'unordered(hierarchy.' + level + ')'
-                if level in config.selectors[selectors_key] and attr_to_index not in attributes_to_index:
-                    attributes_to_index.append('unordered(hierarchy_camel.' + level + ')')
+                if level in config.selectors[
+                    selectors_key] and attr_to_index not in attributes_to_index:
+                    attributes_to_index.append(
+                        'unordered(hierarchy_camel.' + level + ')')
                     attributes_to_index.append(attr_to_index)
 
         for selectors_key in config.selectors:
-            if 'content' in config.selectors[selectors_key] and 'content' not in attributes_to_index:
+            if 'content' in config.selectors[
+                selectors_key] and 'content' not in attributes_to_index:
                 attributes_to_index.append('content')
 
         settings = {
@@ -49,7 +52,8 @@ class AlgoliaSettings:
                 'hierarchy_radio',
                 'content'
             ],
-            'attributesForFaceting': ['tags', 'no_variables', 'extra_attributes'] + config.get_extra_facets(),
+            'attributesForFaceting': ['tags', 'no_variables',
+                                      'extra_attributes'] + config.get_extra_facets(),
             'distinct': True,
             'attributeForDistinct': 'url',
             'customRanking': [

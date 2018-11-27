@@ -24,7 +24,8 @@ def get_conversation_ID_from_url(hs_url):
     cuid = capture_conversation_uid.match(hs_url).group(1)
 
     if not len(cuid) > 0:
-        raise ValueError("Wrong help scout url " + hs_url + ", must have a conversation sub part with ID")
+        raise ValueError(
+            "Wrong help scout url " + hs_url + ", must have a conversation sub part with ID")
 
     if not RepresentsInt(cuid):
         raise ValueError("Conversation ID : " + cuid + " must be an integer")
@@ -42,14 +43,16 @@ def get_conversation(cuid):
     conversation = response_json.get('item')
 
     if not conversation:
-        raise ValueError("Wrong json returned from help scout, must have an item attribute")
+        raise ValueError(
+            "Wrong json returned from help scout, must have an item attribute")
 
     return conversation
 
 
 def get_start_url_from_conversation(conversation):
     if not conversation or not conversation.get('threads')[-1]:
-        raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
+        raise ValueError(
+            "Wrong input conversation, must be not evaluate at None and have at least one thread")
 
     # The message to extract is the first from the thread and it was sent by a customer
     first_thread = conversation.get('threads')[-1]
@@ -60,10 +63,12 @@ def get_start_url_from_conversation(conversation):
         raise ValueError("First thread from the conversation thread is empty")
 
     if not was_sent_by_customer:
-        raise ValueError("First thread from the conversation thread wasn't sent by customer")
+        raise ValueError(
+            "First thread from the conversation thread wasn't sent by customer")
 
-    print ("URL fetched is \033[1;36m" + url_from_conversation + "\033[0m sent by \033[1;33m" + first_thread.get(
-        "customer").get("email") + "\033[0m")
+    print(
+        "URL fetched is \033[1;36m" + url_from_conversation + "\033[0m sent by \033[1;33m" + first_thread.get(
+            "customer").get("email") + "\033[0m")
 
     return url_from_conversation
 
@@ -72,7 +77,8 @@ def get_emails_from_conversation(conversation):
     emails = []
 
     if not conversation or not conversation.get('threads')[-1]:
-        raise ValueError("Wrong input conversation, must be not evaluate at None and have at least one thread")
+        raise ValueError(
+            "Wrong input conversation, must be not evaluate at None and have at least one thread")
 
     # Extract customer
     customer = conversation.get('customer')
@@ -81,7 +87,8 @@ def get_emails_from_conversation(conversation):
     was_sent_by_customer = first_thread.get('createdByCustomer')
 
     if not was_sent_by_customer:
-        raise ValueError("First thread from the conversation thread wasn't sent by customer")
+        raise ValueError(
+            "First thread from the conversation thread wasn't sent by customer")
 
     emails.append(customers_mail)
 
@@ -94,7 +101,9 @@ def get_emails_from_conversation(conversation):
         emails = emails + bcc
 
     if len(emails) > 1:
-        print ("Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (" with " + " ".join(emails[1:])))
+        print(
+            "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (
+            " with " + " ".join(emails[1:])))
 
     return emails
 
@@ -109,7 +118,8 @@ def add_note(cuid, body):
 
     response = helpers.make_request(conversation_endpoint,
                                     json_request=True,
-                                    data={"createdBy": {"id": "75881", "type": "user"},
+                                    data={"createdBy": {"id": "75881",
+                                                        "type": "user"},
                                           "type": "note",
                                           "body": body
                                           },
@@ -142,12 +152,14 @@ def is_pkgdown_conversation(conversation):
 def is_vuepress_conversation(conversation):
     return "vuepress" in conversation.get("tags")
 
+
 def is_larecipe_conversation(conversation):
     return "larecipe" in conversation.get("tags")
 
 
 @rate_limited(200, 60)
-def search(query, page=1, pageSize=50, sortField="modifiedAt", sortOrder="asc"):
+def search(query, page=1, pageSize=50, sortField="modifiedAt",
+           sortOrder="asc"):
     search_endpoint = "https://api.helpscout.net/v1/search/conversations.json"
     hs_api_key = get_helpscout_api_key()
 

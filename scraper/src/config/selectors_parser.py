@@ -4,7 +4,6 @@ from ..helpers import css_to_xpath
 
 
 class SelectorsParser(object):
-
     @staticmethod
     def _parse_selectors_set(config_selectors):
         selectors_set = {}
@@ -22,7 +21,8 @@ class SelectorsParser(object):
 
             # Global
             if 'global' in selectors_set[key]:
-                selectors_set[key]['global'] = bool(selectors_set[key]['global'])
+                selectors_set[key]['global'] = bool(
+                    selectors_set[key]['global'])
             else:
                 selectors_set[key]['global'] = False
 
@@ -30,27 +30,33 @@ class SelectorsParser(object):
             if 'type' in selectors_set[key]:
                 if selectors_set[key]['type'] not in ['xpath', 'css']:
                     raise Exception(
-                        selectors_set[key]['type'] + 'is not a good selector type, it should be `xpath` or `css`')
+                        selectors_set[key][
+                            'type'] + 'is not a good selector type, it should be `xpath` or `css`')
             else:
                 selectors_set[key]['type'] = 'css'
 
             if selectors_set[key]['type'] == 'css':
-                selectors_set[key]['selector'] = css_to_xpath(selectors_set[key]['selector'])
+                selectors_set[key]['selector'] = css_to_xpath(
+                    selectors_set[key]['selector'])
 
             # We don't need it because everything is xpath now
             selectors_set[key].pop('type')
 
             # Default value
-            selectors_set[key]['default_value'] = selectors_set[key]['default_value'] if 'default_value' in \
-                                                                                         selectors_set[
-                                                                                             key] else None
+            selectors_set[key]['default_value'] = selectors_set[key][
+                'default_value'] if 'default_value' in \
+                                    selectors_set[
+                                        key] else None
 
             # Strip chars
-            selectors_set[key]['strip_chars'] = selectors_set[key]['strip_chars'] if 'strip_chars' in selectors_set[
+            selectors_set[key]['strip_chars'] = selectors_set[key][
+                'strip_chars'] if 'strip_chars' in selectors_set[
                 key] else None
 
             if 'attributes' in selectors_set[key]:
-                selectors_set[key]['attributes'] = SelectorsParser._parse_selectors_set(selectors_set[key]['attributes'])
+                selectors_set[key][
+                    'attributes'] = SelectorsParser._parse_selectors_set(
+                    selectors_set[key]['attributes'])
 
         return selectors_set
 
@@ -61,7 +67,8 @@ class SelectorsParser(object):
             config_selectors = {'default': config_selectors}
 
         for selectors_key in config_selectors:
-            selectors[selectors_key] = self._parse_selectors_set(config_selectors[selectors_key])
+            selectors[selectors_key] = self._parse_selectors_set(
+                config_selectors[selectors_key])
 
         return selectors
 

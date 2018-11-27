@@ -1,4 +1,3 @@
-# coding: utf-8
 from ...config.config_loader import ConfigLoader
 from ...config.browser_handler import BrowserHandler
 from .abstract import config
@@ -29,7 +28,7 @@ class TestOpenSeleniumBrowser:
                                                 actual.js_render) is True
 
     def test_browser_needed_when_config_contains_automatic_tag(self,
-                                                                       monkeypatch):
+                                                               monkeypatch):
         from .mocked_init import MockedInit
         monkeypatch.setattr("selenium.webdriver.chrome",
                             lambda x: MockedInit())

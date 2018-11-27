@@ -9,7 +9,8 @@ class EnableConnector(AbstractCommand):
         return 'Disable a connector'
 
     def get_options(self):
-        return [{"name": "name", "description": "name of the connector you want to enable"}]
+        return [{"name": "name",
+                 "description": "name of the connector you want to enable"}]
 
     def run(self, args):
         from deployer.src.helpers import make_request

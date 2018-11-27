@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import lxml.html
 from .abstract import get_strategy
+
 
 class TestGetRecordsFromDomWithXpath:
     def test_one_xpath(self):

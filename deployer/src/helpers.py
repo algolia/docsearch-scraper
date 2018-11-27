@@ -3,7 +3,6 @@ import os
 USERNAME = os.environ.get('WEBSITE_USERNAME', '')
 PASSWORD = os.environ.get('WEBSITE_PASSWORD', '')
 
-
 api_key_prod = os.environ.get('API_KEY_PROD', '')
 
 slack_hook = os.environ.get('SLACK_HOOK', '')
@@ -25,7 +24,7 @@ def confirm(message="Confirm"):
 
         if ans == 'y' or ans == 'Y':
             return True
-        
+
         if ans == 'n' or ans == 'N':
             return False
 
@@ -43,7 +42,8 @@ def make_custom_get_request(url):
     return requests.get(url)
 
 
-def make_request(endpoint, type=None, data=None, username=None, password=None, json_request=False):
+def make_request(endpoint, type=None, data=None, username=None, password=None,
+                 json_request=False):
     import requests
 
     url = base_url + endpoint if "://" not in endpoint else endpoint
@@ -53,7 +53,7 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
     username = username if username else USERNAME
     password = password if password else PASSWORD
 
-    if data and not isinstance( data, dict ):
+    if data and not isinstance(data, dict):
         raise ValueError(data + " must be a dict ")
 
     if type == 'POST':
@@ -66,10 +66,10 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
                               auth=(username, password),
                               data=data)
 
-
         if r.status_code / 100 != 2:
-            print("ISSUE for POST request : " + url + " with params: " + str(data))
-            print (r.text)
+            print("ISSUE for POST request : " + url + " with params: " + str(
+                data))
+            print(r.text)
         return r
 
     if type == 'DELETE':
@@ -77,7 +77,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
                             auth=(username, password))
 
         if r.status_code not in success_codes:
-            print("ISSUE for DELETE request : " + url + " with params: " + str(data))
+            print("ISSUE for DELETE request : " + url + " with params: " + str(
+                data))
         return r
 
     if type == 'PUT':
@@ -86,7 +87,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
                          data=data)
         print(r.status_code)
         if r.status_code / 100 != 2:
-            print("ISSUE for PUT request : " + url + " with params: " + str(data))
+            print("ISSUE for PUT request : " + url + " with params: " + str(
+                data))
         return r
 
     if data != None:
@@ -97,9 +99,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
         r = requests.get(url,
                          auth=(username, password))
 
-
     if r.status_code / 100 != 2:
-        print("ISSUE for GET request : " + url + " with params:"+ data)
+        print("ISSUE for GET request : " + url + " with params:" + data)
 
     if json_request:
         r.json()
@@ -108,7 +109,6 @@ def make_request(endpoint, type=None, data=None, username=None, password=None, j
 
 
 def send_slack_notif(reports):
-
     if slack_hook == '':
         raise ValueError("NO SLACK_HOOK")
 

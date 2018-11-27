@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import lxml.html
 from .abstract import get_strategy
+
 
 class TestGetRecordsFromDomWithGlobalLevels:
     def test_global_title_at_the_end(self):
@@ -75,7 +74,6 @@ class TestGetRecordsFromDomWithGlobalLevels:
         assert actual[2]['hierarchy']['lvl0'] == 'Foo Foo'
         assert actual[2]['hierarchy']['lvl1'] == 'Bar'
         assert actual[2]['hierarchy']['lvl2'] == 'Baz'
-
 
     def test_several_global_selectors(self):
         # Given

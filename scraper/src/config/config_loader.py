@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 Load the config json file.
 """
@@ -75,7 +74,8 @@ class ConfigLoader(object):
             setattr(self, key, value)
 
         # Start browser if needed
-        self.driver = BrowserHandler.init(self.config_original_content, self.js_render)
+        self.driver = BrowserHandler.init(self.config_original_content,
+                                          self.js_render)
 
         # Validate
         ConfigValidator(self).validate()
@@ -112,18 +112,23 @@ class ConfigLoader(object):
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)
-        self.min_indexed_level = SelectorsParser().parse_min_indexed_level(self.min_indexed_level)
+        self.min_indexed_level = SelectorsParser().parse_min_indexed_level(
+            self.min_indexed_level)
         self.start_urls = UrlsParser.parse(self.start_urls)
 
         # Build default allowed_domains from start_urls and stop_urls
         if self.allowed_domains is None:
-            self.allowed_domains = UrlsParser.build_allowed_domains(self.start_urls, self.stop_urls)
+            self.allowed_domains = UrlsParser.build_allowed_domains(
+                self.start_urls, self.stop_urls)
 
     def update_nb_hits(self, nb_hits):
         if self.config_file is not None:
             # config loaded from file
-            previous_nb_hits = None if 'nb_hits' not in self.config_content else self.config_content['nb_hits']
-            nb_hit_updater = NbHitsUpdater(self.config_file, self.config_content, previous_nb_hits, nb_hits)
+            previous_nb_hits = None if 'nb_hits' not in self.config_content else \
+            self.config_content['nb_hits']
+            nb_hit_updater = NbHitsUpdater(self.config_file,
+                                           self.config_content,
+                                           previous_nb_hits, nb_hits)
             nb_hit_updater.update()
 
     def get_extra_facets(self):

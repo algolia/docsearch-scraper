@@ -1,4 +1,3 @@
-import scrapy.utils.request
 from OpenSSL import SSL
 from scrapy.core.downloader.contextfactory import ScrapyClientContextFactory
 

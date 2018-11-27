@@ -1,6 +1,6 @@
-# coding: utf-8
 from ...config.config_loader import ConfigLoader
 from .abstract import config
+
 
 class TestDomains:
     def test_allowed_domains_start(self):

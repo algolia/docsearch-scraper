@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
 
 import json
@@ -19,7 +17,6 @@ SELECTORS = {
 
 
 def get_strategy(config=None):
-
     if config is None:
         config = {}
 

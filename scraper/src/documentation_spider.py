@@ -41,8 +41,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     @staticmethod
     def to_any_scheme(url):
         """Return a regex that represent the URL and match any scheme from it"""
-        return url if not re.match(DocumentationSpider.match_capture_any_scheme, url) else re.sub(
-            DocumentationSpider.match_capture_any_scheme, DocumentationSpider.backreference_any_scheme, url)
+        return url if not re.match(
+            DocumentationSpider.match_capture_any_scheme, url) else re.sub(
+            DocumentationSpider.match_capture_any_scheme,
+            DocumentationSpider.backreference_any_scheme, url)
 
     @staticmethod
     def to_other_scheme(url):
@@ -52,7 +54,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         match = DocumentationSpider.match_capture_any_scheme.match(url)
         assert match
         if not (match and match.group(1) and match.group(2)):
-            raise ValueError("Must have a match and split the url into the scheme and the rest. url: " + url)
+            raise ValueError(
+                "Must have a match and split the url into the scheme and the rest. url: " + url)
 
         previous_scheme = match.group(1)
         url_with_no_scheme = match.group(2)
@@ -69,7 +72,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.start_urls_full = config.start_urls
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
         # We need to ensure that the stop urls are scheme agnostic too if it represents URL
-        self.stop_urls = map(DocumentationSpider.to_any_scheme, config.stop_urls)
+        self.stop_urls = map(DocumentationSpider.to_any_scheme,
+                             config.stop_urls)
         self.algolia_helper = algolia_helper
         self.strategy = strategy
         self.js_render = config.js_render
@@ -82,7 +86,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # Get rid of scheme consideration
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
-        start_urls_any_scheme = map(DocumentationSpider.to_any_scheme, self.start_urls)
+        start_urls_any_scheme = map(DocumentationSpider.to_any_scheme,
+                                    self.start_urls)
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
             deny=self.stop_urls,
@@ -92,7 +97,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         )
 
         DocumentationSpider.rules = [
-            Rule(link_extractor, callback=self.parse_from_start_url, follow=True),
+            Rule(link_extractor, callback=self.parse_from_start_url,
+                 follow=True),
         ]
 
         # START _init_ part from SitemapSpider
@@ -109,7 +115,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 print("Neither start url nor regex: default, we scrap all")
                 sitemap_rules = [('.*', 'parse_from_sitemap')]
 
-            self.__init_sitemap_(config.sitemap_urls, sitemap_rules, config.sitemap_alternate_links)
+            self.__init_sitemap_(config.sitemap_urls, sitemap_rules,
+                                 config.sitemap_alternate_links)
             self.force_sitemap_urls_crawling = config.force_sitemap_urls_crawling
 
         # END _init_ part from SitemapSpider
@@ -120,7 +127,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         for url in self.sitemap_urls:
             yield Request(url, callback=self._parse_sitemap,
                           meta={
-                              "alternative_links": DocumentationSpider.to_other_scheme(url)
+                              "alternative_links": DocumentationSpider.to_other_scheme(
+                                  url)
                           },
                           errback=self.errback_alternative_link)
         # Redirection is neither an error (4XX status) nor a success (2XX) if dont_redirect=False, thus we force it
@@ -132,7 +140,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                           # If we wan't to crawl (default behavior) without scraping, we still need to let the
                           # crawling spider acknowledge the content by parsing it with the built-in method
                           meta={
-                              "alternative_links": DocumentationSpider.to_other_scheme(url)
+                              "alternative_links": DocumentationSpider.to_other_scheme(
+                                  url)
                           },
                           errback=self.errback_alternative_link)
 
@@ -145,14 +154,16 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # Arbitrary limit
         if self.nb_hits_max > 0 and DocumentationSpider.NB_INDEXED > self.nb_hits_max:
             DocumentationSpider.NB_INDEXED = 0
-            self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(int(self.nb_hits_max))
+            self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(
+                int(self.nb_hits_max))
             raise ValueError(self.reason_to_stop)
 
     def parse_from_sitemap(self, response):
         if self.reason_to_stop is not None:
             raise CloseSpider(reason=self.reason_to_stop)
 
-        if (not self.force_sitemap_urls_crawling) and (not self.is_rules_compliant(response)):
+        if (not self.force_sitemap_urls_crawling) and (
+                not self.is_rules_compliant(response)):
             print("\033[94m> Ignored from sitemap:\033[0m " + response.url)
         else:
             self.add_records(response, from_sitemap=True)
@@ -175,7 +186,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # Even if the link extract were compliant, we may have been redirected. Hence we check a new time
 
         # Redirection redirect on a start url
-        if not self.scrape_start_urls and (response.url in self.start_urls or response.request.url in self.start_urls):
+        if not self.scrape_start_urls and (
+                        response.url in self.start_urls or response.request.url in self.start_urls):
             return False
 
         for rule in self._rules:
@@ -187,7 +199,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                     response.replace(url=response.request.url)
                     continue
             else:
-                if rule.link_extractor._link_allowed(response) and rule.link_extractor._link_allowed(response.request):
+                if rule.link_extractor._link_allowed(
+                        response) and rule.link_extractor._link_allowed(
+                    response.request):
                     continue
             return False
 
@@ -200,7 +214,9 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         """
         if hasattr(failure.value, 'response'):
             if hasattr(failure.value.response, 'status'):
-                self.logger.error('Http Status:%s on %s', failure.value.response.status, failure.value.response.url)
+                self.logger.error('Http Status:%s on %s',
+                                  failure.value.response.status,
+                                  failure.value.response.url)
             else:
                 self.logger.error('Failure : %s', failure.value)
 
@@ -222,7 +238,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
                 # Other check available such as DNSLookupError, TimeoutError, TCPTimedOutError)...
 
-    def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules, sitemap_alternate_links):
+    def __init_sitemap_(self, sitemap_urls, custom_sitemap_rules,
+                        sitemap_alternate_links):
         """Init method of a SiteMapSpider @Scrapy"""
         self.sitemap_alternate_links = sitemap_alternate_links
         self.sitemap_urls = sitemap_urls

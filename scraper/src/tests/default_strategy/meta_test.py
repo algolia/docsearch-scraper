@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import lxml.html
 from .abstract import get_strategy
 
@@ -105,13 +103,21 @@ class TestMeta:
         # Then
 
         assert len(actual) == 4
-        assert actual[0]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+        assert actual[0]['extra'] == ["ruby", "rails", "python", "php",
+                                      "symfony", "javascript", "java", "scala",
+                                      "go",
                                       "csharp"]
-        assert actual[1]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+        assert actual[1]['extra'] == ["ruby", "rails", "python", "php",
+                                      "symfony", "javascript", "java", "scala",
+                                      "go",
                                       "csharp"]
-        assert actual[2]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+        assert actual[2]['extra'] == ["ruby", "rails", "python", "php",
+                                      "symfony", "javascript", "java", "scala",
+                                      "go",
                                       "csharp"]
-        assert actual[3]['extra'] == ["ruby", "rails", "python", "php", "symfony", "javascript", "java", "scala", "go",
+        assert actual[3]['extra'] == ["ruby", "rails", "python", "php",
+                                      "symfony", "javascript", "java", "scala",
+                                      "go",
                                       "csharp"]
 
     def test_meta_version(self):

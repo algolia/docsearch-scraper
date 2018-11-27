@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import lxml.html
 from .abstract import get_strategy
+
 
 class TestGetRecordsFromDomWithMinIndexedLevel:
     def test_test_default_value_with_global(self):

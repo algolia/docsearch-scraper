@@ -9,7 +9,8 @@ class DisableConnector(AbstractCommand):
         return 'Disable a connector'
 
     def get_options(self):
-        return [{"name": "name", "description": "name of the connector you want to disable"}]
+        return [{"name": "name",
+                 "description": "name of the connector you want to disable"}]
 
     def run(self, args):
         from deployer.src.helpers import make_request
@@ -20,7 +21,8 @@ class DisableConnector(AbstractCommand):
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
 
-        make_request('/' + str(inverted[connector_name]) + '/deactivate', 'PUT')
+        make_request('/' + str(inverted[connector_name]) + '/deactivate',
+                     'PUT')
 
         remove_crawling_issue(connector_name)
 
@@ -28,4 +30,3 @@ class DisableConnector(AbstractCommand):
             'title': 'Disable connectors',
             'text': '- ' + connector_name
         }])
-

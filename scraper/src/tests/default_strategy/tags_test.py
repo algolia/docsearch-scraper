@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import lxml.html
 from .abstract import get_strategy
 
@@ -13,10 +11,10 @@ class TestTags:
                 'tags': ["test"]
             }],
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 
@@ -36,10 +34,10 @@ class TestTags:
         # Given
         strategy = get_strategy({
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             },
             'start_urls': [{
                 'url': 'http://foo.bar/api',
@@ -70,10 +68,10 @@ class TestTags:
                 }
             ],
             'selectors': {
-                 "lvl0": "h1",
-                 "lvl1": "h2",
-                 "lvl2": "h3",
-                 "content": "p"
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
             }
         })
 

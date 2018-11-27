@@ -12,7 +12,8 @@ class ReindexConnector(AbstractCommand):
         return super(ReindexConnector, self).get_usage() + " config"
 
     def get_options(self):
-        return [{"name": "name", "description": "name of the connector to reindex"}]
+        return [{"name": "name",
+                 "description": "name of the connector to reindex"}]
 
     def run(self, args):
         from deployer.src.helpers import make_request
@@ -24,9 +25,8 @@ class ReindexConnector(AbstractCommand):
         make_request('/' + str(inverted[connector_name]) + '/reindex', 'POST')
 
         send_slack_notif([{
-                'title': 'Manually reindexed connectors',
-                'text': '- ' + connector_name
-            }])
+            'title': 'Manually reindexed connectors',
+            'text': '- ' + connector_name
+        }])
 
         return 0
-

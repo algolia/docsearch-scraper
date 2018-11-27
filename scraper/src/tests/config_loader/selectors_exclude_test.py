@@ -1,7 +1,3 @@
-# coding: utf-8
-import os
-import json
-
 from ...config.config_loader import ConfigLoader
 from .abstract import config
 
