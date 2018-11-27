@@ -1,6 +1,8 @@
 import re
+import os
 from selenium import webdriver
 
+from selenium.webdriver.chrome.options import Options
 from ..custom_downloader_middleware import CustomDownloaderMiddleware
 from ..js_executor import JsExecutor
 
@@ -17,16 +19,23 @@ class BrowserHandler:
     def init(config_original_content, js_render):
         driver = None
 
-        if BrowserHandler.conf_need_browser(config_original_content, js_render):
-            profile = webdriver.FirefoxProfile()
-            profile.set_preference('network.http.accept-encoding.secure', 'gzip, deflate')
-            profile.set_preference('network.http.spdy.enabled.http2', False)
-            profile.set_preference('permissions.default.image', 2)
-            driver = webdriver.Firefox(profile)
-            driver.implicitly_wait(1)
+        if BrowserHandler.conf_need_browser(config_original_content,
+                                            js_render):
+            chrome_options = Options()
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--headless')
+
+            CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH',
+                                               "/usr/bin/chromedriver")
+            if not os.path.isfile(CHROMEDRIVER_PATH):
+                raise Exception(
+                    "Env CHROMEDRIVER_PATH='{}' is not a path to a file".format(
+                        CHROMEDRIVER_PATH))
+            driver = webdriver.Chrome(
+                CHROMEDRIVER_PATH,
+                chrome_options=chrome_options)
             CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
-
         return driver
 
     @staticmethod

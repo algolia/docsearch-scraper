@@ -12,7 +12,7 @@ install:
   - pip install pipenv
   - pipenv install
 script:
-  - pipenv run ./docsearch test
+  - pipenv run ./docsearch test no_browser
 notifications:
   email: false
   slack:

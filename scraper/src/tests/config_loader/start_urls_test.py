@@ -68,9 +68,11 @@ class TestStartUrls:
         # Then
         assert actual.start_urls[0]['url'] == 'http://www.foo.bar/'
 
-    def test_start_urls_should_be_generated_when_there_is_automatic_tagging(self, monkeypatch):
+    def test_start_urls_should_be_generated_when_there_is_automatic_tagging_browser(
+            self, monkeypatch):
         from .mocked_init import MockedInit
-        monkeypatch.setattr("selenium.webdriver.Firefox", lambda x: MockedInit())
+        monkeypatch.setattr("selenium.webdriver.chrome",
+                            lambda x: MockedInit())
         monkeypatch.setattr("time.sleep", lambda x: "")
 
         # When
@@ -80,7 +82,9 @@ class TestStartUrls:
                     "url": "https://test.com/doc/(?P<version>.*?)/(?P<type_of_content>.*?)/",
                     "variables": {
                         "version": ["1.0", "1.1"],
-                        "type_of_content": ["book", "bundles", "reference", "components", "cookbook", "best_practices"]
+                        "type_of_content": ["book", "bundles", "reference",
+                                            "components", "cookbook",
+                                            "best_practices"]
                     }
                 }
             ]

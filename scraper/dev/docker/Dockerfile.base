@@ -1,5 +1,7 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 MAINTAINER Algolia <documentationsearch@algolia.com>
+
+WORKDIR /root
 
 # Install selenium
 ENV LC_ALL C
@@ -10,41 +12,52 @@ RUN useradd -d /home/seleuser -m seleuser
 RUN chown -R seleuser /home/seleuser
 RUN chgrp -R seleuser /home/seleuser
 
-RUN apt-get -y update
-RUN apt-get install -y -q software-properties-common wget
+RUN apt-get update -y && apt-get install -yq \
+    software-properties-common
 RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN wget -qO- https://deb.nodesource.com/setup_4.x | sudo bash -
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && apt-get update -y && apt-get install -y -q \
-  openjdk-8-jdk \
-  openjdk-8-jre \
-  nodejs \
-  x11vnc \
+RUN apt-get update -y && apt-get install -yq \
+    curl \
+    wget \
+    sudo \
+    gnupg \
+    && curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+RUN apt-get update -y && apt-get install -yq \
+    nodejs -yq
+RUN apt-get update -y && apt-get install -yq \
+  unzip \
   xvfb \
-  libasound2 \
-  libgtk2.0-0
+  libxi6 \
+  libgconf-2-4 \
+  default-jdk
 
-RUN wget https://demos-cdn.algolia.com/magento/archive/firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
-RUN dpkg -i firefox-mozilla-build_45.0.2-0ubuntu1_amd64.deb
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
+RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update -y && apt-get install -yq \
+  google-chrome-stable \
+  unzip
+RUN wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+RUN unzip chromedriver_linux64.zip
+
+RUN mv chromedriver /usr/bin/chromedriver
+RUN chown root:root /usr/bin/chromedriver
+RUN chmod +x /usr/bin/chromedriver
+
+RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
+RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
+RUN unzip testng-6.8.7.jar.zip
 
 RUN npm install -g \
-  selenium-standalone@3.0.2 \
+  selenium-standalone@3.0.1 \
   && selenium-standalone install
 
-# Install DocSearch dependencies
-RUN apt-get update -y && apt-get install -y \
-      curl        \
-      fontconfig  \
-      libffi-dev  \
-      libssl-dev  \
-      libxml2-dev \
-      libxslt-dev \
-      python-dev  \
-      python-pip
 
+ # Install DocSearch dependencies
+COPY Pipfile .
+COPY Pipfile.lock .
 
-COPY requirements.txt /root/
-COPY scraper/dev/docker/bin/setup_python.sh /root/
-
-# Put everything in /root
-WORKDIR /root
-
+ENV LANG en_US.UTF-8
+ENV PIPENV_HIDE_EMOJIS 1
+RUN apt-get update -y && apt-get install -yq \
+    python-pip
+RUN pip install pipenv
+RUN pipenv install
