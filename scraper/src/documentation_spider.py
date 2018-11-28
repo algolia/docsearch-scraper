@@ -157,6 +157,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(
                 int(self.nb_hits_max))
             raise ValueError(self.reason_to_stop)
+            exit(4)
 
     def parse_from_sitemap(self, response):
         if self.reason_to_stop is not None:

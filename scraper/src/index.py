@@ -86,7 +86,7 @@ def run_config(config):
     else:
         print('Crawling issue: nbHits 0 for ' + config.index_name)
         algolia_helper.report_crawling_issue()
-
+        exit(3)
     print("")
 
 

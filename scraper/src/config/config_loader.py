@@ -105,6 +105,7 @@ class ConfigLoader(object):
             return data
         except ValueError:
             raise ValueError('CONFIG is not a valid JSON')
+            exit(5)
 
     def _parse(self):
         # Parse Env
