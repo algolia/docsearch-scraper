@@ -33,6 +33,18 @@ git clone git@github.com:algolia/docsearch-configs.git configs/public
 
 The CLI will then have more commands for you to run.
 
+## Reason of a fail from the docker image
+
+To spot why a crawl fail without watching the logs, we have defined some custom 
+exit status:
+
+| Exit code | Reason                                         |
+|:---------:|------------------------------------------------|
+|     3     | No record extracted from the crawl             |
+|     4     | Too much hits returned from the crawl          |
+|     5     | The configuration provided is not a valid JSON |
+
+
 [1]: https://github.com/pypa/pipenv
 [2]: https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv
 [3]: ./.env.example
