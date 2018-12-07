@@ -28,7 +28,7 @@ def extract_root_from_input(input_string):
         else:
             pass
 
-        return url_parsed.geturl()
+        return url_parsed.geturl() + '/'
     except ValueError:
         return domain.group() if domain else input_string
 
