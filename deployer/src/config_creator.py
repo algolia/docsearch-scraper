@@ -135,7 +135,7 @@ def to_pkgdown_config(config, urls=None):
                 ("default_value", "Context")
             ))),
             ("text",
-             ".contents p, .contents li, .tempate-article .contents .pre")
+             ".contents p, .contents li")
         ))),
         ("default", OrderedDict((
             ("lvl1", ".contents h2"),
