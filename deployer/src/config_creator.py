@@ -74,23 +74,90 @@ def to_gitbook_config(config):
 
 def to_pkgdown_config(config, urls=None):
     if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
+        root = extract_root_from_input(urls[0])
+        config["start_urls"] = [{
+            "url": root + "index.html",
+            "selectors_key": "homepage",
+            "tags": [
+                "homepage"
+            ]
+        },
+            {
+                "url": root + "reference",
+                "selectors_key": "reference",
+                "tags": [
+                    "reference"
+                ]
+            },
+            {
+                "url": root + "articles",
+                "selectors_key": "articles",
+                "tags": [
+                    "articles"
+                ]
+            }]
 
-    config["selectors"]["lvl0"] = OrderedDict((
-        ("selector", ".contents h1"),
-        ("default_value", "Documentation")
+        config["sitemap_urls"] = [
+            root + "sitemap.xml"]
+
+    config["selectors"] = OrderedDict((
+        ("homepage", OrderedDict((
+            ("lvl0", OrderedDict((
+                ("selector", ".contents h1"),
+                ("default_value", "pkgdown Home page")
+            ))),
+            ("lvl1", ".contents h2"),
+            ("lvl2", OrderedDict((
+                ("selector", ".contents h3"),
+                ("default_value", "Context")
+            ))),
+            ("lvl3", ".ref-arguments td, .ref-description"),
+            ("text", ".contents p, .contents li, .contents .pre")
+        ))),
+        ("reference", OrderedDict((
+            ("lvl0", ".contents h1"),
+            ("lvl1", OrderedDict((
+                ("selector", ".contents .name"),
+                ("default_value", "Argument")
+            ))),
+            ("lvl2", OrderedDict((
+                ("selector", ".ref-arguments th"),
+                ("default_value", "Description")
+            ))),
+            ("lvl3", ".ref-arguments td, .ref-description"),
+            ("text", ".contents p, .contents li")
+        ))),
+        ("articles", OrderedDict((
+            ("lvl0", ".contents h1"),
+            ("lvl1", ".contents .name"),
+            ("lvl2", OrderedDict((
+                ("selector", ".contents h2, .contents h3"),
+                ("default_value", "Context")
+            ))),
+            ("text",
+             ".contents p, .contents li")
+        ))),
+        ("default", OrderedDict((
+            ("lvl1", ".contents h2"),
+            ("lvl2", ".contents h3, .contents th"),
+            ("lvl3", ".contents h4"),
+            ("lvl4", ".contents h5"),
+            ("text",
+             ".contents p, .contents li, .usage, .template-article .contents .pre")
+        )))
     ))
-    config["selectors"]["lvl1"] = ".contents h2"
-    config["selectors"]["lvl2"] = ".contents h3, .contents th"
-    config["selectors"]["lvl3"] = ".contents h4"
-    config["selectors"]["lvl4"] = ".contents h5"
-    config["selectors"][
-        "text"] = ".contents p, .contents li, .usage, .template-article .contents .pre"
     config["selectors_exclude"] = [".dont-index"]
-    config["custom_settings"] = {"separatorsToIndex": "_"}
-    config["scrap_start_urls"] = False
-    config["stop_urls"] = ["LICENSE-text.html"]
+    config["stop_urls"] = ["/reference/$",
+                           "/reference/index.html",
+                           "/articles/$",
+                           "/articles/index.html"]
+    config["custom_settings"] = {
+        "separatorsToIndex": "_",
+        "attributesToRetrieve": ["hierarchy",
+                                 "content", "anchor", "url",
+                                 "url_without_anchor"]
+    }
+    config["min_indexed_level"] = 2
     return config
 
 
@@ -194,7 +261,8 @@ def create_config(u=None):
         u).subdomain if tldextract.extract(
         u).domain == 'github' else tldextract.extract(u).domain
 
-    config['start_urls'] = urls
+    if len(config['start_urls']) == 0:
+        config['start_urls'] = urls
 
     user_index_name = helpers.get_user_value(
         "index_name is " + "\033[1;33m" + config[
