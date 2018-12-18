@@ -1,4 +1,6 @@
 # coding: utf-8
+
+EXIT_CODE_WRONG_CONFIG = 5
 """
 Load the config json file.
 """
@@ -104,7 +106,7 @@ class ConfigLoader(object):
             return data
         except ValueError:
             raise ValueError('CONFIG is not a valid JSON')
-            exit(5)
+            exit(EXIT_CODE_WRONG_CONFIG)
 
     def _parse(self):
         # Parse Env
