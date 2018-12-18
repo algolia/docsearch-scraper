@@ -6,6 +6,7 @@ Load the config json file.
 """
 
 from collections import OrderedDict
+from distutils.util import strtobool
 import json
 import os
 import copy
@@ -49,6 +50,7 @@ class ConfigLoader(object):
     strategy = 'default'
     strict_redirect = True
     strip_chars = u".,;:§¶"
+    update_nb_hits = None
     use_anchors = False
     user_agent = 'Algolia DocSearch Crawler'
     only_content_level = False
@@ -112,6 +114,9 @@ class ConfigLoader(object):
         # Parse Env
         self.app_id = os.environ.get('APPLICATION_ID', None)
         self.api_key = os.environ.get('API_KEY', None)
+        self.update_nb_hits = os.environ.get('UPDATE_NB_HITS', None)
+        if self.update_nb_hits is not None:
+            self.update_nb_hits = bool(strtobool(self.update_nb_hits))
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)
@@ -124,7 +129,7 @@ class ConfigLoader(object):
             self.allowed_domains = UrlsParser.build_allowed_domains(
                 self.start_urls, self.stop_urls)
 
-    def update_nb_hits(self, nb_hits):
+    def update_nb_hits_value(self, nb_hits):
         if self.config_file is not None:
             # config loaded from file
             previous_nb_hits = None if 'nb_hits' not in self.config_content else \
@@ -132,7 +137,7 @@ class ConfigLoader(object):
             nb_hit_updater = NbHitsUpdater(self.config_file,
                                            self.config_content,
                                            previous_nb_hits, nb_hits)
-            nb_hit_updater.update()
+            nb_hit_updater.update(self.update_nb_hits)
 
     def get_extra_facets(self):
         return UrlsParser.get_extra_facets(self.start_urls)
