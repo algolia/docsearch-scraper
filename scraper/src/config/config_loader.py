@@ -48,8 +48,7 @@ class ConfigLoader(object):
     strict_redirect = True
     strip_chars = u".,;:§¶"
     use_anchors = False
-    user_agent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36\
-                  (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/70.0.3538.110 Safari/537.36'
     only_content_level = False
     query_rules = []
 
@@ -127,7 +126,7 @@ class ConfigLoader(object):
         if self.config_file is not None:
             # config loaded from file
             previous_nb_hits = None if 'nb_hits' not in self.config_content else \
-            self.config_content['nb_hits']
+                self.config_content['nb_hits']
             nb_hit_updater = NbHitsUpdater(self.config_file,
                                            self.config_content,
                                            previous_nb_hits, nb_hits)
