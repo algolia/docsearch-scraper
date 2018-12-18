@@ -50,7 +50,7 @@ class ConfigLoader(object):
     strict_redirect = True
     strip_chars = u".,;:§¶"
     use_anchors = False
-    user_agent = 'Algolia Docsearch Crawler'
+    user_agent = 'Algolia DocSearch Crawler'
     only_content_level = False
     query_rules = []
 
