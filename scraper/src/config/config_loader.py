@@ -50,7 +50,7 @@ class ConfigLoader(object):
     strict_redirect = True
     strip_chars = u".,;:§¶"
     use_anchors = False
-    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/70.0.3538.110 Safari/537.36'
+    user_agent = 'Algolia Docsearch Crawler'
     only_content_level = False
     query_rules = []
 
