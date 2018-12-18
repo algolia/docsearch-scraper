@@ -23,6 +23,8 @@ except ImportError:
 
 from scrapy.exceptions import CloseSpider
 
+EXIT_CODE_EXCEEDED_RECORDS = 4
+
 
 class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
@@ -157,6 +159,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
             self.reason_to_stop = "Too much hits, DocSearch only handle {} records".format(
                 int(self.nb_hits_max))
             raise ValueError(self.reason_to_stop)
+            exit(EXIT_CODE_EXCEEDED_RECORDS)
 
     def parse_from_sitemap(self, response):
         if self.reason_to_stop is not None:
@@ -187,7 +190,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # Redirection redirect on a start url
         if not self.scrape_start_urls and (
-                        response.url in self.start_urls or response.request.url in self.start_urls):
+                response.url in self.start_urls or response.request.url in self.start_urls):
             return False
 
         for rule in self._rules:
