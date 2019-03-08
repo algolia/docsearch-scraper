@@ -103,7 +103,7 @@ def get_emails_from_conversation(conversation):
     if len(emails) > 1:
         print(
             "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (
-            " with " + " ".join(emails[1:])))
+                    " with " + " ".join(emails[1:])))
 
     return emails
 
@@ -138,7 +138,8 @@ def get_conversation_url_from_cuid(cuid):
 
 
 def is_docusaurus_conversation(conversation):
-    return "docusaurus" in conversation.get("tags")
+    return "docusaurus" in conversation.get(
+        "tags") or "ds_docusaurus" in conversation.get("tags")
 
 
 def is_gitbook_conversation(conversation):
@@ -146,15 +147,22 @@ def is_gitbook_conversation(conversation):
 
 
 def is_pkgdown_conversation(conversation):
-    return "pkgdown" in conversation.get("tags")
+    return "pkgdown" in conversation.get(
+        "tags") or "ds_pkgdown" in conversation.get("tags")
 
 
 def is_vuepress_conversation(conversation):
-    return "vuepress" in conversation.get("tags")
+    return "vuepress" in conversation.get(
+        "tags") or "ds_vuepress" in conversation.get("tags")
 
 
 def is_larecipe_conversation(conversation):
     return "larecipe" in conversation.get("tags")
+
+
+def is_publii_conversation(conversation):
+    return "publii" in conversation.get(
+        "tags") or "ds_publii" in conversation.get("tags")
 
 
 @rate_limited(200, 60)

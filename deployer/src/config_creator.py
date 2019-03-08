@@ -210,6 +210,28 @@ def to_larecipe_config(config, urls=None):
     return config
 
 
+def to_publii_config(config, urls=None):
+    if urls:
+        config["sitemap_urls"] = [
+            extract_root_from_input(urls[0]) + "sitemap.xml"]
+
+    config["selectors"]["lvl0"] = OrderedDict((
+        ("selector", ".active-parent > span"),
+        ("global", True),
+        ("default_value", "Documentation")
+    ))
+
+    config["selectors"]["lvl1"] = ".content h1"
+    config["selectors"]["lvl2"] = ".content h2"
+    config["selectors"]["lvl3"] = ".content h3"
+    config["selectors"]["lvl4"] = ".content h4"
+    config["selectors"]["lvl5"] = ".content h5"
+    config["selectors"]["text"] = ".content p, .content li"
+    config["only_content_level"] = True
+
+    return config
+
+
 def create_config(u=None):
     config = OrderedDict((
         ("index_name", ""),
@@ -250,6 +272,8 @@ def create_config(u=None):
             config = to_vuepress_config(config)
         elif helpdesk_helper.is_larecipe_conversation(conversation):
             config = to_larecipe_config(config, urls)
+        elif helpdesk_helper.is_publii_conversation(conversation):
+            config = to_publii_config(config, urls)
 
         config["conversation_id"] = [cuid]
 
