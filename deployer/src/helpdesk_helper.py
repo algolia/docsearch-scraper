@@ -139,7 +139,8 @@ def get_conversation_url_from_cuid(cuid):
 
 def is_docusaurus_conversation(conversation):
     return "docusaurus" in conversation.get(
-        "tags") or "ds_docusaurus" in conversation.get("tags")
+        "tags") or "ds_docusaurus" in conversation.get(
+        "tags") or "gen-docusaurus" in conversation.get("tags")
 
 
 def is_gitbook_conversation(conversation):
@@ -148,12 +149,14 @@ def is_gitbook_conversation(conversation):
 
 def is_pkgdown_conversation(conversation):
     return "pkgdown" in conversation.get(
-        "tags") or "ds_pkgdown" in conversation.get("tags")
+        "tags") or "ds_pkgdown" in conversation.get(
+        "tags") or "gen-pkgdown" in conversation.get("tags")
 
 
 def is_vuepress_conversation(conversation):
     return "vuepress" in conversation.get(
-        "tags") or "ds_vuepress" in conversation.get("tags")
+        "tags") or "ds_vuepress" in conversation.get(
+        "tags") or "gen-vuepress" in conversation.get("tags")
 
 
 def is_larecipe_conversation(conversation):
@@ -162,7 +165,8 @@ def is_larecipe_conversation(conversation):
 
 def is_publii_conversation(conversation):
     return "publii" in conversation.get(
-        "tags") or "ds_publii" in conversation.get("tags")
+        "tags") or "ds_publii" in conversation.get(
+        "tags") or "gen-publii" in conversation.get("tags")
 
 
 @rate_limited(200, 60)
