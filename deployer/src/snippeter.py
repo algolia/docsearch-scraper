@@ -40,7 +40,7 @@ You're now a few steps away from having it working on your website:
 
 - Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet to a CSS selector that targets your search input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/styling.html)
-- You can also check your configuration in our github repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
+- You can also check your configuration in our GitHub repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
 {{ANALYTICS}}
 Please open a pull request if want to leverage your configuration!
 
@@ -100,10 +100,13 @@ Have a nice day :)"""
 
         if len(example_options) > 0:
             algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (
-            ', '.join(example_options)) + "] }"
+                ', '.join(example_options)) + "] }"
             facet_template += base_example_template.replace(
                 '{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase)) \
                 .replace('{{EXAMPLE_CODE}}', ', '.join(example_code))
+
+        if facet_template == "\n":
+            facet_template = ""
 
     api_key = algolia_helper.get_docsearch_key(config)
     api_key = "### REPLACE ME ####" if api_key == 'Not found' else api_key
