@@ -169,6 +169,12 @@ def is_publii_conversation(conversation):
         "tags") or "gen-publii" in conversation.get("tags")
 
 
+def is_jsdoc_conversation(conversation):
+    return "jsdoc" in conversation.get(
+        "tags") or "ds_jsdoc" in conversation.get(
+        "tags") or "gen-jsdoc" in conversation.get("tags")
+
+
 @rate_limited(200, 60)
 def search(query, page=1, pageSize=50, sortField="modifiedAt",
            sortOrder="asc"):
