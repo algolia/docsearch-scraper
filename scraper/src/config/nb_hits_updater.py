@@ -1,6 +1,7 @@
 from ..helpers import confirm
 import json
 import copy
+import sys
 
 
 class NbHitsUpdater(object):
@@ -16,12 +17,17 @@ class NbHitsUpdater(object):
         self.new_nb_hit = new_nb_hit
         self.previous_nb_hits = previous_nb_hits
 
-    def update(self):
+    def update(self, perform_update):
         if self._update_needed():
             print("previous nb_hits: " + str(self.previous_nb_hits) + "\n")
 
-            if confirm(
-                                    'Do you want to update the nb_hits in ' + self.config_file + ' ?'):
+            if perform_update is None:
+                if sys.stdout.isatty():
+                    perform_update = confirm('Do you want to update the nb_hits in ' + self.config_file + ' ?')
+                else:
+                    perform_update = True
+
+            if perform_update:
                 try:
                     self._update_config()
                     print("\n[OK] " + self.config_file + " has been updated")
