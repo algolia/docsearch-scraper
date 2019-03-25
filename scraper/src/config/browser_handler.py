@@ -33,14 +33,14 @@ class BrowserHandler:
                         CHROMEDRIVER_PATH))
             driver = webdriver.Chrome(
                 CHROMEDRIVER_PATH,
-                chrome_options=chrome_options)
+                options=chrome_options)
             CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
         return driver
 
     @staticmethod
     def destroy(driver):
-        # Start firefox if needed
+        # Start browser if needed
         if driver is not None:
             driver.quit()
             driver = None
