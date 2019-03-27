@@ -84,7 +84,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.remove_get_params = config.remove_get_params
         self.strict_redirect = config.strict_redirect
         self.nb_hits_max = config.nb_hits_max
-        if config.http_user:
+        if hasattr(config,'http_user') and config.http_user:
             self.http_user = config.http_user
             self.http_pass = config.http_pass
         super(DocumentationSpider, self).__init__(*args, **kwargs)

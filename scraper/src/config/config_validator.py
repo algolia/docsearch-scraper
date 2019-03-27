@@ -63,6 +63,3 @@ class ConfigValidator(object):
         if self.config.nb_hits_max and not isinstance(self.config.nb_hits_max,
                                                       int):
             raise Exception('nb_hits_max should be integer')
-
-        if self.http_user and not self.http_pass:
-            raise Exception('http_pass must be set since http_user is also set')
