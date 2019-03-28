@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class DisableConnector(AbstractCommand):
     def get_name(self):
-        return 'connector:disable'
+        return "connector:disable"
 
     def get_description(self):
-        return 'Disable a connector'
+        return "Disable a connector"
 
     def get_options(self):
         return [{"name": "name",
@@ -21,12 +21,12 @@ class DisableConnector(AbstractCommand):
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
 
-        make_request('/' + str(inverted[connector_name]) + '/deactivate',
-                     'PUT')
+        make_request("/" + str(inverted[connector_name]) + "/deactivate",
+                     "PUT")
 
         remove_crawling_issue(connector_name)
 
         send_slack_notif([{
-            'title': 'Disable connectors',
-            'text': '- ' + connector_name
+            "title": "Disable connectors",
+            "text": "- " + connector_name
         }])

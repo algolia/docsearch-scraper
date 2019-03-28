@@ -3,15 +3,15 @@ from .abstract_build_docker import AbstractBuildDocker
 
 class BuildDockerScraper(AbstractBuildDocker):
     def get_name(self):
-        return 'docker:build'
+        return "docker:build"
 
     def get_description(self):
-        return 'Build scraper images (dev, prod)'
+        return "Build scraper images (dev, prod)"
 
     def get_options(self):
         return [{"name": "test",
                  "description": "build the test image",
-                 'optional': False}]
+                 "optional": False}]
 
     @staticmethod
     def test_parse(args):
@@ -19,11 +19,11 @@ class BuildDockerScraper(AbstractBuildDocker):
             return False
         if isinstance(args[1], bool):
             return args[1]
-        return isinstance(args[1], str) and args[1].lower() == 'true'
+        return isinstance(args[1], str) and args[1].lower() == "true"
 
     def run(self, args):
 
-        test = self.get_option('test', args)
+        test = self.get_option("test", args)
 
         if test:
             return self.build_docker_file("scraper/dev/docker/Dockerfile.test",

@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class InviteUser(AbstractCommand):
     def get_name(self):
-        return 'invite:user'
+        return "invite:user"
 
     def get_description(self):
-        return 'Invite to an DocSearch index an email'
+        return "Invite to an DocSearch index an email"
 
     def get_usage(self):
         return super(InviteUser, self).get_usage() + " config email"
