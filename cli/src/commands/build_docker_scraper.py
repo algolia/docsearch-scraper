@@ -9,25 +9,33 @@ class BuildDockerScraper(AbstractBuildDocker):
         return "Build scraper images (dev, prod)"
 
     def get_options(self):
-        return [{"name": "test",
-                 "description": "build the test image",
-                 "optional": False}]
+        options = super(BuildDockerScraper, self).get_options()
+
+        options.append({"name": "test",
+                        "description": "build the test image",
+                        "optional": False})
+        return options
 
     def run(self, args):
 
+        # Order of options matter
+        local_tag = self.get_option("local_tag", args)
         test = self.get_option("test", args)
 
         if test:
             return self.build_docker_file("scraper/dev/docker/Dockerfile.test",
-                                          "algolia/docsearch-scraper-test")
+                                          "algolia/docsearch-scraper-test",
+                                          local_tag=local_tag)
 
         code = self.build_docker_file("scraper/dev/docker/Dockerfile.base",
-                                      "algolia/docsearch-scraper-base")
+                                      "algolia/docsearch-scraper-base",
+                                      local_tag=local_tag)
 
         if code != 0:
             return code
-        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev")
+        code = self.build_docker_file("scraper/dev/docker/Dockerfile.dev",
+                                      local_tag=local_tag)
         if code != 0:
             return code
         return self.build_docker_file("scraper/dev/docker/Dockerfile",
-                                      "algolia/docsearch-scraper")
+                                      "algolia/docsearch-scraper", local_tag=local_tag)
