@@ -13,14 +13,6 @@ class BuildDockerScraper(AbstractBuildDocker):
                  "description": "build the test image",
                  "optional": False}]
 
-    @staticmethod
-    def test_parse(args):
-        if len(args) < 2:
-            return False
-        if isinstance(args[1], bool):
-            return args[1]
-        return isinstance(args[1], str) and args[1].lower() == "true"
-
     def run(self, args):
 
         test = self.get_option("test", args)
