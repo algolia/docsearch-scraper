@@ -46,12 +46,7 @@ RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server
 RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
 RUN unzip testng-6.8.7.jar.zip
 
-RUN npm install -g \
-  selenium-standalone@3.0.1 \
-  && selenium-standalone install
-
-
- # Install DocSearch dependencies
+# Install DocSearch dependencies
 COPY Pipfile .
 COPY Pipfile.lock .
 
