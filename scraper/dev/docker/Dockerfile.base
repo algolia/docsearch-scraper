@@ -35,7 +35,7 @@ RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" 
 RUN apt-get update -y && apt-get install -yq \
   google-chrome-stable \
   unzip
-RUN wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+RUN wget -q https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip
 
 RUN mv chromedriver /usr/bin/chromedriver
@@ -46,12 +46,7 @@ RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server
 RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
 RUN unzip testng-6.8.7.jar.zip
 
-RUN npm install -g \
-  selenium-standalone@3.0.1 \
-  && selenium-standalone install
-
-
- # Install DocSearch dependencies
+# Install DocSearch dependencies
 COPY Pipfile .
 COPY Pipfile.lock .
 
