@@ -3,7 +3,7 @@ from os import getcwd, path, environ
 from dotenv import load_dotenv
 from builtins import input
 
-env_file = getcwd() + '/.env'
+env_file = getcwd() + "/.env"
 load_dotenv(env_file)
 
 from .helpers import get_color
@@ -74,16 +74,16 @@ load_dotenv(env_file)
 ADMIN = True
 CREDENTIALS = True
 
-if 'APPLICATION_ID' not in environ or len(environ['APPLICATION_ID']) == 0:
+if "APPLICATION_ID" not in environ or len(environ["APPLICATION_ID"]) == 0:
     CREDENTIALS = False
 
-if 'API_KEY' not in environ or len(environ['API_KEY']) == 0:
+if "API_KEY" not in environ or len(environ["API_KEY"]) == 0:
     CREDENTIALS = False
 
-if 'WEBSITE_USERNAME' not in environ or len(environ['WEBSITE_USERNAME']) == 0:
+if "WEBSITE_USERNAME" not in environ or len(environ["WEBSITE_USERNAME"]) == 0:
     ADMIN = False
 
-if 'WEBSITE_PASSWORD' not in environ or len(environ['WEBSITE_PASSWORD']) == 0:
+if "WEBSITE_PASSWORD" not in environ or len(environ["WEBSITE_PASSWORD"]) == 0:
     ADMIN = False
 
 cmds = []
@@ -121,11 +121,11 @@ def print_usage(no_ansi=False):
     printer("Options:", 2, no_ansi)
 
     if no_ansi:
-        printer("  " + "--help" + (' ' * 4) + 'Display help message', 4,
+        printer("  " + "--help" + (" " * 4) + "Display help message", 4,
                 no_ansi)
     else:
         printer("  " + get_color(1) + "--help" + get_color() + (
-            ' ' * 4) + 'Display help message', 4)
+            " " * 4) + "Display help message", 4)
 
     printer("", 4, no_ansi)
 
@@ -135,10 +135,10 @@ def print_usage(no_ansi=False):
 
     for cmd in cmds:
         longest_cmd_name = max(longest_cmd_name, len(cmd.get_name()))
-        group = ''
+        group = ""
 
-        if ':' in cmd.get_name():
-            group = cmd.get_name().split(':')[0]
+        if ":" in cmd.get_name():
+            group = cmd.get_name().split(":")[0]
 
         if group not in groups:
             groups[group] = []
@@ -154,10 +154,10 @@ def print_usage(no_ansi=False):
             nb_spaces = longest_cmd_name + 2 - len(cmd.get_name())
             if no_ansi:
                 printer("  " + cmd.get_name() + (
-                    ' ' * nb_spaces) + cmd.get_description(), 4, no_ansi)
+                    " " * nb_spaces) + cmd.get_description(), 4, no_ansi)
             else:
                 printer("  " + get_color(1) + cmd.get_name() + get_color() + (
-                    ' ' * nb_spaces) + cmd.get_description(),
+                    " " * nb_spaces) + cmd.get_description(),
                         no_ansi)
 
 

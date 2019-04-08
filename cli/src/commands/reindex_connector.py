@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class ReindexConnector(AbstractCommand):
     def get_name(self):
-        return 'connector:reindex'
+        return "connector:reindex"
 
     def get_description(self):
-        return 'Reindex a connector'
+        return "Reindex a connector"
 
     def get_usage(self):
         return super(ReindexConnector, self).get_usage() + " config"
@@ -22,11 +22,11 @@ class ReindexConnector(AbstractCommand):
 
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
-        make_request('/' + str(inverted[connector_name]) + '/reindex', 'POST')
+        make_request("/" + str(inverted[connector_name]) + "/reindex", "POST")
 
         send_slack_notif([{
-            'title': 'Manually reindexed connectors',
-            'text': '- ' + connector_name
+            "title": "Manually reindexed connectors",
+            "text": "- " + connector_name
         }])
 
         return 0

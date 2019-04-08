@@ -4,10 +4,10 @@ from collections import OrderedDict
 
 class BootstrapConfig(AbstractCommand):
     def get_name(self):
-        return 'bootstrap'
+        return "bootstrap"
 
     def get_description(self):
-        return 'Bootstrap a DocSearch config'
+        return "Bootstrap a DocSearch config"
 
     def run(self, args):
         from os import environ, path
@@ -18,21 +18,21 @@ class BootstrapConfig(AbstractCommand):
         else:
             config = create_config()
 
-        config_folder = environ.get('PUBLIC_CONFIG_FOLDER')
+        config_folder = environ.get("PUBLIC_CONFIG_FOLDER")
 
         if config_folder is None:
-            print('PUBLIC_CONFIG_FOLDER must be defined in environment')
+            print("PUBLIC_CONFIG_FOLDER must be defined in environment")
 
         if config_folder is None:
             self.print_config(config)
         else:
-            config_folder += '/configs'
+            config_folder += "/configs"
             if not path.isdir(config_folder):
                 self.print_config(config)
                 print("Folder: " + config_folder + " does not exist")
                 return
 
-            file_path = config_folder + "/" + config['index_name'] + ".json"
+            file_path = config_folder + "/" + config["index_name"] + ".json"
 
             if path.isfile(file_path):
                 self.print_config(config)
@@ -51,7 +51,7 @@ class BootstrapConfig(AbstractCommand):
                                     key=key_sort)
                              )
 
-        return json.dumps(config, separators=(',', ': '), indent=2)
+        return json.dumps(config, separators=(",", ": "), indent=2)
 
     def print_config(self, config):
         import pyperclip

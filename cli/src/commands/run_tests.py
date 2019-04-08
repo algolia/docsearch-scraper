@@ -11,7 +11,7 @@ class RunTests(AbstractCommand):
     def get_options(self):
         return [{"name": "docker",
                  "description": "run test from docker image",
-                 'optional': False}]
+                 "optional": False}]
 
     @staticmethod
     def docker_parse(args):
@@ -19,13 +19,13 @@ class RunTests(AbstractCommand):
             return False
         if isinstance(args[1], bool):
             return args[1]
-        if args[1] is 'no_browser':
+        if args[1] is "no_browser":
             return "no_browser"
 
-        return isinstance(args[1], str) and args[1].lower() == 'true'
+        return isinstance(args[1], str) and args[1].lower() == "true"
 
     def run(self, args):
-        docker = self.get_option('docker', args)
+        docker = self.get_option("docker", args)
         if docker == True:
             self.exec_shell_command(["./docsearch", "docker:build", "true"])
             run_command = [
