@@ -63,7 +63,7 @@ def get_docsearch_key(config):
 
 
 def add_docsearch_key(config):
-    if not isinstance(config, basestring) or '*' in config:
+    if not isinstance(config, str) or '*' in config:
         raise ValueError("index name : {} is not safe".format(config))
 
     response = algolia_client_prod.add_api_key({

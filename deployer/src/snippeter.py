@@ -60,7 +60,7 @@ Have a nice day :)"""
     analytics_details = ''
     if isinstance(analytics_statuses, dict):
         for email, analytics_status in list(analytics_statuses.items()):
-            if isinstance(analytics_status, basestring):
+            if isinstance(analytics_status, str):
                 analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
                 analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
