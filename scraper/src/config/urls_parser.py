@@ -3,10 +3,10 @@ import copy
 from six import string_types
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
 
 from ..js_executor import JsExecutor
 
