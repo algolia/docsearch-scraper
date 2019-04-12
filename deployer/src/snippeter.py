@@ -81,7 +81,7 @@ Have a nice day :)"""
         for name, values in list(facets.items()):
             if name == "no_variables":
                 continue
-            keys = values.keys()
+            keys = list(values.keys())
             keys.sort()
 
             if len(keys) > 0:

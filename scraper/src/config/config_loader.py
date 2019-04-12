@@ -74,7 +74,7 @@ class ConfigLoader(object):
         data = self._load_config(config)
 
         # Fill self from config
-        for key, value in data.items():
+        for key, value in list(data.items()):
             setattr(self, key, value)
 
         # Start browser if needed
