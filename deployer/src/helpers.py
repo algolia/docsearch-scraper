@@ -66,7 +66,7 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                               auth=(username, password),
                               data=data)
 
-        if r.status_code / 100 != 2:
+        if r.status_code // 100 != 2:
             print("ISSUE for POST request : " + url + " with params: " + str(
                 data))
             print(r.text)
@@ -86,7 +86,7 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                          auth=(username, password),
                          data=data)
         print(r.status_code)
-        if r.status_code / 100 != 2:
+        if r.status_code // 100 != 2:
             print("ISSUE for PUT request : " + url + " with params: " + str(
                 data))
         return r
@@ -99,7 +99,7 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
         r = requests.get(url,
                          auth=(username, password))
 
-    if r.status_code / 100 != 2:
+    if r.status_code // 100 != 2:
         print("ISSUE for GET request : " + url + " with params:" + data)
 
     if json_request:
