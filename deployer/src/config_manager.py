@@ -23,6 +23,18 @@ class ConfigManager:
         if not ConfigManager.instance:
             ConfigManager.instance = ConfigManager.__ConfigManager()
 
+    @staticmethod
+    def encode_set(to_encode):
+        encoded = []
+        for config_name in to_encode:
+            try:
+                config_name = config_name.decode()
+            except AttributeError:
+                print("Error decoding non string var {}".format(config_name))
+                pass
+            encoded.append(config_name)
+        return encoded
+
     class __ConfigManager:
         def __init__(self):
             self.public_dir = environ.get('PUBLIC_CONFIG_FOLDER')
@@ -86,13 +98,14 @@ class ConfigManager:
         private_dir = None
 
         def get_added(self):
-            return self.differ.added()
+            return ConfigManager.encode_set(self.differ.added())
 
         def get_removed(self):
-            return self.differ.removed()
+            return ConfigManager.encode_set(self.differ.removed())
 
         def get_changed(self):
-            return self.differ.changed()
+            configs_name, changed_attribute = self.differ.changed()
+            return ConfigManager.encode_set(configs_name), changed_attribute
 
         def add_config(self, config_name):
             key = algolia_helper.add_docsearch_key(config_name)
@@ -126,7 +139,7 @@ class ConfigManager:
             else:
                 if helpers.confirm(
                         '\nDo you want to add emails for {}?'.format(
-                                config_name)):
+                            config_name)):
                     analytics_statuses = emails.add(config_name,
                                                     self.private_dir)
                     print(snippeter.get_email_for_config(config_name,
