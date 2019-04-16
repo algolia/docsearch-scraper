@@ -1,7 +1,6 @@
 import algoliasearch
 import json
 from os import environ
-from subprocess import check_output
 
 from . import algolia_helper
 from . import snippeter
@@ -58,34 +57,40 @@ class ConfigManager:
             self.differ = DictDiffer(self.ref_configs, self.actual_configs)
 
         def init(self):
-            output = check_output(['git', 'stash', 'list'],
-                                  cwd=self.public_dir)
+            output = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                  cwd=self.public_dir)
             self.initial_public_nb_stash = len(output.split('\n'))
-            check_output(['git', 'stash', '--include-untracked'],
-                         cwd=self.public_dir)
-            output2 = check_output(['git', 'stash', 'list'],
-                                   cwd=self.public_dir)
+            helpers.check_output_decoded(
+                ['git', 'stash', '--include-untracked'],
+                cwd=self.public_dir)
+            output2 = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                   cwd=self.public_dir)
             self.final_nb_public_stash = len(output2.split('\n'))
-            check_output(['git', 'pull', '-r', 'origin', 'master'],
-                         cwd=self.public_dir)
+            helpers.check_output_decoded(
+                ['git', 'pull', '-r', 'origin', 'master'],
+                cwd=self.public_dir)
 
-            output = check_output(['git', 'stash', 'list'],
-                                  cwd=self.private_dir)
+            output = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                  cwd=self.private_dir)
             self.initial_private_nb_stash = len(output.split('\n'))
-            check_output(['git', 'stash', '--include-untracked'],
-                         cwd=self.private_dir)
-            output2 = check_output(['git', 'stash', 'list'],
-                                   cwd=self.private_dir)
+            helpers.check_output_decoded(
+                ['git', 'stash', '--include-untracked'],
+                cwd=self.private_dir)
+            output2 = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                   cwd=self.private_dir)
             self.final_nb_private_stash = len(output2.split('\n'))
-            check_output(['git', 'pull', '-r', 'origin', 'master'],
-                         cwd=self.private_dir)
+            helpers.check_output_decoded(
+                ['git', 'pull', '-r', 'origin', 'master'],
+                cwd=self.private_dir)
 
         def destroy(self):
             if self.final_nb_public_stash != self.initial_public_nb_stash:
-                check_output(['git', 'stash', 'pop'], cwd=self.public_dir)
+                helpers.check_output_decoded(['git', 'stash', 'pop'],
+                                             cwd=self.public_dir)
 
             if self.final_nb_private_stash != self.initial_private_nb_stash:
-                check_output(['git', 'stash', 'pop'], cwd=self.private_dir)
+                helpers.check_output_decoded(['git', 'stash', 'pop'],
+                                             cwd=self.private_dir)
 
         def get_configs_from_repos(self):
             fetchers.get_configs_from_repos()
