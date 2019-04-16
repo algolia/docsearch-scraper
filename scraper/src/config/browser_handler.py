@@ -10,7 +10,7 @@ from ..js_executor import JsExecutor
 class BrowserHandler:
     @staticmethod
     def conf_need_browser(config_original_content, js_render):
-        group_regex = re.compile("\\(\?P<(.+?)>.+?\\)")
+        group_regex = re.compile(r'\(\?P<(.+?)>.+?\)')
         results = re.findall(group_regex, config_original_content)
 
         return len(results) > 0 or js_render
