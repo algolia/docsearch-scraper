@@ -22,7 +22,7 @@ class ReindexConnector(AbstractCommand):
 
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
-        make_request("/" + str(inverted[connector_name]) + "/reindex", "POST")
+        make_request('/{}/reindex'.format(inverted[connector_name]), "POST")
 
         send_slack_notif([{
             "title": "Manually reindexed connectors",
