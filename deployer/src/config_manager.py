@@ -103,8 +103,7 @@ class ConfigManager:
             helpers.make_request('/', 'POST', {
                 'configuration': json.dumps(config, separators=(',', ': '))})
 
-            print
-            '\n================================\n'
+            print('\n================================\n')
 
             if "conversation_id" in config:
                 cuid = config["conversation_id"][0]
@@ -153,8 +152,7 @@ class ConfigManager:
                                      separators=(',', ': '))})
             helpers.make_request('/' + config_id + '/reindex', 'POST')
 
-            print
-            '\n================================\n'
+            print('\n================================\n')
             print(snippeter.get_email_for_config(config_name))
 
             if helpers.confirm(
@@ -174,8 +172,7 @@ class ConfigManager:
             for key in analytics_keys:
                 description = key['description'].split()
                 email = description[4]
-                print
-                email
+                print(email)
                 if email is not None:
                     remove_user_from_index(config_name, email)
 
