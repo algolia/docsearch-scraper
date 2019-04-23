@@ -25,16 +25,19 @@ def get_conversation_ID_from_url(hs_url):
 
     if not len(cuid) > 0:
         raise ValueError(
-            "Wrong help scout url " + hs_url + ", must have a conversation sub part with ID")
+            'Wrong help scout url {}, must have a conversation sub part with ID'.format(
+                hs_url))
 
     if not RepresentsInt(cuid):
-        raise ValueError("Conversation ID : " + cuid + " must be an integer")
+        raise ValueError(
+            'Conversation ID : {} must be an integer'.format(cuid))
 
     return cuid
 
 
 def get_conversation(cuid):
-    conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
+    conversation_endpoint = 'https://api.helpscout.net/v1/conversations/{}.json'.format(
+        cuid)
     hs_api_key = get_helpscout_api_key()
 
     response_json = json.loads(helpers.make_request(conversation_endpoint,
@@ -67,8 +70,9 @@ def get_start_url_from_conversation(conversation):
             "First thread from the conversation thread wasn't sent by customer")
 
     print(
-        "URL fetched is \033[1;36m" + url_from_conversation + "\033[0m sent by \033[1;33m" + first_thread.get(
-            "customer").get("email") + "\033[0m")
+        'URL fetched is \033[1;36m{}\033[0m sent by \033[1;33m{}\033[0m'.format(
+            url_from_conversation, first_thread.get(
+                "customer").get("email")))
 
     return url_from_conversation
 
@@ -109,7 +113,8 @@ def get_emails_from_conversation(conversation):
 
 
 def add_note(cuid, body):
-    conversation_endpoint = "https://api.helpscout.net/v1/conversations/" + cuid + ".json"
+    conversation_endpoint = 'https://api.helpscout.net/v1/conversations/{}.json'.format(
+        cuid)
 
     hs_api_key = get_helpscout_api_key()
 
@@ -134,7 +139,7 @@ def get_conversation_url_from_cuid(cuid):
     if not cuid:
         raise ValueError("Wrong input conversation ID")
 
-    return "https://secure.helpscout.net/conversation/" + cuid
+    return 'https://secure.helpscout.net/conversation/{}'.format(cuid)
 
 
 def is_docusaurus_conversation(conversation):

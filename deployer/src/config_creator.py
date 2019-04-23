@@ -314,12 +314,12 @@ def create_config(u=None):
         config['start_urls'] = urls
 
     user_index_name = helpers.get_user_value(
-        "index_name is " + "\033[1;33m" + config[
-            'index_name'] + "\033[0m" + ' [enter to confirm]: ')
+        'index_name is \033[1;33m{}\033[0m [enter to confirm]: '.format(config[
+                                                                            "index_name"]))
 
     if user_index_name != "":
         config['index_name'] = user_index_name
-        print("index_name is now " + "\033[1;33m" + config[
-            'index_name'] + "\033[0m")
+        print('index_name is now \033[1;33m{}\033[0m'.format(config[
+                                                                 "index_name"]))
 
     return config
