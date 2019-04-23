@@ -124,3 +124,8 @@ def send_slack_notif(reports):
         "icon_emoji": ":rocket:",
         "attachments": reports
     })
+
+
+def check_output_decoded(command, cwd=None):
+    from subprocess import check_output
+    return check_output(command, cwd=cwd).decode()
