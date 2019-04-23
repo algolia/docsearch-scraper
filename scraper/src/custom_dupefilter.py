@@ -29,7 +29,7 @@ class CustomDupeFilter(RFPDupeFilter):
         if remove_scheme:
             match_capture_any_scheme = r'(https?)(.*)'
             url_for_hash = re.sub(match_capture_any_scheme, r"\2",
-                                  url_for_hash)
+                                  url_for_finger_print)
 
         if include_headers:
             include_headers = tuple(to_bytes(h.lower())

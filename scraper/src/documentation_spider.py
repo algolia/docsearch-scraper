@@ -52,7 +52,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     def to_other_scheme(url):
         """Return a list with the translation to this url into each other scheme."""
         other_scheme_urls = []
-        url = url.encode('utf8')
         match = DocumentationSpider.match_capture_any_scheme.match(url)
         assert match
         if not (match and match.group(1) and match.group(2)):
