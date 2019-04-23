@@ -15,10 +15,10 @@ def get_endpoint(endpoint, params=''):
 def get_headers():
     token = environ.get('INTERNAL_API_AUTH')
 
-    app_id = environ.get('APPLICATION_ID_PROD')
-    admin_api_key = environ.get('API_KEY_PROD')
-    auth_token = b64encode(app_id + ":" + admin_api_key).replace('=',
-                                                                 '').replace(
+    app_id = environ.get('APPLICATION_ID_PROD').encode()
+    admin_api_key = environ.get('API_KEY_PROD').encode()
+    auth_token = b64encode(app_id + b":" + admin_api_key).decode().replace('=',
+                                                                           '').replace(
         "\n", '')
 
     return {
@@ -92,7 +92,7 @@ def add_user_to_index(index_name, user_email):
 
     # User has already access to some other indices
     if right:
-        endpoint = get_endpoint('/application_rights/' + str(right['id']))
+        endpoint = get_endpoint('/application_rights/{}'.format(right['id']))
         requests.patch(endpoint, json=payload, headers=headers)
         print(
             user_email + " is already registered on algolia dashboard (has right to other DOCSEARCH indices), analytics granted to " + index_name)
@@ -132,18 +132,19 @@ def remove_user_from_index(index_name, user_email):
         indices.remove(index_name)
 
     if len(indices) > 0:
-        requests.patch(get_endpoint('/application_rights/' + str(right['id'])),
-                       json={
-                           'application_right': {
-                               'application_id': APPLICATION_ID_PROD_INTERNAL,
-                               'user_email': user_email,
-                               'indices': indices,
-                               'analytics': True
-                           }
-                       }, headers=get_headers())
+        requests.patch(
+            get_endpoint('/application_rights/{}'.format(right['id'])),
+            json={
+                'application_right': {
+                    'application_id': APPLICATION_ID_PROD_INTERNAL,
+                    'user_email': user_email,
+                    'indices': indices,
+                    'analytics': True
+                }
+            }, headers=get_headers())
     else:
         requests.delete(
-            get_endpoint('/application_rights/' + str(right['id'])),
+            get_endpoint('/application_rights/{}'.format(right['id'])),
             headers=get_headers())
 
     print(user_email + " uninvite from " + index_name)

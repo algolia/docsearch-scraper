@@ -21,7 +21,7 @@ class DisableConnector(AbstractCommand):
         configs, inverted, crawler_ids = get_configs_from_website()
         connector_name = args[0]
 
-        make_request("/" + str(inverted[connector_name]) + "/deactivate",
+        make_request('/{}/deactivate'.format(inverted[connector_name]),
                      "PUT")
 
         remove_crawling_issue(connector_name)
