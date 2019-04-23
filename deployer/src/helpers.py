@@ -77,8 +77,9 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                             auth=(username, password))
 
         if r.status_code not in success_codes:
-            print("ISSUE for DELETE request : " + url + " with params: " + str(
-                data))
+            print(
+                'ISSUE for DELETE request : {} with params: {}'.format(url,
+                                                                       data))
         return r
 
     if type == 'PUT':
