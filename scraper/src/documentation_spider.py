@@ -73,8 +73,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.start_urls_full = config.start_urls
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
         # We need to ensure that the stop urls are scheme agnostic too if it represents URL
-        self.stop_urls = map(DocumentationSpider.to_any_scheme,
-                             config.stop_urls)
+        self.stop_urls = [DocumentationSpider.to_any_scheme(stop_url) for
+                          stop_url in config.stop_urls]
         self.algolia_helper = algolia_helper
         self.strategy = strategy
         self.js_render = config.js_render
@@ -87,8 +87,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # Get rid of scheme consideration
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
-        start_urls_any_scheme = map(DocumentationSpider.to_any_scheme,
-                                    self.start_urls)
+        start_urls_any_scheme = [DocumentationSpider.to_any_scheme(start_url)
+                                 for start_url in self.start_urls]
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
             deny=self.stop_urls,

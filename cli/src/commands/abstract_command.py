@@ -18,8 +18,8 @@ class AbstractCommand(object):
         return []
 
     def nb_options(self):
-        return len(list(filter(lambda x: x.get("optional") is None,
-                               self.get_options())))
+        return len(list(
+            [x for x in self.get_options() if x.get("optional") is None]))
 
     def get_option(self, name, args):
         options = self.get_options()

@@ -84,7 +84,7 @@ class UrlsParser(object):
         # Cache it to avoid to compile it several time
         if not hasattr(UrlsParser.get_url_variables_name, 'group_regex'):
             UrlsParser.get_url_variables_name.group_regex = re.compile(
-                "\\(\?P<(.+?)>.+?\\)")
+                r'\(\?P<(.+?)>.+?\)')
 
         return re.findall(UrlsParser.get_url_variables_name.group_regex, url)
 
