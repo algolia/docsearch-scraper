@@ -13,7 +13,8 @@ RUN chown -R seleuser /home/seleuser
 RUN chgrp -R seleuser /home/seleuser
 
 RUN apt-get update -y && apt-get install -yq \
-    software-properties-common
+    software-properties-common\
+    python3.7
 RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update -y && apt-get install -yq \
     curl \
