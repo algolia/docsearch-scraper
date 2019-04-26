@@ -8,7 +8,7 @@ class AbstractBuildDocker(AbstractCommand):
         tags = [image]
 
         if local_tag:
-            tag = AbstractBuildDocker.get_local_tag()
+            tag = AbstractBuildDocker.get_local_tag().decode()
             tags.append(image + ":" + tag)
 
         cmd = ["docker", "build"] + [param for tag in tags for param in
