@@ -1,5 +1,6 @@
 from .abstract_command import AbstractCommand
-from collections import OrderedDict
+
+from collections.abc import OrderedDict  # Python 3
 
 
 class BootstrapConfig(AbstractCommand):

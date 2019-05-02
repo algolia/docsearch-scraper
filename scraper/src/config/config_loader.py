@@ -5,7 +5,6 @@ EXIT_CODE_WRONG_CONFIG = 5
 Load the config json file.
 """
 
-from collections import OrderedDict
 from distutils.util import strtobool
 import json
 import os
@@ -22,8 +21,10 @@ try:
 except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-
-
+try:
+     from collections.abc import OrderedDict  # Python 3
+except ImportError:
+    from collections import OrderedDict  # Python 2.7
 
 class ConfigLoader(object):
     """

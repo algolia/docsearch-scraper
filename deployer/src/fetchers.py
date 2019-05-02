@@ -1,8 +1,12 @@
 import os
 import json
-from collections import OrderedDict
 from os import environ
 from . import helpers
+
+try:
+    from collections.abc import OrderedDict  # Python 3
+except ImportError:
+    from collections import OrderedDict  # Python 2.7
 
 
 def get_configs_from_repos():

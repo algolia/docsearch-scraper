@@ -1,9 +1,13 @@
 import os
 import os.path as path
 import subprocess as sp
-from collections import OrderedDict
 import json
 from builtins import input
+
+try:
+    from collections.abc import OrderedDict  # Python 3
+except ImportError:
+    from collections import OrderedDict  # Python 2.7
 
 
 def _prompt_command(emails):
