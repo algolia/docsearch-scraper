@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 Scrapy = "==1.5.0"
 algoliasearch = "==1.13.0"
-future = "==0.16.0"
 pyperclip = "==1.5.27"
 python-dotenv = "==0.7.1"
 ratelimit = "==1.4.1"
