@@ -1,20 +1,29 @@
 Hello you,
 
-## Install and use the scraper without Docker
+## Getting started
 
-We do recommend [pipenv][1] to install the whole python environment
+### Setting up the Python environment
 
-- [Install pipenv][2]
-- `pipenv install`
-- `pipenv shell`
+[pipenv][1] is used to manage the whole Python environment.
 
-## Installing Chrome Headless
+- [Install pipenv][2] (this must be done only once)
+- Run `pipenv install` to create a Python virtual environment if unexisting,
+  and install the Scraper's dependencies (this will have to be done each time
+  dependencies are modified)
+- Run `pipenv shell` to enter the Python virtual environment (this will have
+  to be done each time you get back to work on the Scraper)
+
+### Installing Chrome Headless
 
 Websites that need JavaScript for rendering are passed through ChromeDriver.
 [Download the version][4] suited to your OS and then update the
 `CHROMEDRIVER_PATH` in your `.env` file.
 
 You should be ready to go.
+
+### Running
+
+See the dedicated page on [Algolia's documentation web site](https://community.algolia.com/docsearch/run-your-own.html).
 
 ## Run the tests
 
