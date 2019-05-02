@@ -12,6 +12,8 @@ place.
 Please check the [dedicated documentation][2] to see how you can install and
 run DocSearch yourself.
 
+This project supports Python 3.7+
+
 ## Related projects
 
 DocSearch is made of 3 repositories:

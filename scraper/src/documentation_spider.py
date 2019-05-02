@@ -16,10 +16,10 @@ import re
 from scrapy.spidermiddlewares.httperror import HttpError
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
 
 from scrapy.exceptions import CloseSpider
 

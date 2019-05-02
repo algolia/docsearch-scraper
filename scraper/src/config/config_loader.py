@@ -18,10 +18,11 @@ from .selectors_parser import SelectorsParser
 from .browser_handler import BrowserHandler
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
+
 
 
 class ConfigLoader(object):
@@ -74,7 +75,7 @@ class ConfigLoader(object):
         data = self._load_config(config)
 
         # Fill self from config
-        for key, value in data.items():
+        for key, value in list(data.items()):
             setattr(self, key, value)
 
         # Start browser if needed

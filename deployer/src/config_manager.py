@@ -9,7 +9,7 @@ from . import helpers
 from .dict_differ import DictDiffer
 from . import fetchers
 
-from helpdesk_helper import add_note, get_conversation, \
+from .helpdesk_helper import add_note, get_conversation, \
     get_emails_from_conversation, get_conversation_url_from_cuid
 
 from deployer.src.algolia_internal_api import remove_user_from_index

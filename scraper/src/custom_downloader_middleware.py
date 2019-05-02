@@ -7,10 +7,10 @@ import time
 from scrapy.http import Request, HtmlResponse
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
 
 
 class CustomDownloaderMiddleware(object):

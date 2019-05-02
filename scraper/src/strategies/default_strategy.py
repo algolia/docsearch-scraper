@@ -143,7 +143,7 @@ class DefaultStrategy(AbstractStrategy):
             extra_attributes = UrlsParser.get_extra_attributes(
                 current_page_url, self.config.start_urls)
 
-            for key in extra_attributes.keys():
+            for key in list(extra_attributes.keys()):
                 record[key] = extra_attributes[key]
 
             record['hierarchy_camel'] = record['hierarchy'],
@@ -190,7 +190,7 @@ class DefaultStrategy(AbstractStrategy):
         if 'attributes' in selectors[current_level]:
             attributes = {}
             for attribute_name in list(selectors[current_level][
-                                           'attributes'].keys()):
+                'attributes'].keys()):
                 matching_nodes = node.xpath(
                     selectors[current_level]['attributes'][attribute_name][
                         'selector'])
@@ -256,7 +256,7 @@ class DefaultStrategy(AbstractStrategy):
         return hierarchy, content
 
     def _get_nodes_per_global_level(self, selectors, levels):
-        for level in selectors.keys():
+        for level in list(selectors.keys()):
             level_selector = selectors[level]
             if level not in levels or level_selector['global']:
                 matching_dom_nodes = self.select(level_selector['selector'])
