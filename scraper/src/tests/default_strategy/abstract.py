@@ -1,6 +1,4 @@
 # coding: utf-8
-from __future__ import absolute_import
-
 import json
 
 from ...config.config_loader import ConfigLoader
