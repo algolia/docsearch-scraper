@@ -8,7 +8,6 @@ from scrapy.http import Request
 # Import for the sitemap behavior
 from scrapy.spiders import SitemapSpider
 from scrapy.spiders.sitemap import regex
-import six
 import re
 
 # End of import for the sitemap behavior
@@ -248,7 +247,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.sitemap_rules = custom_sitemap_rules
         self._cbs = []
         for r, c in self.sitemap_rules:
-            if isinstance(c, six.string_types):
+            if isinstance(c, str):
                 c = getattr(self, c)
             self._cbs.append((regex(r), c))
         self._follow = [regex(x) for x in self.sitemap_follow]
