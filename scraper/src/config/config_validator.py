@@ -1,4 +1,3 @@
-import six
 
 
 class ConfigValidator(object):
@@ -48,7 +47,7 @@ class ConfigValidator(object):
 
         if self.config.sitemap_urls_regexs and not self.config.sitemap_urls:
             for regex in self.config.sitemap_urls_regex:
-                if not isinstance(regex, six.string_types):
+                if not isinstance(regex, str):
                     raise Exception(
                         'You gave an bad regex: ' + regex + ' must be a string')
 

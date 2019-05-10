@@ -1,11 +1,9 @@
-from six import string_types
-
 from . import algolia_helper, fetchers
 
 
 def _is_automatically_updated(config, attribute):
     for start_url in config['start_urls']:
-        if not isinstance(start_url, string_types):
+        if not isinstance(start_url, str):
             if 'variables' in start_url:
                 for variable in start_url['variables']:
                     if (variable == attribute):
