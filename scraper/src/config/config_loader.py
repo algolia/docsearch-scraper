@@ -80,7 +80,8 @@ class ConfigLoader(object):
 
         # Start browser if needed
         self.driver = BrowserHandler.init(self.config_original_content,
-                                          self.js_render)
+                                          self.js_render,
+                                          self.user_agent)
 
         # Validate
         ConfigValidator(self).validate()
