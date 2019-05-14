@@ -36,7 +36,7 @@ RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" 
 RUN apt-get update -y && apt-get install -yq \
   google-chrome-stable \
   unzip
-RUN wget -q https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_linux64.zip
+RUN wget -q https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip
 
 RUN mv chromedriver /usr/bin/chromedriver
@@ -51,9 +51,10 @@ RUN unzip testng-6.8.7.jar.zip
 COPY Pipfile .
 COPY Pipfile.lock .
 
-ENV LANG en_US.UTF-8
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 ENV PIPENV_HIDE_EMOJIS 1
 RUN apt-get update -y && apt-get install -yq \
-    python-pip
-RUN pip install pipenv
-RUN pipenv install
+    python3-pip
+RUN pip3 install pipenv
+RUN pipenv install --python 3.6
