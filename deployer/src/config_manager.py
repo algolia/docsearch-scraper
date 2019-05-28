@@ -1,12 +1,10 @@
 import algoliasearch
-import json
 from os import environ
 
 from . import algolia_helper
 from . import snippeter
 from . import emails
 from . import helpers
-from .dict_differ import DictDiffer
 from . import fetchers
 
 from .helpdesk_helper import add_note, get_conversation, \
@@ -52,9 +50,6 @@ class ConfigManager:
             self.init()
 
             self.ref_configs = fetchers.get_configs_from_repos()
-            self.actual_configs, self.inverted_actual_configs, self.crawler_ids = fetchers.get_configs_from_website()
-
-            self.differ = DictDiffer(self.ref_configs, self.actual_configs)
 
         def init(self):
             output = helpers.check_output_decoded(['git', 'stash', 'list'],
@@ -91,26 +86,6 @@ class ConfigManager:
             if self.final_nb_private_stash != self.initial_private_nb_stash:
                 helpers.check_output_decoded(['git', 'stash', 'pop'],
                                              cwd=self.private_dir)
-
-        def get_configs_from_repos(self):
-            fetchers.get_configs_from_repos()
-
-        def get_configs_from_website(self):
-            fetchers.get_configs_from_website()
-
-        differ = None
-        public_dir = None
-        private_dir = None
-
-        def get_added(self):
-            return ConfigManager.encode_set(self.differ.added())
-
-        def get_removed(self):
-            return ConfigManager.encode_set(self.differ.removed())
-
-        def get_changed(self):
-            configs_name, changed_attribute = self.differ.changed()
-            return ConfigManager.encode_set(configs_name), changed_attribute
 
         def add_config(self, config_name):
             key = algolia_helper.add_docsearch_key(config_name)
