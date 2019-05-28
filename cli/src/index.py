@@ -22,7 +22,6 @@ from .commands.run_config_docker import RunConfigDocker
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.disable_connector import DisableConnector
-from .commands.enable_connector import EnableConnector
 from .commands.invite_user import InviteUser
 from .commands.invite_removeuser import InviteRemoveUser
 
@@ -74,7 +73,6 @@ if CREDENTIALS:
 
 if ADMIN:
     cmds.append(GenerateEmail())
-    cmds.append(EnableConnector())
     cmds.append(DisableConnector())
     cmds.append(DeployConfigs())
     cmds.append(DeployDockerScraperImages())
