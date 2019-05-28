@@ -150,7 +150,6 @@ class ConfigManager:
                     print(snippeter.get_email_for_config(config_name))
 
         def update_config(self, config_name):
-            config_id = str(self.inverted_actual_configs[config_name])
             message = config_name
 
             try:
@@ -160,12 +159,6 @@ class ConfigManager:
                 pass
 
             print(message)
-
-            helpers.make_request('/' + config_id, 'PUT',
-                                 {'configuration': json.dumps(
-                                     self.ref_configs[config_name],
-                                     separators=(',', ': '))})
-            helpers.make_request('/' + config_id + '/reindex', 'POST')
 
             print('\n================================\n')
             print(snippeter.get_email_for_config(config_name))
