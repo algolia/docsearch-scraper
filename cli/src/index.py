@@ -40,22 +40,6 @@ if not path.isfile(env_file):
     ans = input("What is your Algolia API_KEY: ")
     f.write("API_KEY=" + ans + "\n")
 
-    ans = input(
-        "What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_USERNAME=" + ans + "\n")
-
-    ans = input(
-        "What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_PASSWORD=" + ans + "\n")
-
-    ans = input(
-        "What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_USERNAME=" + ans + "\n")
-
-    ans = input(
-        "What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_PASSWORD=" + ans + "\n")
-
     ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
     if ans != "":
         f.write("SLACK_HOOK=" + ans + "\n")
@@ -78,12 +62,6 @@ if "APPLICATION_ID" not in environ or len(environ["APPLICATION_ID"]) == 0:
 
 if "API_KEY" not in environ or len(environ["API_KEY"]) == 0:
     CREDENTIALS = False
-
-if "WEBSITE_USERNAME" not in environ or len(environ["WEBSITE_USERNAME"]) == 0:
-    ADMIN = False
-
-if "WEBSITE_PASSWORD" not in environ or len(environ["WEBSITE_PASSWORD"]) == 0:
-    ADMIN = False
 
 cmds = []
 
