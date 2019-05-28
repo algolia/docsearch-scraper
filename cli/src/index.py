@@ -19,7 +19,6 @@ from .commands.run_config import RunConfig
 from .commands.deploy_docker_scraper_images import DeployDockerScraperImages
 from .commands.deploy_configs import DeployConfigs
 from .commands.run_config_docker import RunConfigDocker
-from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
 from .commands.disable_connector import DisableConnector
@@ -75,7 +74,6 @@ if CREDENTIALS:
 
 if ADMIN:
     cmds.append(GenerateEmail())
-    cmds.append(ReindexConnector())
     cmds.append(EnableConnector())
     cmds.append(DisableConnector())
     cmds.append(DeployConfigs())
