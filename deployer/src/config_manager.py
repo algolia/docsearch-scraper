@@ -168,10 +168,6 @@ class ConfigManager:
                 emails.add(config_name, self.private_dir)
 
         def remove_config(self, config_name):
-            config_id = str(self.inverted_actual_configs[config_name])
-
-            helpers.make_request('/' + config_id, 'DELETE')
-
             algolia_helper.delete_docsearch_key(config_name)
             algolia_helper.delete_docsearch_index(config_name)
             algolia_helper.delete_docsearch_index(config_name + '_tmp')
