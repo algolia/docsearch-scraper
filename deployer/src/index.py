@@ -47,39 +47,17 @@ def deploy_config(config_name):
 
     helpers.check_output_decoded(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
-    added = config_manager.get_added()
-    changed, changed_attributes = config_manager.get_changed()
-    removed = config_manager.get_removed()
-
-    if config_name in added:
-        deploy_configs([config_name], [], [], changed_attributes,
-                       force_deploy=True)
-    elif config_name in changed:
-        deploy_configs([], [config_name], [], changed_attributes,
-                       force_deploy=True)
-    elif config_name in removed:
-        deploy_configs([], [], [config_name], changed_attributes,
-                       force_deploy=True)
+    # Already live, we will only update the change
+    if config_name in config_manager.ref_configs:
+        deploy_configs([], [config_name], [], force_deploy=True)
+    # Didn't exist, we add it
+    else:
+        deploy_configs([config_name], [], [], force_deploy=True)
 
     config_manager.destroy()
 
 
-def deploy():
-    print_init()
-
-    config_manager = ConfigManager().instance
-
-    added = config_manager.get_added()
-    changed, changed_attributes = config_manager.get_changed()
-    removed = config_manager.get_removed()
-
-    deploy_configs(added, changed, removed, changed_attributes)
-
-    config_manager.destroy()
-
-
-def deploy_configs(added, changed, removed, changed_attributes,
-                   force_deploy=False):
+def deploy_configs(added, changed, removed, force_deploy=False):
     config_manager = ConfigManager().instance
 
     added_log = ""
@@ -104,12 +82,8 @@ def deploy_configs(added, changed, removed, changed_attributes,
         print("")
         print("Will be \033[1;33mupdated\033[0m :")
         for config in changed:
-            log = " - " + config + ' (' + ', '.join(
-                changed_attributes[config]) + ')'
+            log = " - " + config
             cli_log = log
-            if len(changed_attributes[config]) != 1 or 'nb_hits' not in \
-                    changed_attributes[config]:
-                cli_log = '\033[0;35m' + log + '\033[0m'
             updated_log += log + "\n"
             print(cli_log)
 
