@@ -22,7 +22,6 @@ from .commands.run_config_docker import RunConfigDocker
 from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
-from .commands.get_logs import GetLogs
 from .commands.disable_connector import DisableConnector
 from .commands.enable_connector import EnableConnector
 from .commands.invite_user import InviteUser
@@ -83,7 +82,6 @@ if ADMIN:
     cmds.append(DeployDockerScraperImages())
     cmds.append(UpdateEmails())
     cmds.append(DeleteEmails())
-    cmds.append(GetLogs())
     cmds.append(InviteUser())
     cmds.append(InviteRemoveUser())
 
