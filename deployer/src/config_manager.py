@@ -118,9 +118,6 @@ class ConfigManager:
             print(config_name + ' (' + key + ')')
             config = self.ref_configs[config_name]
 
-            helpers.make_request('/', 'POST', {
-                'configuration': json.dumps(config, separators=(',', ': '))})
-
             print('\n================================\n')
 
             if "conversation_id" in config:
