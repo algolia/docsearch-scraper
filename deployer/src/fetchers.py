@@ -2,7 +2,6 @@ import os
 import json
 from collections import OrderedDict
 from os import environ
-from . import helpers
 
 
 def get_configs_from_repos():
@@ -30,19 +29,3 @@ def get_configs_from_repos():
     print('{} docs in public and private repo'.format(len(configs)))
 
     return configs
-
-
-def get_configs_from_website():
-    live_connectors = json.loads(helpers.make_request('/'))['connectors']
-    live_connectors.sort(key=lambda x: x['name'])
-
-    configs = {}
-    inverted = {}
-    crawler_ids = {}
-
-    for connector in live_connectors:
-        configs[connector['name']] = connector['configuration']
-        inverted[connector['name']] = connector['id']
-        crawler_ids[connector['name']] = connector['crawler_id']
-
-    return configs, inverted, crawler_ids
