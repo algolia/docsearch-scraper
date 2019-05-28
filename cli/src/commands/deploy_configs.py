@@ -6,12 +6,17 @@ class DeployConfigs(AbstractCommand):
         return "deploy"
 
     def get_description(self):
-        return "Deploy configs"
+        return "Deploy a config"
+
+    def get_options(self):
+        return [{"name": "index_name",
+                 "description": "name of the config to deploy"}]
 
     def run(self, args):
         if len(args) <= 0:
-            from deployer.src.index import deploy
-            deploy()
+            print(
+                'You can only deploy one config at the time, index_name missing. Aborting')
+            exit(1)
         else:
             from deployer.src.index import deploy_config
             deploy_config(args[0])
