@@ -1,12 +1,11 @@
 import re
 import copy
-from six import string_types
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
 
 from ..js_executor import JsExecutor
 
@@ -16,7 +15,7 @@ class UrlsParser(object):
     def parse(config_start_urls):
         start_urls = []
         for start_url in config_start_urls:
-            if isinstance(start_url, string_types):
+            if isinstance(start_url, str):
                 start_url = {'url': start_url}
 
             start_url['compiled_url'] = re.compile(start_url['url'])
@@ -84,7 +83,7 @@ class UrlsParser(object):
         # Cache it to avoid to compile it several time
         if not hasattr(UrlsParser.get_url_variables_name, 'group_regex'):
             UrlsParser.get_url_variables_name.group_regex = re.compile(
-                "\\(\?P<(.+?)>.+?\\)")
+                r'\(\?P<(.+?)>.+?\)')
 
         return re.findall(UrlsParser.get_url_variables_name.group_regex, url)
 
@@ -128,7 +127,7 @@ class UrlsParser(object):
             return urlparse(url).netloc
 
         # Concatenating both list, being careful that they can be None
-        all_urls = [_['url'] if not isinstance(_, string_types) else _ for _ in
+        all_urls = [_['url'] if not isinstance(_, str) else _ for _ in
                     start_urls] + stop_urls
         # Getting the list of domains for each of them
         all_domains = [get_domain(_) for _ in all_urls]

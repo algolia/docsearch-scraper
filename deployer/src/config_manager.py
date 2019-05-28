@@ -1,7 +1,6 @@
 import algoliasearch
 import json
 from os import environ
-from subprocess import check_output
 
 from . import algolia_helper
 from . import snippeter
@@ -10,7 +9,7 @@ from . import helpers
 from .dict_differ import DictDiffer
 from . import fetchers
 
-from helpdesk_helper import add_note, get_conversation, \
+from .helpdesk_helper import add_note, get_conversation, \
     get_emails_from_conversation, get_conversation_url_from_cuid
 
 from deployer.src.algolia_internal_api import remove_user_from_index
@@ -22,6 +21,18 @@ class ConfigManager:
     def __init__(self):
         if not ConfigManager.instance:
             ConfigManager.instance = ConfigManager.__ConfigManager()
+
+    @staticmethod
+    def encode_set(to_encode):
+        encoded = []
+        for config_name in to_encode:
+            try:
+                config_name = config_name.decode()
+            except AttributeError:
+                print("Error decoding non string var {}".format(config_name))
+                pass
+            encoded.append(config_name)
+        return encoded
 
     class __ConfigManager:
         def __init__(self):
@@ -46,34 +57,40 @@ class ConfigManager:
             self.differ = DictDiffer(self.ref_configs, self.actual_configs)
 
         def init(self):
-            output = check_output(['git', 'stash', 'list'],
-                                  cwd=self.public_dir)
+            output = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                  cwd=self.public_dir)
             self.initial_public_nb_stash = len(output.split('\n'))
-            check_output(['git', 'stash', '--include-untracked'],
-                         cwd=self.public_dir)
-            output2 = check_output(['git', 'stash', 'list'],
-                                   cwd=self.public_dir)
+            helpers.check_output_decoded(
+                ['git', 'stash', '--include-untracked'],
+                cwd=self.public_dir)
+            output2 = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                   cwd=self.public_dir)
             self.final_nb_public_stash = len(output2.split('\n'))
-            check_output(['git', 'pull', '-r', 'origin', 'master'],
-                         cwd=self.public_dir)
+            helpers.check_output_decoded(
+                ['git', 'pull', '-r', 'origin', 'master'],
+                cwd=self.public_dir)
 
-            output = check_output(['git', 'stash', 'list'],
-                                  cwd=self.private_dir)
+            output = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                  cwd=self.private_dir)
             self.initial_private_nb_stash = len(output.split('\n'))
-            check_output(['git', 'stash', '--include-untracked'],
-                         cwd=self.private_dir)
-            output2 = check_output(['git', 'stash', 'list'],
-                                   cwd=self.private_dir)
+            helpers.check_output_decoded(
+                ['git', 'stash', '--include-untracked'],
+                cwd=self.private_dir)
+            output2 = helpers.check_output_decoded(['git', 'stash', 'list'],
+                                                   cwd=self.private_dir)
             self.final_nb_private_stash = len(output2.split('\n'))
-            check_output(['git', 'pull', '-r', 'origin', 'master'],
-                         cwd=self.private_dir)
+            helpers.check_output_decoded(
+                ['git', 'pull', '-r', 'origin', 'master'],
+                cwd=self.private_dir)
 
         def destroy(self):
             if self.final_nb_public_stash != self.initial_public_nb_stash:
-                check_output(['git', 'stash', 'pop'], cwd=self.public_dir)
+                helpers.check_output_decoded(['git', 'stash', 'pop'],
+                                             cwd=self.public_dir)
 
             if self.final_nb_private_stash != self.initial_private_nb_stash:
-                check_output(['git', 'stash', 'pop'], cwd=self.private_dir)
+                helpers.check_output_decoded(['git', 'stash', 'pop'],
+                                             cwd=self.private_dir)
 
         def get_configs_from_repos(self):
             fetchers.get_configs_from_repos()
@@ -86,13 +103,14 @@ class ConfigManager:
         private_dir = None
 
         def get_added(self):
-            return self.differ.added()
+            return ConfigManager.encode_set(self.differ.added())
 
         def get_removed(self):
-            return self.differ.removed()
+            return ConfigManager.encode_set(self.differ.removed())
 
         def get_changed(self):
-            return self.differ.changed()
+            configs_name, changed_attribute = self.differ.changed()
+            return ConfigManager.encode_set(configs_name), changed_attribute
 
         def add_config(self, config_name):
             key = algolia_helper.add_docsearch_key(config_name)
@@ -103,8 +121,7 @@ class ConfigManager:
             helpers.make_request('/', 'POST', {
                 'configuration': json.dumps(config, separators=(',', ': '))})
 
-            print
-            '\n================================\n'
+            print('\n================================\n')
 
             if "conversation_id" in config:
                 cuid = config["conversation_id"][0]
@@ -127,7 +144,7 @@ class ConfigManager:
             else:
                 if helpers.confirm(
                         '\nDo you want to add emails for {}?'.format(
-                                config_name)):
+                            config_name)):
                     analytics_statuses = emails.add(config_name,
                                                     self.private_dir)
                     print(snippeter.get_email_for_config(config_name,
@@ -153,8 +170,7 @@ class ConfigManager:
                                      separators=(',', ': '))})
             helpers.make_request('/' + config_id + '/reindex', 'POST')
 
-            print
-            '\n================================\n'
+            print('\n================================\n')
             print(snippeter.get_email_for_config(config_name))
 
             if helpers.confirm(
@@ -174,8 +190,7 @@ class ConfigManager:
             for key in analytics_keys:
                 description = key['description'].split()
                 email = description[4]
-                print
-                email
+                print(email)
                 if email is not None:
                     remove_user_from_index(config_name, email)
 

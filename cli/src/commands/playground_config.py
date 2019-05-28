@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class PlaygroundConfig(AbstractCommand):
     def get_name(self):
-        return 'playground'
+        return "playground"
 
     def get_description(self):
-        return 'Launch the playground'
+        return "Launch the playground"
 
     def run(self, args):
         from os import getcwd

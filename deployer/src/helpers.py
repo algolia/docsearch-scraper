@@ -66,8 +66,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                               auth=(username, password),
                               data=data)
 
-        if r.status_code / 100 != 2:
-            print("ISSUE for POST request : " + url + " with params: " + str(
+        if r.status_code // 100 != 2:
+            print('ISSUE for POST request : {} with params: {}'.format(url,
                 data))
             print(r.text)
         return r
@@ -77,8 +77,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                             auth=(username, password))
 
         if r.status_code not in success_codes:
-            print("ISSUE for DELETE request : " + url + " with params: " + str(
-                data))
+            print('ISSUE for DELETE request : {} with params: {}'.format(url,
+                                                                       data))
         return r
 
     if type == 'PUT':
@@ -86,8 +86,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
                          auth=(username, password),
                          data=data)
         print(r.status_code)
-        if r.status_code / 100 != 2:
-            print("ISSUE for PUT request : " + url + " with params: " + str(
+        if r.status_code // 100 != 2:
+            print('ISSUE for PUT request : {} with params: {}'.format(url,
                 data))
         return r
 
@@ -99,8 +99,8 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
         r = requests.get(url,
                          auth=(username, password))
 
-    if r.status_code / 100 != 2:
-        print("ISSUE for GET request : " + url + " with params:" + data)
+    if r.status_code // 100 != 2:
+        print('ISSUE for GET request : {} with params: {}'.format(url, data))
 
     if json_request:
         r.json()
@@ -123,3 +123,8 @@ def send_slack_notif(reports):
         "icon_emoji": ":rocket:",
         "attachments": reports
     })
+
+
+def check_output_decoded(command, cwd=None):
+    from subprocess import check_output
+    return check_output(command, cwd=cwd).decode()

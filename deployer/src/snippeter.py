@@ -1,11 +1,9 @@
-from six import string_types
-
 from . import algolia_helper, fetchers
 
 
 def _is_automatically_updated(config, attribute):
     for start_url in config['start_urls']:
-        if not isinstance(start_url, string_types):
+        if not isinstance(start_url, str):
             if 'variables' in start_url:
                 for variable in start_url['variables']:
                     if (variable == attribute):
@@ -60,7 +58,7 @@ Have a nice day :)"""
     analytics_details = ''
     if isinstance(analytics_statuses, dict):
         for email, analytics_status in list(analytics_statuses.items()):
-            if isinstance(analytics_status, basestring):
+            if isinstance(analytics_status, str):
                 analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
             else:
                 analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
@@ -81,7 +79,7 @@ Have a nice day :)"""
         for name, values in list(facets.items()):
             if name == "no_variables":
                 continue
-            keys = values.keys()
+            keys = list(values.keys())
             keys.sort()
 
             if len(keys) > 0:

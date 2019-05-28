@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class GenerateEmail(AbstractCommand):
     def get_name(self):
-        return 'generate:email'
+        return "generate:email"
 
     def get_description(self):
-        return 'Generate the email for a docsearch'
+        return "Generate the email for a docsearch"
 
     def get_options(self):
         return [{"name": "name",
@@ -21,4 +21,4 @@ class GenerateEmail(AbstractCommand):
 
         print(email_content)
         print("Config copied to clipboard [OK]")
-        print('')
+        print("")

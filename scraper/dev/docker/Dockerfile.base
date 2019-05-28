@@ -13,7 +13,8 @@ RUN chown -R seleuser /home/seleuser
 RUN chgrp -R seleuser /home/seleuser
 
 RUN apt-get update -y && apt-get install -yq \
-    software-properties-common
+    software-properties-common\
+    python3.7
 RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update -y && apt-get install -yq \
     curl \
@@ -35,7 +36,7 @@ RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" 
 RUN apt-get update -y && apt-get install -yq \
   google-chrome-stable \
   unzip
-RUN wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+RUN wget -q https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip
 
 RUN mv chromedriver /usr/bin/chromedriver
@@ -46,18 +47,14 @@ RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server
 RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
 RUN unzip testng-6.8.7.jar.zip
 
-RUN npm install -g \
-  selenium-standalone@3.0.1 \
-  && selenium-standalone install
-
-
- # Install DocSearch dependencies
+# Install DocSearch dependencies
 COPY Pipfile .
 COPY Pipfile.lock .
 
-ENV LANG en_US.UTF-8
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 ENV PIPENV_HIDE_EMOJIS 1
 RUN apt-get update -y && apt-get install -yq \
-    python-pip
-RUN pip install pipenv
-RUN pipenv install
+    python3-pip
+RUN pip3 install pipenv
+RUN pipenv install --python 3.6

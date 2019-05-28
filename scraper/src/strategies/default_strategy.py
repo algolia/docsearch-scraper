@@ -6,7 +6,7 @@ from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
 from .hierarchy import Hierarchy
 from ..config.urls_parser import UrlsParser
-from ..helpers import is_number, to_json
+from ..helpers import to_json
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -40,9 +40,9 @@ class DefaultStrategy(AbstractStrategy):
     def _update_hierarchy_with_global_content(self, hierarchy,
                                               current_level_int):
         for index in range(0, current_level_int + 1):
-            if 'lvl' + str(index) in self.global_content:
-                hierarchy['lvl' + str(index)] = self.global_content[
-                    'lvl' + str(index)]
+            if 'lvl{}'.format(index) in self.global_content:
+                hierarchy['lvl{}'.format(index)] = self.global_content[
+                    'lvl{}'.format(index)]
 
         return hierarchy
 
@@ -92,8 +92,8 @@ class DefaultStrategy(AbstractStrategy):
                 anchors[current_level] = Anchor.get_anchor(node)
 
                 for index in range(current_level_int + 1, 7):
-                    hierarchy['lvl' + str(index)] = None
-                    anchors['lvl' + str(index)] = None
+                    hierarchy['lvl{}'.format(index)] = None
+                    anchors['lvl{}'.format(index)] = None
                 previous_hierarchy = hierarchy
 
                 if self.config.only_content_level:
@@ -111,7 +111,7 @@ class DefaultStrategy(AbstractStrategy):
                 node, self.get_strip_chars(current_level, selectors))
 
             if (
-                            content is None or content == "") and current_level == 'content':
+                    content is None or content == "") and current_level == 'content':
                 continue
 
             hierarchy, content = self._handle_default_values(hierarchy,
@@ -143,7 +143,7 @@ class DefaultStrategy(AbstractStrategy):
             extra_attributes = UrlsParser.get_extra_attributes(
                 current_page_url, self.config.start_urls)
 
-            for key in extra_attributes.keys():
+            for key in list(extra_attributes.keys()):
                 record[key] = extra_attributes[key]
 
             record['hierarchy_camel'] = record['hierarchy'],
@@ -189,8 +189,8 @@ class DefaultStrategy(AbstractStrategy):
     def _get_text_content_for_level(self, node, current_level, selectors):
         if 'attributes' in selectors[current_level]:
             attributes = {}
-            for attribute_name in selectors[current_level][
-                'attributes'].keys():
+            for attribute_name in list(selectors[current_level][
+                'attributes'].keys()):
                 matching_nodes = node.xpath(
                     selectors[current_level]['attributes'][attribute_name][
                         'selector'])
@@ -211,8 +211,8 @@ class DefaultStrategy(AbstractStrategy):
     @staticmethod
     def _get_closest_anchor(anchors):
         # Getting the element anchor as the closest one
-        for index in reversed(range(7)):
-            potential_anchor = anchors['lvl' + str(index)]
+        for index in list(range(6, -1, -1)):
+            potential_anchor = anchors['lvl{}'.format(index)]
             if potential_anchor is None:
                 continue
             return potential_anchor
@@ -256,7 +256,7 @@ class DefaultStrategy(AbstractStrategy):
         return hierarchy, content
 
     def _get_nodes_per_global_level(self, selectors, levels):
-        for level in selectors.keys():
+        for level in list(selectors.keys()):
             level_selector = selectors[level]
             if level not in levels or level_selector['global']:
                 matching_dom_nodes = self.select(level_selector['selector'])
@@ -324,7 +324,7 @@ class DefaultStrategy(AbstractStrategy):
 
     def _get_url_with_anchor(self, current_page_url, anchor):
         if (
-                    not self.config.js_render or not self.config.use_anchors) and anchor is not None:
+                not self.config.js_render or not self.config.use_anchors) and anchor is not None:
             return current_page_url + '#' + anchor
 
         return current_page_url

@@ -8,7 +8,6 @@ from scrapy.http import Request
 # Import for the sitemap behavior
 from scrapy.spiders import SitemapSpider
 from scrapy.spiders.sitemap import regex
-import six
 import re
 
 # End of import for the sitemap behavior
@@ -16,10 +15,10 @@ import re
 from scrapy.spidermiddlewares.httperror import HttpError
 
 try:
+    from urllib.parse import urlparse, unquote_plus
+except ImportError:
     from urlparse import urlparse
     from urllib import unquote_plus
-except ImportError:
-    from urllib.parse import urlparse, unquote_plus
 
 from scrapy.exceptions import CloseSpider
 
@@ -52,7 +51,6 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     def to_other_scheme(url):
         """Return a list with the translation to this url into each other scheme."""
         other_scheme_urls = []
-        url = url.encode('utf8')
         match = DocumentationSpider.match_capture_any_scheme.match(url)
         assert match
         if not (match and match.group(1) and match.group(2)):
@@ -74,8 +72,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.start_urls_full = config.start_urls
         self.start_urls = [start_url['url'] for start_url in config.start_urls]
         # We need to ensure that the stop urls are scheme agnostic too if it represents URL
-        self.stop_urls = map(DocumentationSpider.to_any_scheme,
-                             config.stop_urls)
+        self.stop_urls = [DocumentationSpider.to_any_scheme(stop_url) for
+                          stop_url in config.stop_urls]
         self.algolia_helper = algolia_helper
         self.strategy = strategy
         self.js_render = config.js_render
@@ -91,8 +89,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # Get rid of scheme consideration
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
-        start_urls_any_scheme = map(DocumentationSpider.to_any_scheme,
-                                    self.start_urls)
+        start_urls_any_scheme = [DocumentationSpider.to_any_scheme(start_url)
+                                 for start_url in self.start_urls]
         link_extractor = LxmlLinkExtractor(
             allow=start_urls_any_scheme,
             deny=self.stop_urls,
@@ -252,7 +250,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         self.sitemap_rules = custom_sitemap_rules
         self._cbs = []
         for r, c in self.sitemap_rules:
-            if isinstance(c, six.string_types):
+            if isinstance(c, str):
                 c = getattr(self, c)
             self._cbs.append((regex(r), c))
         self._follow = [regex(x) for x in self.sitemap_follow]

@@ -3,13 +3,13 @@ from os import environ
 
 class AbstractCommand(object):
     def run(self, args):
-        raise Exception('run need to be implemented')
+        raise Exception("run need to be implemented")
 
     def get_name(self):
-        raise Exception('get_name need to be implemented')
+        raise Exception("get_name need to be implemented")
 
     def get_description(self):
-        raise Exception('get_description need to be implemented')
+        raise Exception("get_description need to be implemented")
 
     def get_usage(self):
         return "  ./docsearch " + self.get_name()
@@ -18,12 +18,12 @@ class AbstractCommand(object):
         return []
 
     def nb_options(self):
-        return len(list(filter(lambda x: x.get('optional') is None,
-                               self.get_options())))
+        return len(list(
+            [x for x in self.get_options() if x.get("optional") is None]))
 
     def get_option(self, name, args):
         options = self.get_options()
-        index = [i for i, j in enumerate(options) if j['name'] == name]
+        index = [i for i, j in enumerate(options) if j["name"] == name]
         if len(index) == 0:
             return None
         else:
@@ -32,16 +32,16 @@ class AbstractCommand(object):
         if index < len(args):
             return args[index]
         else:
-            return options[index]['optional']
+            return options[index]["optional"]
 
     def check_docsearch_app_id(self, action_description):
-        if environ.get('APPLICATION_ID') != 'BH4D9OD16A':
+        if environ.get("APPLICATION_ID") != "BH4D9OD16A":
             print(
                 "The APP_ID is not BH4D9OD16A. You can not " + action_description + " if you are not using the docsearch account")
             exit(1)
 
     def check_not_docsearch_app_id(self, action_description):
-        if environ.get('APPLICATION_ID') == 'BH4D9OD16A':
+        if environ.get("APPLICATION_ID") == "BH4D9OD16A":
             print(
                 "The APP_ID is BH4D9OD16A. You can not " + action_description + " if you are using the docsearch account")
             exit(1)

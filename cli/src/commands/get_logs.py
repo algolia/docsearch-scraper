@@ -3,10 +3,10 @@ from .abstract_command import AbstractCommand
 
 class GetLogs(AbstractCommand):
     def get_name(self):
-        return 'connector:logs'
+        return "connector:logs"
 
     def get_description(self):
-        return 'Reindex a connector'
+        return "Reindex a connector"
 
     def get_usage(self):
         return super(GetLogs, self).get_usage() + " config"
@@ -25,17 +25,17 @@ class GetLogs(AbstractCommand):
 
         connector_name = args[0]
 
-        scheduler_username = environ.get('SCHEDULER_USERNAME')
-        scheduler_password = environ.get('SCHEDULER_PASSWORD')
+        scheduler_username = environ.get("SCHEDULER_USERNAME")
+        scheduler_password = environ.get("SCHEDULER_PASSWORD")
 
         url = "https://" + scheduler_username + ":" + scheduler_password + "@crawlers.algolia.com/1/crawlers/" + str(
             crawlers_id[connector_name]) + "/logs"
         r = make_custom_get_request(url)
 
-        logs = json.loads(r.content)['logs']
+        logs = json.loads(r.content)["logs"]
 
         for log in reversed(logs):
-            print(log['content'])
-            print('')
+            print(log["content"])
+            print("")
 
         return 0
