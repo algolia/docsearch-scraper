@@ -4,6 +4,7 @@ from w3lib.url import canonicalize_url
 from scrapy.utils.python import to_bytes
 import weakref
 import hashlib
+import os
 import re
 
 _fingerprint_cache = weakref.WeakKeyDictionary()
