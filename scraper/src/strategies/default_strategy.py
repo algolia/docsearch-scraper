@@ -2,6 +2,7 @@
 Default Strategy
 """
 
+from lxml.etree import XPath
 from .abstract_strategy import AbstractStrategy
 from .anchor import Anchor
 from .hierarchy import Hierarchy
@@ -20,6 +21,10 @@ class DefaultStrategy(AbstractStrategy):
         self.levels = ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6']
         self.global_content = {}
         self.page_rank = {}
+
+    def select(self, path):
+        """Select an element in the current DOM using specified CSS selector"""
+        return XPath(path)(self.dom) if len(path) > 0 else []
 
     def get_records_from_response(self, response):
         """
