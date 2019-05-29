@@ -15,7 +15,7 @@ class DeployConfig(AbstractCommand):
     def run(self, args):
         if len(args) <= 0:
             print(
-                'You can only deploy one config at the time, index_name missing. Aborting')
+                'You can only deploy one config at a time, index_name missing. Aborting')
             exit(1)
         else:
             from deployer.src.index import deploy_config
