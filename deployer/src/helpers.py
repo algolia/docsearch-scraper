@@ -46,7 +46,7 @@ def make_request(endpoint, type=None, data=None, username=None, password=None,
         exit(6)
 
     if username is None or password is None:
-        print("Credentials not complete to call:{}, username and password should be set".format(endpoint))
+        print("{}: both username and password must be set".format(endpoint))
         exit(7)
 
     success_codes = [200, 201, 204]
