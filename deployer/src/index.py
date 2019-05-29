@@ -3,6 +3,7 @@ import os
 
 from . import helpers
 from .config_manager import ConfigManager
+from . import fetchers
 
 
 def print_init():
@@ -38,17 +39,18 @@ def deploy_config(config_name):
         print("Folder: " + config_folder + " does not exist")
         exit()
 
+    is_new_config = config_name in fetchers.get_configs_from_repos()
+
     # Not using the config manager to avoid it stashing the config that we want to push
     helpers.check_output_decoded(['git', 'add', config_name + '.json'], cwd=config_folder)
     helpers.check_output_decoded(['git', 'commit', '-m', 'update ' + config_name],
                  cwd=config_folder)
-
     config_manager = ConfigManager().instance
 
     helpers.check_output_decoded(['git', 'push', 'origin', 'master'], cwd=config_folder)
 
     # Already live, we will only update the change
-    if config_name in config_manager.ref_configs:
+    if is_new_config:
         deploy_configs([], [config_name], [], force_deploy=True)
     # Didn't exist, we add it
     else:
