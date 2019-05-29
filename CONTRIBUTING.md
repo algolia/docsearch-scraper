@@ -68,7 +68,7 @@ exit status:
 |     3     | No record extracted from the crawl             |
 |     4     | Too much hits returned from the crawl          |
 |     5     | The configuration provided is not a valid JSON |
-|     6     | The endpoint to call is not correct            |
+|     6     | The endpoint to call is incorrect            |
 |     7     | Credentials used to request are not set        |
 
 
