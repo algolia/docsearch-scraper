@@ -59,6 +59,9 @@ if "APPLICATION_ID" not in environ or len(environ["APPLICATION_ID"]) == 0:
 if "API_KEY" not in environ or len(environ["API_KEY"]) == 0:
     CREDENTIALS = False
 
+if "APPLICATION_ID_PROD_INTERNAL" not in environ or len(environ["APPLICATION_ID_PROD_INTERNAL"]) == 0:
+    ADMIN = False
+
 cmds = []
 
 cmds.append(BootstrapConfig())
