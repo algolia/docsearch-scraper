@@ -19,3 +19,4 @@ class RunConfig(AbstractCommand):
 
         self.check_not_docsearch_app_id("run a config manually")
         return run_config(args[0])
+    

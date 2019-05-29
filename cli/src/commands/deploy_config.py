@@ -1,7 +1,7 @@
 from .abstract_command import AbstractCommand
 
 
-class DeployConfigs(AbstractCommand):
+class DeployConfig(AbstractCommand):
     def get_name(self):
         return "deploy"
 
