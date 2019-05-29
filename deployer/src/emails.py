@@ -40,7 +40,7 @@ def _prompt_command(emails):
                 return _prompt_command(emails)
             emails[idx] = ans[2]
     else:
-        print('/!\ Invalid command `%s`'.format(' '.join(ans)))
+        print('/!\ Invalid command {}'.format(' '.join(ans)))
         return _prompt_command(emails)
 
     return emails
