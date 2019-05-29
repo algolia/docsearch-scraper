@@ -77,7 +77,7 @@ def run_config(config):
     BrowserHandler.destroy(config.driver)
 
     if len(config.extra_records) > 0:
-        algolia_helper.add_records(config.extra_records, "Extra records")
+        algolia_helper.add_records(config.extra_records, "Extra records", False)
 
     print("")
 
