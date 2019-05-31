@@ -13,7 +13,7 @@ except ImportError:
     from urllib import unquote_plus
 
 
-class CustomDownloaderMiddleware(object):
+class CustomDownloaderMiddleware:
     driver = None
 
     def __init__(self):
