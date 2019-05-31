@@ -1,6 +1,6 @@
 
 
-class ConfigValidator(object):
+class ConfigValidator:
     config = None
 
     def __init__(self, config):
