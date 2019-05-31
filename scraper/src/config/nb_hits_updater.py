@@ -4,7 +4,7 @@ import copy
 import sys
 
 
-class NbHitsUpdater(object):
+class NbHitsUpdater:
     new_nb_hit = None
     previous_nb_hits = None
     config_file = None

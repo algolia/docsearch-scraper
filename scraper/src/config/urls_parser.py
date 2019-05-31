@@ -10,7 +10,7 @@ except ImportError:
 from ..js_executor import JsExecutor
 
 
-class UrlsParser(object):
+class UrlsParser:
     @staticmethod
     def parse(config_start_urls):
         start_urls = []
