@@ -17,7 +17,7 @@ def _prompt_command(emails):
         return emails
 
     if len(ans) < 2:
-        print('/!\ Missing number')
+        print('/!\\ Missing number')
         return _prompt_command(emails)
 
     if ans[0] == 'a':
@@ -26,21 +26,21 @@ def _prompt_command(emails):
         try:
             idx = int(ans[1])
         except ValueError:
-            print('/!\ Not a valid integer')
+            print('/!\\ Not a valid integer')
             return _prompt_command(emails)
         if idx >= len(emails):
-            print('/!\ Out of bounds')
+            print('/!\\ Out of bounds')
             return _prompt_command(emails)
 
         if ans[0] == 'd':
             del emails[idx]
         else:
             if len(ans) < 3:
-                print('/!\ Missing new email')
+                print('/!\\ Missing new email')
                 return _prompt_command(emails)
             emails[idx] = ans[2]
     else:
-        print('/!\ Invalid command {}'.format(' '.join(ans)))
+        print('/!\\ Invalid command {}'.format(' '.join(ans)))
         return _prompt_command(emails)
 
     return emails
