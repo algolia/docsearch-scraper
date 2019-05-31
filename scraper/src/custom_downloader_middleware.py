@@ -4,7 +4,7 @@ CustomDownloaderMiddleware
 
 import time
 
-from scrapy.http import Request, HtmlResponse
+from scrapy.http import HtmlResponse
 
 try:
     from urllib.parse import urlparse, unquote_plus
