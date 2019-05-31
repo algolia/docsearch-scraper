@@ -42,14 +42,10 @@ def run_config(config):
         config.query_rules
     )
 
-    DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_downloader_middleware.CustomDownloaderMiddleware'
-    DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
-    DUPEFILTER_CLASS_PATH = 'scraper.src.custom_dupefilter.CustomDupeFilter'
-
-    if __name__ == '__main__':
-        DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_downloader_middleware.CustomDownloaderMiddleware'
-        DOWNLOADER_CLIENTCONTEXTFACTORY = 'src.scrapy_patch.CustomContextFactory'
-        DUPEFILTER_CLASS_PATH = 'src.custom_dupefilter.CustomDupeFilter'
+    root_module = 'src.' if __name__ == '__main__' else 'scraper.src.'
+    DOWNLOADER_MIDDLEWARES_PATH = root_module + 'custom_downloader_middleware.CustomDownloaderMiddleware'
+    DOWNLOADER_CLIENTCONTEXTFACTORY = root_module + 'scrapy_patch.CustomContextFactory'
+    DUPEFILTER_CLASS_PATH = root_module + 'custom_dupefilter.CustomDupeFilter'
 
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
