@@ -17,13 +17,6 @@ from .urls_parser import UrlsParser
 from .selectors_parser import SelectorsParser
 from .browser_handler import BrowserHandler
 
-try:
-    from urllib.parse import urlparse, unquote_plus
-except ImportError:
-    from urlparse import urlparse
-    from urllib import unquote_plus
-
-
 
 class ConfigLoader:
     """
