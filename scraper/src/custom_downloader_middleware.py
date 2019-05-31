@@ -14,6 +14,8 @@ except ImportError:
 
 
 class CustomDownloaderMiddleware(object):
+    driver = None
+
     def __init__(self):
         self.seen = {}  # TODO could be removed
         self.driver = CustomDownloaderMiddleware.driver
