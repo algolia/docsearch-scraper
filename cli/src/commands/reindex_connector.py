@@ -20,7 +20,7 @@ class ReindexConnector(AbstractCommand):
         from deployer.src.fetchers import get_configs_from_website
         from deployer.src.helpers import send_slack_notif
 
-        configs, inverted, crawler_ids = get_configs_from_website()
+        _, inverted, _ = get_configs_from_website()
         connector_name = args[0]
         make_request('/{}/reindex'.format(inverted[connector_name]), "POST")
 
