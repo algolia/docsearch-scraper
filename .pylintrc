@@ -176,7 +176,6 @@ disable=print-statement,
         unnecessary-pass,
         unreachable,
         unused-argument,
-        unused-import,
         wrong-import-order,
         wrong-import-position
 
