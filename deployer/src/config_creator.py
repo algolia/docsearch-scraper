@@ -19,7 +19,7 @@ def extract_root_from_input(input_string):
     domain = re.match(".+?([^/]/(?!/))",
                       input_string)
     try:
-        url_parsed = urlparse(input_string);
+        url_parsed = urlparse(input_string)
         # Removing unused parameters
         url_parsed._replace(params='', query='', fragment='')
         path_splited = url_parsed.path.split('/')
