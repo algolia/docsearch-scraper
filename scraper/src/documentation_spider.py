@@ -14,12 +14,6 @@ import re
 
 from scrapy.spidermiddlewares.httperror import HttpError
 
-try:
-    from urllib.parse import urlparse, unquote_plus
-except ImportError:
-    from urlparse import urlparse
-    from urllib import unquote_plus
-
 from scrapy.exceptions import CloseSpider
 
 EXIT_CODE_EXCEEDED_RECORDS = 4
