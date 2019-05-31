@@ -25,7 +25,7 @@ except ImportError:
 
 
 
-class ConfigLoader(object):
+class ConfigLoader:
     """
     ConfigLoader
     """
