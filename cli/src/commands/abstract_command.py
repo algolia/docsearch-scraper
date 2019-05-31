@@ -1,7 +1,7 @@
 from os import environ
 
 
-class AbstractCommand(object):
+class AbstractCommand:
     def run(self, args):
         raise Exception("run need to be implemented")
 

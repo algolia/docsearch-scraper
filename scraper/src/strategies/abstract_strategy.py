@@ -9,7 +9,7 @@ Abstract Strategy
 """
 
 
-class AbstractStrategy(object):
+class AbstractStrategy:
     """
     Abstract Strategy
     """
