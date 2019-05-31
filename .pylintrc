@@ -180,7 +180,6 @@ disable=print-statement,
         unused-argument,
         unused-import,
         unused-variable,
-        useless-object-inheritance,
         wrong-import-order,
         wrong-import-position
 
