@@ -16,7 +16,7 @@ def extract_root_from_input(input_string):
     if input_string.endswith('/'):
         return input_string
     # extracting substring before the first isolated / (not //)
-    domain = re.match(".+?([^\/]\/(?!\/))",
+    domain = re.match(".+?([^/]/(?!/))",
                       input_string)
     try:
         url_parsed = urlparse(input_string);
