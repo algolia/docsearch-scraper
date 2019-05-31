@@ -2,10 +2,9 @@ import re
 import copy
 
 try:
-    from urllib.parse import urlparse, unquote_plus
+    from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
-    from urllib import unquote_plus
 
 from ..js_executor import JsExecutor
 
