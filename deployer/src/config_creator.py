@@ -3,10 +3,7 @@ import tldextract
 import re
 from . import helpers
 from . import helpdesk_helper
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 def extract_root_from_input(input_string):
