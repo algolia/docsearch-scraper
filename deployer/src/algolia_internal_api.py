@@ -3,7 +3,7 @@ from os import environ
 from base64 import b64encode
 
 APPLICATION_ID_PROD_INTERNAL = environ.get('APPLICATION_ID_PROD_INTERNAL',
-                                           None);  # website internal DocSearch app id
+                                           None)  # website internal DocSearch app id
 
 
 def get_endpoint(endpoint, params=''):
@@ -76,7 +76,7 @@ def add_user_to_index(index_name, user_email):
     # User is already added to this index
     if index_name in indices:
         print(user_email + " has already access to " + index_name)
-        return None;
+        return None
 
     indices.append(index_name)
 
@@ -88,7 +88,7 @@ def add_user_to_index(index_name, user_email):
             'analytics': True
         }
     }
-    headers = get_headers();
+    headers = get_headers()
 
     # User has already access to some other indices
     if right:
