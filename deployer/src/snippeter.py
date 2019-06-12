@@ -36,9 +36,12 @@ You're now a few steps away from having it working on your website:
 });
 </script>
 
-- Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet to a CSS selector that targets your search input field.{{FACETS}}
-- Optionally customize the look and feel by following the DocSearch documentation (https://community.algolia.com/docsearch/styling.html)
-- You can also check your configuration in our GitHub repo (https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
+- Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet
+  to a CSS selector that targets your search input field.{{FACETS}}
+- Optionally customize the look and feel by following the DocSearch documentation
+  (See https://community.algolia.com/docsearch/styling.html)
+- You can also check your configuration in our GitHub repository
+  (See https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
 {{ANALYTICS}}
 Please open a pull request if want to leverage your configuration!
 
@@ -52,16 +55,23 @@ Have a nice day :)"""
    The list of possible {{NAME}} {{UPDATED}}.
    So as of today you have: {{VALUES}}\n"""
 
-    base_example_template = "\n  For example if you want to refine the search to {{EXAMPLE_PHRASE}} just specify: 'facetFilters': [{{EXAMPLE_CODE}}]\n"
+    base_example_template = """
+  For example if you want to refine the search to {{EXAMPLE_PHRASE}} just specify: 'facetFilters': [{{EXAMPLE_CODE}}]
+"""
 
     # Let the user know how they can access their Analytics
     analytics_details = ''
     if isinstance(analytics_statuses, dict):
         for email, analytics_status in list(analytics_statuses.items()):
+            analytics_details += '- ' + email
             if isinstance(analytics_status, str):
-                analytics_details += '- ' + email + ' can get access to the full Algolia analytics for your DocSearch index by creating an account, following this link: ' + analytics_status + "\n"
+                analytics_details += '''\
+ can get access to the full Algolia analytics for your DocSearch index by creating an account,\
+ following this link: ''' + analytics_status + '\n'
             else:
-                analytics_details += '- ' + email + ' has already an Algolia account. Analytics available from the Algolia dashboard by selecting the application DOCSEARCH (access granted)\n';
+                analytics_details += '''\
+ has already an Algolia account. Analytics available from the Algolia dashboard by selecting\
+ the application DOCSEARCH (access granted)'''
 
     facets = algolia_helper.get_facets(config)
 
@@ -70,7 +80,7 @@ Have a nice day :)"""
 
     if facets is not None:
         facet_template = "\n"
-        configs, inverted, crawler_ids = fetchers.get_configs_from_website()
+        configs, _, _ = fetchers.get_configs_from_website()
 
         example_phrase = []
         example_code = []

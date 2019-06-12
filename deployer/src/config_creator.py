@@ -3,10 +3,7 @@ import tldextract
 import re
 from . import helpers
 from . import helpdesk_helper
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 def extract_root_from_input(input_string):
@@ -16,10 +13,10 @@ def extract_root_from_input(input_string):
     if input_string.endswith('/'):
         return input_string
     # extracting substring before the first isolated / (not //)
-    domain = re.match(".+?([^\/]\/(?!\/))",
+    domain = re.match(".+?([^/]/(?!/))",
                       input_string)
     try:
-        url_parsed = urlparse(input_string);
+        url_parsed = urlparse(input_string)
         # Removing unused parameters
         url_parsed._replace(params='', query='', fragment='')
         path_splited = url_parsed.path.split('/')

@@ -14,12 +14,6 @@ import re
 
 from scrapy.spidermiddlewares.httperror import HttpError
 
-try:
-    from urllib.parse import urlparse, unquote_plus
-except ImportError:
-    from urlparse import urlparse
-    from urllib import unquote_plus
-
 from scrapy.exceptions import CloseSpider
 
 EXIT_CODE_EXCEEDED_RECORDS = 4
@@ -107,8 +101,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # START _init_ part from SitemapSpider
         # We son't want to check anything if we don't even have a sitemap URL
         if config.sitemap_urls:
-            # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
-            self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
+            # In case we don't have a special documentation regex,
+            # we assume that start_urls are there to match a documentation part
+            self.sitemap_urls_regexs =\
+                config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
 
             sitemap_rules = []
             if self.sitemap_urls_regexs:

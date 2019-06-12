@@ -45,7 +45,7 @@ def remove_crawling_issue(config):
 
 
 def update_docsearch_key(config, key):
-    algolia_client_prod.update_api_key()(key, {
+    algolia_client_prod.update_api_key(key, {
         'indices': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
