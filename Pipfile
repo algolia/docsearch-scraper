@@ -15,6 +15,7 @@ tldextract = "==2.1.0"
 pytest = "==3.10.0"
 
 [dev-packages]
+pylint = "==2.3.1"
 
 [requires]
 python_version = "3.6"

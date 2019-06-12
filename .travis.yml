@@ -10,8 +10,9 @@ install:
   # need that in CI.
   - touch .env
   - pip install pipenv
-  - pipenv install
+  - pipenv install --dev
 script:
+  - pipenv run pylint scraper cli deployer
   - pipenv run ./docsearch test no_browser
 notifications:
   email: false
