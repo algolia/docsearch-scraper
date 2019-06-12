@@ -80,7 +80,7 @@ Have a nice day :)"""
 
     if facets is not None:
         facet_template = "\n"
-        configs, _, _ = fetchers.get_configs_from_website()
+        configs = fetchers.get_configs_from_repos()
 
         example_phrase = []
         example_code = []
