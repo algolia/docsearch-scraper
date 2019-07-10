@@ -13,6 +13,12 @@ Hello you,
 - Run `pipenv shell` to enter the Python virtual environment (this will have
   to be done each time you get back to work on the Scraper)
 
+### Env variables
+
+If it happens to you to scrape sites protected by Cloudflare Access, you
+have to set appropriate HTTP headers. Values for these headers are taken
+from env variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`.
+
 ### Installing Chrome Headless
 
 Websites that need JavaScript for rendering are passed through ChromeDriver.
