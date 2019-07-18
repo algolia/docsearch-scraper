@@ -13,6 +13,10 @@ import os
 
 # End of import for the sitemap behavior
 
+# Import for GCP IAP auth
+import json
+from requests_iap import IAPAuth
+
 from scrapy.spidermiddlewares.httperror import HttpError
 
 from scrapy.exceptions import CloseSpider
@@ -120,13 +124,21 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         super(DocumentationSpider, self)._compile_rules()
 
     def start_requests(self):
-        CFAccessClientId = os.environ.get('CF_ACCESS_CLIENT_ID', None)
-        CFAccessClientSecret = os.environ.get('CF_ACCESS_CLIENT_SECRET', None)
-        headers = {
-            "CF-Access-Client-Id": CFAccessClientId,
-            "CF-Access-Client-Secret": CFAccessClientSecret
-        } if CFAccessClientId is not None and CFAccessClientSecret is not None else None
-
+        headers = None
+        if os.getenv("CF_ACCESS_CLIENT_ID") and os.getenv("CF_ACCESS_CLIENT_SECRET"):
+            headers = {
+                "CF-Access-Client-Id": os.getenv("CF_ACCESS_CLIENT_ID"),
+                "CF-Access-Client-Secret": os.getenv("CF_ACCESS_CLIENT_SECRET")
+            }
+        elif os.getenv("IAP_AUTH_CLIENT_ID") and os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON"):
+            iap_token = IAPAuth(
+                client_id=os.getenv("IAP_AUTH_CLIENT_ID"),
+                service_account_secret_dict=json.loads(
+                    os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON")
+                ),
+            )().headers["Authorization"]
+            headers = {"Authorization": iap_token}
+        
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
             yield Request(url, callback=self._parse_sitemap,
