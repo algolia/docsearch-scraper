@@ -20,7 +20,7 @@ def is_helpdesk_url(u):
 
 
 def get_conversation_ID_from_url(hs_url):
-    capture_conversation_uid = re.compile('.+/conversation/(\d+)/.*')
+    capture_conversation_uid = re.compile(r'.+/conversation/(\d+)/.*')
     cuid = capture_conversation_uid.match(hs_url).group(1)
 
     if not len(cuid) > 0:

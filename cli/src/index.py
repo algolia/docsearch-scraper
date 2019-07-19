@@ -17,15 +17,10 @@ from .commands.build_docker_scraper import BuildDockerScraper
 from .commands.run_tests import RunTests
 from .commands.run_config import RunConfig
 from .commands.deploy_docker_scraper_images import DeployDockerScraperImages
-from .commands.deploy_configs import DeployConfigs
+from .commands.deploy_config import DeployConfig
 from .commands.run_config_docker import RunConfigDocker
-from .commands.reindex_connector import ReindexConnector
 from .commands.generate_email import GenerateEmail
 from .commands.modify_emails import UpdateEmails, DeleteEmails
-from .commands.get_logs import GetLogs
-from .commands.disable_connector import DisableConnector
-from .commands.enable_connector import EnableConnector
-from .commands.batch_sync_helpdesk import BatchSyncHelpdesk
 from .commands.invite_user import InviteUser
 from .commands.invite_removeuser import InviteRemoveUser
 
@@ -40,22 +35,6 @@ if not path.isfile(env_file):
 
     ans = input("What is your Algolia API_KEY: ")
     f.write("API_KEY=" + ans + "\n")
-
-    ans = input(
-        "What is your WEBSITE_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_USERNAME=" + ans + "\n")
-
-    ans = input(
-        "What is your WEBSITE_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("WEBSITE_PASSWORD=" + ans + "\n")
-
-    ans = input(
-        "What is your SCHEDULER_USERNAME (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_USERNAME=" + ans + "\n")
-
-    ans = input(
-        "What is your SCHEDULER_PASSWORD (Leave empty if you are not an Algolia employee): ")
-    f.write("SCHEDULER_PASSWORD=" + ans + "\n")
 
     ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
     if ans != "":
@@ -80,10 +59,7 @@ if "APPLICATION_ID" not in environ or len(environ["APPLICATION_ID"]) == 0:
 if "API_KEY" not in environ or len(environ["API_KEY"]) == 0:
     CREDENTIALS = False
 
-if "WEBSITE_USERNAME" not in environ or len(environ["WEBSITE_USERNAME"]) == 0:
-    ADMIN = False
-
-if "WEBSITE_PASSWORD" not in environ or len(environ["WEBSITE_PASSWORD"]) == 0:
+if "APPLICATION_ID_PROD_INTERNAL" not in environ or len(environ["APPLICATION_ID_PROD_INTERNAL"]) == 0:
     ADMIN = False
 
 cmds = []
@@ -99,15 +75,10 @@ if CREDENTIALS:
 
 if ADMIN:
     cmds.append(GenerateEmail())
-    cmds.append(ReindexConnector())
-    cmds.append(EnableConnector())
-    cmds.append(DisableConnector())
-    cmds.append(DeployConfigs())
+    cmds.append(DeployConfig())
     cmds.append(DeployDockerScraperImages())
     cmds.append(UpdateEmails())
     cmds.append(DeleteEmails())
-    cmds.append(GetLogs())
-    cmds.append(BatchSyncHelpdesk())
     cmds.append(InviteUser())
     cmds.append(InviteRemoveUser())
 

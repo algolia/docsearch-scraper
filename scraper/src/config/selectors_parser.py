@@ -1,7 +1,7 @@
 from ..helpers import css_to_xpath
 
 
-class SelectorsParser(object):
+class SelectorsParser:
     @staticmethod
     def _parse_selectors_set(config_selectors):
         selectors_set = {}

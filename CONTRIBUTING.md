@@ -7,11 +7,17 @@ Hello you,
 [pipenv][1] is used to manage the whole Python environment.
 
 - [Install pipenv][2] (this must be done only once)
-- Run `pipenv install` to create a Python virtual environment if unexisting,
-  and install the Scraper's dependencies (this will have to be done each time
-  dependencies are modified)
+- Run `pipenv install --dev` to create a Python virtual environment if
+  unexisting and to install the Scraper's dependencies (this will have
+  to be done each time dependencies are modified)
 - Run `pipenv shell` to enter the Python virtual environment (this will have
   to be done each time you get back to work on the Scraper)
+
+### Env variables
+
+If it happens to you to scrape sites protected by Cloudflare Access, you
+have to set appropriate HTTP headers. Values for these headers are taken
+from env variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`.
 
 ### Installing Chrome Headless
 
@@ -24,6 +30,17 @@ You should be ready to go.
 ### Running
 
 See the dedicated page on [Algolia's documentation web site](https://community.algolia.com/docsearch/run-your-own.html).
+
+## Lint code
+
+The code is checked against linting rules by the CI, with `pylint`
+(which is installed by `pipenv` as a dev package).
+
+To run the linter, run the following command at the root of
+your clone:
+```bash
+pipenv run pylint scraper cli deployer
+```
 
 ## Run the tests
 
@@ -57,6 +74,8 @@ exit status:
 |     3     | No record extracted from the crawl             |
 |     4     | Too much hits returned from the crawl          |
 |     5     | The configuration provided is not a valid JSON |
+|     6     | The endpoint to call is incorrect              |
+|     7     | Credentials used to request are not set        |
 
 
 [1]: https://github.com/pypa/pipenv
