@@ -9,7 +9,9 @@ class TestGetRecordsFromDomWithXpath:
         strategy = get_strategy({
             'selectors': {
                 'lvl0': {
-                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'), \' title \')]',
+                    'selector':
+                        "descendant-or-self::"
+                        "*[@class and contains(concat(' ', normalize-space(@class), ' '), ' title ')]",
                     'type': 'xpath'
                 },
                 'lvl1': 'h2',
@@ -44,14 +46,16 @@ class TestGetRecordsFromDomWithXpath:
         strategy = get_strategy({
             'selectors': {
                 'lvl0': {
-                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
-                                ' \' title \')]',
+                    'selector':
+                        "descendant-or-self::"
+                        "*[@class and contains(concat(' ', normalize-space(@class), ' '), ' title ')]",
                     'type': 'xpath',
                     'global': True
                 },
                 'lvl1': {
-                    'selector': 'descendant-or-self::*[@class and contains(concat(\' \', normalize-space(@class), \' \'),'
-                                ' \' subtitle \')]',
+                    'selector':
+                        "descendant-or-self::"
+                        "*[@class and contains(concat(' ', normalize-space(@class), ' '), ' subtitle ')]",
                     'type': 'xpath'
                 },
                 'lvl2': 'h3',

@@ -9,16 +9,15 @@ from scrapy.http import Request
 from scrapy.spiders import SitemapSpider
 from scrapy.spiders.sitemap import regex
 import re
+import os
 
 # End of import for the sitemap behavior
 
-from scrapy.spidermiddlewares.httperror import HttpError
+# Import for GCP IAP auth
+import json
+from requests_iap import IAPAuth
 
-try:
-    from urllib.parse import urlparse, unquote_plus
-except ImportError:
-    from urlparse import urlparse
-    from urllib import unquote_plus
+from scrapy.spidermiddlewares.httperror import HttpError
 
 from scrapy.exceptions import CloseSpider
 
@@ -104,8 +103,10 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # START _init_ part from SitemapSpider
         # We son't want to check anything if we don't even have a sitemap URL
         if config.sitemap_urls:
-            # In case we don't have a special documentation regex, we assume that start_urls are there to match a documentation part
-            self.sitemap_urls_regexs = config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
+            # In case we don't have a special documentation regex,
+            # we assume that start_urls are there to match a documentation part
+            self.sitemap_urls_regexs =\
+                config.sitemap_urls_regexs if config.sitemap_urls_regexs else start_urls_any_scheme
 
             sitemap_rules = []
             if self.sitemap_urls_regexs:
@@ -123,9 +124,25 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         super(DocumentationSpider, self)._compile_rules()
 
     def start_requests(self):
+        headers = None
+        if os.getenv("CF_ACCESS_CLIENT_ID") and os.getenv("CF_ACCESS_CLIENT_SECRET"):
+            headers = {
+                "CF-Access-Client-Id": os.getenv("CF_ACCESS_CLIENT_ID"),
+                "CF-Access-Client-Secret": os.getenv("CF_ACCESS_CLIENT_SECRET")
+            }
+        elif os.getenv("IAP_AUTH_CLIENT_ID") and os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON"):
+            iap_token = IAPAuth(
+                client_id=os.getenv("IAP_AUTH_CLIENT_ID"),
+                service_account_secret_dict=json.loads(
+                    os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON")
+                ),
+            )().headers["Authorization"]
+            headers = {"Authorization": iap_token}
+
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
             yield Request(url, callback=self._parse_sitemap,
+                          headers=headers,
                           meta={
                               "alternative_links": DocumentationSpider.to_other_scheme(
                                   url)
@@ -137,6 +154,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         for url in self.start_urls:
             yield Request(url,
                           callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
+                          headers=headers,
                           # If we wan't to crawl (default behavior) without scraping, we still need to let the
                           # crawling spider acknowledge the content by parsing it with the built-in method
                           meta={

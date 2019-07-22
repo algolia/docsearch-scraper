@@ -9,8 +9,10 @@ from .config.config_loader import ConfigLoader
 from .documentation_spider import DocumentationSpider
 from .strategies.default_strategy import DefaultStrategy
 from .custom_downloader_middleware import CustomDownloaderMiddleware
+from .custom_dupefilter import CustomDupeFilter
 from .config.browser_handler import BrowserHandler
 from .strategies.algolia_settings import AlgoliaSettings
+from .scrapy_patch import CustomContextFactory
 
 try:
     # disable boto (S3 download)
@@ -29,9 +31,6 @@ def run_config(config):
     CustomDownloaderMiddleware.driver = config.driver
     DocumentationSpider.NB_INDEXED = 0
 
-    if config.use_anchors:
-        from . import scrapy_patch
-
     strategy = DefaultStrategy(config)
 
     algolia_helper = AlgoliaHelper(
@@ -43,14 +42,10 @@ def run_config(config):
         config.query_rules
     )
 
-    DOWNLOADER_MIDDLEWARES_PATH = 'scraper.src.custom_downloader_middleware.CustomDownloaderMiddleware'
-    DOWNLOADER_CLIENTCONTEXTFACTORY = 'scraper.src.scrapy_patch.CustomContextFactory'
-    DUPEFILTER_CLASS_PATH = 'scraper.src.custom_dupefilter.CustomDupeFilter'
-
-    if __name__ == '__main__':
-        DOWNLOADER_MIDDLEWARES_PATH = 'src.custom_downloader_middleware.CustomDownloaderMiddleware'
-        DOWNLOADER_CLIENTCONTEXTFACTORY = 'src.scrapy_patch.CustomContextFactory'
-        DUPEFILTER_CLASS_PATH = 'src.custom_dupefilter.CustomDupeFilter'
+    root_module = 'src.' if __name__ == '__main__' else 'scraper.src.'
+    DOWNLOADER_MIDDLEWARES_PATH = root_module + 'custom_downloader_middleware.' + CustomDownloaderMiddleware.__name__
+    DOWNLOADER_CLIENTCONTEXTFACTORY = root_module + 'scrapy_patch.' + CustomContextFactory.__name__
+    DUPEFILTER_CLASS_PATH = root_module + 'custom_dupefilter.' + CustomDupeFilter.__name__
 
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
@@ -78,7 +73,7 @@ def run_config(config):
     BrowserHandler.destroy(config.driver)
 
     if len(config.extra_records) > 0:
-        algolia_helper.add_records(config.extra_records, "Extra records")
+        algolia_helper.add_records(config.extra_records, "Extra records", False)
 
     print("")
 

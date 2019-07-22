@@ -35,7 +35,7 @@ class AlgoliaHelper:
 
     def add_synonyms(self, synonyms):
         synonyms_list = []
-        for key, value in list(synonyms.items()):
+        for _, value in list(synonyms.items()):
             synonyms_list.append(value)
 
         self.algolia_index_tmp.batch_synonyms(synonyms_list)
