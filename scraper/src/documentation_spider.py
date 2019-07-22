@@ -138,7 +138,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 ),
             )().headers["Authorization"]
             headers = {"Authorization": iap_token}
-        
+
         # We crawl according to the sitemap
         for url in self.sitemap_urls:
             yield Request(url, callback=self._parse_sitemap,
