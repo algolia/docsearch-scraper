@@ -37,6 +37,7 @@ def run_config(config):
         config.app_id,
         config.api_key,
         config.index_name,
+        config.index_name_tmp,
         AlgoliaSettings.get(config, strategy.levels),
         config.query_rules
     )

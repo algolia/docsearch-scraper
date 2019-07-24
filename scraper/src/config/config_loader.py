@@ -29,6 +29,7 @@ class ConfigLoader:
     custom_settings = None
     extra_records = []
     index_name = None
+    index_name_tmp = None
     js_wait = 0
     js_render = False
     keep_tags = []
@@ -112,6 +113,8 @@ class ConfigLoader:
         self.update_nb_hits = os.environ.get('UPDATE_NB_HITS', None)
         if self.update_nb_hits is not None:
             self.update_nb_hits = bool(strtobool(self.update_nb_hits))
+        if self.index_name_tmp is None:
+            self.index_name_tmp = os.environ.get('INDEX_NAME_TMP', self.index_name + '_tmp')
 
         # Parse config
         self.selectors = SelectorsParser().parse(self.selectors)
