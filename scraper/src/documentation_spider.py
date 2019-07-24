@@ -28,8 +28,8 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
     DocumentationSpider
     """
-    http_user=os.environ.get('DOCSEARCH_BASICAUTH_USERNAME', None)
-    http_pass=os.environ.get('DOCSEARCH_BASICAUTH_PASSWORD', None)
+    http_user = os.environ.get('DOCSEARCH_BASICAUTH_USERNAME', None)
+    http_pass = os.environ.get('DOCSEARCH_BASICAUTH_PASSWORD', None)
     algolia_helper = None
     strategy = None
     js_render = False
