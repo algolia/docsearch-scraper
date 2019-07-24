@@ -66,7 +66,7 @@ class BootstrapConfig(AbstractCommand):
             print("")
             print("Config copied to clipboard [OK]")
             print("")
-        except: 
+        except Exception:
             print(dump)
 
 
