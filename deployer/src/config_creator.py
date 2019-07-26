@@ -41,6 +41,14 @@ def to_docusaurus_config(config, urls=None):
         config["custom_settings"] = {"attributesForFaceting": ["language",
                                                                "version"]
                                      }
+    start_url = urls[0]
+    if '/docs/' not in start_url:
+        if not start_url.endswith('/'):
+            start_url = start_url + '/'
+
+        config["start_urls"] = [start_url + 'docs/']
+    else:
+        config["start_urls"] = [start_url]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
