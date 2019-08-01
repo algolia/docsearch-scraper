@@ -1,10 +1,10 @@
 # DocSearch scraper
 
-This repository holds the code of the DocSearch crawler used to power the hosted
+This repository holds the code of the DocSearch scraper used to power the hosted
 version of DocSearch.
 
 If you're looking for a way to add DocSearch to your site, the easiest solution
-is to [apply to DocSearch][1]. To run the crawler yourself, you're at the right
+is to [apply to DocSearch][1]. To run the scraper yourself, you're at the right
 place.
 
 ## Installation and Usage
@@ -22,7 +22,7 @@ DocSearch is made of 3 repositories:
   documentation website.
 - [algolia/docsearch-configs][4] contains the JSON files representing all the
   configs for all the documentations DocSearch is powering
-- [algolia/docsearch-scraper][5] contains the crawler we use to extract data
+- [algolia/docsearch-scraper][5] contains the scraper we use to extract data
   from your documentation. The code is open source and you can run it from a
   Docker image
 
