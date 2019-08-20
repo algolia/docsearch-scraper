@@ -1,0 +1,29 @@
+{
+  "index_name": "docs",
+  "start_urls": [
+    {
+      "url":  "https://docs.yugabyte.com/(?P<version>.*?)/",
+      "variables": {
+        "version": [
+          "latest",
+          "v1.3",
+          "v1.2",
+          "v1.1",
+          "v1.0"
+        ]
+      }
+    }
+  ],
+  "stop_urls": [
+     "^[^/]*//.*//"
+  ],
+  "selectors": {
+    "lvl0": "main article h1",
+    "lvl1": "main article h2",
+    "lvl2": "main wrapper h3",
+    "lvl3": "main article p",
+    "text": "#content section p,#content section ol"
+  },
+  "selectors_exclude": [],
+  "nb_hits": 21609
+}
