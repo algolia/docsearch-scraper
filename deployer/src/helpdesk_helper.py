@@ -21,9 +21,20 @@ def is_helpdesk_url(u):
 
 def get_conversation_ID_from_url(hs_url):
     capture_conversation_uid = re.compile(r'.+/conversation/(\d+)/.*')
-    cuid = capture_conversation_uid.match(hs_url).group(1)
 
-    if not len(cuid) > 0:
+    conversation_uid_match = capture_conversation_uid.match(hs_url)
+
+    # Handle URL that are build without the tailing /
+    print(capture_conversation_uid)
+    if conversation_uid_match is None:
+        capture_conversation_uid = re.compile(r'.+/conversation/(\d+)')
+        conversation_uid_match = capture_conversation_uid.match(hs_url)
+        cuid = conversation_uid_match.group(1)
+
+    else:
+        cuid = conversation_uid_match.group(1)
+
+    if not len(cuid) > 0 or cuid is None:
         raise ValueError(
             'Wrong help scout url {}, must have a conversation sub part with ID'.format(
                 hs_url))
