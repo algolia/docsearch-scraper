@@ -25,7 +25,6 @@ def get_conversation_ID_from_url(hs_url):
     conversation_uid_match = capture_conversation_uid.match(hs_url)
 
     # Handle URL that are build without the tailing /
-    print(capture_conversation_uid)
     if conversation_uid_match is None:
         capture_conversation_uid = re.compile(r'.+/conversation/(\d+)')
         conversation_uid_match = capture_conversation_uid.match(hs_url)
