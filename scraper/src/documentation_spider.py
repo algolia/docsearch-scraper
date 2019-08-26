@@ -15,6 +15,7 @@ import os
 
 # Import for GCP IAP auth
 import json
+import requests
 from requests_iap import IAPAuth
 
 from scrapy.spidermiddlewares.httperror import HttpError
@@ -138,7 +139,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 service_account_secret_dict=json.loads(
                     os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON")
                 ),
-            )().headers["Authorization"]
+            )(requests.Request()).headers["Authorization"]
             headers = {"Authorization": iap_token}
 
         # We crawl according to the sitemap
