@@ -107,7 +107,7 @@ def get_emails_from_conversation(conversation_with_threads):
     first_thread = conversation_with_threads.threads[-1]
     customer = first_thread['customer']
     customers_mail = customer['email']
-    was_sent_by_customer = first_thread['createdByCustomer']
+    was_sent_by_customer = first_thread['createdBy']['type'] == 'customer'
 
     if not was_sent_by_customer:
         raise ValueError(
