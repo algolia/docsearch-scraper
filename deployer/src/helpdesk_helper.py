@@ -135,24 +135,19 @@ def get_emails_from_conversation(conversation_with_threads):
 
 
 def add_note(cuid, body):
-    conversation_endpoint = 'https://api.helpscout.net/v1/conversations/{}.json'.format(
-        cuid)
-
-    hs_api_key = get_helpscout_api_key()
+    app_id = get_helpscout_app_id()
+    app_secret = get_helpscout_app_secret()
+    hs = HelpScout(app_id, app_secret)
 
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = html.escape(body)
 
-    response = helpers.make_request(conversation_endpoint,
-                                    json_request=True,
-                                    data={"createdBy": {"id": "75881",
-                                                        "type": "user"},
-                                          "type": "note",
-                                          "body": body
-                                          },
-                                    username=hs_api_key,
-                                    password="X",
-                                    type='POST')
+    response = hs.note.post(resource_id=cuid,
+                            data={"createdBy": {"id": "75881",
+                                                "type": "user"},
+                                  "type": "note",
+                                  "body": body
+                                  })
 
     return response
 
@@ -164,33 +159,53 @@ def get_conversation_url_from_cuid(cuid):
     return 'https://secure.helpscout.net/conversation/{}'.format(cuid)
 
 
+def check_if_is_tag(tag, ref_tag):
+    '''
+        Check if a tag is a ref_tag
+    '''
+    return tag["tag"] == ref_tag
+
+
+def check_if_has_tag(conversation, ref_tags):
+    '''
+            Check if the conversation has one tag from ref_tags
+    '''
+    for ref_tag in ref_tags:
+        if any(check_if_is_tag(tag, ref_tag) for tag in conversation.tags):
+            return True
+
+
 def is_docusaurus_conversation(conversation):
-    return "docusaurus" in conversation.tags or "ds_docusaurus" in \
-           conversation.tags or "gen-docusaurus" in conversation.tags
+    return check_if_has_tag(conversation,
+                            ["docusaurus", "ds_docusaurus", "gen-docusaurus"])
 
 
 def is_gitbook_conversation(conversation):
-    return "gitbook" in conversation.tags
+    return check_if_has_tag(conversation, ["gitbook"])
 
 
 def is_pkgdown_conversation(conversation):
-    return "pkgdown" in conversation.tags or "ds_pkgdown" in conversation.tags or "gen-pkgdown" in conversation.tags
+    return check_if_has_tag(conversation,
+                            ["pkgdown", "ds_pkgdown", "gen-pkgdown"])
 
 
 def is_vuepress_conversation(conversation):
-    return "vuepress" in conversation.tags or "ds_vuepress" in conversation.tags or "gen-vuepress" in conversation.tags
+    return check_if_has_tag(conversation,
+                            ["vuepress", "ds_vuepress", "gen-vuepress"])
 
 
 def is_larecipe_conversation(conversation):
-    return "larecipe" in conversation.tags
+    return check_if_has_tag(conversation, ["larecipe"])
 
 
 def is_publii_conversation(conversation):
-    return "publii" in conversation.tags or "ds_publii" in conversation.tags or "gen-publii" in conversation.tags
+    return check_if_has_tag(conversation,
+                            ["publii", "ds_publii", "gen-publii"])
 
 
 def is_jsdoc_conversation(conversation):
-    return "jsdoc" in conversation.tags or "ds_jsdoc" in conversation.tags or "gen-jsdoc" in conversation.tags
+    return check_if_has_tag(conversation,
+                            ["jsdoc", "ds_jsdoc", "gen-jsdoc"])
 
 
 @rate_limited(200, 60)
