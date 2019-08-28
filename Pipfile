@@ -14,9 +14,11 @@ slacker = "==0.9.60"
 tldextract = "==2.1.0"
 pytest = "==3.10.0"
 requests-iap = "==0.2.0"
+python-helpscout-v2 = "*"
 
 [dev-packages]
 pylint = "==2.3.1"
+autopep8 = "*"
 
 [requires]
 python_version = "3.6"

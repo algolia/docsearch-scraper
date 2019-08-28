@@ -288,8 +288,9 @@ def create_config(u=None):
         cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
         conversation = helpdesk_helper.get_conversation(cuid)
+        conversation_with_threads = helpdesk_helper.get_conversation_with_threads(cuid)
         url_from_conversation = helpdesk_helper.get_start_url_from_conversation(
-            conversation)
+            conversation_with_threads)
         urls = [url_from_conversation]
         u = url_from_conversation
 
