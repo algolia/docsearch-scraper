@@ -7,8 +7,7 @@ from . import fetchers
 
 
 def print_init():
-    if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ or\
-            'WEBSITE_USERNAME' not in os.environ or 'WEBSITE_PASSWORD' not in os.environ:
+    if 'APPLICATION_ID' not in os.environ or 'API_KEY' not in os.environ:
         print("")
         print("ERROR: missing configuration")
         print("")
@@ -42,12 +41,15 @@ def deploy_config(config_name):
     is_new_config = config_name in fetchers.get_configs_from_repos()
 
     # Not using the config manager to avoid it stashing the config that we want to push
-    helpers.check_output_decoded(['git', 'add', config_name + '.json'], cwd=config_folder)
-    helpers.check_output_decoded(['git', 'commit', '-m', 'update ' + config_name],
-                 cwd=config_folder)
+    helpers.check_output_decoded(['git', 'add', config_name + '.json'],
+                                 cwd=config_folder)
+    helpers.check_output_decoded(
+        ['git', 'commit', '-m', 'update ' + config_name],
+        cwd=config_folder)
     config_manager = ConfigManager().instance
 
-    helpers.check_output_decoded(['git', 'push', 'origin', 'master'], cwd=config_folder)
+    helpers.check_output_decoded(['git', 'push', 'origin', 'master'],
+                                 cwd=config_folder)
 
     # Already live, we will only update the change
     if is_new_config:
