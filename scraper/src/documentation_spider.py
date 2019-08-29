@@ -13,11 +13,6 @@ import os
 
 # End of import for the sitemap behavior
 
-# Import for GCP IAP auth
-import json
-import requests
-from requests_iap import IAPAuth
-
 from scrapy.spidermiddlewares.httperror import HttpError
 
 from scrapy.exceptions import CloseSpider
