@@ -139,14 +139,20 @@ def add_note(cuid, body):
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = html.escape(body)
 
-    response = hs.note.post(resource_id=cuid,
-                            data={"createdBy": {"id": "75881",
-                                                "type": "user"},
-                                  "type": "note",
-                                  "body": body
-                                  })
+    endpoint = 'conversations/%s/notes' % cuid
+    params = "id=%s" % cuid
+    data = {"text": body}
+    # "attachments": [
+    #     {"fileName": "file.txt",
+    #      "mimeType": "plain/text",
+    #      "data": "ZmlsZQ=="}
+    # ]
+    # }
+    print(endpoint)
+    result= hs.hit(endpoint, 'post', data=data, params=params)
+    print(result)
 
-    return response
+    return True
 
 
 def get_conversation_url_from_cuid(cuid):
@@ -174,7 +180,8 @@ def check_if_has_tag(conversation, ref_tags):
 
 def is_docusaurus_conversation(conversation):
     return check_if_has_tag(conversation,
-                            ["docusaurus", "ds_docusaurus", "gen-docusaurus"])
+                            ["docusaurus", "ds_docusaurus",
+                             "gen-docusaurus"])
 
 
 def is_gitbook_conversation(conversation):
