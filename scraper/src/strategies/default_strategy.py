@@ -8,6 +8,8 @@ from .anchor import Anchor
 from .hierarchy import Hierarchy
 from ..config.urls_parser import UrlsParser
 from ..helpers import to_json
+import json
+import hashlib
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -187,6 +189,21 @@ class DefaultStrategy(AbstractStrategy):
                 record['no_variables'] = record['url'] == record[
                     'url_without_variables']
 
+            # Define our own ObjectID to enable proper analytics
+            hierarchy_to_hash = {}
+            for lvl in hierarchy:
+                if hierarchy[lvl] is not None:
+                    hierarchy_to_hash[lvl] = hierarchy[lvl]
+            raw_hash = hashlib.sha1(json.dumps(
+                {'hierarchy_to_hash': json.dumps(hierarchy_to_hash,
+                                                 sort_keys=True),
+                 'url': record['url'],
+                 'position': position}, sort_keys=True).encode('utf-8'))
+            digest_hash = raw_hash.hexdigest()
+
+            # We only need 10 digits
+            record['objectID'] = int(digest_hash, 16) % 100000000000
+
             records.append(record)
 
         return records
@@ -195,7 +212,7 @@ class DefaultStrategy(AbstractStrategy):
         if 'attributes' in selectors[current_level]:
             attributes = {}
             for attribute_name in list(selectors[current_level][
-                'attributes'].keys()):
+                                           'attributes'].keys()):
                 matching_nodes = node.xpath(
                     selectors[current_level]['attributes'][attribute_name][
                         'selector'])
