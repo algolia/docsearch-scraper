@@ -465,3 +465,27 @@ class TestGetRecordsFromDom:
         assert len(actual) == 2
         assert actual[1]['type'] == 'lvl1'
         assert actual[1]['hierarchy']['lvl1'] == 'Bar'
+
+    def test_objectID(self):
+        # Given
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+          <h1>Foo</h1>
+          <h2>Bar</h2>
+          <h3>Baz</h3>
+        </body></html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert actual[0]['objectID'] is not None
+        assert actual[0]['objectID'] == 47249647150
+
+        assert actual[1]['objectID'] is not None
+        assert actual[1]['objectID'] == 58647695347
+
+        assert actual[2]['objectID'] is not None
+        assert actual[2]['objectID'] == 51867348454
