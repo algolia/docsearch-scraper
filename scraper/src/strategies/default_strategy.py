@@ -195,8 +195,7 @@ class DefaultStrategy(AbstractStrategy):
                 if hierarchy[lvl] is not None:
                     hierarchy_to_hash[lvl] = hierarchy[lvl]
             raw_hash = hashlib.sha1(json.dumps(
-                {'hierarchy_to_hash': json.dumps(hierarchy_to_hash,
-                                                 sort_keys=True),
+                {'hierarchy_to_hash': hierarchy_to_hash,
                  'url': record['url'],
                  'position': position}, sort_keys=True).encode('utf-8'))
             digest_hash = raw_hash.hexdigest()
