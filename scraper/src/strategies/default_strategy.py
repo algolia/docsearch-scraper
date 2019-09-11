@@ -190,10 +190,8 @@ class DefaultStrategy(AbstractStrategy):
                     'url_without_variables']
 
             # Define our own ObjectID to enable proper analytics
-            hierarchy_to_hash = {}
-            for lvl in hierarchy:
-                if hierarchy[lvl] is not None:
-                    hierarchy_to_hash[lvl] = hierarchy[lvl]
+            hierarchy_to_hash = {lvl: x for lvl, x in hierarchy.items() if
+                                 x is not None}
             raw_hash = hashlib.sha1(json.dumps(
                 {'hierarchy_to_hash': hierarchy_to_hash,
                  'url': record['url'],
