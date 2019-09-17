@@ -199,7 +199,7 @@ class DefaultStrategy(AbstractStrategy):
             digest_hash = raw_hash.hexdigest()
 
             # We only need 10 digits
-            record['objectID'] = int(digest_hash, 16) % 100000000000
+            record['objectID'] = int(digest_hash, 16)
 
             records.append(record)
 
