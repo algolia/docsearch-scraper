@@ -482,10 +482,13 @@ class TestGetRecordsFromDom:
 
         # Then
         assert actual[0]['objectID'] is not None
-        assert actual[0]['objectID'] == 47249647150
+        assert actual[0][
+                   'objectID'] == 897315557872696217448760952123662964402214550948
 
         assert actual[1]['objectID'] is not None
-        assert actual[1]['objectID'] == 58647695347
+        assert actual[1][
+                   'objectID'] == 544775784088954908252414345583075553386098973475
 
         assert actual[2]['objectID'] is not None
-        assert actual[2]['objectID'] == 51867348454
+        assert actual[2][
+                   'objectID'] == 648506819785346648151979634050767773652854925500
