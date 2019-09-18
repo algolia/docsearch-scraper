@@ -13,7 +13,9 @@ Hello you,
 - Run `pipenv shell` to enter the Python virtual environment (this will have
   to be done each time you get back to work on the Scraper)
 
-### Env variables
+### Authentication env variables
+
+WARNING! Please be aware that the scraper sends auth headers to every scraped site, so use `allowed_domains` to adjust the scope accordingly!
 
 If it happens to you to scrape sites protected by Cloudflare Access, you
 have to set appropriate HTTP headers. Values for these headers are taken

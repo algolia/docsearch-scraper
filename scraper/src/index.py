@@ -1,6 +1,10 @@
 """
 DocSearch scraper main entry point
 """
+import os
+import json
+import requests
+from requests_iap import IAPAuth
 
 from scrapy.crawler import CrawlerProcess
 
@@ -47,6 +51,29 @@ def run_config(config):
     DOWNLOADER_CLIENTCONTEXTFACTORY = root_module + 'scrapy_patch.' + CustomContextFactory.__name__
     DUPEFILTER_CLASS_PATH = root_module + 'custom_dupefilter.' + CustomDupeFilter.__name__
 
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en",
+    }  # Defaults for scrapy https://docs.scrapy.org/en/latest/topics/settings.html#default-request-headers
+
+    if os.getenv("CF_ACCESS_CLIENT_ID") and os.getenv("CF_ACCESS_CLIENT_SECRET"):
+        headers.update(
+            {
+                "CF-Access-Client-Id": os.getenv("CF_ACCESS_CLIENT_ID"),
+                "CF-Access-Client-Secret": os.getenv("CF_ACCESS_CLIENT_SECRET"),
+            }
+        )
+    elif os.getenv("IAP_AUTH_CLIENT_ID") and os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON"):
+        iap_token = IAPAuth(
+            client_id=os.getenv("IAP_AUTH_CLIENT_ID"),
+            service_account_secret_dict=json.loads(
+                os.getenv("IAP_AUTH_SERVICE_ACCOUNT_JSON")
+            ),
+        )(requests.Request()).headers["Authorization"]
+        headers.update({"Authorization": iap_token})
+
+    DEFAULT_REQUEST_HEADERS = headers
+
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
         'LOG_LEVEL': 'ERROR',
@@ -56,7 +83,8 @@ def run_config(config):
         'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY,
         'DUPEFILTER_USE_ANCHORS': config.use_anchors,
         # Use our custom dupefilter in order to be scheme agnostic regarding link provided
-        'DUPEFILTER_CLASS': DUPEFILTER_CLASS_PATH
+        'DUPEFILTER_CLASS': DUPEFILTER_CLASS_PATH,
+        'DEFAULT_REQUEST_HEADERS': DEFAULT_REQUEST_HEADERS,
     })
 
     process.crawl(
