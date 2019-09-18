@@ -139,18 +139,8 @@ def add_note(cuid, body):
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = html.escape(body)
 
-    endpoint = 'conversations/%s/notes' % cuid
-    params = "id=%s" % cuid
     data = {"text": body}
-    # "attachments": [
-    #     {"fileName": "file.txt",
-    #      "mimeType": "plain/text",
-    #      "data": "ZmlsZQ=="}
-    # ]
-    # }
-    print(endpoint)
-    result= hs.hit(endpoint, 'post', data=data, params=params)
-    print(result)
+    hs.conversations[cuid].notes.post(data=data)
 
     return True
 
