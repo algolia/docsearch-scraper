@@ -197,10 +197,7 @@ class DefaultStrategy(AbstractStrategy):
                  'url': record['url'],
                  'position': position}, sort_keys=True).encode('utf-8'))
             digest_hash = raw_hash.hexdigest()
-
-            # We only need 10 digits
             record['objectID'] = digest_hash
-
             records.append(record)
 
         return records
