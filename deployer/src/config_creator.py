@@ -68,6 +68,37 @@ def to_docusaurus_config(config, urls=None):
     return config
 
 
+def to_docusaurus_v2_config(config, urls=None):
+    if urls:
+        config["sitemap_urls"] = [
+            extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_alternate_links"] = True
+    start_url = urls[0]
+    if '/docs/' not in start_url:
+        if not start_url.endswith('/'):
+            start_url = start_url + '/'
+
+        config["start_urls"] = [start_url + 'docs/']
+    else:
+        config["start_urls"] = [start_url]
+
+    config["selectors"]["lvl0"] = OrderedDict((
+        ("selector",
+         ".menu__link--sublist.menu__link--active"),
+        ("global", True),
+        ("default_value", "Documentation")
+    ))
+    config["selectors"]["lvl1"] = "[class^='docItemContainer_'] h1"
+    config["selectors"]["lvl2"] = "[class^='docItemContainer_'] h2"
+    config["selectors"]["lvl3"] = "[class^='docItemContainer_'] h3"
+    config["selectors"]["lvl4"] = "[class^='docItemContainer_'] h4"
+    config["selectors"]["lvl5"] = "[class^='docItemContainer_'] h5"
+    config["selectors"]["text"] = "[class^='docItemContainer_'] p, [class^='docItemContainer_'] li"
+    config["selectors_exclude"] = [".hash-link"]
+
+    return config
+
+
 def to_gitbook_config(config):
     config["selectors"]["lvl0"] = ".markdown-section h1"
     config["selectors"]["lvl1"] = ".markdown-section h2"
@@ -96,14 +127,14 @@ def to_pkgdown_config(config, urls=None):
                 "tags": [
                     "reference"
                 ]
-            },
+        },
             {
                 "url": root + "articles",
                 "selectors_key": "articles",
                 "tags": [
                     "articles"
                 ]
-            }]
+        }]
 
         config["sitemap_urls"] = [
             root + "sitemap.xml"]
@@ -296,6 +327,8 @@ def create_config(u=None):
 
         if helpdesk_helper.is_docusaurus_conversation(conversation):
             config = to_docusaurus_config(config, urls)
+        elif helpdesk_helper.is_docusaurus_v2_conversation(conversation):
+            config = to_docusaurus_v2_config(config, urls)
         elif helpdesk_helper.is_gitbook_conversation(conversation):
             config = to_gitbook_config(config)
         elif helpdesk_helper.is_pkgdown_conversation(conversation):
@@ -324,11 +357,11 @@ def create_config(u=None):
 
     user_index_name = helpers.get_user_value(
         'index_name is \033[1;33m{}\033[0m [enter to confirm]: '.format(config[
-                                                                            "index_name"]))
+            "index_name"]))
 
     if user_index_name != "":
         config['index_name'] = user_index_name
         print('index_name is now \033[1;33m{}\033[0m'.format(config[
-                                                                 "index_name"]))
+            "index_name"]))
 
     return config
