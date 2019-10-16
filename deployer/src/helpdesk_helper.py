@@ -127,7 +127,7 @@ def get_emails_from_conversation(conversation_with_threads):
     if len(emails) > 1:
         print(
             "Conversation sent by \033[1;33m" + customers_mail + "\033[0m" + (
-                    " with " + " ".join(emails[1:])))
+                " with " + " ".join(emails[1:])))
 
     return emails
 
@@ -173,6 +173,12 @@ def is_docusaurus_conversation(conversation):
     return check_if_has_tag(conversation,
                             ["docusaurus", "ds_docusaurus",
                              "gen-docusaurus"])
+
+
+def is_docusaurus_v2_conversation(conversation):
+    return check_if_has_tag(conversation,
+                            ["docusaurus_v2", "ds_docusaurus_v2",
+                             "gen-docusaurus_v2"])
 
 
 def is_gitbook_conversation(conversation):
