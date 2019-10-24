@@ -3,6 +3,7 @@ DocSearch scraper main entry point
 """
 import os
 import json
+import base64
 import requests
 from requests_iap import IAPAuth
 
@@ -71,6 +72,10 @@ def run_config(config):
             ),
         )(requests.Request()).headers["Authorization"]
         headers.update({"Authorization": iap_token})
+    elif os.getenv("BASIC_AUTH_USERNAME") and os.getenv("BASIC_AUTH_PASSWORD"):
+        auth_str = f"{os.getenv('BASIC_AUTH_USERNAME')}:{os.getenv('BASIC_AUTH_PASSWORD')}"
+        b64_auth_str = base64.b64encode(auth_str.encode()).decode()
+        headers.update({"Authorization": f"Basic {b64_auth_str}"})
 
     DEFAULT_REQUEST_HEADERS = headers
 
