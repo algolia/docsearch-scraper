@@ -13,9 +13,19 @@ Hello you,
 - Run `pipenv shell` to enter the Python virtual environment (this will have
   to be done each time you get back to work on the Scraper)
 
-### Authentication env variables
+### Authentication
 
-WARNING! Please be aware that the scraper sends auth headers to every scraped site, so use `allowed_domains` to adjust the scope accordingly!
+_Disclaimer:_ When Algolia runs the scraper on Algolia's infrastructure, no authentication methods are possible since DocSearch focus on publicly available websites.
+
+_WARNING:_ Please be aware that the scraper sends authentication headers to every scraped site, so use `allowed_domains` to adjust the scope accordingly!
+
+#### Basic HTTP:
+
+Basic HTTP authentication is supported by setting these environment variables:
+- `DOCSEARCH_BASICAUTH_USERNAME`
+- `DOCSEARCH_BASICAUTH_PASSWORD`
+
+#### Cloudflare Access: Identity and Access Management
 
 If it happens to you to scrape sites protected by Cloudflare Access, you
 have to set appropriate HTTP headers. Values for these headers are taken
