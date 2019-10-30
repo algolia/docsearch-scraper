@@ -13,6 +13,28 @@ Hello you,
 - Run `pipenv shell` to enter the Python virtual environment (this will have
   to be done each time you get back to work on the Scraper)
 
+### Authentication
+
+_Disclaimer:_ When Algolia runs the scraper on Algolia's infrastructure, no authentication methods are possible since DocSearch focus on publicly available websites.
+
+_WARNING:_ Please be aware that the scraper sends authentication headers to every scraped site, so use `allowed_domains` to adjust the scope accordingly!
+
+#### Basic HTTP:
+
+Basic HTTP authentication is supported by setting these environment variables:
+- `DOCSEARCH_BASICAUTH_USERNAME`
+- `DOCSEARCH_BASICAUTH_PASSWORD`
+
+#### Cloudflare Access: Identity and Access Management
+
+If it happens to you to scrape sites protected by Cloudflare Access, you
+have to set appropriate HTTP headers. Values for these headers are taken
+from env variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`.
+
+In case of Google Cloud Identity-Aware Proxy, please specify these env variables:
+- `IAP_AUTH_CLIENT_ID` - # pick [client ID of the application](https://console.cloud.google.com/apis/credentials) you are connecting to
+- `IAP_AUTH_SERVICE_ACCOUNT_JSON` - # generate in [Actions](https://console.cloud.google.com/iam-admin/serviceaccounts) -> Create key -> JSON
+
 ### Installing Chrome Headless
 
 Websites that need JavaScript for rendering are passed through ChromeDriver.
@@ -68,6 +90,8 @@ exit status:
 |     3     | No record extracted from the crawl             |
 |     4     | Too much hits returned from the crawl          |
 |     5     | The configuration provided is not a valid JSON |
+|     6     | The endpoint to call is incorrect              |
+|     7     | Credentials used to request are not set        |
 
 
 [1]: https://github.com/pypa/pipenv

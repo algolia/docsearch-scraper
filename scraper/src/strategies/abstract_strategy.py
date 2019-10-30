@@ -1,5 +1,4 @@
 from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
 import lxml
 import re
 import json
@@ -10,7 +9,7 @@ Abstract Strategy
 """
 
 
-class AbstractStrategy(object):
+class AbstractStrategy:
     """
     Abstract Strategy
     """
@@ -185,7 +184,3 @@ class AbstractStrategy(object):
         if matches:
             return 100 - int(matches.group(1)) * 10
         return 0
-
-    def select(self, path):
-        """Select an element in the current DOM using specified CSS selector"""
-        return XPath(path)(self.dom) if len(path) > 0 else []

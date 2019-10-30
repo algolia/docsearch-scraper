@@ -57,15 +57,17 @@ class BootstrapConfig(AbstractCommand):
         import pyperclip
 
         dump = self.config_to_s(config)
-        pyperclip.copy(dump)
-
-        print("")
-        print("=============")
-        print(dump)
-        print("=============")
-        print("")
-        print("Config copied to clipboard [OK]")
-        print("")
+        try:
+            pyperclip.copy(dump)
+            print("")
+            print("=============")
+            print(dump)
+            print("=============")
+            print("")
+            print("Config copied to clipboard [OK]")
+            print("")
+        except Exception:
+            print(dump)
 
 
 def key_sort(attr):

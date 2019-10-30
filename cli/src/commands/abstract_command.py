@@ -1,7 +1,7 @@
 from os import environ
 
 
-class AbstractCommand(object):
+class AbstractCommand:
     def run(self, args):
         raise Exception("run need to be implemented")
 
@@ -36,14 +36,14 @@ class AbstractCommand(object):
 
     def check_docsearch_app_id(self, action_description):
         if environ.get("APPLICATION_ID") != "BH4D9OD16A":
-            print(
-                "The APP_ID is not BH4D9OD16A. You can not " + action_description + " if you are not using the docsearch account")
+            print("The APP_ID is not BH4D9OD16A. You can not " + action_description +
+                  " if you are not using the docsearch account")
             exit(1)
 
     def check_not_docsearch_app_id(self, action_description):
         if environ.get("APPLICATION_ID") == "BH4D9OD16A":
-            print(
-                "The APP_ID is BH4D9OD16A. You can not " + action_description + " if you are using the docsearch account")
+            print("The APP_ID is BH4D9OD16A. You can not " + action_description +
+                  " if you are using the docsearch account")
             exit(1)
 
     @staticmethod

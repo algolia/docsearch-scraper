@@ -43,7 +43,12 @@ class TestOpenSeleniumBrowser:
                     "variables": {
                         "version": {
                             "url": "https://symfony.com/doc/current/book/controller.html",
-                            "js": "var versions = $('.doc-switcher .versions li').map(function (i, elt) { return $(elt).find('a').html().split('/')[0].replace(/ |\\n/g,''); }).toArray(); versions.push('current'); return JSON.stringify(versions);"
+                            "js": """\
+var versions = $('.doc-switcher .versions li').map(function (i, elt) {\
+  return $(elt).find('a').html().split('/')[0].replace(/ |\\n/g,'');\
+}).toArray();\
+versions.push('current');\
+return JSON.stringify(versions);"""
                         },
                         "type_of_content": ["book", "bundles", "reference",
                                             "components", "cookbook",

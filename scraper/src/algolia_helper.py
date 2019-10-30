@@ -8,13 +8,12 @@ from builtins import range
 class AlgoliaHelper:
     """AlgoliaHelper"""
 
-    def __init__(self, app_id, api_key, index_name, settings, query_rules):
+    def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules):
         self.algolia_client = algoliasearch.Client(app_id, api_key)
         self.index_name = index_name
-        self.index_name_tmp = index_name + '_tmp'
+        self.index_name_tmp = index_name_tmp
         self.algolia_index = self.algolia_client.init_index(self.index_name)
-        self.algolia_index_tmp = self.algolia_client.init_index(
-            self.index_name_tmp)
+        self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
         self.algolia_client.delete_index(self.index_name_tmp)
         self.algolia_index_tmp.set_settings(settings)
 
@@ -36,7 +35,7 @@ class AlgoliaHelper:
 
     def add_synonyms(self, synonyms):
         synonyms_list = []
-        for key, value in list(synonyms.items()):
+        for _, value in list(synonyms.items()):
             synonyms_list.append(value)
 
         self.algolia_index_tmp.batch_synonyms(synonyms_list)

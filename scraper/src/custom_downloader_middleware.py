@@ -4,16 +4,13 @@ CustomDownloaderMiddleware
 
 import time
 
-from scrapy.http import Request, HtmlResponse
-
-try:
-    from urllib.parse import urlparse, unquote_plus
-except ImportError:
-    from urlparse import urlparse
-    from urllib import unquote_plus
+from scrapy.http import HtmlResponse
+from urllib.parse import urlparse, unquote_plus
 
 
-class CustomDownloaderMiddleware(object):
+class CustomDownloaderMiddleware:
+    driver = None
+
     def __init__(self):
         self.seen = {}  # TODO could be removed
         self.driver = CustomDownloaderMiddleware.driver

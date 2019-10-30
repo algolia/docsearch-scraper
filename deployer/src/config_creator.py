@@ -3,10 +3,7 @@ import tldextract
 import re
 from . import helpers
 from . import helpdesk_helper
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 def extract_root_from_input(input_string):
@@ -16,10 +13,10 @@ def extract_root_from_input(input_string):
     if input_string.endswith('/'):
         return input_string
     # extracting substring before the first isolated / (not //)
-    domain = re.match(".+?([^\/]\/(?!\/))",
+    domain = re.match(".+?([^/]/(?!/))",
                       input_string)
     try:
-        url_parsed = urlparse(input_string);
+        url_parsed = urlparse(input_string)
         # Removing unused parameters
         url_parsed._replace(params='', query='', fragment='')
         path_splited = url_parsed.path.split('/')
@@ -44,6 +41,14 @@ def to_docusaurus_config(config, urls=None):
         config["custom_settings"] = {"attributesForFaceting": ["language",
                                                                "version"]
                                      }
+    start_url = urls[0]
+    if '/docs/' not in start_url:
+        if not start_url.endswith('/'):
+            start_url = start_url + '/'
+
+        config["start_urls"] = [start_url + 'docs/']
+    else:
+        config["start_urls"] = [start_url]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
@@ -283,8 +288,9 @@ def create_config(u=None):
         cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
         conversation = helpdesk_helper.get_conversation(cuid)
+        conversation_with_threads = helpdesk_helper.get_conversation_with_threads(cuid)
         url_from_conversation = helpdesk_helper.get_start_url_from_conversation(
-            conversation)
+            conversation_with_threads)
         urls = [url_from_conversation]
         u = url_from_conversation
 
