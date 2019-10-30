@@ -1,18 +1,27 @@
 import os
 import re
-import json
-from . import helpers
-from ratelimit import rate_limited
 import html
 
+from helpscout.client import HelpScout
 
-def get_helpscout_api_key():
-    hs_api_key = os.environ.get('HELP_SCOUT_API_KEY')
 
-    if not hs_api_key:
-        raise ValueError("None HELP_SCOUT_API_KEY from environment variables")
+def get_helpscout_app_id():
+    hs_api_id = os.environ.get('HELPSCOUT_APP_ID')
 
-    return hs_api_key
+    if not hs_api_id:
+        raise ValueError("None HELPSCOUT_APP_ID from environment variables")
+
+    return hs_api_id
+
+
+def get_helpscout_app_secret():
+    hs_api_secret = os.environ.get('HELPSCOUT_APP_SECRET')
+
+    if not hs_api_secret:
+        raise ValueError(
+            "None HELPSCOUT_APP_SECRET from environment variables")
+
+    return hs_api_secret
 
 
 def is_helpdesk_url(u):
@@ -45,15 +54,11 @@ def get_conversation_ID_from_url(hs_url):
     return cuid
 
 
-def get_conversation(cuid):
-    conversation_endpoint = 'https://api.helpscout.net/v1/conversations/{}.json'.format(
-        cuid)
-    hs_api_key = get_helpscout_api_key()
-
-    response_json = json.loads(helpers.make_request(conversation_endpoint,
-                                                    username=hs_api_key,
-                                                    password="X"))
-    conversation = response_json.get('item')
+def get_conversation(cuid, params=None):
+    app_id = get_helpscout_app_id()
+    app_secret = get_helpscout_app_secret()
+    hs = HelpScout(app_id, app_secret)
+    conversation = hs.conversations.get(params=params, resource_id=cuid)
 
     if not conversation:
         raise ValueError(
@@ -62,15 +67,20 @@ def get_conversation(cuid):
     return conversation
 
 
-def get_start_url_from_conversation(conversation):
-    if not conversation or not conversation.get('threads')[-1]:
+def get_conversation_with_threads(cuid):
+    return get_conversation(cuid, params='embed=threads')
+
+
+def get_start_url_from_conversation(conversation_with_threads):
+    embedded_conversation = conversation_with_threads._embedded
+    if not embedded_conversation or not embedded_conversation["threads"][-1]:
         raise ValueError(
             "Wrong input conversation, must be not evaluate at None and have at least one thread")
 
     # The message to extract is the first from the thread and it was sent by a customer
-    first_thread = conversation.get('threads')[-1]
-    was_sent_by_customer = first_thread.get('createdByCustomer')
-    url_from_conversation = first_thread.get('body')
+    first_thread = embedded_conversation["threads"][-1]
+    was_sent_by_customer = first_thread['createdBy']['type'] == 'customer'
+    url_from_conversation = first_thread['body']
 
     if not len(url_from_conversation):
         raise ValueError("First thread from the conversation thread is empty")
@@ -81,24 +91,24 @@ def get_start_url_from_conversation(conversation):
 
     print(
         'URL fetched is \033[1;36m{}\033[0m sent by \033[1;33m{}\033[0m'.format(
-            url_from_conversation, first_thread.get(
-                "customer").get("email")))
+            url_from_conversation, first_thread["customer"]["email"]))
 
     return url_from_conversation
 
 
-def get_emails_from_conversation(conversation):
+def get_emails_from_conversation(conversation_with_threads):
     emails = []
 
-    if not conversation or not conversation.get('threads')[-1]:
+    embedded_conversation = conversation_with_threads._embedded
+    if not conversation_with_threads or not embedded_conversation["threads"][-1]:
         raise ValueError(
             "Wrong input conversation, must be not evaluate at None and have at least one thread")
 
     # Extract customer
-    customer = conversation.get('customer')
-    customers_mail = customer.get('email')
-    first_thread = conversation.get('threads')[-1]
-    was_sent_by_customer = first_thread.get('createdByCustomer')
+    first_thread = embedded_conversation["threads"][-1]
+    customer = first_thread['customer']
+    customers_mail = customer['email']
+    was_sent_by_customer = first_thread['createdBy']['type'] == 'customer'
 
     if not was_sent_by_customer:
         raise ValueError(
@@ -106,11 +116,11 @@ def get_emails_from_conversation(conversation):
 
     emails.append(customers_mail)
 
-    cc = conversation.get('cc')
+    cc = first_thread['cc']
     if cc:
         emails = emails + cc
 
-    bcc = conversation.get('bcc')
+    bcc = first_thread['bcc']
     if bcc:
         emails = emails + bcc
 
@@ -123,26 +133,17 @@ def get_emails_from_conversation(conversation):
 
 
 def add_note(cuid, body):
-    conversation_endpoint = 'https://api.helpscout.net/v1/conversations/{}.json'.format(
-        cuid)
-
-    hs_api_key = get_helpscout_api_key()
+    app_id = get_helpscout_app_id()
+    app_secret = get_helpscout_app_secret()
+    hs = HelpScout(app_id, app_secret)
 
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = html.escape(body)
 
-    response = helpers.make_request(conversation_endpoint,
-                                    json_request=True,
-                                    data={"createdBy": {"id": "75881",
-                                                        "type": "user"},
-                                          "type": "note",
-                                          "body": body
-                                          },
-                                    username=hs_api_key,
-                                    password="X",
-                                    type='POST')
+    data = {"text": body}
+    hs.conversations[cuid].notes.post(data=data)
 
-    return response
+    return True
 
 
 def get_conversation_url_from_cuid(cuid):
@@ -152,64 +153,54 @@ def get_conversation_url_from_cuid(cuid):
     return 'https://secure.helpscout.net/conversation/{}'.format(cuid)
 
 
+def check_if_is_tag(tag, ref_tag):
+    '''
+        Check if a tag is a ref_tag
+    '''
+    return tag["tag"] == ref_tag
+
+
+def check_if_has_tag(conversation, ref_tags):
+    '''
+            Check if the conversation has one tag from ref_tags
+    '''
+    for ref_tag in ref_tags:
+        if any(check_if_is_tag(tag, ref_tag) for tag in conversation.tags):
+            return True
+
+
 def is_docusaurus_conversation(conversation):
-    return "docusaurus" in conversation.get(
-        "tags") or "ds_docusaurus" in conversation.get(
-        "tags") or "gen-docusaurus" in conversation.get("tags")
+    return check_if_has_tag(conversation,
+                            ["docusaurus", "ds_docusaurus",
+                             "gen-docusaurus"])
 
 
 def is_gitbook_conversation(conversation):
-    return "gitbook" in conversation.get("tags")
+    return check_if_has_tag(conversation, ["gitbook"])
 
 
 def is_pkgdown_conversation(conversation):
-    return "pkgdown" in conversation.get(
-        "tags") or "ds_pkgdown" in conversation.get(
-        "tags") or "gen-pkgdown" in conversation.get("tags")
+    return check_if_has_tag(conversation,
+                            ["pkgdown", "ds_pkgdown", "gen-pkgdown"])
 
 
 def is_vuepress_conversation(conversation):
-    return "vuepress" in conversation.get(
-        "tags") or "ds_vuepress" in conversation.get(
-        "tags") or "gen-vuepress" in conversation.get("tags")
+    return check_if_has_tag(conversation,
+                            ["vuepress", "ds_vuepress", "gen-vuepress"])
 
 
 def is_larecipe_conversation(conversation):
-    return "larecipe" in conversation.get("tags")
+    return check_if_has_tag(conversation, ["larecipe"])
 
 
 def is_publii_conversation(conversation):
-    return "publii" in conversation.get(
-        "tags") or "ds_publii" in conversation.get(
-        "tags") or "gen-publii" in conversation.get("tags")
+    return check_if_has_tag(conversation,
+                            ["publii", "ds_publii", "gen-publii"])
 
 
 def is_jsdoc_conversation(conversation):
-    return "jsdoc" in conversation.get(
-        "tags") or "ds_jsdoc" in conversation.get(
-        "tags") or "gen-jsdoc" in conversation.get("tags")
-
-
-@rate_limited(200, 60)
-def search(query, page=1, pageSize=50, sortField="modifiedAt",
-           sortOrder="asc"):
-    search_endpoint = "https://api.helpscout.net/v1/search/conversations.json"
-    hs_api_key = get_helpscout_api_key()
-
-    response_json = json.loads(helpers.make_request(search_endpoint,
-                                                    username=hs_api_key,
-                                                    password="X",
-                                                    data={
-                                                        "query": query,
-                                                        "page": page,
-                                                        "pageSize": pageSize,
-                                                        "sortField": sortField,
-                                                        "sortOrder": sortOrder
-                                                    },
-                                                    json_request=True)
-                               )
-
-    return response_json
+    return check_if_has_tag(conversation,
+                            ["jsdoc", "ds_jsdoc", "gen-jsdoc"])
 
 
 def RepresentsInt(s):
