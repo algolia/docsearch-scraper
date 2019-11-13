@@ -33,23 +33,26 @@ def extract_root_from_input(input_string):
         return domain.group() if domain else input_string
 
 
-def to_docusaurus_config(config, urls=None):
-    if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
-        config["sitemap_alternate_links"] = True
-        config["custom_settings"] = {"attributesForFaceting": ["language",
-                                                               "version"]
+def assert_list_non_empty(list_to_check):
+    # Check if the input is not None or empty. Otherwise, it raises an exception
+    if not list_to_check or len(list_to_check) == 0:
+        raise Exception('{} is None or empty'.format(list_to_check))
+
+
+def to_docusaurus_config(config, urls):
+    assert_list_non_empty(urls)
+    config["sitemap_urls"] = [
+        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_alternate_links"] = True
+    config["custom_settings"] = {"attributesForFaceting": ["language",
+                                                            "version"]
                                      }
     start_url = urls[0]
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
-            start_url = start_url + '/'
-
-        config["start_urls"] = [start_url + 'docs/']
-    else:
-        config["start_urls"] = [start_url]
-
+            start_url += '/'
+        start_url += 'docs/'
+    config["start_urls"] = [start_url]
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
          "//*[contains(@class,'navGroups')]//*[contains(@class,'navListItemActive')]/preceding::h3[1]"),
@@ -68,19 +71,17 @@ def to_docusaurus_config(config, urls=None):
     return config
 
 
-def to_docusaurus_v2_config(config, urls=None):
-    if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
-        config["sitemap_alternate_links"] = True
+def to_docusaurus_v2_config(config, urls):
+    assert_list_non_empty(urls)
+    config["sitemap_urls"] = [
+        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_alternate_links"] = True
     start_url = urls[0]
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
-            start_url = start_url + '/'
-
-        config["start_urls"] = [start_url + 'docs/']
-    else:
-        config["start_urls"] = [start_url]
+            start_url += '/'
+        start_url += 'docs/'
+    config["start_urls"] = [start_url]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
@@ -127,14 +128,14 @@ def to_pkgdown_config(config, urls=None):
                 "tags": [
                     "reference"
                 ]
-        },
+            },
             {
                 "url": root + "articles",
                 "selectors_key": "articles",
                 "tags": [
                     "articles"
                 ]
-        }]
+            }]
 
         config["sitemap_urls"] = [
             root + "sitemap.xml"]
@@ -272,7 +273,7 @@ def to_publii_config(config, urls=None):
     return config
 
 
-def to_jsdoc_config(config, urls=None):
+def to_jsdoc_config(config):
     config["stop_urls"] = ["\\.js\\.html",
                            "/index\\.html$"]
 
@@ -341,7 +342,7 @@ def create_config(u=None):
         elif helpdesk_helper.is_publii_conversation(conversation):
             config = to_publii_config(config, urls)
         elif helpdesk_helper.is_jsdoc_conversation(conversation):
-            config = to_jsdoc_config(config, urls)
+            config = to_jsdoc_config(config)
 
         config["conversation_id"] = [cuid]
 
