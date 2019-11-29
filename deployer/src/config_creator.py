@@ -33,23 +33,26 @@ def extract_root_from_input(input_string):
         return domain.group() if domain else input_string
 
 
-def to_docusaurus_config(config, urls=None):
-    if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
-        config["sitemap_alternate_links"] = True
-        config["custom_settings"] = {"attributesForFaceting": ["language",
-                                                               "version"]
+def assert_list_non_empty(list_to_check):
+    # Check if the input is not None or empty. Otherwise, it raises an exception
+    if not list_to_check or len(list_to_check) == 0:
+        raise Exception('{} is None or empty'.format(list_to_check))
+
+
+def to_docusaurus_config(config, urls):
+    assert_list_non_empty(urls)
+    config["sitemap_urls"] = [
+        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_alternate_links"] = True
+    config["custom_settings"] = {"attributesForFaceting": ["language",
+                                                            "version"]
                                      }
     start_url = urls[0]
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
-            start_url = start_url + '/'
-
-        config["start_urls"] = [start_url + 'docs/']
-    else:
-        config["start_urls"] = [start_url]
-
+            start_url += '/'
+        start_url += 'docs/'
+    config["start_urls"] = [start_url]
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
          "//*[contains(@class,'navGroups')]//*[contains(@class,'navListItemActive')]/preceding::h3[1]"),
@@ -63,6 +66,35 @@ def to_docusaurus_config(config, urls=None):
     config["selectors"]["lvl4"] = ".post h4"
     config["selectors"]["lvl5"] = ".post h5"
     config["selectors"]["text"] = ".post article p, .post article li"
+    config["selectors_exclude"] = [".hash-link"]
+
+    return config
+
+
+def to_docusaurus_v2_config(config, urls):
+    assert_list_non_empty(urls)
+    config["sitemap_urls"] = [
+        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_alternate_links"] = True
+    start_url = urls[0]
+    if '/docs/' not in start_url:
+        if not start_url.endswith('/'):
+            start_url += '/'
+        start_url += 'docs/'
+    config["start_urls"] = [start_url]
+
+    config["selectors"]["lvl0"] = OrderedDict((
+        ("selector",
+         ".menu__link--sublist.menu__link--active"),
+        ("global", True),
+        ("default_value", "Documentation")
+    ))
+    config["selectors"]["lvl1"] = "[class^='docItemContainer_'] h1"
+    config["selectors"]["lvl2"] = "[class^='docItemContainer_'] h2"
+    config["selectors"]["lvl3"] = "[class^='docItemContainer_'] h3"
+    config["selectors"]["lvl4"] = "[class^='docItemContainer_'] h4"
+    config["selectors"]["lvl5"] = "[class^='docItemContainer_'] h5"
+    config["selectors"]["text"] = "[class^='docItemContainer_'] p, [class^='docItemContainer_'] li"
     config["selectors_exclude"] = [".hash-link"]
 
     return config
@@ -177,18 +209,19 @@ def to_vuepress_config(config):
     ))
     config["custom_settings"] = {"attributesForFaceting": ["lang"]
                                  }
-    config["selectors"]["lvl1"] = ".content h1"
-    config["selectors"]["lvl2"] = ".content h2"
-    config["selectors"]["lvl3"] = ".content h3"
-    config["selectors"]["lvl4"] = ".content h4"
-    config["selectors"]["lvl5"] = ".content h5"
-    config["selectors"]["text"] = ".content p, .content li"
+    config["selectors"]["lvl1"] = ".theme-default-content h1"
+    config["selectors"]["lvl2"] = ".theme-default-content h2"
+    config["selectors"]["lvl3"] = ".theme-default-content h3"
+    config["selectors"]["lvl4"] = ".theme-default-content h4"
+    config["selectors"]["lvl5"] = ".theme-default-content h5"
+    config["selectors"]["text"] = ".theme-default-content p, .theme-default-content li"
     config["selectors"]["lang"] = OrderedDict((
         ("selector", "/html/@lang"),
         ("type", "xpath"),
         ("global", True),
         ("default_value", "en-US")
     ))
+    config["selectors_exclude"] = [".table-of-contents"]
 
     config["scrap_start_urls"] = False
     config["strip_chars"] = " .,;:#"
@@ -240,7 +273,7 @@ def to_publii_config(config, urls=None):
     return config
 
 
-def to_jsdoc_config(config, urls=None):
+def to_jsdoc_config(config):
     config["stop_urls"] = ["\\.js\\.html",
                            "/index\\.html$"]
 
@@ -296,6 +329,8 @@ def create_config(u=None):
 
         if helpdesk_helper.is_docusaurus_conversation(conversation):
             config = to_docusaurus_config(config, urls)
+        elif helpdesk_helper.is_docusaurus_v2_conversation(conversation):
+            config = to_docusaurus_v2_config(config, urls)
         elif helpdesk_helper.is_gitbook_conversation(conversation):
             config = to_gitbook_config(config)
         elif helpdesk_helper.is_pkgdown_conversation(conversation):
@@ -307,7 +342,7 @@ def create_config(u=None):
         elif helpdesk_helper.is_publii_conversation(conversation):
             config = to_publii_config(config, urls)
         elif helpdesk_helper.is_jsdoc_conversation(conversation):
-            config = to_jsdoc_config(config, urls)
+            config = to_jsdoc_config(config)
 
         config["conversation_id"] = [cuid]
 
@@ -324,11 +359,11 @@ def create_config(u=None):
 
     user_index_name = helpers.get_user_value(
         'index_name is \033[1;33m{}\033[0m [enter to confirm]: '.format(config[
-                                                                            "index_name"]))
+            "index_name"]))
 
     if user_index_name != "":
         config['index_name'] = user_index_name
         print('index_name is now \033[1;33m{}\033[0m'.format(config[
-                                                                 "index_name"]))
+            "index_name"]))
 
     return config
