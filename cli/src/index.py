@@ -36,14 +36,6 @@ if not path.isfile(env_file):
     ans = input("What is your Algolia API_KEY: ")
     f.write("API_KEY=" + ans + "\n")
 
-    ans = input("What is your SLACK_HOOK (Leave empty unless you have it): ")
-    if ans != "":
-        f.write("SLACK_HOOK=" + ans + "\n")
-
-        ans = input(
-            "What is your DEPLOY_KEY (Leave empty unless you have it): ")
-        f.write("DEPLOY_KEY=" + ans + "\n")
-
     f.close()
 
     print("")
