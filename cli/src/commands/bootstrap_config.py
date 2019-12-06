@@ -92,8 +92,6 @@ def key_sort(attr):
         "use_anchors": 17,
         "custom_settings": 18,
         "synonyms": 19,
-        "docker_memory": 20,
-        "docker_cpu": 21,
         "conversation_id": 22,
         "comments": 29,
         "nb_hits": 30
