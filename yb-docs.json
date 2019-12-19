@@ -5,8 +5,7 @@
       "url":  "https://docs.yugabyte.com/(?P<version>.*?)/",
       "variables": {
         "version": [
-          "latest",
-          "v2.0"
+          "latest"
         ]
       }
     }
