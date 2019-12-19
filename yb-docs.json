@@ -22,7 +22,11 @@
     "lvl1": "main article h2",
     "lvl2": "main wrapper h3",
     "lvl3": "main article p",
-    "text": "#content section p,#content section ol"
+    "text": "#content section p,#content section ol, #content code"
+  },
+    "custom_settings": {
+      "advancedSyntax": true,
+      "separatorsToIndex": "_"
   },
   "selectors_exclude": [],
   "nb_hits": 21609
