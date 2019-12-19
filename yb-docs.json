@@ -6,11 +6,7 @@
       "variables": {
         "version": [
           "latest",
-          "v2.0",
-          "v1.3",
-          "v1.2",
-          "v1.1",
-          "v1.0"
+          "v2.0"
         ]
       }
     }
@@ -21,9 +17,11 @@
   "selectors": {
     "lvl0": "main article h1",
     "lvl1": "main article h2",
-    "lvl2": "main wrapper h3",
-    "lvl3": "main article p",
-    "text": "#content section p,#content section ol, #content code"
+    "lvl2": "main article h3",
+    "lvl3": "main article h4",
+    "lvl4": "main article h5",
+    "lvl5": "main article h6",
+    "text": "#content section p, #content li, #content section ol, #content code"
   },
     "custom_settings": {
       "advancedSyntax": true,
