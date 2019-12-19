@@ -64,9 +64,9 @@ class RunConfigDocker(AbstractCommand):
             run_command.append("-v")
             run_command.append(os.getcwd() + "/scraper/src:/root/src")
 
+        self.exec_shell_command(["docker", "rm", container_name, "-f"])
         run_command = run_command + ["--name",
                                      container_name,
-                                     "-t",
                                      image_name,
                                      "bash"]
 
