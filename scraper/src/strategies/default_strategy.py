@@ -212,7 +212,11 @@ class DefaultStrategy(AbstractStrategy):
             end_date = datetime.strptime(record['end']+suffix, "%H:%M, %d %B, %Y")
 
             record['start'] = datetime.timestamp(start_date)*1000
-            record['end'] = datetime.timestamp(end_date)*1000
+            record['end'] = datetime.timestamp(end_date) * 1000
+            if start_date.hour < 12:
+                record['time_period'] = record['day'].lower()+" morning"
+            else:
+                record['time_period'] = record['day'].lower()+" afternoon"
             records.append(record)
 
         return records
