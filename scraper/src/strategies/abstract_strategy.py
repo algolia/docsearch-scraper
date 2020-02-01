@@ -154,6 +154,29 @@ class AbstractStrategy:
         return AbstractStrategy.escape(text)
 
     @staticmethod
+    def get_array_from_nodes(elements, strip_chars=None):
+        """
+        Return the text content of a set of DOM nodes.
+        elements can contain either an array of nodes or a custom data return from xpath
+        (Example: integer in the case of a count)
+        """
+
+        if not isinstance(elements, list):
+            return elements
+
+        if len(elements) == 0:
+            return None
+
+        text = [AbstractStrategy.get_text(element, strip_chars) for element in
+                elements
+                if AbstractStrategy.get_text(element, strip_chars) is not None]
+
+        if len(text) == 0:
+            return None
+
+        return [AbstractStrategy.escape(e) for e in text]
+
+    @staticmethod
     def remove_from_dom(dom, exclude_selectors):
         """Remove any elements matching the selector from the DOM"""
         for selector in exclude_selectors:

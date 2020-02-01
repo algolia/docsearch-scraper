@@ -10,6 +10,8 @@ from ..config.urls_parser import UrlsParser
 from ..helpers import to_json
 import json
 import hashlib
+from datetime import datetime
+import re
 
 
 class DefaultStrategy(AbstractStrategy):
@@ -198,6 +200,19 @@ class DefaultStrategy(AbstractStrategy):
                  'position': position}, sort_keys=True).encode('utf-8'))
             digest_hash = raw_hash.hexdigest()
             record['objectID'] = digest_hash
+            suffix = ", "
+            suffix += + "1" if record['day'] is "Saturday" else "2"
+            suffix += " February, 2020"
+            if record['github']:
+                github_handle = re.search('https:\/\/github\.com\/(\w*)', record['github'], re.IGNORECASE)
+                if github_handle:
+                    record['github_handle'] = github_handle.group(1)
+
+            start_date = datetime.strptime(record['start']+suffix, "%H:%M, %d %B, %Y")
+            end_date = datetime.strptime(record['end']+suffix, "%H:%M, %d %B, %Y")
+
+            record['start'] = datetime.timestamp(start_date)*1000
+            record['end'] = datetime.timestamp(end_date)*1000
             records.append(record)
 
         return records
@@ -276,9 +291,14 @@ class DefaultStrategy(AbstractStrategy):
             level_selector = selectors[level]
             if level not in levels or level_selector['global']:
                 matching_dom_nodes = self.select(level_selector['selector'])
-                self.global_content[level] = self.get_text_from_nodes(
-                    matching_dom_nodes,
-                    self.get_strip_chars(level, selectors))
+                if ("speaker" in level):
+                    self.global_content[level] = self.get_array_from_nodes(
+                        matching_dom_nodes,
+                        self.get_strip_chars(level, selectors))
+                else:
+                    self.global_content[level] = self.get_text_from_nodes(
+                        matching_dom_nodes,
+                        self.get_strip_chars(level, selectors))
 
                 if self.global_content[level] is None and level_selector[
                     'default_value'] is not None:
