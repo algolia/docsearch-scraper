@@ -1,6 +1,7 @@
 """MeiliSearchHelper
 Wrapper on top of the AlgoliaSearch API client"""
 
+import time
 import meilisearch
 from builtins import range
 
@@ -27,6 +28,8 @@ class MeiliSearchHelper:
         self.meilisearch_client = meilisearch.Client("https://" + app_id + ".getmeili.com" , api_key)
         self.index_uid = index_uid
         self.meilisearch_index = self.meilisearch_client.get_index(self.index_uid)
+        self.meilisearch_index.delete_all_documents()
+        time.sleep(1)
         # self.meilisearch_index.add_settings(settings)
 
     def add_records(self, records, url, from_sitemap):
@@ -35,7 +38,6 @@ class MeiliSearchHelper:
 
         for i in range(0, record_count, 50):
             cleaned_records = list(map(clean_dict, records[i:i + 50]))
-            print(cleaned_records)
             self.meilisearch_index.add_documents(cleaned_records)
             # self.meilisearch_index.add_documents(records[i:i + 50])
 
