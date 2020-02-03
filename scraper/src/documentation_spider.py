@@ -26,7 +26,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
     """
     http_user = os.environ.get('DOCSEARCH_BASICAUTH_USERNAME', None)
     http_pass = os.environ.get('DOCSEARCH_BASICAUTH_PASSWORD', None)
-    algolia_helper = None
+    meilisearch_helper = None
     strategy = None
     js_render = False
     js_wait = 0
@@ -62,7 +62,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
                 other_scheme_urls.append(scheme + url_with_no_scheme)
         return other_scheme_urls
 
-    def __init__(self, config, algolia_helper, strategy, *args, **kwargs):
+    def __init__(self, config, meilisearch_helper, strategy, *args, **kwargs):
         # Scrapy config
         self.name = config.index_name
         self.allowed_domains = config.allowed_domains
@@ -71,7 +71,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # We need to ensure that the stop urls are scheme agnostic too if it represents URL
         self.stop_urls = [DocumentationSpider.to_any_scheme(stop_url) for
                           stop_url in config.stop_urls]
-        self.algolia_helper = algolia_helper
+        self.meilisearch_helper = meilisearch_helper
         self.strategy = strategy
         self.js_render = config.js_render
         self.js_wait = config.js_wait
@@ -146,7 +146,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
     def add_records(self, response, from_sitemap):
         records = self.strategy.get_records_from_response(response)
-        self.algolia_helper.add_records(records, response.url, from_sitemap)
+        self.meilisearch_helper.add_records(records, response.url, from_sitemap)
 
         DocumentationSpider.NB_INDEXED += len(records)
 

@@ -8,7 +8,7 @@ from requests_iap import IAPAuth
 
 from scrapy.crawler import CrawlerProcess
 
-from .algolia_helper import AlgoliaHelper
+from .meilisearch_helper import MeiliSearchHelper
 from .config.config_loader import ConfigLoader
 from .documentation_spider import DocumentationSpider
 from .strategies.default_strategy import DefaultStrategy
@@ -37,11 +37,10 @@ def run_config(config):
 
     strategy = DefaultStrategy(config)
 
-    algolia_helper = AlgoliaHelper(
+    meilisearch_helper = MeiliSearchHelper(
         config.app_id,
         config.api_key,
         config.index_name,
-        config.index_name_tmp,
         AlgoliaSettings.get(config, strategy.levels),
         config.query_rules
     )
@@ -90,7 +89,7 @@ def run_config(config):
     process.crawl(
         DocumentationSpider,
         config=config,
-        algolia_helper=algolia_helper,
+        meilisearch_helper=meilisearch_helper,
         strategy=strategy
     )
 
@@ -101,17 +100,17 @@ def run_config(config):
     BrowserHandler.destroy(config.driver)
 
     if len(config.extra_records) > 0:
-        algolia_helper.add_records(config.extra_records, "Extra records", False)
+        meilisearch_helper.add_records(config.extra_records, "Extra records", False)
 
     print("")
 
     if DocumentationSpider.NB_INDEXED > 0:
-        algolia_helper.commit_tmp_index()
+        # meilisearch_helper.commit_tmp_index()
         print('Nb hits: {}'.format(DocumentationSpider.NB_INDEXED))
         config.update_nb_hits_value(DocumentationSpider.NB_INDEXED)
     else:
         print('Crawling issue: nbHits 0 for ' + config.index_name)
-        algolia_helper.report_crawling_issue()
+        # meilisearch_helper.report_crawling_issue()
         exit(EXIT_CODE_NO_RECORD)
     print("")
 

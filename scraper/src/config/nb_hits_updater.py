@@ -21,12 +21,13 @@ class NbHitsUpdater:
         if self._update_needed():
             print('previous nb_hits: {}\n'.format(self.previous_nb_hits))
             if perform_update is None:
-                if sys.stdout.isatty():
-                    perform_update = confirm(
-                        'Do you want to update the nb_hits in {} ?'.format(
-                            self.config_file))
-                else:
-                    perform_update = True
+                # if sys.stdout.isatty():
+                #     perform_update = confirm(
+                #         'Do you want to update the nb_hits in {} ?'.format(
+                #             self.config_file))
+                # else:
+                #     perform_update = True
+                perform_update = True
 
             if perform_update:
                 try:
