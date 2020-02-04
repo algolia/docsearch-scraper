@@ -15,7 +15,7 @@ from .strategies.default_strategy import DefaultStrategy
 from .custom_downloader_middleware import CustomDownloaderMiddleware
 from .custom_dupefilter import CustomDupeFilter
 from .config.browser_handler import BrowserHandler
-from .strategies.algolia_settings import AlgoliaSettings
+# from .strategies.algolia_settings import AlgoliaSettings
 from .scrapy_patch import CustomContextFactory
 
 try:
@@ -41,8 +41,8 @@ def run_config(config):
         config.app_id,
         config.api_key,
         config.index_name,
-        AlgoliaSettings.get(config, strategy.levels),
-        config.query_rules
+        # AlgoliaSettings.get(config, strategy.levels),
+        # config.query_rules
     )
 
     root_module = 'src.' if __name__ == '__main__' else 'scraper.src.'
