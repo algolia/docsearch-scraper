@@ -19,5 +19,3 @@ geckodriver.log
 
 configs/public
 configs/private
-
-config.json
