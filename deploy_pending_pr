@@ -2,7 +2,7 @@
 set -u
 set -e
 # Any subsequent(*) commands which fail will cause the shell script to exit immediately
-pr_pattern="ropensci"
+pr_pattern="create"
 echo "Deploying every pending request matching the pattern=$pr_pattern"
 cd configs/public/configs
 git pull
@@ -25,8 +25,12 @@ do
     echo "Will run a crawl for $path_config_to_deploy"
     APPLICATION_ID=$APPLICATION_ID_PROD API_KEY=$API_KEY_PROD ./docsearch run configs/public/$path_config_to_deploy
     cd configs/public/
-    git add $path_config_to_deploy --ignore-errors
-    git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
-    git push
-    cd configs
+    git rm --cached "$path_config_to_deploy"
+    git commit -m "temporal untrack to deploy config $path_config_to_deploy"
+    cd ../../../
+    index="$(echo $path_config_to_deploy | sed -En 's/^configs\/([A-Za-z0-9\-\_]+)\.json$/\1/p')"
+    ./docsearch deploy "$index"
+    # git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
+    # git push
+    # cd configs
 done
