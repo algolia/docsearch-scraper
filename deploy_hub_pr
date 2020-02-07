@@ -1,0 +1,37 @@
+#!/bin/sh
+set -u
+set -e
+# Any subsequent(*) commands which fail will cause the shell script to exit immediately
+pr_pattern="create c"
+echo "Deploying every pending request matching the pattern=$pr_pattern"
+cd configs/public/configs
+git pull
+
+SAVEIFS=$IFS
+IFS=$'\n'
+pr_to_merge=($(hub pr list --format="%U;%t;%i%n" | grep "$pr_pattern"))
+IFS=$SAVEIFS
+
+
+for pr_details in "${pr_to_merge[@]}"
+do
+    url="$(cut -d';' -f1 <<< "$pr_details")"
+    pr_number_has="$(cut -d';' -f3 <<<"$pr_details")"
+    echo $url
+    hub merge "$url"
+    echo "path_config_to_deploy"
+    path_config_to_deploy=$(git diff --name-only HEAD HEAD~)
+    git push
+    cd ../../../
+    echo "Will run a crawl for $path_config_to_deploy"
+    APPLICATION_ID=$APPLICATION_ID_PROD API_KEY=$API_KEY_PROD ./docsearch run configs/public/$path_config_to_deploy
+    cd configs/public/
+    git rm --cached "$path_config_to_deploy"
+    git commit -m "temporal untrack to deploy config $path_config_to_deploy, deploying $pr_number_has" --no-verify
+    cd ../../
+    index="$(echo $path_config_to_deploy | sed -En 's/^configs\/([A-Za-z0-9\_\-]+)\.json$/\1/p')"
+    APPLICATION_ID=$APPLICATION_ID_PROD API_KEY=$API_KEY_PROD ./docsearch deploy "$index"
+    # git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
+    # git push
+    # cd configs
+done
