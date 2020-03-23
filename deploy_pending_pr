@@ -27,7 +27,7 @@ do
     cd configs/public/
     git rm --cached "$path_config_to_deploy"
     git commit -m "temporal untrack to deploy config $path_config_to_deploy"
-    cd ../../../
+    cd ../../
     index="$(echo $path_config_to_deploy | sed -En 's/^configs\/([A-Za-z0-9\-\_]+)\.json$/\1/p')"
     ./docsearch deploy "$index"
     # git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
