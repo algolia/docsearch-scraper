@@ -30,7 +30,7 @@ do
     cd ../../
     index="$(echo $path_config_to_deploy | sed -En 's/^configs\/([A-Za-z0-9\-\_]+)\.json$/\1/p')"
     ./docsearch deploy "$index"
-    # git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
-    # git push
-    # cd configs
+    git diff-index --quiet HEAD || git commit -m "deploying $pr_number_has" --no-verify
+    git push
+    cd configs
 done
