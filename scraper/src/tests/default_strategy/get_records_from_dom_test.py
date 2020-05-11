@@ -512,7 +512,7 @@ class TestGetRecordsFromDom:
                 <h1>Title</h1>
                 <h2>Chapter</h2>
                 <h3></h3>
-                <p>>Bim</p>
+                <p>Bim</p>
             </body></html>
             """
 
