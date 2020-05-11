@@ -492,3 +492,34 @@ class TestGetRecordsFromDom:
         assert actual[2]['objectID'] is not None
         assert actual[2][
                    'objectID'] == '71980d31d18995da99751933a79075e35b1a68bc'
+
+    def test_current_level(self):
+            # Given
+            strategy = get_strategy({
+                'selectors': {
+                    "lvl0": "h1",
+                    "lvl1": "h2",
+                    "lvl2": "h3",
+                    "content": "p"
+                },
+                'start_urls': [
+                    'http://test.com/docs/guides'
+                ]
+            })
+
+            html = """
+            <html><body>
+                <h1>Title</h1>
+                <h2>Chapter</h2>
+                <h3></h3>
+                <p>>Bim</p>
+            </body></html>
+            """
+
+            response = TextResponse('http://test.com/docs/guides', body=html,
+                                    encoding='utf-8')
+            # When
+            actual = strategy.get_records_from_response(response)
+
+            # Then
+            assert len(actual) == 3
