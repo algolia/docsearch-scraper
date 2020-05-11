@@ -121,6 +121,10 @@ class DefaultStrategy(AbstractStrategy):
                     content is None or content == "") and current_level == 'content':
                 continue
 
+            # We do not want to keept level without current_level. Example h1 is an empty element.
+            if ("lvl" in current_level and (hierarchy[current_level] == "" or hierarchy[current_level] is None)):
+                continue
+
             hierarchy, content = self._handle_default_values(hierarchy,
                                                              content,
                                                              selectors,
