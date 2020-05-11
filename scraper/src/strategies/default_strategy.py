@@ -121,7 +121,7 @@ class DefaultStrategy(AbstractStrategy):
                     content is None or content == "") and current_level == 'content':
                 continue
 
-            # We do not want to keept level without current_level. Example h1 is an empty element.
+            # We do not want to keep levels without current_level because they don't provide semantic value. For example, a h1 that only contains a SVG and doesn't have any text content should be skipped.
             if ("lvl" in current_level and (hierarchy[current_level] == "" or hierarchy[current_level] is None)):
                 continue
 
