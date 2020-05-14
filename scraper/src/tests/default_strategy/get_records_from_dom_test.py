@@ -483,31 +483,31 @@ class TestGetRecordsFromDom:
         # Then
         assert actual[0]['objectID'] is not None
         assert actual[0][
-                   'objectID'] == '9d2d056ef5f45585b2ed5121e6487c8e04c63da4'
+            'objectID'] == '9d2d056ef5f45585b2ed5121e6487c8e04c63da4'
 
         assert actual[1]['objectID'] is not None
         assert actual[1][
-                   'objectID'] == '5f6c974da7435f903a7f3e8d441b42107c5ddb23'
+            'objectID'] == '5f6c974da7435f903a7f3e8d441b42107c5ddb23'
 
         assert actual[2]['objectID'] is not None
         assert actual[2][
-                   'objectID'] == '71980d31d18995da99751933a79075e35b1a68bc'
+            'objectID'] == '71980d31d18995da99751933a79075e35b1a68bc'
 
     def test_current_level(self):
-            # Given
-            strategy = get_strategy({
-                'selectors': {
-                    "lvl0": "h1",
-                    "lvl1": "h2",
-                    "lvl2": "h3",
-                    "content": "p"
-                },
-                'start_urls': [
-                    'http://test.com/docs/guides'
-                ]
-            })
+        # Given
+        strategy = get_strategy({
+            'selectors': {
+                "lvl0": "h1",
+                "lvl1": "h2",
+                "lvl2": "h3",
+                "content": "p"
+            },
+            'start_urls': [
+                'http://test.com/docs/guides'
+            ]
+        })
 
-            html = """
+        html = """
             <html><body>
                 <h1>Title</h1>
                 <h2>Chapter</h2>
@@ -516,10 +516,10 @@ class TestGetRecordsFromDom:
             </body></html>
             """
 
-            response = TextResponse('http://test.com/docs/guides', body=html,
-                                    encoding='utf-8')
-            # When
-            actual = strategy.get_records_from_response(response)
+        response = TextResponse('http://test.com/docs/guides', body=html,
+                                encoding='utf-8')
+        # When
+        actual = strategy.get_records_from_response(response)
 
-            # Then
-            assert len(actual) == 3
+        # Then
+        assert len(actual) == 3
