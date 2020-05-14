@@ -19,14 +19,15 @@ class Anchor:
 
         # Check the name or id on the element
         anchor = Anchor._get_anchor_string_from_element(element)
-
-        if anchor is not None and anchor != '':
+        if anchor is not None and not anchor.startswith('_') and anchor != '':
             return anchor
 
         # Check on child
         children = element.cssselect('[name],[id]')
         if len(children) > 0:
-            return Anchor._get_anchor_string_from_element(children[-1])
+            anchor = Anchor._get_anchor_string_from_element(children[-1])
+            if anchor is not None and not anchor.startswith('_'):
+                return anchor
 
         el = element
 
@@ -38,14 +39,14 @@ class Anchor:
                 if el is not None:
                     anchor = Anchor._get_anchor_string_from_element(el)
 
-                    if anchor is not None:
+                    if anchor is not None and not anchor.startswith('_'):
                         return anchor
 
             # check last previous
             if el is not None:
                 anchor = Anchor._get_anchor_string_from_element(el)
 
-                if anchor is not None:
+                if anchor is not None and not anchor.startswith('_'):
                     return anchor
 
             # go up
@@ -55,7 +56,7 @@ class Anchor:
                 anchor = Anchor._get_anchor_string_from_element(el)
 
                 # check parent
-                if anchor is not None:
+                if anchor is not None and not anchor.startswith('_'):
                     return anchor
 
         # No more parent, we have no anchor
