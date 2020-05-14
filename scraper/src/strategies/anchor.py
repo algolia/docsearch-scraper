@@ -9,6 +9,10 @@ class Anchor:
         return element.get('name', element.get('id'))
 
     @staticmethod
+    def _is_valid_anchor(anchor):
+        return anchor is not None and not anchor.startswith('_') and anchor != ''
+
+    @staticmethod
     def get_anchor(element):
         """
         Return a possible anchor for that element.
@@ -19,14 +23,14 @@ class Anchor:
 
         # Check the name or id on the element
         anchor = Anchor._get_anchor_string_from_element(element)
-        if anchor is not None and not anchor.startswith('_') and anchor != '':
+        if Anchor._is_valid_anchor(anchor):
             return anchor
 
         # Check on child
         children = element.cssselect('[name],[id]')
         if len(children) > 0:
             anchor = Anchor._get_anchor_string_from_element(children[-1])
-            if anchor is not None and not anchor.startswith('_'):
+            if Anchor._is_valid_anchor(anchor):
                 return anchor
 
         el = element
@@ -39,14 +43,14 @@ class Anchor:
                 if el is not None:
                     anchor = Anchor._get_anchor_string_from_element(el)
 
-                    if anchor is not None and not anchor.startswith('_'):
+                    if Anchor._is_valid_anchor(anchor):
                         return anchor
 
             # check last previous
             if el is not None:
                 anchor = Anchor._get_anchor_string_from_element(el)
 
-                if anchor is not None and not anchor.startswith('_'):
+                if Anchor._is_valid_anchor(anchor):
                     return anchor
 
             # go up
@@ -56,7 +60,7 @@ class Anchor:
                 anchor = Anchor._get_anchor_string_from_element(el)
 
                 # check parent
-                if anchor is not None and not anchor.startswith('_'):
+                if Anchor._is_valid_anchor(anchor):
                     return anchor
 
         # No more parent, we have no anchor
