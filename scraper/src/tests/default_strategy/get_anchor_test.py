@@ -107,3 +107,23 @@ class TestGetAnchor:
 
         # Then
         assert actual is None
+
+    def test_linking_anchor(self):
+        # Given
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
+        <html><body>
+            <h1>Foo</h1>
+            <h2 id='_docusaurus'>Bar</h2>
+            <h3>Baz</h3>
+        </body></html>
+        """)
+        level = 'lvl1'
+        element = strategy.select(
+            strategy.config.selectors['default'][level]['selector'])[0]
+
+        # When
+        actual = Anchor.get_anchor(element)
+
+        # Then
+        assert actual is None
