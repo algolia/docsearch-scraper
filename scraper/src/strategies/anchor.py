@@ -10,7 +10,7 @@ class Anchor:
 
     @staticmethod
     def _is_valid_anchor(anchor):
-        return anchor is not None and not anchor.startswith('_') and anchor != ''
+        return anchor is not None and not anchor.startswith('__') and anchor != ''
 
     @staticmethod
     def get_anchor(element):
