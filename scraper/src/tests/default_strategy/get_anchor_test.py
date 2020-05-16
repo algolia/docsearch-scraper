@@ -133,7 +133,7 @@ class TestGetAnchor:
         strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
         <html><body>
-            <article id='_docusaurus'>
+            <article id='__docusaurus'>
                 <h1>Foo</h1>
                 <h2>Bar</h2>
                 <h3>Baz</h3>
