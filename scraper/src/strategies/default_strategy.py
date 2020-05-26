@@ -177,7 +177,7 @@ class DefaultStrategy(AbstractStrategy):
                         record[name] = content
 
                     if name == "version":
-                        record[name] = str(record[name])
+                        record[name] = str(content)
 
             if current_page_url is not None:
                 # Add variables to the record
