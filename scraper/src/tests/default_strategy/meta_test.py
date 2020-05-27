@@ -216,6 +216,7 @@ class TestMeta:
 
         assert len(actual) == 2
         assert actual[0]['version'] == "5.20"
+        assert actual[0]['version'] != "5.2"
         assert actual[1]['version'] != 5.2
 
     def test_meta_escaped_string(self):
