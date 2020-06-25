@@ -25,7 +25,7 @@
     "lvl3": "main article h4",
     "lvl4": "main article h5",
     "lvl5": "main article h6",
-    "text": "main article p, main article li, #content section p, #content li, #content section ol, #content code"
+    "text": ".article p, .article li, .article ol"
   },
     "custom_settings": {
       "advancedSyntax": true,
