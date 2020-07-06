@@ -21,23 +21,11 @@ I've successfully configured the underlying crawler and it will now run every 24
 
 You're now a few steps away from having it working on your website:
 
-- Copy the following CSS/JS snippets and add them to your page
+- Use these credentials from your website configuration:
 
-<!-- at the end of the HEAD -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
-
-<!-- at the end of the BODY -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
-<script type="text/javascript"> docsearch({
   apiKey: '{{API_KEY}}',
   indexName: '{{INDEX_NAME}}',
-  inputSelector: '### REPLACE ME ####'{{ALGOLIA_OPTIONS}},
-  debug: false // Set debug to true if you want to inspect the dropdown
-});
-</script>
 
-- Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet
-  to a CSS selector that targets your search input field.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation
   (See https://docsearch.algolia.com/docs/styling/)
 - You can also check your configuration in our GitHub repository
