@@ -6,13 +6,13 @@ set -e
 cd configs/public/configs
 git pull
 path_config_to_deploy=$(git diff --name-only HEAD HEAD^)
+last_message_commit=$(git show -s --format=%s)
 cd ../../../
 echo "echo $path_config_to_deploy"
 echo configs/public/$path_config_to_deploy
 APPLICATION_ID=$APPLICATION_ID_PROD API_KEY=$API_KEY_PROD ./docsearch run configs/public/$path_config_to_deploy
 cd configs/public/
 git add "$path_config_to_deploy"
-last_message_commit=$(git show -s --format=%s)
 ref_PR_to_deploy=$(echo $last_message_commit | grep -o "#\d*")
 git commit -m "deploying $ref_PR_to_deploy"
 git push
