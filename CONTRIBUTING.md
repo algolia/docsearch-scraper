@@ -45,7 +45,7 @@ You should be ready to go.
 
 ### Running
 
-See the dedicated page on [Algolia's documentation web site](https://community.algolia.com/docsearch/run-your-own.html).
+See the dedicated page on [Algolia's documentation web site][5].
 
 ## Lint code
 
@@ -98,3 +98,4 @@ exit status:
 [2]: https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv
 [3]: ./.env.example
 [4]: http://chromedriver.chromium.org/downloads
+[5]: https://docsearch.algolia.com/docs/run-your-own/
