@@ -16,7 +16,6 @@ from .custom_downloader_middleware import CustomDownloaderMiddleware
 from .custom_dupefilter import CustomDupeFilter
 from .config.browser_handler import BrowserHandler
 from .strategies.algolia_settings import AlgoliaSettings
-from .scrapy_patch import CustomContextFactory
 
 try:
     # disable boto (S3 download)
@@ -48,7 +47,6 @@ def run_config(config):
 
     root_module = 'src.' if __name__ == '__main__' else 'scraper.src.'
     DOWNLOADER_MIDDLEWARES_PATH = root_module + 'custom_downloader_middleware.' + CustomDownloaderMiddleware.__name__
-    DOWNLOADER_CLIENTCONTEXTFACTORY = root_module + 'scrapy_patch.' + CustomContextFactory.__name__
     DUPEFILTER_CLASS_PATH = root_module + 'custom_dupefilter.' + CustomDupeFilter.__name__
 
     headers = {
@@ -80,7 +78,6 @@ def run_config(config):
         'USER_AGENT': config.user_agent,
         'DOWNLOADER_MIDDLEWARES': {DOWNLOADER_MIDDLEWARES_PATH: 900},
         # Need to be > 600 to be after the redirectMiddleware
-        'DOWNLOADER_CLIENTCONTEXTFACTORY': DOWNLOADER_CLIENTCONTEXTFACTORY,
         'DUPEFILTER_USE_ANCHORS': config.use_anchors,
         # Use our custom dupefilter in order to be scheme agnostic regarding link provided
         'DUPEFILTER_CLASS': DUPEFILTER_CLASS_PATH,
