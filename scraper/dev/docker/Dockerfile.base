@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-MAINTAINER Algolia <documentationsearch@algolia.com>
+LABEL maintainer="docsearch@algolia.com"
 
 WORKDIR /root
 
