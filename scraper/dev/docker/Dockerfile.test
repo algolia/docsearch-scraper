@@ -1,5 +1,5 @@
 FROM algolia/docsearch-scraper-base
-MAINTAINER Algolia <documentationsearch@algolia.com>
+LABEL maintainer="docsearch@algolia.com"
 
 WORKDIR /root
 
