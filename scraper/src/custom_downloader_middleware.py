@@ -12,7 +12,6 @@ class CustomDownloaderMiddleware:
     driver = None
 
     def __init__(self):
-        self.seen = {}  # TODO could be removed
         self.driver = CustomDownloaderMiddleware.driver
 
     def process_request(self, request, spider):
@@ -23,11 +22,6 @@ class CustomDownloaderMiddleware:
             o = urlparse(request.url)
             url_without_params = o.scheme + "://" + o.netloc + o.path
             request = request.replace(url=url_without_params)
-
-        if request.url in self.seen:
-            return None
-
-        self.seen[request.url] = True
 
         print("Getting " + request.url + " from selenium")
 
