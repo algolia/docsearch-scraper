@@ -85,6 +85,7 @@ def run_config(config):
         # Use our custom dupefilter in order to be scheme agnostic regarding link provided
         'DUPEFILTER_CLASS': DUPEFILTER_CLASS_PATH,
         'DEFAULT_REQUEST_HEADERS': DEFAULT_REQUEST_HEADERS,
+        'TELNETCONSOLE_ENABLED': False
     })
 
     process.crawl(
