@@ -223,7 +223,7 @@ def to_vuepress_config(config):
     ))
     config["selectors_exclude"] = [".table-of-contents"]
 
-    config["scrap_start_urls"] = False
+    config["scrape_start_urls"] = False
     config["strip_chars"] = " .,;:#"
 
     return config
