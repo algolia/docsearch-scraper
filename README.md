@@ -16,18 +16,19 @@ This project supports Python 3.6+
 
 ## Related projects
 
-DocSearch is made of 3 repositories:
+DocSearch is made of 4 repositories:
 
-- [algolia/DocSearch][3] contains the `docsearch.js` code source and the
-  documentation website.
+- [algolia/DocSearch][3] contains the `docsearch.js` code source.
 - [algolia/docsearch-configs][4] contains the JSON files representing all the
-  configs for all the documentations DocSearch is powering
+  configurations for all the documentations DocSearch is powering.
 - [algolia/docsearch-scraper][5] contains the scraper we use to extract data
   from your documentation. The code is open source and you can run it from a
-  Docker image
+  Docker image.
+- [algolia/docsearch-website][6] contains the documentation website.
 
 [1]: https://docsearch.algolia.com/
 [2]: https://docsearch.algolia.com/docs/run-your-own
 [3]: https://github.com/algolia/docsearch
 [4]: https://github.com/algolia/docsearch-configs
 [5]: https://github.com/algolia/docsearch-scraper
+[6]: https://github.com/algolia/docsearch-website
