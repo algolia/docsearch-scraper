@@ -523,3 +523,22 @@ class TestGetRecordsFromDom:
 
         # Then
         assert len(actual) == 3
+
+    def test_text_with_empty_content(self):
+        # Given
+        strategy = get_strategy()
+
+        strategy.dom = lxml.html.fromstring("""
+            <html><body>
+                <h1>Foo</h1>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+                <p></p>
+            </body></html>
+            """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 3
