@@ -89,13 +89,26 @@ def to_docusaurus_v2_config(config, urls):
         ("global", True),
         ("default_value", "Documentation")
     ))
-    config["selectors"]["lvl1"] = "[class^='docItemContainer_'] h1"
-    config["selectors"]["lvl2"] = "[class^='docItemContainer_'] h2"
-    config["selectors"]["lvl3"] = "[class^='docItemContainer_'] h3"
-    config["selectors"]["lvl4"] = "[class^='docItemContainer_'] h4"
-    config["selectors"]["lvl5"] = "[class^='docItemContainer_'] h5"
-    config["selectors"]["text"] = "[class^='docItemContainer_'] p, [class^='docItemContainer_'] li"
-    config["selectors_exclude"] = [".hash-link"]
+    config["selectors"]["lvl1"] = "header h1"
+    config["selectors"]["lvl2"] = "article h2"
+    config["selectors"]["lvl3"] = "article h3"
+    config["selectors"]["lvl4"] = "article h4"
+    config["selectors"]["lvl5"] = "article h5, article td:first-child"
+    config["selectors"]["text"] = "article p, article li, article td:last-child"
+    config["strip_chars"] = " .,;:#"
+    config["custom_settings"] = {
+        "separatorsToIndex": "_",
+        "attributesForFaceting": ["language",
+                                  "version", "type"],
+        "attributesToRetrieve": [
+            "hierarchy",
+            "content",
+            "anchor",
+            "url",
+            "url_without_anchor",
+            "type"
+        ]
+    }
 
     return config
 
