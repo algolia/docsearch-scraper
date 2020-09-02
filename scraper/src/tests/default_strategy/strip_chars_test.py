@@ -7,12 +7,6 @@ class TestGetRecordsFromDomWithStripChars:
     def test_strip_chars(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            },
             'strip_chars': ',.'
         })
         strategy.dom = lxml.html.fromstring("""

@@ -10,13 +10,7 @@ class TestTags:
             'start_urls': [{
                 'url': 'http://foo.bar/api',
                 'tags': ["test"]
-            }],
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            }
+            }]
         })
 
         strategy.dom = lxml.html.fromstring("""
@@ -34,12 +28,6 @@ class TestTags:
     def test_adding_tags_for_subpage(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            },
             'start_urls': [{
                 'url': 'http://foo.bar/api',
                 'tags': ["test"]
@@ -67,13 +55,7 @@ class TestTags:
                     'url': 'http://foo.bar/.*',
                     'tags': ["test"]
                 }
-            ],
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            }
+            ]
         })
 
         strategy.dom = lxml.html.fromstring("""
