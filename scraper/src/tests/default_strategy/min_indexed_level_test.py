@@ -8,12 +8,6 @@ class TestGetRecordsFromDomWithMinIndexedLevel:
         """ Should be able to not index the n first levels """
         # Given
         strategy = get_strategy({
-            'selectors': {
-                'lvl0': 'h1',
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p',
-            },
             'min_indexed_level': 2
         })
 

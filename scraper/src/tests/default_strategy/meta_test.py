@@ -6,14 +6,7 @@ from .abstract import get_strategy
 class TestMeta:
     def test_meta_number(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p'
-            }
-        })
+        strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
@@ -41,14 +34,7 @@ class TestMeta:
 
     def test_meta_json_without_content(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p'
-            }
-        })
+        strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
            <html>
                <header>
@@ -76,14 +62,7 @@ class TestMeta:
 
     def test_meta_json(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p'
-            }
-        })
+        strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
            <html>
                <header>
@@ -123,14 +102,7 @@ class TestMeta:
 
     def test_meta_version(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p'
-            }
-        })
+        strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
@@ -221,14 +193,7 @@ class TestMeta:
 
     def test_meta_escaped_string(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': "h1",
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'content': 'p'
-            }
-        })
+        strategy = get_strategy()
         strategy.dom = lxml.html.fromstring("""
         <html>
             <header>
