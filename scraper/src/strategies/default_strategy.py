@@ -178,11 +178,8 @@ class DefaultStrategy(AbstractStrategy):
 
                     if name == "version":
                         version = str(content)
-                        # When version is a comma-separated tokens
-                        if ',' in version:
-                            record[name] = [token.strip() for token in version.split(",")]
-                        else:
-                            record[name] = version
+                        # Handle version as comma-separated tokens
+                        record[name] = [token.strip() for token in version.split(",")]
 
             if current_page_url is not None:
                 # Add variables to the record
