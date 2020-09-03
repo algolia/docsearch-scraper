@@ -133,14 +133,7 @@ class TestGetRecordsFromDom:
 
     def test_text_with_only_three_levels(self):
         # Given
-        strategy = get_strategy({
-            'selectors': {
-                'lvl0': 'h1',
-                'lvl1': 'h2',
-                'lvl2': 'h3',
-                'text': 'p'
-            }
-        })
+        strategy = get_strategy()
 
         strategy.dom = lxml.html.fromstring("""
         <html><body>
@@ -164,12 +157,6 @@ class TestGetRecordsFromDom:
     def test_backward_compatibility_selectors(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "text": "p"
-            },
             'strip_chars': ',.'
         })
 
@@ -371,12 +358,6 @@ class TestGetRecordsFromDom:
     def test_stop_content(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            },
             'start_urls': [
                 'http://test.com/docs/guides'
             ],
@@ -403,12 +384,6 @@ class TestGetRecordsFromDom:
     def test_selectors_exclude_tail(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "text": "p"
-            },
             'selectors_exclude': ['.test'],
             'start_urls': [
                 'http://test.com/docs/guides'
@@ -436,12 +411,6 @@ class TestGetRecordsFromDom:
     def test_selectors_exclude_tail2(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "text": "p"
-            },
             'selectors_exclude': ['.test'],
             'start_urls': [
                 'http://test.com/docs/guides'
@@ -496,12 +465,6 @@ class TestGetRecordsFromDom:
     def test_current_level(self):
         # Given
         strategy = get_strategy({
-            'selectors': {
-                "lvl0": "h1",
-                "lvl1": "h2",
-                "lvl2": "h3",
-                "content": "p"
-            },
             'start_urls': [
                 'http://test.com/docs/guides'
             ]
