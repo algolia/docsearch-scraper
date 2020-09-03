@@ -218,3 +218,57 @@ class TestMeta:
         assert actual[1]['string'] == "ok"
         assert actual[2]['string'] == "ok"
         assert actual[3]['string'] == "ok"
+
+    def test_meta_coma_separated_version(self):
+        # Given
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:version" content="1.2.0,latest">
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 4
+        assert actual[0]['version'] == ["1.2.0", "latest"]
+        assert actual[1]['version'] == ["1.2.0", "latest"]
+        assert actual[2]['version'] == ["1.2.0", "latest"]
+        assert actual[3]['version'] == ["1.2.0", "latest"]
+
+    def test_meta_coma_separated_whitespace_version(self):
+        # Given
+        strategy = get_strategy()
+        strategy.dom = lxml.html.fromstring("""
+        <html>
+            <header>
+                <meta name="docsearch:version" content=" 1.2.0, latest ">
+            </header>
+            <body>
+                <h1>Foo</h1>
+                <p>text</p>
+                <h2>Bar</h2>
+                <h3>Baz</h3>
+            </body>
+        </html>
+        """)
+
+        # When
+        actual = strategy.get_records_from_dom()
+
+        # Then
+        assert len(actual) == 4
+        assert actual[0]['version'] == ["1.2.0", "latest"]
+        assert actual[1]['version'] == ["1.2.0", "latest"]
+        assert actual[2]['version'] == ["1.2.0", "latest"]
+        assert actual[3]['version'] == ["1.2.0", "latest"]
