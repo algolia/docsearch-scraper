@@ -123,10 +123,10 @@ class TestMeta:
         # Then
 
         assert len(actual) == 4
-        assert actual[0]['version'] == "1.2.3"
-        assert actual[1]['version'] == "1.2.3"
-        assert actual[2]['version'] == "1.2.3"
-        assert actual[3]['version'] == "1.2.3"
+        assert actual[0]['version'] == ["1.2.3"]
+        assert actual[1]['version'] == ["1.2.3"]
+        assert actual[2]['version'] == ["1.2.3"]
+        assert actual[3]['version'] == ["1.2.3"]
 
     def test_meta_numbered_version(self):
         # Given
@@ -156,8 +156,8 @@ class TestMeta:
         # Then
 
         assert len(actual) == 2
-        assert actual[0]['version'] == "1.0"
-        assert actual[1]['version'] != 1
+        assert actual[0]['version'] == ["1.0"]
+        assert actual[1]['version'] != [1]
 
     def test_meta_decimal_version(self):
         # Given
@@ -187,9 +187,9 @@ class TestMeta:
         # Then
 
         assert len(actual) == 2
-        assert actual[0]['version'] == "5.20"
-        assert actual[0]['version'] != "5.2"
-        assert actual[1]['version'] != 5.2
+        assert actual[0]['version'] == ["5.20"]
+        assert actual[0]['version'] != ["5.2"]
+        assert actual[1]['version'] != [5.2]
 
     def test_meta_escaped_string(self):
         # Given
