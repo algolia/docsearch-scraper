@@ -88,8 +88,7 @@ class AlgoliaSettings:
             'attributeCriteriaComputedByMinProximity': True,
             'removeWordsIfNoResults': 'allOptional',
             'userData': {
-                'crawling_issue': False,
-                'crawler_version': '13.0'
+                'crawling_issue': False
             }
         }
         # apply custom updates
