@@ -38,7 +38,7 @@ def deploy_config(config_name):
         print("Folder: " + config_folder + " does not exist")
         exit()
 
-    is_new_config = config_name in fetchers.get_configs_from_repos()
+    config_exists = config_name in fetchers.get_configs_from_repos()
 
     # Not using the config manager to avoid it stashing the config that we want to push
     helpers.check_output_decoded(['git', 'add', config_name + '.json'],
@@ -52,7 +52,7 @@ def deploy_config(config_name):
                                  cwd=config_folder)
 
     # Already live, we will only update the change
-    if is_new_config:
+    if config_exists:
         deploy_configs([], [config_name], [], force_deploy=True)
     # Didn't exist, we add it
     else:
