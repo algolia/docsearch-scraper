@@ -51,9 +51,9 @@ def deploy_config(config_name, config_exists, push_config=True):
                                     cwd=config_folder)
 
     config_manager = ConfigManager().instance
-
+    print(config_exists)
     # Already live, we will only update the change
-    if config_exists:
+    if config_exists is True:
         deploy_configs([], [config_name], [], force_deploy=True)
     # Didn't exist, we add it
     else:

@@ -15,11 +15,15 @@ algolia_client_prod = algoliasearch.Client(app_id_prod, api_key_prod)
 def get_facets(config):
     index = algolia_client.init_index(config)
 
-    res = index.search('', {
-        'facets': '*',
-        'maxValuesPerFacet': 1000,
-        'hitsPerPage': 0
-    })
+    try:
+        res = index.search('', {
+            'facets': '*',
+            'maxValuesPerFacet': 1000,
+            'hitsPerPage': 0
+        })
+    except Exception:
+        return None
+
 
     if 'facets' in res:
         return res['facets']
