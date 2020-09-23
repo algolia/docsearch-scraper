@@ -20,4 +20,4 @@ class DeployConfig(AbstractCommand):
             exit(1)
         else:
             from deployer.src.index import deploy_config
-            deploy_config(args[0], args[1])
+            deploy_config(args[0], args[1] if len(args) > 1 else True)
