@@ -11,7 +11,7 @@ class DeployConfig(AbstractCommand):
     def get_options(self):
         return [{"name": "index_name",
                  "description": "name of the config to deploy"},
-                 {"name": "push_config", "description": "push the config to master","optional": True }]
+                 {"name": "push_config", "description": "push the config to master", "optional": True}]
 
     def run(self, args):
         if len(args) <= 0:
