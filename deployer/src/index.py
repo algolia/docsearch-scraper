@@ -50,7 +50,7 @@ def deploy_config(config_name, push_config=True):
 
         helpers.check_output_decoded(['git', 'push', 'origin', 'master'],
                                     cwd=config_folder)
-        
+
     config_manager = ConfigManager().instance
 
     # Already live, we will only update the change
