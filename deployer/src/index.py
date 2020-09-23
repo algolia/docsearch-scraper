@@ -3,7 +3,6 @@ import os
 
 from . import helpers
 from .config_manager import ConfigManager
-from . import fetchers
 
 
 def print_init():
