@@ -21,7 +21,7 @@ def print_init():
     print("")
 
 
-def deploy_config(config_name, push_config = True):
+def deploy_config(config_name, push_config=True):
     from os import environ, path
 
     print_init()
