@@ -21,7 +21,7 @@ def print_init():
     print("")
 
 
-def deploy_config(config_name):
+def deploy_config(config_name, push_config = True):
     from os import environ, path
 
     print_init()
@@ -40,16 +40,18 @@ def deploy_config(config_name):
 
     config_exists = config_name in fetchers.get_configs_from_repos()
 
-    # Not using the config manager to avoid it stashing the config that we want to push
-    helpers.check_output_decoded(['git', 'add', config_name + '.json'],
-                                 cwd=config_folder)
-    helpers.check_output_decoded(
-        ['git', 'commit', '-m', 'update ' + config_name],
-        cwd=config_folder)
-    config_manager = ConfigManager().instance
+    if push_config == True:
+        # Not using the config manager to avoid it stashing the config that we want to push
+        helpers.check_output_decoded(['git', 'add', config_name + '.json'],
+                                    cwd=config_folder)
+        helpers.check_output_decoded(
+            ['git', 'commit', '-m', 'update ' + config_name],
+            cwd=config_folder)
 
-    helpers.check_output_decoded(['git', 'push', 'origin', 'master'],
-                                 cwd=config_folder)
+        helpers.check_output_decoded(['git', 'push', 'origin', 'master'],
+                                    cwd=config_folder)
+        
+    config_manager = ConfigManager().instance
 
     # Already live, we will only update the change
     if config_exists:
