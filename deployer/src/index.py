@@ -21,7 +21,7 @@ def print_init():
     print("")
 
 
-def deploy_config(config_name, push_config=True):
+def deploy_config(config_name, config_exists, push_config=True):
     from os import environ, path
 
     print_init()
@@ -38,7 +38,7 @@ def deploy_config(config_name, push_config=True):
         print("Folder: " + config_folder + " does not exist")
         exit()
 
-    config_exists = config_name in fetchers.get_configs_from_repos()
+    # config_exists = config_name in fetchers.get_configs_from_repos()
 
     if push_config == True:
         # Not using the config manager to avoid it stashing the config that we want to push
