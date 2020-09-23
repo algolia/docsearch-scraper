@@ -38,7 +38,7 @@ def deploy_config(config_name, push_config = True):
         print("Folder: " + config_folder + " does not exist")
         exit()
 
-    is_new_config = config_name in fetchers.get_configs_from_repos()
+    config_exists = config_name in fetchers.get_configs_from_repos()
 
     if push_config == True:
         # Not using the config manager to avoid it stashing the config that we want to push
@@ -54,7 +54,7 @@ def deploy_config(config_name, push_config = True):
     config_manager = ConfigManager().instance
 
     # Already live, we will only update the change
-    if is_new_config:
+    if config_exists:
         deploy_configs([], [config_name], [], force_deploy=True)
     # Didn't exist, we add it
     else:
