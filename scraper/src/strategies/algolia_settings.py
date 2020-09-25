@@ -1,3 +1,5 @@
+import datetime
+
 class AlgoliaSettings:
     def __init__(self):
         pass
@@ -88,7 +90,7 @@ class AlgoliaSettings:
             'attributeCriteriaComputedByMinProximity': True,
             'removeWordsIfNoResults': 'allOptional',
             'userData': {
-                'crawling_issue': False
+                'lastCrawl': str(datetime.datetime.now().isoformat())
             }
         }
         # apply custom updates

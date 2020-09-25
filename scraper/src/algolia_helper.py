@@ -47,10 +47,3 @@ class AlgoliaHelper:
         """Overwrite the real index with the temporary one"""
         # print("Update settings")
         self.algolia_client.move_index(self.index_name_tmp, self.index_name)
-
-    def report_crawling_issue(self):
-        self.algolia_index.set_settings({
-            'userData': {
-                'crawling_issue': True
-            }
-        })

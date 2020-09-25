@@ -109,7 +109,6 @@ def run_config(config):
         config.update_nb_hits_value(DocumentationSpider.NB_INDEXED)
     else:
         print('Crawling issue: nbHits 0 for ' + config.index_name)
-        algolia_helper.report_crawling_issue()
         exit(EXIT_CODE_NO_RECORD)
     print("")
 
