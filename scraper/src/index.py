@@ -72,6 +72,13 @@ def run_config(config):
 
     DEFAULT_REQUEST_HEADERS = headers
 
+    if os.getenv('AUTH_COOKIE_NAME') and os.getenv('AUTH_COOKIE_VALUE'):
+        auth_cookie = {
+            'name': os.getenv('AUTH_COOKIE_NAME'),
+            'value': os.getenv('AUTH_COOKIE_VALUE'),
+        }
+        CustomDownloaderMiddleware.auth_cookie = auth_cookie
+
     process = CrawlerProcess({
         'LOG_ENABLED': '1',
         'LOG_LEVEL': 'ERROR',
