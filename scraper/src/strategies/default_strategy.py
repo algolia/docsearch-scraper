@@ -188,8 +188,8 @@ class DefaultStrategy(AbstractStrategy):
                     record['url_without_variables'] = url_without_variables
                     record[attr] = value
 
-                record['url_without_anchor'] = record['url']
-                record['url'] = self._get_url_with_anchor(record['url'],
+                record['url_without_anchor'] = record['url'].split('?id=')[0]
+                record['url'] = self._get_url_with_anchor(record['url_without_anchor'],
                                                           record['anchor'])
                 record['url_without_variables'] = self._get_url_with_anchor(
                     record['url_without_variables'], record['anchor'])
@@ -346,8 +346,7 @@ class DefaultStrategy(AbstractStrategy):
         return False
 
     def _get_url_with_anchor(self, current_page_url, anchor):
-        if (
-                not self.config.js_render or not self.config.use_anchors) and anchor is not None:
-            return current_page_url + '#' + anchor
+        if anchor is not None:
+            return current_page_url + '?id=' + anchor
 
         return current_page_url
