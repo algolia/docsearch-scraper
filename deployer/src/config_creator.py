@@ -44,9 +44,8 @@ def to_docusaurus_config(config, urls):
     config["sitemap_urls"] = [
         extract_root_from_input(urls[0]) + "sitemap.xml"]
     config["sitemap_alternate_links"] = True
-    config["custom_settings"] = {"attributesForFaceting": ["language",
-                                                           "version"]
-                                 }
+    config["custom_settings"] = {
+        "attributesForFaceting": ["language", "version"]}
     start_url = urls[0]
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
@@ -77,9 +76,8 @@ def to_docusaurus_v2_config(config, urls):
         extract_root_from_input(urls[0]) + "sitemap.xml"]
     config["sitemap_alternate_links"] = True
     start_url = urls[0]
-    if '/docs/' not in start_url:
-        if not start_url.endswith('/'):
-            start_url += '/'
+    if not start_url.endswith('/'):
+        start_url += '/'
     config["start_urls"] = [start_url]
 
     config["selectors"]["lvl0"] = OrderedDict((
