@@ -45,8 +45,8 @@ def to_docusaurus_config(config, urls):
         extract_root_from_input(urls[0]) + "sitemap.xml"]
     config["sitemap_alternate_links"] = True
     config["custom_settings"] = {"attributesForFaceting": ["language",
-                                                            "version"]
-                                     }
+                                                           "version"]
+                                 }
     start_url = urls[0]
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
@@ -80,12 +80,12 @@ def to_docusaurus_v2_config(config, urls):
     if '/docs/' not in start_url:
         if not start_url.endswith('/'):
             start_url += '/'
-        start_url += 'docs/'
     config["start_urls"] = [start_url]
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
-         ".menu__link--sublist.menu__link--active"),
+         "(//ul[contains(@class,'menu__list')]//a[contains(@class, 'menu__link menu__link--sublist menu__link--active')]/text() | //nav[contains(@class, 'navbar')]//a[contains(@class, 'navbar__link--active')]/text())[last()]"),
+        ("type", "xpath"),
         ("global", True),
         ("default_value", "Documentation")
     ))
@@ -99,7 +99,7 @@ def to_docusaurus_v2_config(config, urls):
     config["custom_settings"] = {
         "separatorsToIndex": "_",
         "attributesForFaceting": ["language",
-                                  "version", "type"],
+                                  "version", "type", "docusaurus_tag"],
         "attributesToRetrieve": [
             "hierarchy",
             "content",
@@ -141,14 +141,14 @@ def to_pkgdown_config(config, urls=None):
                 "tags": [
                     "reference"
                 ]
-            },
+        },
             {
                 "url": root + "articles",
                 "selectors_key": "articles",
                 "tags": [
                     "articles"
                 ]
-            }]
+        }]
 
         config["sitemap_urls"] = [
             root + "sitemap.xml"]
@@ -334,7 +334,8 @@ def create_config(u=None):
         cuid = helpdesk_helper.get_conversation_ID_from_url(u)
 
         conversation = helpdesk_helper.get_conversation(cuid)
-        conversation_with_threads = helpdesk_helper.get_conversation_with_threads(cuid)
+        conversation_with_threads = helpdesk_helper.get_conversation_with_threads(
+            cuid)
         url_from_conversation = helpdesk_helper.get_start_url_from_conversation(
             conversation_with_threads)
         urls = [url_from_conversation]
