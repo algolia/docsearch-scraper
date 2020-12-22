@@ -80,6 +80,7 @@ def to_docusaurus_v2_config(config, urls):
         start_url += '/'
     config["start_urls"] = [start_url]
 
+    # pylint: disable=line-too-long
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
          "(//ul[contains(@class,'menu__list')]//a[contains(@class, 'menu__link menu__link--sublist menu__link--active')]/text() | //nav[contains(@class, 'navbar')]//a[contains(@class, 'navbar__link--active')]/text())[last()]"),
