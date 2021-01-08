@@ -132,16 +132,34 @@ def get_emails_from_conversation(conversation_with_threads):
     return emails
 
 
-def add_note(cuid, body):
+def get_customer_id(cuid):
     app_id = get_helpscout_app_id()
     app_secret = get_helpscout_app_secret()
     hs = HelpScout(app_id, app_secret)
 
+    for conversation in hs.hit('conversations', 'get', resource_id=cuid):
+        customer_id = conversation["createdBy"]["id"]
+
+    return customer_id
+
+
+def add_draft(cuid, body):
+    app_id = get_helpscout_app_id()
+    app_secret = get_helpscout_app_secret()
+    hs = HelpScout(app_id, app_secret)
+
+    customer_id = get_customer_id(cuid)
+
+    if customer_id is None:
+        return False
+
     # Inserting HTML code into HTML mail, snippet need to be HTML escaped
     body = html.escape(body)
 
-    data = {"text": body}
-    hs.conversations[cuid].notes.post(data=data)
+    data = {"text": body, "draft": True, "customer": {
+        "id": customer_id
+    }, }
+    hs.conversations[cuid].reply.post(data=data)
 
     return True
 
