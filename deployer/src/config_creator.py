@@ -1,9 +1,19 @@
 from collections import OrderedDict
 import tldextract
 import re
+import requests
 from . import helpers
 from . import helpdesk_helper
 from urllib.parse import urlparse
+
+
+def get_sitemap_if_available(url):
+    if url.endswith('sitemap.xml'):
+        return url if (requests.head(url).status_code == 200) else [""]
+    if not url.endswith('/'):
+        url = re.match(".+?([^/]/(?!/))",
+                       url).group()
+    return url + "sitemap.xml" if (requests.head(url + "sitemap.xml").status_code == 200) else [""]
 
 
 def extract_root_from_input(input_string):
@@ -41,8 +51,8 @@ def assert_list_non_empty(list_to_check):
 
 def to_docusaurus_config(config, urls):
     assert_list_non_empty(urls)
-    config["sitemap_urls"] = [
-        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_urls"] = get_sitemap_if_available(
+        extract_root_from_input(urls[0]) + "sitemap.xml")
     config["sitemap_alternate_links"] = True
     config["custom_settings"] = {
         "attributesForFaceting": ["language", "version"]}
@@ -72,8 +82,8 @@ def to_docusaurus_config(config, urls):
 
 def to_docusaurus_v2_config(config, urls):
     assert_list_non_empty(urls)
-    config["sitemap_urls"] = [
-        extract_root_from_input(urls[0]) + "sitemap.xml"]
+    config["sitemap_urls"] = get_sitemap_if_available(
+        extract_root_from_input(urls[0]) + "sitemap.xml")
     config["sitemap_alternate_links"] = True
     start_url = urls[0]
     if not start_url.endswith('/'):
@@ -149,8 +159,8 @@ def to_pkgdown_config(config, urls=None):
                 ]
         }]
 
-        config["sitemap_urls"] = [
-            root + "sitemap.xml"]
+        config["sitemap_urls"] = get_sitemap_if_available(
+            root + "sitemap.xml")
 
     config["selectors"] = OrderedDict((
         ("homepage", OrderedDict((
@@ -243,8 +253,8 @@ def to_vuepress_config(config):
 
 def to_larecipe_config(config, urls=None):
     if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_urls"] = get_sitemap_if_available(
+            extract_root_from_input(urls[0]) + "sitemap.xml")
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector",
          "//div[contains(@class, 'sidebar')]//li/a[text()=//div[contains(@class, 'article')]//h1[1]/text()]"),
@@ -265,8 +275,8 @@ def to_larecipe_config(config, urls=None):
 
 def to_publii_config(config, urls=None):
     if urls:
-        config["sitemap_urls"] = [
-            extract_root_from_input(urls[0]) + "sitemap.xml"]
+        config["sitemap_urls"] = get_sitemap_if_available(
+            extract_root_from_input(urls[0]) + "sitemap.xml")
 
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector", ".active-parent > span"),
@@ -313,6 +323,7 @@ def create_config(u=None):
         ("index_name", ""),
         ("start_urls", []),
         ("stop_urls", []),
+        ("sitemap_urls", []),
         ("selectors", OrderedDict((
             ("lvl0", "FIXME h1"),
             ("lvl1", "FIXME h2"),
@@ -356,6 +367,8 @@ def create_config(u=None):
             config = to_publii_config(config, urls)
         elif helpdesk_helper.is_jsdoc_conversation(conversation):
             config = to_jsdoc_config(config)
+        else:
+            config['sitemap_urls'] = get_sitemap_if_available(urls[0])
 
         config["conversation_id"] = [cuid]
 
