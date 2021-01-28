@@ -9,11 +9,11 @@ from urllib.parse import urlparse
 
 def get_sitemap_if_available(url):
     if url.endswith('sitemap.xml'):
-        return url if (requests.head(url).status_code == 200) else [""]
+        return [url] if (requests.head(url).status_code == 200) else []
     if not url.endswith('/'):
         url = re.match(".+?([^/]/(?!/))",
                        url).group()
-    return url + "sitemap.xml" if (requests.head(url + "sitemap.xml").status_code == 200) else [""]
+    return [url + "sitemap.xml"] if (requests.head(url + "sitemap.xml").status_code == 200) else []
 
 
 def extract_root_from_input(input_string):
@@ -382,6 +382,9 @@ def create_config(u=None):
 
     if len(config['start_urls']) == 0:
         config['start_urls'] = urls
+
+    if (len(config['sitemap_urls']) == 0):
+        config.pop('sitemap_urls', None)
 
     user_index_name = helpers.get_user_value(
         'index_name is \033[1;33m{}\033[0m [enter to confirm]: '.format(config[
