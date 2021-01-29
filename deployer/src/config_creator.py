@@ -5,15 +5,16 @@ import requests
 from . import helpers
 from . import helpdesk_helper
 from urllib.parse import urlparse
+from scrapy.selector import Selector
 
 
 def get_sitemap_if_available(url):
-    if url.endswith('sitemap.xml'):
-        return [url] if (requests.head(url).status_code == 200) else []
-    if not url.endswith('/'):
-        url = re.match(".+?([^/]/(?!/))",
-                       url).group()
-    return [url + "sitemap.xml"] if (requests.head(url + "sitemap.xml").status_code == 200) else []
+    if not url.endswith("sitemap.xml"):
+        reMatch = re.search(".+?([^/]/(?!/))", url)
+        url = url + "/sitemap.xml" if reMatch is None else reMatch.group() + \
+            "sitemap.xml"
+
+    return [url] if requests.get(url).status_code == 200 else []
 
 
 def extract_root_from_input(input_string):
@@ -47,6 +48,36 @@ def assert_list_non_empty(list_to_check):
     # Check if the input is not None or empty. Otherwise, it raises an exception
     if not list_to_check or len(list_to_check) == 0:
         raise Exception('{} is None or empty'.format(list_to_check))
+
+
+def to_fixme_config(config, urls):
+    config["sitemap_urls"] = get_sitemap_if_available(urls[0])
+    config["start_urls"] = urls
+
+    mainSelector = "FIXME"
+    response = requests.get(urls[0])
+    selector = Selector(text=response.content)
+
+    if len(selector.css("article").extract()):
+        mainSelector = "article"
+    elif len(selector.css("main").extract()):
+        mainSelector = "main"
+
+    if not mainSelector == "FIXME":
+        config["selectors"]["lvl0"] = OrderedDict((
+            ("selector", ""),
+            ("global", True),
+            ("default_value", "Documentation")
+        ))
+        config["selectors"]["lvl1"] = mainSelector + " h1"
+        config["selectors"]["lvl2"] = mainSelector + " h2"
+        config["selectors"]["lvl3"] = mainSelector + " h3"
+        config["selectors"]["lvl4"] = mainSelector + " h4"
+        config["selectors"]["lvl5"] = mainSelector + " h5"
+        config["selectors"]["text"] = mainSelector + \
+            " p, " + mainSelector + " li"
+
+    return config
 
 
 def to_docusaurus_config(config, urls):
@@ -223,12 +254,13 @@ def to_pkgdown_config(config, urls=None):
     return config
 
 
-def to_vuepress_config(config):
+def to_vuepress_config(config, urls):
     config["selectors"]["lvl0"] = OrderedDict((
         ("selector", "p.sidebar-heading.open"),
         ("global", True),
         ("default_value", "Documentation")
     ))
+    config["sitemap_urls"] = get_sitemap_if_available(urls[0])
     config["custom_settings"] = {"attributesForFaceting": ["lang"]
                                  }
     config["selectors"]["lvl1"] = ".theme-default-content h1"
@@ -360,7 +392,7 @@ def create_config(u=None):
         elif helpdesk_helper.is_pkgdown_conversation(conversation):
             config = to_pkgdown_config(config, urls)
         elif helpdesk_helper.is_vuepress_conversation(conversation):
-            config = to_vuepress_config(config)
+            config = to_vuepress_config(config, urls)
         elif helpdesk_helper.is_larecipe_conversation(conversation):
             config = to_larecipe_config(config, urls)
         elif helpdesk_helper.is_publii_conversation(conversation):
@@ -368,7 +400,7 @@ def create_config(u=None):
         elif helpdesk_helper.is_jsdoc_conversation(conversation):
             config = to_jsdoc_config(config)
         else:
-            config['sitemap_urls'] = get_sitemap_if_available(urls[0])
+            config = to_fixme_config(config, urls)
 
         config["conversation_id"] = [cuid]
 
