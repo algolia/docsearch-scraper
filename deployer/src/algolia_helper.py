@@ -42,8 +42,7 @@ def get_docsearch_key(config):
     k = 'Not found'
     # find a key
     for key in algolia_client_prod.list_api_keys()['keys']:
-        if 'description' in key and 'docsearch frontend ' + config == key[
-                'description'] and key["acl"] == ["search"]:
+        if 'description' in key and 'docsearch frontend ' + config == key['description'] and key["acl"] == ["search"]:
             k = key['value']
     return k
 
@@ -67,14 +66,13 @@ def delete_docsearch_key(config):
 
 def delete_docsearch_index(config):
     algolia_index = algolia_client_prod.init_index(config)
-    algolia_index.delet()
+    algolia_index.delete()
 
 
 def list_index_analytics_key(config_name):
     analytics_keys = []
     keys = algolia_client_prod.list_api_keys()['keys']
     for key in keys:
-        if 'indexes' in key and config_name in key[
-                'indexes'] and 'analytics' in key['acl']:
+        if 'indexes' in key and config_name in key['indexes'] and 'analytics' in key['acl']:
             analytics_keys.append(key)
     return analytics_keys
