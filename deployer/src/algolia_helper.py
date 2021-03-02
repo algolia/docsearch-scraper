@@ -67,7 +67,7 @@ def delete_docsearch_key(config):
 
 def delete_docsearch_index(config):
     algolia_index = algolia_client_prod.init_index(config)
-    algolia_index.delet()
+    algolia_index.delete()
 
 
 def list_index_analytics_key(config_name):
