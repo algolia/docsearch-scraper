@@ -1,4 +1,3 @@
-import algoliasearch
 from os import environ
 
 from . import algolia_helper
@@ -128,11 +127,8 @@ class ConfigManager:
         def update_config(self, config_name):
             message = config_name
 
-            try:
-                key = algolia_helper.get_docsearch_key(config_name)
-                message = message + ' (' + key + ')'
-            except algoliasearch.helpers.AlgoliaException:
-                pass
+            key = algolia_helper.get_docsearch_key(config_name)
+            message = message + ' (' + key + ')'
 
             print(message)
 
