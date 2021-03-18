@@ -158,8 +158,8 @@ def run():
                     printer("")
                     print_command_help(command)
                 else:
-                    exit(command.run(sys.argv[2:]))
+                    sys.exit(command.run(sys.argv[2:]))
         else:
             print_error("Command \"" + sys.argv[1] + "\" not found")
 
-    exit(1)
+    sys.exit(1)
