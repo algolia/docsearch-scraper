@@ -2,6 +2,7 @@
 DocSearch scraper main entry point
 """
 import os
+import sys
 import json
 import requests
 from requests_iap import IAPAuth
@@ -116,7 +117,7 @@ def run_config(config):
         config.update_nb_hits_value(DocumentationSpider.NB_INDEXED)
     else:
         print('Crawling issue: nbHits 0 for ' + config.index_name)
-        exit(EXIT_CODE_NO_RECORD)
+        sys.exit(EXIT_CODE_NO_RECORD)
     print("")
 
 
