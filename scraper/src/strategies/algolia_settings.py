@@ -6,35 +6,35 @@ class AlgoliaSettings:
 
     @staticmethod
     def get(config, levels):
-        attributes_to_index = []
+        searchable_attributes = []
 
         # We first look for matches in the exact titles
         for level in levels:
             for selectors_key in config.selectors:
                 attr_to_index = 'unordered(hierarchy_radio.' + level + ')'
                 if level in config.selectors[
-                    selectors_key] and attr_to_index not in attributes_to_index:
-                    attributes_to_index.append(
+                    selectors_key] and attr_to_index not in searchable_attributes:
+                    searchable_attributes.append(
                         'unordered(hierarchy_radio_camel.' + level + ')')
-                    attributes_to_index.append(attr_to_index)
+                    searchable_attributes.append(attr_to_index)
 
         # Then in the whole title hierarchy
         for level in levels:
             for selectors_key in config.selectors:
                 attr_to_index = 'unordered(hierarchy.' + level + ')'
                 if level in config.selectors[
-                    selectors_key] and attr_to_index not in attributes_to_index:
-                    attributes_to_index.append(
+                    selectors_key] and attr_to_index not in searchable_attributes:
+                    searchable_attributes.append(
                         'unordered(hierarchy_camel.' + level + ')')
-                    attributes_to_index.append(attr_to_index)
+                    searchable_attributes.append(attr_to_index)
 
         for selectors_key in config.selectors:
             if 'content' in config.selectors[
-                selectors_key] and 'content' not in attributes_to_index:
-                attributes_to_index.append('content')
+                selectors_key] and 'content' not in searchable_attributes:
+                searchable_attributes.append('content')
 
         settings = {
-            'attributesToIndex': attributes_to_index,
+            'searchableAttributes': searchable_attributes,
             'attributesToRetrieve': [
                 'hierarchy',
                 'content',

@@ -35,4 +35,4 @@ class TestGetSettings:
             'content'
         ]
 
-        assert settings['attributesToIndex'] == expected_settings
+        assert settings['searchableAttributes'] == expected_settings
