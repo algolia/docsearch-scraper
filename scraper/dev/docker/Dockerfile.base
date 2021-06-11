@@ -31,12 +31,13 @@ RUN apt-get update -y && apt-get install -yq \
   libgconf-2-4 \
   default-jdk
 
+# https://www.ubuntuupdates.org/package/google_chrome/stable/main/base/google-chrome-stable for references around the latest versions
 RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
 RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
 RUN apt-get update -y && apt-get install -yq \
-  google-chrome-stable=85.0.4183.102-1 \
+  google-chrome-stable=91.0.4472.114-1 \
   unzip
-RUN wget -q https://chromedriver.storage.googleapis.com/85.0.4183.83/chromedriver_linux64.zip
+RUN wget -q https://chromedriver.storage.googleapis.com/92.0.4515.43/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip
 
 RUN mv chromedriver /usr/bin/chromedriver
