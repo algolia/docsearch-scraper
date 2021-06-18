@@ -22,6 +22,7 @@ _WARNING:_ Please be aware that the scraper sends authentication headers to ever
 #### Basic HTTP:
 
 Basic HTTP authentication is supported by setting these environment variables:
+
 - `DOCSEARCH_BASICAUTH_USERNAME`
 - `DOCSEARCH_BASICAUTH_PASSWORD`
 
@@ -32,20 +33,13 @@ have to set appropriate HTTP headers. Values for these headers are taken
 from env variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`.
 
 In case of Google Cloud Identity-Aware Proxy, please specify these env variables:
+
 - `IAP_AUTH_CLIENT_ID` - # pick [client ID of the application](https://console.cloud.google.com/apis/credentials) you are connecting to
 - `IAP_AUTH_SERVICE_ACCOUNT_JSON` - # generate in [Actions](https://console.cloud.google.com/iam-admin/serviceaccounts) -> Create key -> JSON
 
-### Installing Chrome Headless
-
-Websites that need JavaScript for rendering are passed through ChromeDriver.
-[Download the version][4] suited to your OS and then update the
-`CHROMEDRIVER_PATH` in your `.env` file.
-
-You should be ready to go.
-
 ### Running
 
-See the dedicated page on [Algolia's documentation web site][5].
+See the dedicated page on [Algolia's documentation web site][4].
 
 ## Lint code
 
@@ -54,6 +48,7 @@ The code is checked against linting rules by the CI, with `pylint`
 
 To run the linter, run the following command at the root of
 your clone:
+
 ```bash
 pipenv run pylint scraper cli deployer
 ```
@@ -82,20 +77,18 @@ The CLI will then have more commands for you to run.
 
 ## Reason of a fail from the docker image
 
-To spot why a crawl fail without watching the logs, we have defined some custom 
+To spot why a crawl fail without watching the logs, we have defined some custom
 exit status:
 
 | Exit code | Reason                                         |
-|:---------:|------------------------------------------------|
+| :-------: | ---------------------------------------------- |
 |     3     | No record extracted from the crawl             |
 |     4     | Too much hits returned from the crawl          |
 |     5     | The configuration provided is not a valid JSON |
 |     6     | The endpoint to call is incorrect              |
 |     7     | Credentials used to request are not set        |
 
-
 [1]: https://github.com/pypa/pipenv
 [2]: https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv
 [3]: ./.env.example
-[4]: http://chromedriver.chromium.org/downloads
-[5]: https://docsearch.algolia.com/docs/run-your-own/
+[4]: https://docsearch.algolia.com/docs/run-your-own/

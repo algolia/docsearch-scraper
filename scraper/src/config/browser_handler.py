@@ -1,6 +1,7 @@
 import re
-import os
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
 
 from selenium.webdriver.chrome.options import Options
 from ..custom_downloader_middleware import CustomDownloaderMiddleware
@@ -26,15 +27,7 @@ class BrowserHandler:
             chrome_options.add_argument('--headless')
             chrome_options.add_argument('user-agent={0}'.format(user_agent))
 
-            CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH',
-                                               "/usr/bin/chromedriver")
-            if not os.path.isfile(CHROMEDRIVER_PATH):
-                raise Exception(
-                    "Env CHROMEDRIVER_PATH='{}' is not a path to a file".format(
-                        CHROMEDRIVER_PATH))
-            driver = webdriver.Chrome(
-                CHROMEDRIVER_PATH,
-                options=chrome_options)
+            driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install(), options=chrome_options)
             CustomDownloaderMiddleware.driver = driver
             JsExecutor.driver = driver
         return driver
