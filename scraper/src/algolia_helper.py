@@ -20,7 +20,6 @@ class AlgoliaHelper:
             self.index_name,
             self.index_name_tmp
         )
-        self.algolia_index.delete()
         self.algolia_index_tmp.set_settings(settings)
 
         if len(query_rules) > 0:
