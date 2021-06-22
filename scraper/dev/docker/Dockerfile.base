@@ -8,44 +8,43 @@ ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-RUN useradd -d /home/seleuser -m seleuser
-RUN chown -R seleuser /home/seleuser
-RUN chgrp -R seleuser /home/seleuser
+RUN useradd -d /home/seleuser -m seleuser && \
+    chown -R seleuser /home/seleuser && \
+    chgrp -R seleuser /home/seleuser
 
-RUN apt-get update -y && apt-get install -yq \
+RUN apt-get update -y && apt-get install --no-install-recommends -yq \
     software-properties-common\
-    python3.7
-RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN apt-get update -y && apt-get install -yq \
+    python3.7 && \
+    add-apt-repository -y ppa:openjdk-r/ppa && \
+    apt-get update -y && apt-get install -yq \
     curl \
     wget \
     sudo \
-    gnupg \
-    && curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
-RUN apt-get update -y && apt-get install -yq \
-    nodejs -yq
-RUN apt-get update -y && apt-get install -yq \
-  unzip \
-  xvfb \
-  libxi6 \
-  libgconf-2-4 \
-  default-jdk
+    gnupg && \
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo bash - && \
+    apt-get update -y && apt-get install -yq \
+    nodejs \
+    unzip \
+    xvfb \
+    libxi6 \
+    libgconf-2-4 \
+    default-jdk && \
+    apt-get clean
 
-RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
-RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-RUN apt-get update -y && apt-get install -yq \
-  google-chrome-stable=85.0.4183.102-1 \
-  unzip
-RUN wget -q https://chromedriver.storage.googleapis.com/85.0.4183.83/chromedriver_linux64.zip
-RUN unzip chromedriver_linux64.zip
-
-RUN mv chromedriver /usr/bin/chromedriver
-RUN chown root:root /usr/bin/chromedriver
-RUN chmod +x /usr/bin/chromedriver
-
-RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
-RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
-RUN unzip testng-6.8.7.jar.zip
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add && \
+    echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update -y && apt-get install -yq --no-install-recommends \
+    google-chrome-stable=85.0.4183.102-1 \
+    unzip && \
+    wget -q https://chromedriver.storage.googleapis.com/85.0.4183.83/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    apt-get clean && \
+    mv chromedriver /usr/bin/chromedriver && \
+    chown root:root /usr/bin/chromedriver && \
+    chmod +x /usr/bin/chromedriver && \
+    wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar && \
+    wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip && \
+    unzip testng-6.8.7.jar.zip
 
 # Install DocSearch dependencies
 COPY Pipfile .
