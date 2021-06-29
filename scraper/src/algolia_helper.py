@@ -23,7 +23,7 @@ class AlgoliaHelper:
         self.algolia_index_tmp.set_settings(settings)
 
         if len(query_rules) > 0:
-            self.algolia_index_tmp.batch_rules(query_rules, True, True)
+            self.algolia_index_tmp.save_rules(query_rules, True, True)
 
     def add_records(self, records, url, from_sitemap):
         """Add new records to the temporary index"""

@@ -1,0 +1,32 @@
+version: 2
+
+jobs:
+  pr:
+    docker:
+      - image: circleci/python:3.6.2
+    steps:
+      - checkout
+      - run:
+          name: setup
+          command: |
+            sudo apt-get update -y
+            touch .env
+      - run:
+          name: install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install --dev
+      - run:
+          name: run linter
+          command: |
+            pipenv run pylint scraper cli deployer
+      - run:
+          name: run tests
+          command: |
+            pipenv run ./docsearch test no_browser
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - pr
