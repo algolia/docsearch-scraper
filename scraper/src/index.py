@@ -33,6 +33,7 @@ EXIT_CODE_NO_RECORD = 3
 def run_config(config):
     config = ConfigLoader(config)
     CustomDownloaderMiddleware.driver = config.driver
+    CustomDownloaderMiddleware.wait_selectors = config.wait_selectors
     DocumentationSpider.NB_INDEXED = 0
 
     strategy = DefaultStrategy(config)
