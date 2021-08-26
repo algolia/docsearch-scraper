@@ -12,12 +12,6 @@ from selenium.webdriver.support import expected_conditions
 from uuid import uuid4;
 import re
 
-HEADER_SPAN_XPATH = "//section/article/{}//span"
-ARTICLE_CONTENT_SELECTOR = '//section/article[./h1 or ./h2]'
-SIDEBAR_CONTENT_SELECTOR = "//aside//li[@class='active']"
-TEMP_CONTENT_ID = "temp-docsearch-scraper-content-id"
-TEMP_SIDEBAR_ID = "temp-docsearch-scraper-sidebar-id"
-
 class CustomDownloaderMiddleware:
     driver = None
     auth_cookie = None
