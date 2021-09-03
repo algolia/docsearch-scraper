@@ -28,7 +28,7 @@ class CustomDownloaderMiddleware:
         self.driver.get(unquote_plus(
             request.url))  # Decode url otherwise firefox is not happy. Ex /#%21/ => /#!/%21
         time.sleep(spider.js_wait)
-        body = self.driver.page_source.encode('utf-8')
+        body = self.driver.execute_script("return document.documentElement.getInnerHTML();")
         url = self.driver.current_url
 
         return HtmlResponse(
