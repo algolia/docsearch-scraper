@@ -24,26 +24,31 @@ You're now a few steps away from having it working on your website:
 - Copy the following CSS/JS snippets and add them to your page
 
 <!-- at the end of the HEAD -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@alpha" />
 
 <!-- at the end of the BODY -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
-<script type="text/javascript"> docsearch({
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@docsearch/js@alpha"></script>
+<script type="text/javascript">
+docsearch({
+  appId: 'BH4D9OD16A',
   apiKey: '{{API_KEY}}',
   indexName: '{{INDEX_NAME}}',
-  inputSelector: '### REPLACE ME ####'{{ALGOLIA_OPTIONS}},
-  debug: false // Set debug to true if you want to inspect the dropdown
+  container: '### REPLACE ME ####'{{SEARCH_PARAMETERS}},
+  debug: false // Set debug to true if you want to inspect the modal
 });
 </script>
 
-- Add a search input in your page if you don't have any yet. Then update the inputSelector value in JS snippet
-  to a CSS selector that targets your search input field.{{FACETS}}
+DocSearch is also available on the NPM registry, and for React, learn more on: https://docsearch.algolia.com/docs/DocSearch-v3
+
+- Add a container in your page if you don't have any yet. Then update the container value in JS snippet
+  to a CSS selector that targets it or an Element.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation
   (See https://docsearch.algolia.com/docs/styling/)
 - You can also check your configuration in our GitHub repository
   (See https://github.com/algolia/docsearch-configs/blob/master/configs/{{INDEX_NAME}}.json).
 {{ANALYTICS}}
-Please open a pull request if want to leverage your configuration!
+
+Please open a pull request on https://github.com/algolia/docsearch-configs if want to leverage your configuration. You can get some inspiration by looking at other existing configs, and reading our documentation: https://docsearch.algolia.com/docs/legacy/config-file
 
 Feel free to get back to us if you have any issues or questions regarding the integration.
 
@@ -76,7 +81,7 @@ Have a nice day :)"""
     facets = algolia_helper.get_facets(config)
 
     facet_template = ""
-    algolia_options = ""
+    search_parameters = ""
 
     if facets is not None:
         facet_template = "\n"
@@ -107,7 +112,7 @@ Have a nice day :)"""
                     "\"" + name + ":$" + name.upper() + "\"")
 
         if len(example_options) > 0:
-            algolia_options += ",\n  algoliaOptions: { 'facetFilters': [" + (
+            search_parameters += ",\n  searchParameters: { 'facetFilters': [" + (
                 ', '.join(example_options)) + "] }"
             facet_template += base_example_template.replace(
                 '{{EXAMPLE_PHRASE}}', ' and '.join(example_phrase)) \
@@ -122,7 +127,7 @@ Have a nice day :)"""
     template = base_template.replace('{{API_KEY}}', api_key) \
         .replace('{{INDEX_NAME}}', config) \
         .replace('{{FACETS}}', facet_template) \
-        .replace('{{ALGOLIA_OPTIONS}}', algolia_options) \
+        .replace('{{SEARCH_PARAMETERS}}', search_parameters) \
         .replace('{{ANALYTICS}}', analytics_details)
 
     return template
