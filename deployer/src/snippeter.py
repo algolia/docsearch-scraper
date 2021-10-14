@@ -21,7 +21,7 @@ I've successfully configured the underlying crawler and it will now run every 24
 
 You're now a few steps away from having it working on your website:
 
-- Copy the following CSS/JS snippets and add them to your page
+- Copy the following CSS/JavaScript snippets and add them to your page
 
 <!-- at the end of the HEAD -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@alpha" />
@@ -40,8 +40,8 @@ docsearch({
 
 DocSearch is also available on the NPM registry, and for React, learn more on: https://docsearch.algolia.com/docs/DocSearch-v3
 
-- Add a container in your page if you don't have any yet. Then update the container value in JS snippet
-  to a CSS selector that targets it or an Element.{{FACETS}}
+- Add a container in your page if you don't have any yet. Then update the container value in the JavaScript snippet
+  to a CSS selector that targets your container or an Element.{{FACETS}}
 - Optionally customize the look and feel by following the DocSearch documentation
   (See https://docsearch.algolia.com/docs/styling/)
 - You can also check your configuration in our GitHub repository
@@ -75,7 +75,7 @@ Have a nice day :)"""
  following this link: ''' + analytics_status + '\n'
             else:
                 analytics_details += '''\
- has already an Algolia account. Analytics available from the Algolia dashboard by selecting\
+ has already an Algolia account. Analytics are available from the Algolia dashboard by selecting\
  the application DOCSEARCH (access granted)'''
 
     facets = algolia_helper.get_facets(config)
