@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Scrapy = "==2.2.1"
+scrapy = "==2.5.1"
 algoliasearch = "==1.13.0"
 pyperclip = "==1.5.27"
 python-dotenv = "==0.7.1"
