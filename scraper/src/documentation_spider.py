@@ -135,7 +135,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         # We crawl the start URL in order to ensure we didn't miss anything (Even if we used the sitemap)
         for url in self.start_urls:
             yield Request(url,
-                          callback=self.parse_from_start_url if self.scrape_start_urls else self.parse,
+                          callback=self.parse_from_start_url if self.scrape_start_urls else self._parse,
                           # If we wan't to crawl (default behavior) without scraping, we still need to let the
                           # crawling spider acknowledge the content by parsing it with the built-in method
                           meta={
@@ -179,7 +179,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
         else:
             print("\033[94m> Ignored: from start url\033[0m " + response.url)
 
-        return self.parse(response)
+        return self._parse(response)
 
     def is_rules_compliant(self, response):
 
