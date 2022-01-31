@@ -10,9 +10,11 @@ from urllib.parse import urlparse, unquote_plus
 
 class CustomDownloaderMiddleware:
     driver = None
+    auth_cookie = None
 
     def __init__(self):
         self.driver = CustomDownloaderMiddleware.driver
+        self.initialized_auth = False
 
     def process_request(self, request, spider):
         if not spider.js_render:
@@ -22,6 +24,11 @@ class CustomDownloaderMiddleware:
             o = urlparse(request.url)
             url_without_params = o.scheme + "://" + o.netloc + o.path
             request = request.replace(url=url_without_params)
+
+        if self.auth_cookie and not self.initialized_auth:
+            self.driver.get(unquote_plus(request.url))
+            self.driver.add_cookie(self.auth_cookie)
+            self.initialized_auth = True
 
         print("Getting " + request.url + " from selenium")
 
