@@ -56,8 +56,8 @@ class AlgoliaSettings:
             ],
             'attributesForFaceting': ['tags', 'no_variables',
                                       'extra_attributes'] + config.get_extra_facets(),
-            'distinct': True,
-            'attributeForDistinct': 'url',
+            'distinct': 3,
+            'attributeForDistinct': 'url_without_anchor',
             'customRanking': [
                 'desc(weight.page_rank)',
                 'desc(weight.level)',
