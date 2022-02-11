@@ -8,13 +8,17 @@ from builtins import range
 class AlgoliaHelper:
     """AlgoliaHelper"""
 
-    def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules):
+    def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules, append, copy_to_prod):
+        self.append = append
+        self.copy_to_prod = copy_to_prod
         self.algolia_client = algoliasearch.Client(app_id, api_key)
         self.index_name = index_name
         self.index_name_tmp = index_name_tmp
         self.algolia_index = self.algolia_client.init_index(self.index_name)
         self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
-        self.algolia_client.delete_index(self.index_name_tmp)
+        if not self.append:
+            self.algolia_client.delete_index(self.index_name_tmp)
+
         self.algolia_index_tmp.set_settings(settings)
 
         if len(query_rules) > 0:
@@ -46,4 +50,5 @@ class AlgoliaHelper:
     def commit_tmp_index(self):
         """Overwrite the real index with the temporary one"""
         # print("Update settings")
-        self.algolia_client.move_index(self.index_name_tmp, self.index_name)
+        if self.copy_to_prod:
+            self.algolia_client.move_index(self.index_name_tmp, self.index_name)

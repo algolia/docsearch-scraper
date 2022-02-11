@@ -44,7 +44,9 @@ def run_config(config):
         config.index_name,
         config.index_name_tmp,
         AlgoliaSettings.get(config, strategy.levels),
-        config.query_rules
+        config.query_rules,
+        config.append,
+        config.copy_to_prod,
     )
 
     root_module = 'src.' if __name__ == '__main__' else 'scraper.src.'
