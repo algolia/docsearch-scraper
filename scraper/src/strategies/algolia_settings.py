@@ -72,7 +72,9 @@ class AlgoliaSettings:
                 'typo',
                 'attribute',
                 'proximity',
-                'exact'
+                'exact',
+                'desc(weight.level)',
+                'desc(weight.position)'
             ],
             'highlightPreTag': '<span class="algolia-docsearch-suggestion--highlight">',
             'highlightPostTag': '</span>',
