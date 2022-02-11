@@ -27,7 +27,7 @@ class ConfigLoader:
     api_key = None
     append = None
     app_id = None
-    copy_to_prod = None
+    push_to_prod = None
     custom_settings = None
     extra_records = []
     index_name = None

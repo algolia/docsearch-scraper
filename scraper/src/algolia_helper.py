@@ -8,9 +8,9 @@ from builtins import range
 class AlgoliaHelper:
     """AlgoliaHelper"""
 
-    def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules, append, copy_to_prod):
+    def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules, append, push_to_prod):
         self.append = append
-        self.copy_to_prod = copy_to_prod
+        self.push_to_prod = push_to_prod
         self.algolia_client = algoliasearch.Client(app_id, api_key)
         self.index_name = index_name
         self.index_name_tmp = index_name_tmp
@@ -50,5 +50,5 @@ class AlgoliaHelper:
     def commit_tmp_index(self):
         """Overwrite the real index with the temporary one"""
         # print("Update settings")
-        if self.copy_to_prod:
+        if self.push_to_prod:
             self.algolia_client.move_index(self.index_name_tmp, self.index_name)
