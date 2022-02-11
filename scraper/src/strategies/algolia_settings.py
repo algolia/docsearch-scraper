@@ -71,13 +71,13 @@ class AlgoliaSettings:
             # - For the same reason, we put proximity lower and gave more weight
             #   to attribute
             'ranking': [
-                'custom',
                 'words',
                 'filters',
                 'typo',
                 'attribute',
                 'proximity',
-                'exact'
+                'exact',
+                'custom'
             ],
             'highlightPreTag': '<span class="algolia-docsearch-suggestion--highlight">',
             'highlightPostTag': '</span>',
