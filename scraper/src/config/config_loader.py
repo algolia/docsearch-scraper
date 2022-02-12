@@ -25,7 +25,9 @@ class ConfigLoader:
     # We define them here so the linters/autocomplete know what to expect
     allowed_domains = None
     api_key = None
+    append = None
     app_id = None
+    push_to_prod = None
     custom_settings = None
     extra_records = []
     index_name = None

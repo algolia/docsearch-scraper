@@ -56,13 +56,8 @@ class AlgoliaSettings:
             ],
             'attributesForFaceting': ['tags', 'no_variables',
                                       'extra_attributes'] + config.get_extra_facets(),
-            'distinct': True,
-            'attributeForDistinct': 'url',
-            'customRanking': [
-                'desc(weight.page_rank)',
-                'desc(weight.level)',
-                'asc(weight.position)'
-            ],
+            'distinct': 3,
+            'attributeForDistinct': 'url_without_anchor',
             # Default ranking is: typo, geo, words, proximity, attribute, exact, custom
             # - We removed geo as this is irrelevant
             # - We moved words before typo, because in case of a documentation
@@ -71,13 +66,15 @@ class AlgoliaSettings:
             # - For the same reason, we put proximity lower and gave more weight
             #   to attribute
             'ranking': [
+                'desc(weight.page_rank)',
                 'words',
                 'filters',
                 'typo',
                 'attribute',
                 'proximity',
                 'exact',
-                'custom'
+                'desc(weight.level)',
+                'desc(weight.position)'
             ],
             'highlightPreTag': '<span class="algolia-docsearch-suggestion--highlight">',
             'highlightPostTag': '</span>',
