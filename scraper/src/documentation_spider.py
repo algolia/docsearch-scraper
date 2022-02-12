@@ -83,10 +83,7 @@ class DocumentationSpider(CrawlSpider, SitemapSpider):
 
         # Get rid of scheme consideration
         # Start_urls must stays authentic URL in order to be reached, we build agnostic scheme regex based on those URL
-        # start_urls_any_scheme = [DocumentationSpider.to_any_scheme(start_url)
-        #                          for start_url in self.start_urls]
         link_extractor = LxmlLinkExtractor(
-            # allow=start_urls_any_scheme,
             deny=self.stop_urls,
             tags=('a', 'area', 'iframe'),
             attrs=('href', 'src'),
