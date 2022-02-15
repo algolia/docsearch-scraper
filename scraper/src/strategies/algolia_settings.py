@@ -56,7 +56,7 @@ class AlgoliaSettings:
             ],
             'attributesForFaceting': ['tags', 'no_variables',
                                       'extra_attributes'] + config.get_extra_facets(),
-            'distinct': 3,
+            'distinct': True,
             'attributeForDistinct': 'url_without_anchor',
             # Default ranking is: typo, geo, words, proximity, attribute, exact, custom
             # - We removed geo as this is irrelevant
