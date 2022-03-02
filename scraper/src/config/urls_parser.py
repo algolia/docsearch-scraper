@@ -11,9 +11,9 @@ class UrlsParser:
         start_urls = []
         for start_url in config_start_urls:
             if isinstance(start_url, str):
-                start_url = {'url': start_url}
+                start_url = {'url': start_url, 'url_pattern': start_url}
 
-            start_url['compiled_url'] = re.compile(start_url['url'])
+            start_url['compiled_url'] = re.compile(start_url['url_pattern'])
 
             if "scrape" not in start_url:
                 start_url['scrape'] = True
