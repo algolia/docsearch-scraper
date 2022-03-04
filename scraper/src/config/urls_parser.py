@@ -13,7 +13,7 @@ class UrlsParser:
             if isinstance(start_url, str):
                 start_url = {'url': start_url, 'url_pattern': start_url}
 
-            start_url['compiled_url'] = re.compile(start_url['url_pattern'])
+            start_url['compiled_url'] = re.compile(start_url['url_pattern'] if 'url_pattern' in start_url else start_url['url'])
 
             if "scrape" not in start_url:
                 start_url['scrape'] = True
