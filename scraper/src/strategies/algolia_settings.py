@@ -67,11 +67,11 @@ class AlgoliaSettings:
             #   to attribute
             'ranking': [
                 'desc(weight.page_rank)',
+                'typo',
                 'words',
                 'filters',
-                'typo',
-                'attribute',
                 'proximity',
+                'attribute',
                 'exact',
                 'desc(weight.level)',
                 'desc(weight.position)'
