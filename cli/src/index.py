@@ -161,5 +161,6 @@ def run():
                     sys.exit(command.run(sys.argv[2:]))
         else:
             print_error("Command \"" + sys.argv[1] + "\" not found")
+            sys.exit(1)
 
-    sys.exit(1)
+    sys.exit(0)
