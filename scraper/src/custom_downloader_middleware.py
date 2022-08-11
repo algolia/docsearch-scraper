@@ -16,10 +16,12 @@ class CustomDownloaderMiddleware:
     driver = None
     auth_cookie = None
     wait_selectors = []
+    start_urls = []
 
     def __init__(self):
         self.wait_selectors = CustomDownloaderMiddleware.wait_selectors
         self.driver = CustomDownloaderMiddleware.driver
+        self.start_urls = CustomDownloaderMiddleware.start_urls
         self.initialized_auth = False
 
     def process_request(self, request, spider):
@@ -59,6 +61,9 @@ class CustomDownloaderMiddleware:
                 WebDriverWait(self.driver, 30).until(
                     expected_conditions.presence_of_element_located((By.XPATH, selector['selector']))
                 )
+
+        if request.url in self.start_urls:
+            time.sleep(5)
 
         body = self.driver.page_source.encode('utf-8')
         url = self.driver.current_url

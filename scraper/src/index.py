@@ -34,6 +34,7 @@ def run_config(config):
     config = ConfigLoader(config)
     CustomDownloaderMiddleware.driver = config.driver
     CustomDownloaderMiddleware.wait_selectors = config.wait_selectors
+    CustomDownloaderMiddleware.start_urls = [start_url['url'] for start_url in config.start_urls]
     DocumentationSpider.NB_INDEXED = 0
 
     strategy = DefaultStrategy(config)
