@@ -25,6 +25,7 @@ class BrowserHandler:
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--headless')
             chrome_options.add_argument('user-agent={0}'.format(user_agent))
+            chrome_options.binary_location = os.environ.get("CHROME_PATH", "/usr/bin/google-chrome")
 
             CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH',
                                                "/usr/bin/chromedriver")
