@@ -1,5 +1,5 @@
 import os
-from algoliasearch import algoliasearch
+from algoliasearch import search_client
 
 app_id = os.environ.get('APPLICATION_ID', '')
 
@@ -8,8 +8,8 @@ api_key = os.environ.get('API_KEY', '')
 app_id_prod = os.environ.get('APPLICATION_ID_PROD', '')
 api_key_prod = os.environ.get('API_KEY_PROD', '')
 
-algolia_client = algoliasearch.Client(app_id, api_key)
-algolia_client_prod = algoliasearch.Client(app_id_prod, api_key_prod)
+algolia_client = search_client.SearchClient.create(app_id, api_key)
+algolia_client_prod = search_client.SearchClient.create(app_id_prod, api_key_prod)
 
 
 def get_facets(config):
@@ -33,7 +33,7 @@ def get_facets(config):
 
 def update_docsearch_key(config, key):
     algolia_client_prod.update_api_key(key, {
-        'indices': [config],
+        'indexes': [config],
         'description': 'docsearch frontend ' + config,
         'acl': ['search']
     })
@@ -53,10 +53,9 @@ def add_docsearch_key(config):
     if not isinstance(config, str) or '*' in config:
         raise ValueError("index name : {} is not safe".format(config))
 
-    response = algolia_client_prod.add_api_key({
-        'indices': [config],
+    response = algolia_client_prod.add_api_key(['search'], {
+        'indexes': [config],
         'description': 'docsearch frontend ' + config,
-        'acl': ['search']
     })
 
     return response['key']
@@ -68,7 +67,7 @@ def delete_docsearch_key(config):
 
 
 def delete_docsearch_index(config):
-    algolia_client_prod.delete_index(config)
+    algolia_client_prod.init_index(config).delete()
 
 
 def list_index_analytics_key(config_name):

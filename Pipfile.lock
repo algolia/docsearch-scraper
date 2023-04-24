@@ -18,11 +18,11 @@
     "default": {
         "algoliasearch": {
             "hashes": [
-                "sha256:434eb2f04060301cfb12fad078fa85f6f1b70ecdfdbebd093e92380a957f16cb",
-                "sha256:fcdfd8605c6ace8d5a225a5eb679e837548d85a8fa234a57296eba69ab259797"
+                "sha256:0647732a91549132514ba5263cb12c7cc443baeb54bd52d324f84f6acd845ac1",
+                "sha256:9706d1238ad912e87a9fb43791399de47fe559afd32964e91dfc69a7ca3fe0ce"
             ],
             "index": "pypi",
-            "version": "==1.13.0"
+            "version": "==2.6.3"
         },
         "atomicwrites": {
             "hashes": [

@@ -1,7 +1,7 @@
 """AlgoliaHelper
 Wrapper on top of the AlgoliaSearch API client"""
 
-from algoliasearch import algoliasearch
+from algoliasearch import search_client
 from builtins import range
 
 
@@ -11,13 +11,13 @@ class AlgoliaHelper:
     def __init__(self, app_id, api_key, index_name, index_name_tmp, settings, query_rules, append, push_to_prod):
         self.append = append
         self.push_to_prod = push_to_prod
-        self.algolia_client = algoliasearch.Client(app_id, api_key)
+        self.algolia_client = search_client.SearchClient.create(app_id, api_key)
         self.index_name = index_name
         self.index_name_tmp = index_name_tmp
         self.algolia_index = self.algolia_client.init_index(self.index_name)
         self.algolia_index_tmp = self.algolia_client.init_index(self.index_name_tmp)
         if not self.append:
-            self.algolia_client.delete_index(self.index_name_tmp)
+            self.algolia_index_tmp.delete()
 
         self.algolia_index_tmp.set_settings(settings)
 
@@ -29,7 +29,7 @@ class AlgoliaHelper:
         record_count = len(records)
 
         for i in range(0, record_count, 50):
-            self.algolia_index_tmp.add_objects(records[i:i + 50])
+            self.algolia_index_tmp.save_objects(records[i:i + 50])
 
         color = "96" if from_sitemap else "94"
 
