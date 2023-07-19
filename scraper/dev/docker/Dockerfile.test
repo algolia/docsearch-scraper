@@ -1,4 +1,4 @@
-FROM algolia/docsearch-scraper-base
+FROM europe-west1-docker.pkg.dev/slashid-tools/docker/algolia/docsearch-scraper-base
 LABEL maintainer="docsearch@algolia.com"
 
 WORKDIR /root
